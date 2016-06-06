@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8B62C0761CEFA2F00087727A /* MotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0751CEFA2F00087727A /* MotionTests.swift */; };
+		8B62C0931CEFA34C0087727A /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0781CEFA34C0087727A /* MotionSequence.swift */; };
+		8B62C0941CEFA34C0087727A /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0791CEFA34C0087727A /* MotionGroup.swift */; };
+		8B62C0951CEFA34C0087727A /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07A1CEFA34C0087727A /* Motion.swift */; };
+		8B62C0981CEFA34C0087727A /* ValueAssistantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */; };
+		8B62C0991CEFA34C0087727A /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */; };
+		8B62C09A1CEFA34C0087727A /* MotionSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0801CEFA34C0087727A /* MotionSupport.swift */; };
+		8B62C09B1CEFA34C0087727A /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */; };
+		8B62C09C1CEFA34C0087727A /* CATempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0821CEFA34C0087727A /* CATempo.swift */; };
+		8B62C09E1CEFA34C0087727A /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0841CEFA34C0087727A /* MotionMachine.swift */; };
+		8B62C09F1CEFA34C0087727A /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0861CEFA34C0087727A /* EasingBack.swift */; };
+		8B62C0A01CEFA34C0087727A /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0871CEFA34C0087727A /* EasingBounce.swift */; };
+		8B62C0A11CEFA34C0087727A /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0881CEFA34C0087727A /* EasingCircular.swift */; };
+		8B62C0A21CEFA34C0087727A /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0891CEFA34C0087727A /* EasingCubic.swift */; };
+		8B62C0A31CEFA34C0087727A /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08A1CEFA34C0087727A /* EasingElastic.swift */; };
+		8B62C0A41CEFA34C0087727A /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08B1CEFA34C0087727A /* EasingExpo.swift */; };
+		8B62C0A51CEFA34C0087727A /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08C1CEFA34C0087727A /* EasingLinear.swift */; };
+		8B62C0A61CEFA34C0087727A /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */; };
+		8B62C0A71CEFA34C0087727A /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */; };
+		8B62C0A81CEFA34C0087727A /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */; };
+		8B62C0A91CEFA34C0087727A /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0901CEFA34C0087727A /* EasingSine.swift */; };
+		8B62C0AA1CEFA34C0087727A /* Tempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0911CEFA34C0087727A /* Tempo.swift */; };
+		8B62C0BC1CF014210087727A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BB1CF014210087727A /* AppDelegate.swift */; };
+		8B62C0BE1CF014210087727A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BD1CF014210087727A /* ViewController.swift */; };
+		8B62C0C11CF014210087727A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0BF1CF014210087727A /* Main.storyboard */; };
+		8B62C0C31CF014210087727A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0C21CF014210087727A /* Assets.xcassets */; };
+		8B62C0C61CF014210087727A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0C41CF014210087727A /* LaunchScreen.storyboard */; };
+		8B62C0CE1CF017640087727A /* TimerTempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0CD1CF017640087727A /* TimerTempo.swift */; };
+		8B6B031B1CF3CC6300C1E216 /* PhysicsMotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */; };
+		8B6B031D1CF3F57500C1E216 /* CGStructAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6B031C1CF3F57500C1E216 /* CGStructAssistantTests.swift */; };
+		8BAA9C481CF2574D0079A9DC /* EasingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C471CF2574D0079A9DC /* EasingTests.swift */; };
+		8BAA9C4A1CF27DA40079A9DC /* MotionGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */; };
+		8BAA9C4C1CF2A4C90079A9DC /* MotionSequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */; };
+		8BC143D11CF0439A00E8EBC5 /* Tester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC143D01CF0439A00E8EBC5 /* Tester.swift */; };
+		8BC8EC6F1CF432DA00B3B0A3 /* UIColorAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC8EC6E1CF432DA00B3B0A3 /* UIColorAssistantTests.swift */; };
+		8BD8878A1CFCEBA00085107A /* CGStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD887891CFCEBA00085107A /* CGStructAssistant.swift */; };
+		8BD8878C1CFD69C60085107A /* UIKitStructAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */; };
+		8BD8878E1CFD69E60085107A /* UIKitStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */; };
+		8BF304E21CF50B5900B8BE67 /* ValueAssistantGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E11CF50B5900B8BE67 /* ValueAssistantGroupTests.swift */; };
+		8BF304E61CF6C4E300B8BE67 /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */; };
+		8BF304EA1CF7D42D00B8BE67 /* CIColorAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E91CF7D42D00B8BE67 /* CIColorAssistantTests.swift */; };
+		8BF304ED1CF7D44700B8BE67 /* UIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */; };
+		8BF304EE1CF7D44700B8BE67 /* CIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8BC143CC1CF03F6900E8EBC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B62C0091CEF9C0F0087727A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B62C0B81CF014210087727A;
+			remoteInfo = MotionMachine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionMachineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B62C0751CEFA2F00087727A /* MotionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionTests.swift; sourceTree = "<group>"; };
+		8B62C0781CEFA34C0087727A /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSequence.swift; path = ../Classes/MotionSequence.swift; sourceTree = "<group>"; };
+		8B62C0791CEFA34C0087727A /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionGroup.swift; path = ../Classes/MotionGroup.swift; sourceTree = "<group>"; };
+		8B62C07A1CEFA34C0087727A /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Motion.swift; path = ../Classes/Motion.swift; sourceTree = "<group>"; };
+		8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueAssistantGroup.swift; sourceTree = "<group>"; };
+		8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsMotion.swift; path = ../Classes/PhysicsMotion.swift; sourceTree = "<group>"; };
+		8B62C0801CEFA34C0087727A /* MotionSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSupport.swift; path = ../Classes/MotionSupport.swift; sourceTree = "<group>"; };
+		8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsSystem.swift; path = ../Classes/PhysicsSystem.swift; sourceTree = "<group>"; };
+		8B62C0821CEFA34C0087727A /* CATempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CATempo.swift; path = ../Classes/CATempo.swift; sourceTree = "<group>"; };
+		8B62C0841CEFA34C0087727A /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionMachine.swift; path = ../Classes/MotionMachine.swift; sourceTree = "<group>"; };
+		8B62C0861CEFA34C0087727A /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
+		8B62C0871CEFA34C0087727A /* EasingBounce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBounce.swift; sourceTree = "<group>"; };
+		8B62C0881CEFA34C0087727A /* EasingCircular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCircular.swift; sourceTree = "<group>"; };
+		8B62C0891CEFA34C0087727A /* EasingCubic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCubic.swift; sourceTree = "<group>"; };
+		8B62C08A1CEFA34C0087727A /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
+		8B62C08B1CEFA34C0087727A /* EasingExpo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingExpo.swift; sourceTree = "<group>"; };
+		8B62C08C1CEFA34C0087727A /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
+		8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuadratic.swift; sourceTree = "<group>"; };
+		8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuartic.swift; sourceTree = "<group>"; };
+		8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuintic.swift; sourceTree = "<group>"; };
+		8B62C0901CEFA34C0087727A /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
+		8B62C0911CEFA34C0087727A /* Tempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tempo.swift; path = ../Classes/Tempo.swift; sourceTree = "<group>"; };
+		8B62C0AC1CEFA3730087727A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MotionMachineTests/Info.plist; sourceTree = "<group>"; };
+		8B62C0B91CF014210087727A /* MotionMachine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionMachine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B62C0BB1CF014210087727A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8B62C0BD1CF014210087727A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8B62C0C01CF014210087727A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8B62C0C21CF014210087727A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8B62C0C51CF014210087727A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8B62C0C71CF014210087727A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B62C0CD1CF017640087727A /* TimerTempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimerTempo.swift; path = ../Classes/TimerTempo.swift; sourceTree = "<group>"; };
+		8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsMotionTests.swift; sourceTree = "<group>"; };
+		8B6B031C1CF3F57500C1E216 /* CGStructAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGStructAssistantTests.swift; path = ValueAssistants/CGStructAssistantTests.swift; sourceTree = "<group>"; };
+		8BAA9C471CF2574D0079A9DC /* EasingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingTests.swift; sourceTree = "<group>"; };
+		8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroupTests.swift; sourceTree = "<group>"; };
+		8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequenceTests.swift; sourceTree = "<group>"; };
+		8BC143D01CF0439A00E8EBC5 /* Tester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tester.swift; path = Helpers/Tester.swift; sourceTree = "<group>"; };
+		8BC8EC6E1CF432DA00B3B0A3 /* UIColorAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIColorAssistantTests.swift; path = ValueAssistants/UIColorAssistantTests.swift; sourceTree = "<group>"; };
+		8BD887891CFCEBA00085107A /* CGStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGStructAssistant.swift; sourceTree = "<group>"; };
+		8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIKitStructAssistantTests.swift; path = ValueAssistants/UIKitStructAssistantTests.swift; sourceTree = "<group>"; };
+		8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitStructAssistant.swift; sourceTree = "<group>"; };
+		8BF304E11CF50B5900B8BE67 /* ValueAssistantGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ValueAssistantGroupTests.swift; path = ValueAssistants/ValueAssistantGroupTests.swift; sourceTree = "<group>"; };
+		8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyData.swift; path = ../Classes/PropertyData.swift; sourceTree = "<group>"; };
+		8BF304E91CF7D42D00B8BE67 /* CIColorAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CIColorAssistantTests.swift; path = ValueAssistants/CIColorAssistantTests.swift; sourceTree = "<group>"; };
+		8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorAssistant.swift; sourceTree = "<group>"; };
+		8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIColorAssistant.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8B62C0221CEF9C0F0087727A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B62C0B61CF014210087727A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8B62C0081CEF9C0F0087727A = {
+			isa = PBXGroup;
+			children = (
+				8B62C0AC1CEFA3730087727A /* Info.plist */,
+				8B62C0771CEFA32F0087727A /* MotionMachine */,
+				8B62C0341CEF9CA80087727A /* Tests */,
+				8B62C0BA1CF014210087727A /* App */,
+				8B62C0121CEF9C0F0087727A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8B62C0121CEF9C0F0087727A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */,
+				8B62C0B91CF014210087727A /* MotionMachine.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8B62C0341CEF9CA80087727A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8B6B031E1CF3F57900C1E216 /* ValueAssistants */,
+				8BC143D21CF043A200E8EBC5 /* Helpers */,
+				8B62C0751CEFA2F00087727A /* MotionTests.swift */,
+				8BAA9C471CF2574D0079A9DC /* EasingTests.swift */,
+				8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */,
+				8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */,
+				8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		8B62C0771CEFA32F0087727A /* MotionMachine */ = {
+			isa = PBXGroup;
+			children = (
+				8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */,
+				8B62C0CD1CF017640087727A /* TimerTempo.swift */,
+				8B62C0781CEFA34C0087727A /* MotionSequence.swift */,
+				8B62C0791CEFA34C0087727A /* MotionGroup.swift */,
+				8B62C07A1CEFA34C0087727A /* Motion.swift */,
+				8B62C07B1CEFA34C0087727A /* ValueAssistants */,
+				8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */,
+				8B62C0801CEFA34C0087727A /* MotionSupport.swift */,
+				8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */,
+				8B62C0821CEFA34C0087727A /* CATempo.swift */,
+				8B62C0841CEFA34C0087727A /* MotionMachine.swift */,
+				8B62C0851CEFA34C0087727A /* EasingTypes */,
+				8B62C0911CEFA34C0087727A /* Tempo.swift */,
+			);
+			name = MotionMachine;
+			sourceTree = "<group>";
+		};
+		8B62C07B1CEFA34C0087727A /* ValueAssistants */ = {
+			isa = PBXGroup;
+			children = (
+				8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */,
+				8BD887891CFCEBA00085107A /* CGStructAssistant.swift */,
+				8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */,
+				8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */,
+				8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */,
+			);
+			name = ValueAssistants;
+			path = ../Classes/ValueAssistants;
+			sourceTree = "<group>";
+		};
+		8B62C0851CEFA34C0087727A /* EasingTypes */ = {
+			isa = PBXGroup;
+			children = (
+				8B62C0861CEFA34C0087727A /* EasingBack.swift */,
+				8B62C0871CEFA34C0087727A /* EasingBounce.swift */,
+				8B62C0881CEFA34C0087727A /* EasingCircular.swift */,
+				8B62C0891CEFA34C0087727A /* EasingCubic.swift */,
+				8B62C08A1CEFA34C0087727A /* EasingElastic.swift */,
+				8B62C08B1CEFA34C0087727A /* EasingExpo.swift */,
+				8B62C08C1CEFA34C0087727A /* EasingLinear.swift */,
+				8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */,
+				8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */,
+				8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */,
+				8B62C0901CEFA34C0087727A /* EasingSine.swift */,
+			);
+			name = EasingTypes;
+			path = ../Classes/EasingTypes;
+			sourceTree = "<group>";
+		};
+		8B62C0BA1CF014210087727A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8B62C0BB1CF014210087727A /* AppDelegate.swift */,
+				8B62C0BD1CF014210087727A /* ViewController.swift */,
+				8B62C0BF1CF014210087727A /* Main.storyboard */,
+				8B62C0C21CF014210087727A /* Assets.xcassets */,
+				8B62C0C41CF014210087727A /* LaunchScreen.storyboard */,
+				8B62C0C71CF014210087727A /* Info.plist */,
+			);
+			name = App;
+			path = MotionMachine;
+			sourceTree = "<group>";
+		};
+		8B6B031E1CF3F57900C1E216 /* ValueAssistants */ = {
+			isa = PBXGroup;
+			children = (
+				8B6B031C1CF3F57500C1E216 /* CGStructAssistantTests.swift */,
+				8BC8EC6E1CF432DA00B3B0A3 /* UIColorAssistantTests.swift */,
+				8BF304E11CF50B5900B8BE67 /* ValueAssistantGroupTests.swift */,
+				8BF304E91CF7D42D00B8BE67 /* CIColorAssistantTests.swift */,
+				8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */,
+			);
+			name = ValueAssistants;
+			sourceTree = "<group>";
+		};
+		8BC143D21CF043A200E8EBC5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8BC143D01CF0439A00E8EBC5 /* Tester.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8B62C0241CEF9C0F0087727A /* MotionMachineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B62C0311CEF9C0F0087727A /* Build configuration list for PBXNativeTarget "MotionMachineTests" */;
+			buildPhases = (
+				8B62C0211CEF9C0F0087727A /* Sources */,
+				8B62C0221CEF9C0F0087727A /* Frameworks */,
+				8B62C0231CEF9C0F0087727A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8BC143CD1CF03F6900E8EBC5 /* PBXTargetDependency */,
+			);
+			name = MotionMachineTests;
+			productName = MotionMachineTestsTests;
+			productReference = 8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8B62C0B81CF014210087727A /* MotionMachine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B62C0C81CF014210087727A /* Build configuration list for PBXNativeTarget "MotionMachine" */;
+			buildPhases = (
+				8B62C0B51CF014210087727A /* Sources */,
+				8B62C0B61CF014210087727A /* Frameworks */,
+				8B62C0B71CF014210087727A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MotionMachine;
+			productName = MotionMachine;
+			productReference = 8B62C0B91CF014210087727A /* MotionMachine.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8B62C0091CEF9C0F0087727A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Poet & Mountain, LLC";
+				TargetAttributes = {
+					8B62C0241CEF9C0F0087727A = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = 8B62C0B81CF014210087727A;
+					};
+					8B62C0B81CF014210087727A = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 8B62C00C1CEF9C0F0087727A /* Build configuration list for PBXProject "MotionMachineTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8B62C0081CEF9C0F0087727A;
+			productRefGroup = 8B62C0121CEF9C0F0087727A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8B62C0241CEF9C0F0087727A /* MotionMachineTests */,
+				8B62C0B81CF014210087727A /* MotionMachine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8B62C0231CEF9C0F0087727A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B62C0B71CF014210087727A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B62C0C61CF014210087727A /* LaunchScreen.storyboard in Resources */,
+				8B62C0C31CF014210087727A /* Assets.xcassets in Resources */,
+				8B62C0C11CF014210087727A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8B62C0211CEF9C0F0087727A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BC8EC6F1CF432DA00B3B0A3 /* UIColorAssistantTests.swift in Sources */,
+				8BAA9C481CF2574D0079A9DC /* EasingTests.swift in Sources */,
+				8B62C0A21CEFA34C0087727A /* EasingCubic.swift in Sources */,
+				8B62C0941CEFA34C0087727A /* MotionGroup.swift in Sources */,
+				8B62C0A51CEFA34C0087727A /* EasingLinear.swift in Sources */,
+				8B62C0AA1CEFA34C0087727A /* Tempo.swift in Sources */,
+				8BC143D11CF0439A00E8EBC5 /* Tester.swift in Sources */,
+				8BF304ED1CF7D44700B8BE67 /* UIColorAssistant.swift in Sources */,
+				8B62C09B1CEFA34C0087727A /* PhysicsSystem.swift in Sources */,
+				8BD8878C1CFD69C60085107A /* UIKitStructAssistantTests.swift in Sources */,
+				8B62C0951CEFA34C0087727A /* Motion.swift in Sources */,
+				8BF304EE1CF7D44700B8BE67 /* CIColorAssistant.swift in Sources */,
+				8B62C09E1CEFA34C0087727A /* MotionMachine.swift in Sources */,
+				8B62C09C1CEFA34C0087727A /* CATempo.swift in Sources */,
+				8B62C0A91CEFA34C0087727A /* EasingSine.swift in Sources */,
+				8B62C0931CEFA34C0087727A /* MotionSequence.swift in Sources */,
+				8B62C0A31CEFA34C0087727A /* EasingElastic.swift in Sources */,
+				8B62C0A71CEFA34C0087727A /* EasingQuartic.swift in Sources */,
+				8B62C0A81CEFA34C0087727A /* EasingQuintic.swift in Sources */,
+				8B6B031D1CF3F57500C1E216 /* CGStructAssistantTests.swift in Sources */,
+				8BD8878A1CFCEBA00085107A /* CGStructAssistant.swift in Sources */,
+				8BAA9C4A1CF27DA40079A9DC /* MotionGroupTests.swift in Sources */,
+				8BF304E21CF50B5900B8BE67 /* ValueAssistantGroupTests.swift in Sources */,
+				8BF304EA1CF7D42D00B8BE67 /* CIColorAssistantTests.swift in Sources */,
+				8B62C0761CEFA2F00087727A /* MotionTests.swift in Sources */,
+				8B62C0A61CEFA34C0087727A /* EasingQuadratic.swift in Sources */,
+				8B62C0A01CEFA34C0087727A /* EasingBounce.swift in Sources */,
+				8B62C0A41CEFA34C0087727A /* EasingExpo.swift in Sources */,
+				8B62C0A11CEFA34C0087727A /* EasingCircular.swift in Sources */,
+				8B62C0981CEFA34C0087727A /* ValueAssistantGroup.swift in Sources */,
+				8BD8878E1CFD69E60085107A /* UIKitStructAssistant.swift in Sources */,
+				8B62C0CE1CF017640087727A /* TimerTempo.swift in Sources */,
+				8B62C09A1CEFA34C0087727A /* MotionSupport.swift in Sources */,
+				8B62C0991CEFA34C0087727A /* PhysicsMotion.swift in Sources */,
+				8BAA9C4C1CF2A4C90079A9DC /* MotionSequenceTests.swift in Sources */,
+				8B62C09F1CEFA34C0087727A /* EasingBack.swift in Sources */,
+				8BF304E61CF6C4E300B8BE67 /* PropertyData.swift in Sources */,
+				8B6B031B1CF3CC6300C1E216 /* PhysicsMotionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B62C0B51CF014210087727A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B62C0BE1CF014210087727A /* ViewController.swift in Sources */,
+				8B62C0BC1CF014210087727A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8BC143CD1CF03F6900E8EBC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B62C0B81CF014210087727A /* MotionMachine */;
+			targetProxy = 8BC143CC1CF03F6900E8EBC5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8B62C0BF1CF014210087727A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8B62C0C01CF014210087727A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8B62C0C41CF014210087727A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8B62C0C51CF014210087727A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8B62C02C1CEF9C0F0087727A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8B62C02D1CEF9C0F0087727A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8B62C0321CEF9C0F0087727A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = MotionMachineTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
+			};
+			name = Debug;
+		};
+		8B62C0331CEF9C0F0087727A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = MotionMachineTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
+			};
+			name = Release;
+		};
+		8B62C0C91CF014210087727A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MotionMachine/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8B62C0CA1CF014210087727A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MotionMachine/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8B62C00C1CEF9C0F0087727A /* Build configuration list for PBXProject "MotionMachineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B62C02C1CEF9C0F0087727A /* Debug */,
+				8B62C02D1CEF9C0F0087727A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8B62C0311CEF9C0F0087727A /* Build configuration list for PBXNativeTarget "MotionMachineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B62C0321CEF9C0F0087727A /* Debug */,
+				8B62C0331CEF9C0F0087727A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8B62C0C81CF014210087727A /* Build configuration list for PBXNativeTarget "MotionMachine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B62C0C91CF014210087727A /* Debug */,
+				8B62C0CA1CF014210087727A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8B62C0091CEF9C0F0087727A /* Project object */;
+}

@@ -1,0 +1,456 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8B43DC401D0150B100A58D80 /* PhysicsMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC3F1D0150B100A58D80 /* PhysicsMotionViewController.swift */; };
+		8B43DC421D0159BA00A58D80 /* AdditiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC411D0159BA00A58D80 /* AdditiveViewController.swift */; };
+		8B43DC441D01764900A58D80 /* DynamicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC431D01764900A58D80 /* DynamicViewController.swift */; };
+		8B683B041D00BE76008D43E2 /* GroupMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B031D00BE76008D43E2 /* GroupMotionViewController.swift */; };
+		8B683B061D00E386008D43E2 /* SequenceContiguousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B051D00E386008D43E2 /* SequenceContiguousViewController.swift */; };
+		8B683B081D012529008D43E2 /* SequenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B071D012529008D43E2 /* SequenceViewController.swift */; };
+		8BB379D81CFFA17E00A35AFD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379D71CFFA17E00A35AFD /* AppDelegate.swift */; };
+		8BB379DA1CFFA17E00A35AFD /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379D91CFFA17E00A35AFD /* MasterViewController.swift */; };
+		8BB379E11CFFA17E00A35AFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BB379E01CFFA17E00A35AFD /* Assets.xcassets */; };
+		8BB379E41CFFA17E00A35AFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB379E21CFFA17E00A35AFD /* LaunchScreen.storyboard */; };
+		8BB37A0B1CFFAFBA00A35AFD /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379EE1CFFAFBA00A35AFD /* MotionMachine.swift */; };
+		8BB37A0C1CFFAFBA00A35AFD /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379EF1CFFAFBA00A35AFD /* PhysicsMotion.swift */; };
+		8BB37A0D1CFFAFBA00A35AFD /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F01CFFAFBA00A35AFD /* Motion.swift */; };
+		8BB37A0E1CFFAFBA00A35AFD /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F11CFFAFBA00A35AFD /* MotionGroup.swift */; };
+		8BB37A0F1CFFAFBA00A35AFD /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F21CFFAFBA00A35AFD /* MotionSequence.swift */; };
+		8BB37A101CFFAFBA00A35AFD /* CGStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F41CFFAFBA00A35AFD /* CGStructAssistant.swift */; };
+		8BB37A111CFFAFBA00A35AFD /* CIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F51CFFAFBA00A35AFD /* CIColorAssistant.swift */; };
+		8BB37A121CFFAFBA00A35AFD /* UIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F61CFFAFBA00A35AFD /* UIColorAssistant.swift */; };
+		8BB37A131CFFAFBA00A35AFD /* UIKitStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F71CFFAFBA00A35AFD /* UIKitStructAssistant.swift */; };
+		8BB37A141CFFAFBA00A35AFD /* ValueAssistantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F81CFFAFBA00A35AFD /* ValueAssistantGroup.swift */; };
+		8BB37A151CFFAFBA00A35AFD /* MotionSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379F91CFFAFBA00A35AFD /* MotionSupport.swift */; };
+		8BB37A161CFFAFBA00A35AFD /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379FA1CFFAFBA00A35AFD /* PropertyData.swift */; };
+		8BB37A171CFFAFBA00A35AFD /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379FB1CFFAFBA00A35AFD /* PhysicsSystem.swift */; };
+		8BB37A181CFFAFBA00A35AFD /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379FD1CFFAFBA00A35AFD /* EasingBack.swift */; };
+		8BB37A191CFFAFBA00A35AFD /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379FE1CFFAFBA00A35AFD /* EasingBounce.swift */; };
+		8BB37A1A1CFFAFBA00A35AFD /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379FF1CFFAFBA00A35AFD /* EasingCircular.swift */; };
+		8BB37A1B1CFFAFBA00A35AFD /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A001CFFAFBA00A35AFD /* EasingCubic.swift */; };
+		8BB37A1C1CFFAFBA00A35AFD /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A011CFFAFBA00A35AFD /* EasingElastic.swift */; };
+		8BB37A1D1CFFAFBA00A35AFD /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A021CFFAFBA00A35AFD /* EasingExpo.swift */; };
+		8BB37A1E1CFFAFBA00A35AFD /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A031CFFAFBA00A35AFD /* EasingLinear.swift */; };
+		8BB37A1F1CFFAFBA00A35AFD /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A041CFFAFBA00A35AFD /* EasingQuadratic.swift */; };
+		8BB37A201CFFAFBA00A35AFD /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A051CFFAFBA00A35AFD /* EasingQuartic.swift */; };
+		8BB37A211CFFAFBA00A35AFD /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A061CFFAFBA00A35AFD /* EasingQuintic.swift */; };
+		8BB37A221CFFAFBA00A35AFD /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A071CFFAFBA00A35AFD /* EasingSine.swift */; };
+		8BB37A231CFFAFBA00A35AFD /* TimerTempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A081CFFAFBA00A35AFD /* TimerTempo.swift */; };
+		8BB37A241CFFAFBA00A35AFD /* CATempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A091CFFAFBA00A35AFD /* CATempo.swift */; };
+		8BB37A251CFFAFBA00A35AFD /* Tempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A0A1CFFAFBA00A35AFD /* Tempo.swift */; };
+		8BB37A281CFFB03F00A35AFD /* BasicMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A271CFFB03F00A35AFD /* BasicMotionViewController.swift */; };
+		8BB37A2C1CFFC64F00A35AFD /* ButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A2B1CFFC64F00A35AFD /* ButtonsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8B43DC3F1D0150B100A58D80 /* PhysicsMotionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsMotionViewController.swift; path = Classes/PhysicsMotionViewController.swift; sourceTree = "<group>"; };
+		8B43DC411D0159BA00A58D80 /* AdditiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdditiveViewController.swift; path = Classes/AdditiveViewController.swift; sourceTree = "<group>"; };
+		8B43DC431D01764900A58D80 /* DynamicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DynamicViewController.swift; path = Classes/DynamicViewController.swift; sourceTree = "<group>"; };
+		8B683B031D00BE76008D43E2 /* GroupMotionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupMotionViewController.swift; path = Classes/GroupMotionViewController.swift; sourceTree = "<group>"; };
+		8B683B051D00E386008D43E2 /* SequenceContiguousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SequenceContiguousViewController.swift; path = Classes/SequenceContiguousViewController.swift; sourceTree = "<group>"; };
+		8B683B071D012529008D43E2 /* SequenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SequenceViewController.swift; path = Classes/SequenceViewController.swift; sourceTree = "<group>"; };
+		8BB379D41CFFA17D00A35AFD /* MotionExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BB379D71CFFA17E00A35AFD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8BB379D91CFFA17E00A35AFD /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		8BB379E01CFFA17E00A35AFD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8BB379E31CFFA17E00A35AFD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8BB379E51CFFA17E00A35AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8BB379EE1CFFAFBA00A35AFD /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionMachine.swift; path = ../Classes/MotionMachine.swift; sourceTree = "<group>"; };
+		8BB379EF1CFFAFBA00A35AFD /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsMotion.swift; path = ../Classes/PhysicsMotion.swift; sourceTree = "<group>"; };
+		8BB379F01CFFAFBA00A35AFD /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Motion.swift; path = ../Classes/Motion.swift; sourceTree = "<group>"; };
+		8BB379F11CFFAFBA00A35AFD /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionGroup.swift; path = ../Classes/MotionGroup.swift; sourceTree = "<group>"; };
+		8BB379F21CFFAFBA00A35AFD /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSequence.swift; path = ../Classes/MotionSequence.swift; sourceTree = "<group>"; };
+		8BB379F41CFFAFBA00A35AFD /* CGStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGStructAssistant.swift; sourceTree = "<group>"; };
+		8BB379F51CFFAFBA00A35AFD /* CIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIColorAssistant.swift; sourceTree = "<group>"; };
+		8BB379F61CFFAFBA00A35AFD /* UIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorAssistant.swift; sourceTree = "<group>"; };
+		8BB379F71CFFAFBA00A35AFD /* UIKitStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitStructAssistant.swift; sourceTree = "<group>"; };
+		8BB379F81CFFAFBA00A35AFD /* ValueAssistantGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueAssistantGroup.swift; sourceTree = "<group>"; };
+		8BB379F91CFFAFBA00A35AFD /* MotionSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSupport.swift; path = ../Classes/MotionSupport.swift; sourceTree = "<group>"; };
+		8BB379FA1CFFAFBA00A35AFD /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyData.swift; path = ../Classes/PropertyData.swift; sourceTree = "<group>"; };
+		8BB379FB1CFFAFBA00A35AFD /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsSystem.swift; path = ../Classes/PhysicsSystem.swift; sourceTree = "<group>"; };
+		8BB379FD1CFFAFBA00A35AFD /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
+		8BB379FE1CFFAFBA00A35AFD /* EasingBounce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBounce.swift; sourceTree = "<group>"; };
+		8BB379FF1CFFAFBA00A35AFD /* EasingCircular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCircular.swift; sourceTree = "<group>"; };
+		8BB37A001CFFAFBA00A35AFD /* EasingCubic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCubic.swift; sourceTree = "<group>"; };
+		8BB37A011CFFAFBA00A35AFD /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
+		8BB37A021CFFAFBA00A35AFD /* EasingExpo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingExpo.swift; sourceTree = "<group>"; };
+		8BB37A031CFFAFBA00A35AFD /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
+		8BB37A041CFFAFBA00A35AFD /* EasingQuadratic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuadratic.swift; sourceTree = "<group>"; };
+		8BB37A051CFFAFBA00A35AFD /* EasingQuartic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuartic.swift; sourceTree = "<group>"; };
+		8BB37A061CFFAFBA00A35AFD /* EasingQuintic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuintic.swift; sourceTree = "<group>"; };
+		8BB37A071CFFAFBA00A35AFD /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
+		8BB37A081CFFAFBA00A35AFD /* TimerTempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimerTempo.swift; path = ../Classes/TimerTempo.swift; sourceTree = "<group>"; };
+		8BB37A091CFFAFBA00A35AFD /* CATempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CATempo.swift; path = ../Classes/CATempo.swift; sourceTree = "<group>"; };
+		8BB37A0A1CFFAFBA00A35AFD /* Tempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tempo.swift; path = ../Classes/Tempo.swift; sourceTree = "<group>"; };
+		8BB37A271CFFB03F00A35AFD /* BasicMotionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BasicMotionViewController.swift; path = Classes/BasicMotionViewController.swift; sourceTree = "<group>"; };
+		8BB37A2B1CFFC64F00A35AFD /* ButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8BB379D11CFFA17D00A35AFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8BB379CB1CFFA17D00A35AFD = {
+			isa = PBXGroup;
+			children = (
+				8BB379ED1CFFAF9C00A35AFD /* MotionMachine */,
+				8BB379D61CFFA17E00A35AFD /* MotionExamples */,
+				8BB379D51CFFA17D00A35AFD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8BB379D51CFFA17D00A35AFD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8BB379D41CFFA17D00A35AFD /* MotionExamples.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8BB379D61CFFA17E00A35AFD /* MotionExamples */ = {
+			isa = PBXGroup;
+			children = (
+				8BB37A261CFFAFEE00A35AFD /* Example VCs */,
+				8BB379D71CFFA17E00A35AFD /* AppDelegate.swift */,
+				8BB379D91CFFA17E00A35AFD /* MasterViewController.swift */,
+				8BB379E01CFFA17E00A35AFD /* Assets.xcassets */,
+				8BB379E21CFFA17E00A35AFD /* LaunchScreen.storyboard */,
+				8BB379E51CFFA17E00A35AFD /* Info.plist */,
+				8BB37A2B1CFFC64F00A35AFD /* ButtonsView.swift */,
+			);
+			path = MotionExamples;
+			sourceTree = "<group>";
+		};
+		8BB379ED1CFFAF9C00A35AFD /* MotionMachine */ = {
+			isa = PBXGroup;
+			children = (
+				8BB379EE1CFFAFBA00A35AFD /* MotionMachine.swift */,
+				8BB379EF1CFFAFBA00A35AFD /* PhysicsMotion.swift */,
+				8BB379F01CFFAFBA00A35AFD /* Motion.swift */,
+				8BB379F11CFFAFBA00A35AFD /* MotionGroup.swift */,
+				8BB379F21CFFAFBA00A35AFD /* MotionSequence.swift */,
+				8BB379F31CFFAFBA00A35AFD /* ValueAssistants */,
+				8BB379F91CFFAFBA00A35AFD /* MotionSupport.swift */,
+				8BB379FA1CFFAFBA00A35AFD /* PropertyData.swift */,
+				8BB379FB1CFFAFBA00A35AFD /* PhysicsSystem.swift */,
+				8BB379FC1CFFAFBA00A35AFD /* EasingTypes */,
+				8BB37A081CFFAFBA00A35AFD /* TimerTempo.swift */,
+				8BB37A091CFFAFBA00A35AFD /* CATempo.swift */,
+				8BB37A0A1CFFAFBA00A35AFD /* Tempo.swift */,
+			);
+			name = MotionMachine;
+			sourceTree = "<group>";
+		};
+		8BB379F31CFFAFBA00A35AFD /* ValueAssistants */ = {
+			isa = PBXGroup;
+			children = (
+				8BB379F41CFFAFBA00A35AFD /* CGStructAssistant.swift */,
+				8BB379F51CFFAFBA00A35AFD /* CIColorAssistant.swift */,
+				8BB379F61CFFAFBA00A35AFD /* UIColorAssistant.swift */,
+				8BB379F71CFFAFBA00A35AFD /* UIKitStructAssistant.swift */,
+				8BB379F81CFFAFBA00A35AFD /* ValueAssistantGroup.swift */,
+			);
+			name = ValueAssistants;
+			path = ../Classes/ValueAssistants;
+			sourceTree = "<group>";
+		};
+		8BB379FC1CFFAFBA00A35AFD /* EasingTypes */ = {
+			isa = PBXGroup;
+			children = (
+				8BB379FD1CFFAFBA00A35AFD /* EasingBack.swift */,
+				8BB379FE1CFFAFBA00A35AFD /* EasingBounce.swift */,
+				8BB379FF1CFFAFBA00A35AFD /* EasingCircular.swift */,
+				8BB37A001CFFAFBA00A35AFD /* EasingCubic.swift */,
+				8BB37A011CFFAFBA00A35AFD /* EasingElastic.swift */,
+				8BB37A021CFFAFBA00A35AFD /* EasingExpo.swift */,
+				8BB37A031CFFAFBA00A35AFD /* EasingLinear.swift */,
+				8BB37A041CFFAFBA00A35AFD /* EasingQuadratic.swift */,
+				8BB37A051CFFAFBA00A35AFD /* EasingQuartic.swift */,
+				8BB37A061CFFAFBA00A35AFD /* EasingQuintic.swift */,
+				8BB37A071CFFAFBA00A35AFD /* EasingSine.swift */,
+			);
+			name = EasingTypes;
+			path = ../Classes/EasingTypes;
+			sourceTree = "<group>";
+		};
+		8BB37A261CFFAFEE00A35AFD /* Example VCs */ = {
+			isa = PBXGroup;
+			children = (
+				8BB37A271CFFB03F00A35AFD /* BasicMotionViewController.swift */,
+				8B683B031D00BE76008D43E2 /* GroupMotionViewController.swift */,
+				8B683B051D00E386008D43E2 /* SequenceContiguousViewController.swift */,
+				8B683B071D012529008D43E2 /* SequenceViewController.swift */,
+				8B43DC3F1D0150B100A58D80 /* PhysicsMotionViewController.swift */,
+				8B43DC411D0159BA00A58D80 /* AdditiveViewController.swift */,
+				8B43DC431D01764900A58D80 /* DynamicViewController.swift */,
+			);
+			name = "Example VCs";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8BB379D31CFFA17D00A35AFD /* MotionExamples */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BB379E81CFFA17E00A35AFD /* Build configuration list for PBXNativeTarget "MotionExamples" */;
+			buildPhases = (
+				8BB379D01CFFA17D00A35AFD /* Sources */,
+				8BB379D11CFFA17D00A35AFD /* Frameworks */,
+				8BB379D21CFFA17D00A35AFD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MotionExamples;
+			productName = MotionExamples;
+			productReference = 8BB379D41CFFA17D00A35AFD /* MotionExamples.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8BB379CC1CFFA17D00A35AFD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Poet & Mountain, LLC";
+				TargetAttributes = {
+					8BB379D31CFFA17D00A35AFD = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 8BB379CF1CFFA17D00A35AFD /* Build configuration list for PBXProject "MotionExamples" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8BB379CB1CFFA17D00A35AFD;
+			productRefGroup = 8BB379D51CFFA17D00A35AFD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8BB379D31CFFA17D00A35AFD /* MotionExamples */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8BB379D21CFFA17D00A35AFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BB379E41CFFA17E00A35AFD /* LaunchScreen.storyboard in Resources */,
+				8BB379E11CFFA17E00A35AFD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8BB379D01CFFA17D00A35AFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B43DC421D0159BA00A58D80 /* AdditiveViewController.swift in Sources */,
+				8BB37A181CFFAFBA00A35AFD /* EasingBack.swift in Sources */,
+				8BB37A151CFFAFBA00A35AFD /* MotionSupport.swift in Sources */,
+				8B43DC401D0150B100A58D80 /* PhysicsMotionViewController.swift in Sources */,
+				8B43DC441D01764900A58D80 /* DynamicViewController.swift in Sources */,
+				8BB37A111CFFAFBA00A35AFD /* CIColorAssistant.swift in Sources */,
+				8BB37A101CFFAFBA00A35AFD /* CGStructAssistant.swift in Sources */,
+				8BB37A2C1CFFC64F00A35AFD /* ButtonsView.swift in Sources */,
+				8BB379DA1CFFA17E00A35AFD /* MasterViewController.swift in Sources */,
+				8BB37A281CFFB03F00A35AFD /* BasicMotionViewController.swift in Sources */,
+				8B683B081D012529008D43E2 /* SequenceViewController.swift in Sources */,
+				8BB37A251CFFAFBA00A35AFD /* Tempo.swift in Sources */,
+				8BB37A131CFFAFBA00A35AFD /* UIKitStructAssistant.swift in Sources */,
+				8BB37A1D1CFFAFBA00A35AFD /* EasingExpo.swift in Sources */,
+				8BB37A221CFFAFBA00A35AFD /* EasingSine.swift in Sources */,
+				8B683B061D00E386008D43E2 /* SequenceContiguousViewController.swift in Sources */,
+				8BB37A1C1CFFAFBA00A35AFD /* EasingElastic.swift in Sources */,
+				8BB37A141CFFAFBA00A35AFD /* ValueAssistantGroup.swift in Sources */,
+				8BB37A1B1CFFAFBA00A35AFD /* EasingCubic.swift in Sources */,
+				8BB37A231CFFAFBA00A35AFD /* TimerTempo.swift in Sources */,
+				8BB37A0C1CFFAFBA00A35AFD /* PhysicsMotion.swift in Sources */,
+				8BB37A241CFFAFBA00A35AFD /* CATempo.swift in Sources */,
+				8BB37A0B1CFFAFBA00A35AFD /* MotionMachine.swift in Sources */,
+				8BB37A191CFFAFBA00A35AFD /* EasingBounce.swift in Sources */,
+				8BB37A1E1CFFAFBA00A35AFD /* EasingLinear.swift in Sources */,
+				8BB37A201CFFAFBA00A35AFD /* EasingQuartic.swift in Sources */,
+				8BB37A0D1CFFAFBA00A35AFD /* Motion.swift in Sources */,
+				8BB37A121CFFAFBA00A35AFD /* UIColorAssistant.swift in Sources */,
+				8BB37A161CFFAFBA00A35AFD /* PropertyData.swift in Sources */,
+				8BB37A1A1CFFAFBA00A35AFD /* EasingCircular.swift in Sources */,
+				8BB37A211CFFAFBA00A35AFD /* EasingQuintic.swift in Sources */,
+				8BB379D81CFFA17E00A35AFD /* AppDelegate.swift in Sources */,
+				8BB37A0E1CFFAFBA00A35AFD /* MotionGroup.swift in Sources */,
+				8B683B041D00BE76008D43E2 /* GroupMotionViewController.swift in Sources */,
+				8BB37A0F1CFFAFBA00A35AFD /* MotionSequence.swift in Sources */,
+				8BB37A1F1CFFAFBA00A35AFD /* EasingQuadratic.swift in Sources */,
+				8BB37A171CFFAFBA00A35AFD /* PhysicsSystem.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		8BB379E21CFFA17E00A35AFD /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8BB379E31CFFA17E00A35AFD /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8BB379E61CFFA17E00A35AFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8BB379E71CFFA17E00A35AFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8BB379E91CFFA17E00A35AFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MotionExamples/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionExamples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8BB379EA1CFFA17E00A35AFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = MotionExamples/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionExamples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8BB379CF1CFFA17D00A35AFD /* Build configuration list for PBXProject "MotionExamples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BB379E61CFFA17E00A35AFD /* Debug */,
+				8BB379E71CFFA17E00A35AFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BB379E81CFFA17E00A35AFD /* Build configuration list for PBXNativeTarget "MotionExamples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BB379E91CFFA17E00A35AFD /* Debug */,
+				8BB379EA1CFFA17E00A35AFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8BB379CC1CFFA17D00A35AFD /* Project object */;
+}
