@@ -83,7 +83,7 @@ All of the included motion classes in MotionMachine adopt the `Moveable` protoco
 
 ## Getting Started
 
-**Get started with the [Moveable Classes guide](MoveableClasses.md)**, which explains all of the basic motion classes in MotionMachine.
+**Get started with the [Moveable Classes guide](Guides/MoveableClasses.md)**, which explains all of the basic motion classes in MotionMachine.
 
 Also see the [Examples project](Examples) to see all the MotionMachine classes in action.
 
