@@ -15,6 +15,7 @@ MotionMachine provides a modular, generic platform for manipulating values. Its 
 * Includes both static and physics-based motion classes, and both support additive animation.
 * Powerfully modular – most aspects can be customized or outright replaced to fit your specific needs.
 * Provides status callback closures for many types of motion events.
+* Fully tested
 
 #### Example
 ![MotionGroup animation](Guides/group.gif)
