@@ -112,6 +112,7 @@ Or add the Classes directory to your project.
 
 MotionMachine currently requires:
 * Swift 2.2
+  - _See the swift2.3 branch for Swift 2.3 support. Be aware that there's a serious Xcode 8b1 Simulator bug that severely impacts MotionMachine usage. For now, please use a device to test with Swift 2.3._
 * Xcode 7.3 or later
 * iOS 8.0 or later, tvOS 9.0 or later
 
