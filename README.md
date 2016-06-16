@@ -11,11 +11,14 @@ MotionMachine is a powerful yet elegant animation library for Swift. It offers s
 
 MotionMachine provides a modular, generic platform for manipulating values. Its animation engine was built from the ground up to support not just UIKit values, but property values of any class you want to manipulate. MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them.
 
+* Animation engine built from the ground up (not tied to Core Animation).
 * Motions can be grouped, sequenced, and nested in any arrangement.
+* Animate properties of UIKit or any generic classes.
 * Includes both static and physics-based motion classes, and both support additive animation.
 * Powerfully modular – most aspects can be customized or outright replaced to fit your specific needs.
 * Provides status callback closures for many types of motion events.
 * Fully tested
+* Fully [documented](https://poetmountain.github.io/MotionMachine/)
 
 #### Example
 ![MotionGroup animation](Guides/group.gif)
@@ -57,7 +60,7 @@ All of the included motion classes in MotionMachine adopt the `Moveable` protoco
 `Motion` uses a keypath (i.e. "frame.origin.x") to target specific properties of an object and transform their values over a period of time via an easing equation.
 
 ```
-[Motion] --------------------> |
+[Motion] --------------> |
 ```
 
 ##### MotionGroup
@@ -84,7 +87,7 @@ All of the included motion classes in MotionMachine adopt the `Moveable` protoco
 
 ##### Get started with the **[Motion Classes guide](Guides/MoveableClasses.md)** for detailed explanations and examples.
 
-Also check out the [Examples project](Examples) to see all the MotionMachine classes in action.
+Also check out the [Examples project](Examples) to see all the MotionMachine classes in action, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
 
 
 ## Installation
@@ -109,18 +112,18 @@ Or add the Classes directory to your project.
 
 MotionMachine currently requires:
 * Swift 2.2
-* Xcode 7.3
+* Xcode 7.3 or later
 * iOS 8.0 or later, tvOS 9.0 or later
 
 #### Caveats
 
-[•] MotionMachine uses Key-Value Coding (KVC) to introspect objects and retrieve and set their property values using keypaths. Because Swift currently offers no native ability in this regard, objects whose properties should be modified by MotionMachine must inherit from `NSObject`. If and when more dynamism is added to Swift (and the author of this library hopes that is the case), MotionMachine will hopefully be able to do away with this restriction.
+* MotionMachine uses Key-Value Coding (KVC) to introspect objects and retrieve and set their property values using keypaths. Because Swift currently offers no native ability in this regard, objects whose properties should be modified by MotionMachine must inherit from `NSObject`. If and when more dynamism is added to Swift (and the author of this library hopes that is the case), MotionMachine will hopefully be able to do away with this restriction.
 
-[•] Because native Swift structs cannot inherit from `NSObject`, Swift structs unfortunately cannot be used with MotionMachine at this time.
+* Because native Swift structs cannot inherit from `NSObject`, Swift structs unfortunately cannot be used with MotionMachine at this time.
 
-[•] The KVC provided by `NSObject` is not able to evaluate Optional values. Properties you wish to modify with MotionMachine must not be Optionals.
+* The KVC provided by `NSObject` is not able to evaluate Optional values. Properties you wish to modify with MotionMachine must not be Optionals.
 
-[•] Swift on Linux is not currently supported due to the lack of Foundation and Core Graphics frameworks on that platform.
+* Swift on Linux is not currently supported due to the lack of Foundation and Core Graphics frameworks on that platform.
 
 ## Credits
 
