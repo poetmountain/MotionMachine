@@ -47,7 +47,7 @@ public protocol PhysicsSolving {
      *
      *  - returns: An array of updated positions in the same order as the array passed in.
      */
-    func solve(forPositions positions: [Double], timestamp: NSTimeInterval) -> [Double]
+    func solve(forPositions positions: [Double], timestamp: TimeInterval) -> [Double]
     
     /**
      *  This method should reset the physics system to its initial velocity and clear the timestamp used to calculate the current step.
@@ -112,7 +112,7 @@ public class PhysicsSystem: PhysicsSolving {
     }
     private var _friction: Double = 0.0
     
-    public var timestamp: NSTimeInterval = 0.0
+    public var timestamp: TimeInterval = 0.0
     
     // MARK: Private properties
     
@@ -120,7 +120,7 @@ public class PhysicsSystem: PhysicsSolving {
     private var initialVelocity: Double = 0.0
 
     /// The last timestamp sent via the `solve` method.
-    private var lastTimestamp: NSTimeInterval = 0.0
+    private var lastTimestamp: TimeInterval = 0.0
     
     /// Boolean value representing whether the physics system is currently paused.
     private var paused: Bool = false
@@ -148,7 +148,7 @@ public class PhysicsSystem: PhysicsSolving {
     
     // MARK: PhysicsSolving methods
     
-    public func solve(forPositions positions: [Double], timestamp: NSTimeInterval) -> [Double] {
+    public func solve(forPositions positions: [Double], timestamp: TimeInterval) -> [Double] {
         var time_delta = timestamp - lastTimestamp
         
         time_delta = max(0.0, time_delta)

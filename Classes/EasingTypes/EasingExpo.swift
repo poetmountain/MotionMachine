@@ -33,7 +33,7 @@ public struct EasingExpo {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value = (elapsedTime == 0) ? startValue : valueRange * pow(2, 10 * (elapsedTime/duration - 1)) + startValue
             
             return easing_value
@@ -44,7 +44,7 @@ public struct EasingExpo {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value = (elapsedTime == duration) ? startValue+valueRange : valueRange * (-pow(2, -10 * elapsedTime/duration) + 1) + startValue
             
             return easing_value
@@ -55,7 +55,7 @@ public struct EasingExpo {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var easing_value = 0.0
             var time = elapsedTime
             

@@ -100,7 +100,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - warning: Setting this parameter after a motion operation has begun has no effect.
      */
-    public var delay: NSTimeInterval = 0.0
+    public var delay: TimeInterval = 0.0
     
     /**
      *  A Boolean which determines whether the group's motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
@@ -162,9 +162,9 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .Forward) {
+            if (reversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .Reverse) {
+            } else if (reversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -268,18 +268,18 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  - note: While including this property in custom classes which implement the `MoveableCollection` protocol is required, implementation of behavior based on the property's value is optional.
      *  - remark: The default value is `Sequential`. Please see the documentation for `CollectionReversingMode` for more information on these modes.
      */
-    public var reversingMode: CollectionReversingMode = .Sequential {
+    public var reversingMode: CollectionReversingMode = .sequential {
         didSet {
-            if (reversingMode == .Contiguous && reversing) {
+            if (reversingMode == .contiguous && reversing) {
                 for motion in motions {
                     motion.reversing = true
                     if var collection = motion as? MoveableCollection {
                         // by default, setting a .Contiguous reversingMode will cascade down to sub-collections
                         // since usually a user would expect a contiguous movement from each sub-motion when setting this value
-                        collection.reversingMode = .Contiguous
+                        collection.reversingMode = .contiguous
                     }
                 }
-            } else if (reversingMode == .Sequential && reversing) {
+            } else if (reversingMode == .sequential && reversing) {
                 for motion in motions {
                     motion.reversing = false
                 }
@@ -312,7 +312,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _tempo?.delegate = self
             
              // tell motions conforming to the `TempoDriven` protocol that don't want their tempo used to stop their tempo updates
-            for (index, motion) in motions.enumerate() {
+            for (index, motion) in motions.enumerated() {
                 if let driven = motion as? TempoDriven {
                     if (index < tempoOverrides.count) {
                         let should_override = tempoOverrides[index]
@@ -337,7 +337,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: start
      */
-    public func started(closure: GroupStarted) -> Self {
+    public func started(_ closure: GroupStarted) -> Self {
         _started = closure
         
         return self
@@ -349,7 +349,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: stop
      */
-    public func stopped(closure: GroupStopped) -> Self {
+    public func stopped(_ closure: GroupStopped) -> Self {
         _stopped = closure
         
         return self
@@ -361,7 +361,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(closure: GroupUpdated) -> Self {
+    public func updated(_ closure: GroupUpdated) -> Self {
         _updated = closure
         
         return self
@@ -373,7 +373,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(closure: GroupRepeated) -> Self {
+    public func cycleRepeated(_ closure: GroupRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -385,7 +385,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(closure: GroupReversed) -> Self {
+    public func reversed(_ closure: GroupReversed) -> Self {
         _reversed = closure
         
         return self
@@ -397,7 +397,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: pause
      */
-    public func paused(closure: GroupPaused) -> Self {
+    public func paused(_ closure: GroupPaused) -> Self {
         _paused = closure
         
         return self
@@ -409,7 +409,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: resume
      */
-    public func resumed(closure: GroupResumed) -> Self {
+    public func resumed(_ closure: GroupResumed) -> Self {
         _resumed = closure
         
         return self
@@ -420,7 +420,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
      *
      */
-    public func completed(closure: GroupCompleted) -> Self {
+    public func completed(_ closure: GroupCompleted) -> Self {
         _completed = closure
         
         return self
@@ -431,16 +431,16 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     // MARK: - Private Properties
     
     /// The starting time of the group's current motion operation. A value of 0 means that no motion is currently in progress.
-    private var startTime: NSTimeInterval = 0.0
+    private var startTime: TimeInterval = 0.0
     
     /// The most recent update timestamp, as sent by the `update` method.
-    private var currentTime: NSTimeInterval = 0.0
+    private var currentTime: TimeInterval = 0.0
     
     /// The ending time of the delay, which is determined by adding the delay to the starting time.
-    private var endTime: NSTimeInterval = 0.0
+    private var endTime: TimeInterval = 0.0
     
     /// Timestamp when the `pause` method is called, to track amount of time paused.
-    private var pauseTimestamp: NSTimeInterval = 0.0
+    private var pauseTimestamp: TimeInterval = 0.0
     
     
     /**
@@ -474,8 +474,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         repeating = options!.contains(.Repeat)
         _reversing = options!.contains(.Reverse)
         
-        motionState = .Stopped
-        motionDirection = .Forward
+        motionState = .stopped
+        motionDirection = .forward
         
         for motion: Moveable in motions {
             add(motion)
@@ -508,7 +508,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *      - A NSInternalInconsistencyException will be raised if the provided object does not adopt the `Moveable` protocol.
      *      - This method should not be called after a MotionGroup has started moving.
      */
-    public func add(motion: Moveable, useChildTempo: Bool = false) -> Self {
+    @discardableResult public func add(_ motion: Moveable, useChildTempo: Bool = false) -> Self {
         
         if (reversing) { motion.reversing = true }
         
@@ -538,7 +538,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *      - This method should not be called after a MotionGroup has started moving.
      *
      */
-    public func add(motions: [Moveable]) -> Self {
+    @discardableResult public func add(_ motions: [Moveable]) -> Self {
     
         for motion in motions {
             add(motion)
@@ -552,16 +552,16 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - parameter motion: The motion object to remove.
      */
-    public func remove(motion: Moveable) {
+    public func remove(_ motion: Moveable) {
         
         // first grab the index of the object in the motions array so we can remove the corresponding tempoOverrides value
-        let index = motions.indexOf {
+        let index = motions.index {
             $0 == motion
         }
         if let motion_index = index {
             motion.updateDelegate = nil
-            motions.removeAtIndex(motion_index)
-            tempoOverrides.removeAtIndex(motion_index)
+            motions.remove(at: motion_index)
+            tempoOverrides.remove(at: motion_index)
         }
         
     }
@@ -573,7 +573,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  - parameter amount: The number of seconds to wait.
      *  - returns: A reference to this MotionGroup instance, for the purpose of chaining multiple calls to this method.
      */
-    public func afterDelay(amount: NSTimeInterval) -> MotionGroup {
+    @discardableResult public func afterDelay(_ amount: TimeInterval) -> MotionGroup {
         
         delay = amount
         
@@ -591,7 +591,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  - returns: A reference to this MotionGroup instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: repeatCycles, repeating
      */
-    public func repeats(numberOfCycles: UInt = REPEAT_INFINITE) -> MotionGroup {
+    @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> MotionGroup {
         
         repeatCycles = numberOfCycles
         repeating = true
@@ -610,7 +610,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  - returns: A reference to this MotionGroup instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: reversing, syncMotionsWhenReversing
      */
-    public func reverses(syncsChildMotions syncMotions: Bool) -> MotionGroup {
+    @discardableResult public func reverses(syncsChildMotions syncMotions: Bool) -> MotionGroup {
         
         reversing = true
         syncMotionsWhenReversing = syncMotions
@@ -628,7 +628,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /// Starts the group's next repeat cycle, if there is one.
     private func nextRepeatCycle() {
         
-        motionDirection = .Forward
+        motionDirection = .forward
         cyclesCompletedCount += 1
         if (repeatCycles == 0 || cyclesCompletedCount - 1 < repeatCycles) {
             motionsCompletedCount = 0
@@ -640,7 +640,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _cycleRepeated?(group: weak_self!)
             
             // send repeat status update
-            sendStatusUpdate(.Repeated)
+            sendStatusUpdate(.repeated)
             
             // restart motions of children for another cycle
             for motion in motions {
@@ -656,7 +656,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /// Called when all `Moveable` objects in the group have completed their motion operations.
     private func groupCompleted() {
         
-        motionState = .Stopped
+        motionState = .stopped
         motionProgress = 1.0
         _cycleProgress = 1.0
         if (!repeating) { cyclesCompletedCount += 1 }
@@ -669,7 +669,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         _completed?(group: weak_self!)
         
         // send completion status update
-        sendStatusUpdate(.Completed)
+        sendStatusUpdate(.completed)
         
     }
     
@@ -677,18 +677,18 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /// Reverses the direction of the motion.
     private func reverseMotionDirection() {
         
-        if (motionDirection == .Forward) {
-            motionDirection = .Reverse
+        if (motionDirection == .forward) {
+            motionDirection = .reverse
             
-        } else if (motionDirection == .Reverse) {
-            motionDirection = .Forward
+        } else if (motionDirection == .reverse) {
+            motionDirection = .forward
         }
         
         motionsReversedCount = 0
         
         // resume any paused motions
         for motion in motions {
-            if (motion.motionState == .Paused) {
+            if (motion.motionState == .paused) {
                 motion.resume()
             }
         }
@@ -700,11 +700,11 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
-        if (motionDirection == .Reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
-            sendStatusUpdate(.HalfCompleted)
+        if (motionDirection == .reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
+            sendStatusUpdate(.halfCompleted)
             
         } else {
-            sendStatusUpdate(.Reversed)
+            sendStatusUpdate(.reversed)
         }
 
     }
@@ -716,7 +716,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - parameter status: The `MoveableStatus` enum value to send to the delegate.
      */
-    private func sendStatusUpdate(status: MoveableStatus) {
+    private func sendStatusUpdate(_ status: MoveableStatus) {
         
         weak var weak_self = self
         updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
@@ -746,11 +746,11 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     // MARK: - Moveable protocol methods
     
-    public func update(withTimeInterval currentTime: NSTimeInterval) {
+    public func update(withTimeInterval currentTime: TimeInterval) {
         
         self.currentTime = currentTime
-        if (motionState == .Moving) {
-            for (index, motion) in motions.enumerate() {
+        if (motionState == .moving) {
+            for (index, motion) in motions.enumerated() {
                 if (index < tempoOverrides.count) {
                     // only call tempo update on motions that were not specified to override
                     let should_override = tempoOverrides[index]
@@ -764,13 +764,13 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             calculateProgress()
             
             // call update closure, but only if this group is still moving
-            if (motionState == .Moving) {
+            if (motionState == .moving) {
                 weak var weak_self = self
                 _updated?(group: weak_self!)
             }
 
             
-        } else if (motionState == .Delayed) {
+        } else if (motionState == .delayed) {
             
             if (startTime == 0.0) {
                 // a start time of 0 means we need to initialize the motion times
@@ -780,7 +780,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             if (self.currentTime >= endTime) {
                 // delay is done, time to move
-                motionState = .Moving
+                motionState = .moving
                 
                 for motion in motions {
                     motion.start()
@@ -791,7 +791,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                 _started?(group: weak_self!)
                 
                 // send start status update
-                sendStatusUpdate(.Started)
+                sendStatusUpdate(.started)
             }
         }
     }
@@ -799,10 +799,10 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     public func start() -> Self {
         
-        if (motionState == .Stopped) {
+        if (motionState == .stopped) {
             reset()
             if (delay == 0.0) {
-                motionState = .Moving
+                motionState = .moving
                 for motion in motions {
                     motion.start()
                 }
@@ -812,10 +812,10 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                 _started?(group: weak_self!)
                 
                 // send start status update
-                sendStatusUpdate(.Started)
+                sendStatusUpdate(.started)
             
             } else {
-                motionState = .Delayed
+                motionState = .delayed
             }
         }
         
@@ -825,8 +825,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     public func stop() {
         
-        if (motionState == .Moving || motionState == .Paused || motionState == .Delayed) {
-            motionState = .Stopped
+        if (motionState == .moving || motionState == .paused || motionState == .delayed) {
+            motionState = .stopped
             _motionProgress = 0.0
             _cycleProgress = 0.0
             
@@ -839,15 +839,15 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _stopped?(group: weak_self!)
             
             // send stop status update
-            sendStatusUpdate(.Stopped)
+            sendStatusUpdate(.stopped)
         }
     }
     
     
     public func pause() {
         
-        if (motionState == .Moving) {
-            motionState = .Paused
+        if (motionState == .moving) {
+            motionState = .paused
             
             for motion in motions {
                 motion.pause()
@@ -858,7 +858,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _paused?(group: weak_self!)
             
             // send pause status update
-            sendStatusUpdate(.Paused)
+            sendStatusUpdate(.paused)
         }
         
     }
@@ -866,8 +866,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     public func resume() {
         
-        if (motionState == .Paused) {
-            motionState = .Moving
+        if (motionState == .paused) {
+            motionState = .moving
 
             for motion in motions {
                 motion.resume()
@@ -878,17 +878,17 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _resumed?(group: weak_self!)
             
             // send resume status update
-            sendStatusUpdate(.Resumed)
+            sendStatusUpdate(.resumed)
         }
     }
     
     
     /// Resets the group and all child motions to its initial state.
     public func reset() {
-        motionState = .Stopped
+        motionState = .stopped
         motionsCompletedCount = 0
         cyclesCompletedCount = 0
-        motionDirection = .Forward
+        motionDirection = .forward
         motionsReversedCount = 0
         _motionProgress = 0.0
         _cycleProgress = 0.0
@@ -909,8 +909,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     public func motionStatusUpdated(forMotion motion: Moveable, updateType status: MoveableStatus) {
         
         switch status {
-        case .HalfCompleted:
-            if (reversing && motionDirection == .Forward) {
+        case .halfCompleted:
+            if (reversing && motionDirection == .forward) {
                 motionsReversedCount += 1
 
                 if (syncMotionsWhenReversing && motionsReversedCount >= motions.count) {
@@ -921,12 +921,12 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                     motion.pause()
                 }
                 
-                if (!syncMotionsWhenReversing && motionDirection == .Forward && (Double(motionsReversedCount) / Double(motions.count) >= 0.5)) {
+                if (!syncMotionsWhenReversing && motionDirection == .forward && (Double(motionsReversedCount) / Double(motions.count) >= 0.5)) {
                     reverseMotionDirection()
                 }
 
             }
-        case .Completed:
+        case .completed:
             motionsCompletedCount += 1
             if (motionsCompletedCount >= motions.count) {
                 if (repeating) {
@@ -953,7 +953,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     // MARK: - TempoDelegate methods
     
-    public func tempoBeatUpdate(timestamp: NSTimeInterval) {
+    public func tempoBeatUpdate(_ timestamp: TimeInterval) {
         update(withTimeInterval: timestamp)
         
     }

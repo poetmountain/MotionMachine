@@ -49,25 +49,25 @@ public class CGStructAssistant : ValueAssistant {
     public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) throws -> [PropertyData] {
         var properties: [PropertyData] = []
 
-        guard let value = object as? NSValue else { throw ValueAssistantError.TypeRequirement("NSValue") }
+        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
 
         let value_type = CGStructAssistant.determineType(forValue: value)
         
         switch value_type {
-        case .Number:
+        case .number:
             let number = value as! NSNumber
             let property = PropertyData(path, number.doubleValue)
             properties.append(property)
             
-        case .Point:
+        case .point:
             var base_path: String = path + "."
             var org_x: Double?
             var org_y: Double?
 
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .Point) {
-                    let org_pt = unwrapped_nsvalue.CGPointValue()
+                if (type == .point) {
+                    let org_pt = unwrapped_nsvalue.cgPointValue()
                     org_x = Double(org_pt.x)
                     org_y = Double(org_pt.y)
                 }
@@ -80,7 +80,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             #endif
             
-            let pt = value.CGPointValue()
+            let pt = value.cgPointValue()
             
             if let unwrapped_x = org_x {
                 if (Double(pt.x) !≈ unwrapped_x) {
@@ -99,7 +99,7 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-        case .Size:
+        case .size:
             var base_path: String = path + "."
             var org_w: Double?
             var org_h: Double?
@@ -113,13 +113,13 @@ public class CGStructAssistant : ValueAssistant {
             #endif
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .Size) {
-                    let org_size = unwrapped_nsvalue.CGSizeValue()
+                if (type == .size) {
+                    let org_size = unwrapped_nsvalue.cgSizeValue()
                     org_w = Double(org_size.width)
                     org_h = Double(org_size.height)
                 }
             }
-            let size = value.CGSizeValue()
+            let size = value.cgSizeValue()
             if let unwrapped_w = org_w {
                 if (Double(size.width) !≈ unwrapped_w) {
                     var prop_w = PropertyData("width", Double(size.width))
@@ -138,28 +138,28 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             
-        case .Rect:
+        case .rect:
             var base_path: String = path + "."
             #if os(iOS) || os(tvOS)
             if (target is UIView && path == "") {
                 base_path = "frame."
             }
             #endif
-            let rect = value.CGRectValue()
-            let pt_value = NSValue.init(CGPoint: rect.origin)
+            let rect = value.cgRectValue()
+            let pt_value = NSValue.init(cgPoint: rect.origin)
             var target_pt: NSValue?
             var target_size: NSValue?
             
             #if os(iOS) || os(tvOS)
             if let unwrapped_view = target as? UIView {
-                target_pt = NSValue.init(CGPoint: unwrapped_view.frame.origin)
-                target_size = NSValue.init(CGSize: unwrapped_view.frame.size)
+                target_pt = NSValue.init(cgPoint: unwrapped_view.frame.origin)
+                target_size = NSValue.init(cgSize: unwrapped_view.frame.size)
             }
             #endif
             if let unwrapped_value = target as? NSValue {
-                let target_rect = unwrapped_value.CGRectValue()
-                target_pt = NSValue.init(CGPoint: target_rect.origin)
-                target_size = NSValue.init(CGSize: target_rect.size)
+                let target_rect = unwrapped_value.cgRectValue()
+                target_pt = NSValue.init(cgPoint: target_rect.origin)
+                target_size = NSValue.init(cgSize: target_rect.size)
             }
             if let unwrapped_pt = target_pt {
                 do {
@@ -171,10 +171,10 @@ public class CGStructAssistant : ValueAssistant {
                     for index in 0 ..< pt_props.count {
                         pt_props[index].path = base_path + mid_path + pt_props[index].path
                     }
-                    properties.appendContentsOf(pt_props)
+                    properties.append(contentsOf: pt_props)
                     
-                } catch ValueAssistantError.TypeRequirement(let valueType) {
-                    ValueAssistantError.TypeRequirement(valueType).printError(fromFunction: #function)
+                } catch ValueAssistantError.typeRequirement(let valueType) {
+                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                     
                     return properties
                 }
@@ -182,7 +182,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             if let unwrapped_size = target_size {
-                let size_value = NSValue.init(CGSize: rect.size)
+                let size_value = NSValue.init(cgSize: rect.size)
                 
                 do {
                     var size_props = try generateProperties(fromObject: size_value, keyPath: "", targetObject: unwrapped_size)
@@ -193,28 +193,28 @@ public class CGStructAssistant : ValueAssistant {
                     for index in 0 ..< size_props.count {
                         size_props[index].path = base_path + mid_path + size_props[index].path
                     }
-                    properties.appendContentsOf(size_props)
+                    properties.append(contentsOf: size_props)
                     
-                } catch ValueAssistantError.TypeRequirement(let valueType) {
-                    ValueAssistantError.TypeRequirement(valueType).printError(fromFunction: #function)
+                } catch ValueAssistantError.typeRequirement(let valueType) {
+                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                     
                     return properties
                 }
 
             }
             
-        case .Vector:
+        case .vector:
             var org_dx: Double?
             var org_dy: Double?
             if (target is NSValue) {
                 let type = CGStructAssistant.determineType(forValue: target as! NSValue)
-                if (type == .Vector) {
-                    let org_vec = (target as! NSValue).CGVectorValue()
+                if (type == .vector) {
+                    let org_vec = (target as! NSValue).cgVectorValue()
                     org_dx = Double(org_vec.dx)
                     org_dy = Double(org_vec.dy)
                 }
             }
-            let vector = value.CGVectorValue()
+            let vector = value.cgVectorValue()
             if let unwrapped_dx = org_dx {
                 if (Double(vector.dx) !≈ unwrapped_dx) {
                     let prop_dx = PropertyData(path + ".dx", Double(vector.dx))
@@ -228,7 +228,7 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-        case .AffineTransform:
+        case .affineTransform:
             var oa: Double?
             var ob: Double?
             var oc: Double?
@@ -237,8 +237,8 @@ public class CGStructAssistant : ValueAssistant {
             var oty: Double?
             if let unwrapped_value = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_value)
-                if (type == .AffineTransform) {
-                    let org_t = unwrapped_value.CGAffineTransformValue()
+                if (type == .affineTransform) {
+                    let org_t = unwrapped_value.cgAffineTransform()
                     oa = Double(org_t.a)
                     ob = Double(org_t.b)
                     oc = Double(org_t.c)
@@ -249,7 +249,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             // find all transform properties
-            let transform = value.CGAffineTransformValue()
+            let transform = value.cgAffineTransform()
             let base_path = path + "."
             if let ua = oa {
                 if (Double(transform.a) !≈ ua) {
@@ -288,15 +288,15 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-        case .Transform3D:
+        case .transform3D:
             var o11: Double?, o12: Double?, o13: Double?, o14: Double?
             var o21: Double?, o22: Double?, o23: Double?, o24: Double?
             var o31: Double?, o32: Double?, o33: Double?, o34: Double?
             var o42: Double?, o43: Double?, o44: Double?
             if let unwrapped_value = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_value)
-                if (type == .Transform3D) {
-                    let org_t = unwrapped_value.CATransform3DValue
+                if (type == .transform3D) {
+                    let org_t = unwrapped_value.caTransform3DValue
                     o11 = Double(org_t.m11)
                     o12 = Double(org_t.m12)
                     o13 = Double(org_t.m13)
@@ -316,7 +316,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             let base_path = path + "."
             
-            let transform = value.CATransform3DValue
+            let transform = value.caTransform3DValue
             if let u11 = o11 {
                 let double_val = Double(transform.m11)
                 if (double_val !≈ u11) {
@@ -423,7 +423,7 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-        case .Unsupported: break
+        case .unsupported: break
             
         default: break
         }
@@ -438,34 +438,34 @@ public class CGStructAssistant : ValueAssistant {
         
         var retrieved_value: Double?
         
-        guard let value = object as? NSValue else { throw ValueAssistantError.TypeRequirement("NSValue") }
+        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
         
         if let unwrapped_number = value as? NSNumber {
             retrieved_value = unwrapped_number.doubleValue
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Point.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .Point, path: path)
+            retrieved_value = retrieveStructValue(value, type: .point, path: path)
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Size.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .Size, path: path)
+            retrieved_value = retrieveStructValue(value, type: .size, path: path)
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Rect.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .Rect, path: path)
+            retrieved_value = retrieveStructValue(value, type: .rect, path: path)
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Vector.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .Vector, path: path)
+            retrieved_value = retrieveStructValue(value, type: .vector, path: path)
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.AffineTransform.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .AffineTransform, path: path)
+            retrieved_value = retrieveStructValue(value, type: .affineTransform, path: path)
             
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Transform3D.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .Transform3D, path: path)
+            retrieved_value = retrieveStructValue(value, type: .transform3D, path: path)
             
         }
         
@@ -478,7 +478,7 @@ public class CGStructAssistant : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         // this code path will execute if the object passed in was an NSValue
         // as such we must replace the value object directly
@@ -497,7 +497,7 @@ public class CGStructAssistant : ValueAssistant {
         if let unwrapped_object = property.targetObject {
             // we have a normal object whose property is being changed
             if (unwrapped_target is Double) {
-                if let base_prop = unwrapped_object.valueForKeyPath(property.path) {
+                if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
                     var new_property_value = property.current
                     if (additive) {
                         new_property_value = newValue
@@ -507,7 +507,7 @@ public class CGStructAssistant : ValueAssistant {
                 
             } else if (unwrapped_target is NSValue) {
                 if (!property.replaceParentProperty) {
-                    if let base_prop = unwrapped_object.valueForKeyPath(property.path) {
+                    if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
                         
                         if (base_prop is NSObject) {
                             var new_property_value = property.current
@@ -523,7 +523,7 @@ public class CGStructAssistant : ValueAssistant {
                 } else {
                     // replace the top-level struct of the property we're trying to alter
                     // e.g.: key path is "frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                    if let base_prop = unwrapped_object.valueForKeyPath(property.parentKeyPath) {
+                    if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
                         var new_property_value = property.current
                         if (additive) {
                             new_property_value = newValue
@@ -572,31 +572,31 @@ public class CGStructAssistant : ValueAssistant {
                     new_value = unwrapped_number.doubleValue + new_value
                 }
                 
-                new_parent_value = NSNumber.init(double: new_value)
+                new_parent_value = NSNumber.init(value: new_value)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Point.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType())) {
                 
-                updateStruct(&value, type: .Point, newValues: newValues)
+                updateStruct(&value, type: .point, newValues: newValues)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Size.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType())) {
                 
-                updateStruct(&value, type: .Size, newValues: newValues)
+                updateStruct(&value, type: .size, newValues: newValues)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Rect.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType())) {
                 
-                updateStruct(&value, type: .Rect, newValues: newValues)
+                updateStruct(&value, type: .rect, newValues: newValues)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Vector.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType())) {
                 
-                updateStruct(&value, type: .Vector, newValues: newValues)
+                updateStruct(&value, type: .vector, newValues: newValues)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.AffineTransform.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())) {
                 
-                updateStruct(&value, type: .AffineTransform, newValues: newValues)
+                updateStruct(&value, type: .affineTransform, newValues: newValues)
                 
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Transform3D.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType())) {
                 
-                updateStruct(&value, type: .Transform3D, newValues: newValues)
+                updateStruct(&value, type: .transform3D, newValues: newValues)
                 
             }
             
@@ -609,7 +609,7 @@ public class CGStructAssistant : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         if (object is Double || object is Int || object is UInt) {
@@ -618,12 +618,12 @@ public class CGStructAssistant : ValueAssistant {
         } else if let unwrapped_value = object as? NSValue {
 
             if (unwrapped_value is NSNumber
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.Point.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.Size.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.Rect.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.Vector.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.AffineTransform.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.Transform3D.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.point.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.size.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.rect.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.vector.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.transform3D.toObjCType())
                 ) {
                 
                 is_supported = true
@@ -636,7 +636,7 @@ public class CGStructAssistant : ValueAssistant {
     }
     
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = false
 
         if (object is NSObject || object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform || object is CATransform3D) {
@@ -655,56 +655,56 @@ public class CGStructAssistant : ValueAssistant {
         let type: ValueStructTypes
         
         if (value is NSNumber) {
-            type = ValueStructTypes.Number
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Point.toObjCType()) {
-            type = ValueStructTypes.Point
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Size.toObjCType()) {
-            type = ValueStructTypes.Size
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Rect.toObjCType()) {
-            type = ValueStructTypes.Rect
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Vector.toObjCType()) {
-            type = ValueStructTypes.Vector
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.AffineTransform.toObjCType()) {
-            type = ValueStructTypes.AffineTransform
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.Transform3D.toObjCType()) {
-            type = ValueStructTypes.Transform3D
+            type = ValueStructTypes.number
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType()) {
+            type = ValueStructTypes.point
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType()) {
+            type = ValueStructTypes.size
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType()) {
+            type = ValueStructTypes.rect
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType()) {
+            type = ValueStructTypes.vector
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType()) {
+            type = ValueStructTypes.affineTransform
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType()) {
+            type = ValueStructTypes.transform3D
         } else {
-            type = ValueStructTypes.Unsupported
+            type = ValueStructTypes.unsupported
         }
         
         return type
     }
     
     
-    static func valueForCGStruct(cfStruct: Any) -> NSValue? {
+    static func valueForCGStruct(_ cfStruct: Any) -> NSValue? {
         var value: NSValue?
         
-        let num = NSNumber.init(integer: 0)
-        let pt = CGPointZero
-        let size = CGSizeZero
-        let rect = CGRectZero
-        let vector = CGVectorMake(0.0, 0.0)
-        let transform = CGAffineTransformIdentity
+        let num = NSNumber.init(value: 0)
+        let pt = CGPoint.zero
+        let size = CGSize.zero
+        let rect = CGRect.zero
+        let vector = CGVector(dx: 0.0, dy: 0.0)
+        let transform = CGAffineTransform.identity
         let transform3D = CATransform3DIdentity
         
         if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: num.dynamicType)) {
             // cast numeric value to a double
             let double_value = MotionSupport.cast(cfStruct as! AnyObject)
             if let doub = double_value {
-                value = NSNumber.init(double: doub)
+                value = NSNumber.init(value: doub)
             }
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: pt.dynamicType)) {
-            value = NSValue.init(CGPoint: (cfStruct as! CGPoint))
+            value = NSValue.init(cgPoint: (cfStruct as! CGPoint))
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: size.dynamicType)) {
-            value = NSValue.init(CGSize: (cfStruct as! CGSize))
+            value = NSValue.init(cgSize: (cfStruct as! CGSize))
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: rect.dynamicType)) {
-            value = NSValue.init(CGRect: (cfStruct as! CGRect))
+            value = NSValue.init(cgRect: (cfStruct as! CGRect))
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: vector.dynamicType)) {
-            value = NSValue.init(CGVector: (cfStruct as! CGVector))
+            value = NSValue.init(cgVector: (cfStruct as! CGVector))
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: transform.dynamicType)) {
-            value = NSValue.init(CGAffineTransform: (cfStruct as! CGAffineTransform))
+            value = NSValue.init(cgAffineTransform: (cfStruct as! CGAffineTransform))
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: transform3D.dynamicType)) {
-            value = NSValue.init(CATransform3D: (cfStruct as! CATransform3D))
+            value = NSValue.init(caTransform3D: (cfStruct as! CATransform3D))
         }
         
         return value
@@ -714,11 +714,11 @@ public class CGStructAssistant : ValueAssistant {
     static func isCGStruct(forValue value: Any) -> Bool {
         var is_supported = false
         
-        let pt = CGPointZero
-        let size = CGSizeZero
-        let rect = CGRectZero
-        let vector = CGVectorMake(0.0, 0.0)
-        let transform = CGAffineTransformIdentity
+        let pt = CGPoint.zero
+        let size = CGSize.zero
+        let rect = CGRect.zero
+        let vector = CGVector(dx: 0.0, dy: 0.0)
+        let transform = CGAffineTransform.identity
         let transform3D = CATransform3DIdentity
         if (MotionSupport.matchesType(forValue: value, typeToMatch: pt.dynamicType)
             || MotionSupport.matchesType(forValue: value, typeToMatch: size.dynamicType)
@@ -738,12 +738,12 @@ public class CGStructAssistant : ValueAssistant {
 
     // MARK: Private Methods
     
-    func updateStruct(inout structValue: NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
+    func updateStruct(_ structValue: inout NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
                 
         guard newValues.count > 0 else { return }
         
         switch type {
-        case .Number:
+        case .number:
             if let unwrapped_number = structValue as? NSNumber {
                 var val = unwrapped_number.doubleValue
                 if (additive) {
@@ -751,11 +751,11 @@ public class CGStructAssistant : ValueAssistant {
                 } else {
                     val = newValues.values.first!
                 }
-                structValue = NSNumber.init(double: val)
+                structValue = NSNumber.init(value: val)
             }
             
-        case .Point:
-            var point = structValue.CGPointValue()
+        case .point:
+            var point = structValue.cgPointValue()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -768,10 +768,10 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(CGPoint: point)
+            structValue = NSValue.init(cgPoint: point)
             
-        case .Size:
-            var size = structValue.CGSizeValue()
+        case .size:
+            var size = structValue.cgSizeValue()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -784,37 +784,37 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(CGSize: size)
+            structValue = NSValue.init(cgSize: size)
             
             
-        case .Rect:
-            var rect = structValue.CGRectValue()
+        case .rect:
+            var rect = structValue.cgRectValue()
             let keys = Array(newValues.keys)
             
             let last_components: [String] = keys.map { (str) -> String in
-                let components = str.componentsSeparatedByString(".")
+                let components = str.components(separatedBy: ".")
                 return components.last!
             }
             
             if (last_components.containsAny(["x", "y"])) {
-                var pt_value = NSValue.init(CGPoint: rect.origin)
-                updateStruct(&pt_value, type: .Point, newValues: newValues)
+                var pt_value = NSValue.init(cgPoint: rect.origin)
+                updateStruct(&pt_value, type: .point, newValues: newValues)
                 
-                rect.origin = pt_value.CGPointValue()
+                rect.origin = pt_value.cgPointValue()
             }
             
             if (last_components.containsAny(["width", "height"])) {
-                var size_value = NSValue.init(CGSize: rect.size)
-                updateStruct(&size_value, type: .Size, newValues: newValues)
+                var size_value = NSValue.init(cgSize: rect.size)
+                updateStruct(&size_value, type: .size, newValues: newValues)
                 
-                rect.size = size_value.CGSizeValue()
+                rect.size = size_value.cgSizeValue()
             }
             
-            structValue = NSValue.init(CGRect: rect)
+            structValue = NSValue.init(cgRect: rect)
             
             
-        case .Vector:
-            var vector = structValue.CGVectorValue()
+        case .vector:
+            var vector = structValue.cgVectorValue()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -827,10 +827,10 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(CGVector: vector)
+            structValue = NSValue.init(cgVector: vector)
             
-        case .AffineTransform:
-            var transform = structValue.CGAffineTransformValue()
+        case .affineTransform:
+            var transform = structValue.cgAffineTransform()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -850,10 +850,10 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(CGAffineTransform: transform)
+            structValue = NSValue.init(cgAffineTransform: transform)
             
-        case .Transform3D:
-            var transform = structValue.CATransform3DValue
+        case .transform3D:
+            var transform = structValue.caTransform3DValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -893,9 +893,9 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(CATransform3D: transform)
+            structValue = NSValue.init(caTransform3D: transform)
             
-        case .Unsupported: break
+        case .unsupported: break
         
         default: break
         }
@@ -903,18 +903,18 @@ public class CGStructAssistant : ValueAssistant {
     }
     
     
-    func retrieveStructValue(structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
+    func retrieveStructValue(_ structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
         
         var retrieved_value: Double?
         
         switch type {
-        case .Number:
+        case .number:
             if let unwrapped_number = structValue as? NSNumber {
                 retrieved_value = unwrapped_number.doubleValue
             }
             
-        case .Point:
-            let point = structValue.CGPointValue()
+        case .point:
+            let point = structValue.cgPointValue()
             
             let last_component = lastComponent(forPath: path)
             
@@ -926,8 +926,8 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             
-        case .Size:
-            let size = structValue.CGSizeValue()
+        case .size:
+            let size = structValue.cgSizeValue()
             
             let last_component = lastComponent(forPath: path)
             
@@ -940,26 +940,26 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             
-        case .Rect:
-            let rect = structValue.CGRectValue()
+        case .rect:
+            let rect = structValue.cgRectValue()
             
             let last_component = lastComponent(forPath: path)
             
             if ([last_component].containsAny(["x", "y"])) {
-                let pt_value = NSValue.init(CGPoint: rect.origin)
+                let pt_value = NSValue.init(cgPoint: rect.origin)
                 
-                retrieved_value = retrieveStructValue(pt_value, type: .Point, path: path)
+                retrieved_value = retrieveStructValue(pt_value, type: .point, path: path)
                 
             } else if ([last_component].containsAny(["width", "height"])) {
-                let size_value = NSValue.init(CGSize: rect.size)
+                let size_value = NSValue.init(cgSize: rect.size)
                 
-                retrieved_value = retrieveStructValue(size_value, type: .Size, path: path)
+                retrieved_value = retrieveStructValue(size_value, type: .size, path: path)
                 
             }
             
             
-        case .Vector:
-            let vector = structValue.CGVectorValue()
+        case .vector:
+            let vector = structValue.cgVectorValue()
             
             let last_component = lastComponent(forPath: path)
             
@@ -971,8 +971,8 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             
-        case .AffineTransform:
-            let transform = structValue.CGAffineTransformValue()
+        case .affineTransform:
+            let transform = structValue.cgAffineTransform()
             
             let last_component = lastComponent(forPath: path)
             
@@ -990,8 +990,8 @@ public class CGStructAssistant : ValueAssistant {
                 retrieved_value = Double(transform.ty)
             }
             
-        case .Transform3D:
-            let transform = structValue.CATransform3DValue
+        case .transform3D:
+            let transform = structValue.caTransform3DValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -1029,7 +1029,7 @@ public class CGStructAssistant : ValueAssistant {
                 retrieved_value = Double(transform.m44)
             }
             
-        case .Unsupported: break
+        case .unsupported: break
             
         default: break
         }

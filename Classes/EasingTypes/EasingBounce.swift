@@ -36,7 +36,7 @@ public struct EasingBounce {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
 
             let easing_closure = EasingBounce.easeOut()
             let time = duration - elapsedTime
@@ -50,7 +50,7 @@ public struct EasingBounce {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime / duration
             let easing_value: Double
             if (time < (1/2.75)) {
@@ -74,7 +74,7 @@ public struct EasingBounce {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value: Double
             let easing_closure = EasingBounce.easeOut()
 

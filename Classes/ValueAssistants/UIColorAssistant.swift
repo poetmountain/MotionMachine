@@ -161,8 +161,8 @@ public class UIColorAssistant : ValueAssistant {
             // BEWARE, THIS BE UNSAFE MUCKING ABOUT
             // this would normally be in a do/catch but unfortunately Swift can't catch exceptions from Obj-C methods
             typealias GetterFunction = @convention(c) (AnyObject, Selector) -> AnyObject
-            let implementation: IMP = unwrapped_object.methodForSelector(property.getter!)
-            let curried = unsafeBitCast(implementation, GetterFunction.self)
+            let implementation: IMP = unwrapped_object.method(for: property.getter!)
+            let curried = unsafeBitCast(implementation, to: GetterFunction.self)
             let obj = curried(unwrapped_object, property.getter!)
             
             object_value = retrieveValue(inObject: obj as! NSObject, keyPath: property.path)
@@ -296,7 +296,7 @@ public class UIColorAssistant : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         
         if let unwrapped_object = property.targetObject {
@@ -309,7 +309,7 @@ public class UIColorAssistant : ValueAssistant {
                 
                 // replace the top-level struct of the property we're trying to alter
                 // e.g.: keyPath is @"frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                if let base_prop = unwrapped_object.valueForKeyPath(property.parentKeyPath) {
+                if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
                     
                     let new_color = updateValue(inObject: (base_prop as! NSObject), newValues: [property.path : new_property_value]) as! UIColor
                     new_prop = new_color
@@ -319,8 +319,8 @@ public class UIColorAssistant : ValueAssistant {
                     
                     // letting the runtime know about result and argument types
                     typealias SetterFunction = @convention(c) (AnyObject, Selector, UIColor) -> Void
-                    let implementation: IMP = unwrapped_object.methodForSelector(property.setter!)
-                    let curried = unsafeBitCast(implementation, SetterFunction.self)
+                    let implementation: IMP = unwrapped_object.method(for: property.setter!)
+                    let curried = unsafeBitCast(implementation, to: SetterFunction.self)
                     curried(unwrapped_object, property.setter!, new_color)
                 }
                 
@@ -349,7 +349,7 @@ public class UIColorAssistant : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         if (object is UIColor) {
@@ -360,7 +360,7 @@ public class UIColorAssistant : ValueAssistant {
     }
     
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         return false
     }
     

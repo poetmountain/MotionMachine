@@ -106,7 +106,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - warning: Setting this parameter after a sequence has begun has no effect.
      */
-    public var delay: NSTimeInterval = 0.0
+    public var delay: TimeInterval = 0.0
     
     /**
      *  A Boolean which determines whether the sequence should repeat. When set to `true`, the sequence repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
@@ -157,9 +157,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .Forward) {
+            if (reversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .Reverse) {
+            } else if (reversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -244,7 +244,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _reversing = newValue
             
             // change the `reversing` property on each `Moveable` object sequence step to reflect the sequence's new state
-            if (reversingMode == .Contiguous) {
+            if (reversingMode == .contiguous) {
                 for step in steps {
                     step.reversing = _reversing
                 }
@@ -272,18 +272,18 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  - note: While including this property in custom classes which implement the `MoveableCollection` protocol is required, implementation of behavior based on the property's value is optional.
      *  - remark: The default value is `Sequential`. Please see the documentation for `CollectionReversingMode` for more information on these modes.
      */
-    public var reversingMode: CollectionReversingMode = .Sequential {
+    public var reversingMode: CollectionReversingMode = .sequential {
         didSet {
-            if (reversingMode == .Contiguous && reversing) {
+            if (reversingMode == .contiguous && reversing) {
                 for step in steps {
                     step.reversing = true
                     if var collection = step as? MoveableCollection {
                         // by default, setting a .Contiguous reversingMode will cascade down to sub-collections
                         // since usually a user would expect a contiguous movement from each sub-motion when setting this value
-                        collection.reversingMode = .Contiguous
+                        collection.reversingMode = .contiguous
                     }
                 }
-            } else if (reversingMode == .Sequential && reversing) {
+            } else if (reversingMode == .sequential && reversing) {
                 for step in steps {
                     step.reversing = false
                 }
@@ -316,7 +316,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _tempo?.delegate = self
             
             // tell sequence steps conforming to the `TempoDriven` protocol that don't want their tempo used to stop their tempo updates
-            for (index, step) in steps.enumerate() {
+            for (index, step) in steps.enumerated() {
                 if let driven = step as? TempoDriven {
                     if (index < tempoOverrides.count) {
                         let should_override = tempoOverrides[index]
@@ -341,7 +341,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: start
      */
-    public func started(closure: SequenceStarted) -> Self {
+    public func started(_ closure: SequenceStarted) -> Self {
         _started = closure
         
         return self
@@ -353,7 +353,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: stop
      */
-    public func stopped(closure: SequenceStopped) -> Self {
+    public func stopped(_ closure: SequenceStopped) -> Self {
         _stopped = closure
         
         return self
@@ -365,7 +365,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(closure: SequenceUpdated) -> Self {
+    public func updated(_ closure: SequenceUpdated) -> Self {
         _updated = closure
         
         return self
@@ -377,7 +377,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(closure: SequenceRepeated) -> Self {
+    public func cycleRepeated(_ closure: SequenceRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -389,7 +389,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(closure: SequenceReversed) -> Self {
+    public func reversed(_ closure: SequenceReversed) -> Self {
         _reversed = closure
         
         return self
@@ -401,7 +401,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: pause
      */
-    public func paused(closure: SequencePaused) -> Self {
+    public func paused(_ closure: SequencePaused) -> Self {
         _paused = closure
         
         return self
@@ -413,7 +413,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: resume
      */
-    public func resumed(closure: SequenceResumed) -> Self {
+    public func resumed(_ closure: SequenceResumed) -> Self {
         _resumed = closure
         
         return self
@@ -424,7 +424,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
      *
      */
-    public func completed(closure: SequenceCompleted) -> Self {
+    public func completed(_ closure: SequenceCompleted) -> Self {
         _completed = closure
         
         return self
@@ -435,7 +435,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This notification closure is called when the sequence's movement has advanced to its next sequence step.
      *
      */
-    public func stepCompleted(closure: SequenceStepped) -> Self {
+    public func stepCompleted(_ closure: SequenceStepped) -> Self {
         _stepCompleted = closure
         
         return self
@@ -447,16 +447,16 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     // MARK: - Private Properties
     
     /// The starting time of the current sequence's delay. A value of 0 means that no motion is currently in progress.
-    private var startTime: NSTimeInterval = 0.0
+    private var startTime: TimeInterval = 0.0
     
     /// The most recent update timestamp, as sent by the `update` method.
-    private var currentTime: NSTimeInterval = 0.0
+    private var currentTime: TimeInterval = 0.0
     
     /// The ending time of the delay, which is determined by adding the delay to the starting time.
-    private var endTime: NSTimeInterval = 0.0
+    private var endTime: TimeInterval = 0.0
     
     /// Timestamp when the `pause` method is called, to track amount of time paused.
-    private var pauseTimestamp: NSTimeInterval = 0.0
+    private var pauseTimestamp: TimeInterval = 0.0
     
     
     /**
@@ -491,8 +491,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         repeating = options!.contains(.Repeat)
         _reversing = options!.contains(.Reverse)
         
-        motionState = .Stopped
-        motionDirection = .Forward
+        motionState = .stopped
+        motionDirection = .forward
         
         for step: Moveable in steps {
             add(step)
@@ -525,9 +525,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *      - A NSInternalInconsistencyException will be raised if the provided object does not adopt the `Moveable` protocol.
      *      - This method should not be called after a MotionSequence has started moving.
      */
-    public func add(sequenceStep: Moveable, useChildTempo: Bool = false) -> Self {
+    @discardableResult public func add(_ sequenceStep: Moveable, useChildTempo: Bool = false) -> Self {
         
-        if (reversing && reversingMode == .Contiguous) {
+        if (reversing && reversingMode == .contiguous) {
             sequenceStep.reversing = true
         }
         
@@ -557,7 +557,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *      - This method should not be called after a MotionGroup has started moving.
      *
      */
-    public func add(steps: [Moveable]) -> Self {
+    @discardableResult public func add(_ steps: [Moveable]) -> Self {
         
         for step in steps {
             add(step)
@@ -571,17 +571,17 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - parameter sequenceStep: The sequence step to remove.
      */
-    public func remove(sequenceStep: Moveable) {
+    public func remove(_ sequenceStep: Moveable) {
         
         // first grab the index of the object in the motions array so we can remove the corresponding tempoOverrides value
-        let index = steps.indexOf {
+        let index = steps.index {
             $0 == sequenceStep
         }
         
         if let motion_index = index {
             sequenceStep.updateDelegate = nil
-            steps.removeAtIndex(motion_index)
-            tempoOverrides.removeAtIndex(motion_index)
+            steps.remove(at: motion_index)
+            tempoOverrides.remove(at: motion_index)
         }
         
     }
@@ -593,7 +593,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  - parameter amount: The number of seconds to wait.
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.
      */
-    public func afterDelay(amount: NSTimeInterval) -> MotionSequence {
+    @discardableResult public func afterDelay(_ amount: TimeInterval) -> MotionSequence {
         
         delay = amount
         
@@ -610,7 +610,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: repeatCycles, repeating
      */
-    public func repeats(numberOfCycles: UInt = REPEAT_INFINITE) -> MotionSequence {
+    @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> MotionSequence {
         
         repeatCycles = numberOfCycles
         repeating = true
@@ -629,7 +629,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: reversing, reversingMode
      */
-    public func reverses(mode: CollectionReversingMode = .Sequential) -> MotionSequence {
+    @discardableResult public func reverses(_ mode: CollectionReversingMode = .sequential) -> MotionSequence {
         
         reversing = true
         reversingMode = mode
@@ -680,26 +680,26 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _cycleRepeated?(sequence: weak_self!)
             
             if (reversing) {
-                if (motionDirection == .Forward) {
-                    motionDirection = .Reverse
+                if (motionDirection == .forward) {
+                    motionDirection = .reverse
                     
-                } else if (motionDirection == .Reverse) {
-                    motionDirection = .Forward
+                } else if (motionDirection == .reverse) {
+                    motionDirection = .forward
                 }
                 
                 motionsReversedCount = 0
             }
             
             // send repeat status update
-            sendStatusUpdate(.Repeated)
+            sendStatusUpdate(.repeated)
             
-            if (reversing && reversingMode == .Sequential) {
+            if (reversing && reversingMode == .sequential) {
                 currentSequenceIndex += 1
             }
             
             // start first sequence step
             if let step = currentStep() {
-                if (step.motionState == .Paused) {
+                if (step.motionState == .paused) {
                     step.resume()
                 }
                 step.start()
@@ -717,13 +717,13 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         
         if (
             (!reversing && currentSequenceIndex + 1 < steps.count)
-            || (reversing && (motionDirection == .Forward && currentSequenceIndex + 1 < steps.count))
-            || (reversing && (motionDirection == .Reverse && currentSequenceIndex - 1 >= 0))
+            || (reversing && (motionDirection == .forward && currentSequenceIndex + 1 < steps.count))
+            || (reversing && (motionDirection == .reverse && currentSequenceIndex - 1 >= 0))
             ) {
             
-            if (!reversing || (reversing && motionDirection == .Forward)) {
+            if (!reversing || (reversing && motionDirection == .forward)) {
                 currentSequenceIndex += 1
-            } else if (reversing && motionDirection == .Reverse) {
+            } else if (reversing && motionDirection == .reverse) {
                 currentSequenceIndex -= 1
             }
             
@@ -732,18 +732,18 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _stepCompleted?(sequence: weak_self!)
             
             // send step status update
-            sendStatusUpdate(.Stepped)
+            sendStatusUpdate(.stepped)
             
             // start the next sequence step
             if let next_step = currentStep() {
 
                 if (!reversing
-                    || (reversing && reversingMode == .Contiguous && motionDirection == .Forward)
-                    || (reversing && reversingMode == .Sequential)) {
+                    || (reversing && reversingMode == .contiguous && motionDirection == .forward)
+                    || (reversing && reversingMode == .sequential)) {
                     next_step.start()
                     
                 } else {
-                    if (next_step.motionState == .Paused) {
+                    if (next_step.motionState == .paused) {
                         next_step.resume()
                     }
                 }
@@ -758,11 +758,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     /// Reverses the direction of the sequence.
     private func reverseMotionDirection() {
-        if (motionDirection == .Forward) {
-            motionDirection = .Reverse
+        if (motionDirection == .forward) {
+            motionDirection = .reverse
             
-        } else if (motionDirection == .Reverse) {
-            motionDirection = .Forward
+        } else if (motionDirection == .reverse) {
+            motionDirection = .forward
         }
         
         motionsReversedCount = 0
@@ -772,11 +772,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         _reversed?(sequence: weak_self!)
         
         let half_complete = round(Double(repeatCycles) * 0.5)
-        if (motionDirection == .Reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
-            sendStatusUpdate(.HalfCompleted)
+        if (motionDirection == .reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
+            sendStatusUpdate(.halfCompleted)
             
         } else {
-            sendStatusUpdate(.Reversed)
+            sendStatusUpdate(.reversed)
         }
     }
     
@@ -784,7 +784,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /// Called when the sequence has completed its movement.
     private func sequenceCompleted() {
         
-        motionState = .Stopped
+        motionState = .stopped
         motionProgress = 1.0
         _cycleProgress = 1.0
         if (!repeating) { cyclesCompletedCount += 1 }
@@ -797,7 +797,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         _completed?(sequence: weak_self!)
         
         // send completion status update
-        sendStatusUpdate(.Completed)
+        sendStatusUpdate(.completed)
         
 
     }
@@ -810,7 +810,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - parameter status: The `MoveableStatus` enum value to send to the delegate.
      */
-    private func sendStatusUpdate(status: MoveableStatus) {
+    private func sendStatusUpdate(_ status: MoveableStatus) {
         
         weak var weak_self = self
         updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
@@ -830,10 +830,10 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             children_progress += step.totalProgress
         }
         children_progress /= Double(steps.count)
-        if (reversing && reversingMode == .Sequential) {
+        if (reversing && reversingMode == .sequential) {
             children_progress *= 0.5
             
-            if (motionDirection == .Reverse) {
+            if (motionDirection == .reverse) {
                 children_progress += 0.5
             }
         }
@@ -847,11 +847,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     // MARK: Moveable methods
     
-    public func update(withTimeInterval currentTime: NSTimeInterval) {
+    public func update(withTimeInterval currentTime: TimeInterval) {
     
         self.currentTime = currentTime
         
-        if (motionState == .Moving) {
+        if (motionState == .moving) {
             
             if (startTime == 0.0 && cyclesCompletedCount == 0) { startTime = currentTime }
             
@@ -868,12 +868,12 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             calculateProgress()
             
             // call update closure, but only if this sequence is still moving
-            if (motionState == .Moving) {
+            if (motionState == .moving) {
                 weak var weak_self = self as MotionSequence
                 _updated?(sequence: weak_self!)
             }
             
-        } else if (motionState == .Delayed) {
+        } else if (motionState == .delayed) {
             
             if (startTime == 0.0) {
                 // a start time of 0.0 means we need to initialize the motion times
@@ -883,7 +883,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             
             if (currentTime >= endTime) {
                 // delay is done, time to move
-                motionState = .Moving
+                motionState = .moving
                 
                 if let step = currentStep() {
                     step.start()
@@ -894,7 +894,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 _started?(sequence: weak_self!)
                 
                 // send start status update
-                sendStatusUpdate(.Started)
+                sendStatusUpdate(.started)
             }
             
         }
@@ -903,11 +903,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     
     public func start() -> Self {
-        if (motionState == .Stopped) {
+        if (motionState == .stopped) {
             reset()
             
             if (delay == 0.0) {
-                motionState = .Moving
+                motionState = .moving
                
                 if let sequence_step = currentStep() {
                     sequence_step.start()
@@ -918,10 +918,10 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 _started?(sequence: weak_self!)
                 
                 // send start status update
-                sendStatusUpdate(.Started)
+                sendStatusUpdate(.started)
                 
             } else {
-                motionState = .Delayed
+                motionState = .delayed
             }
         }
         
@@ -931,8 +931,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     public func stop() {
         
-        if (motionState == .Moving || motionState == .Paused || motionState == .Delayed) {
-            motionState = .Stopped
+        if (motionState == .moving || motionState == .paused || motionState == .delayed) {
+            motionState = .stopped
             _motionProgress = 0.0
             _cycleProgress = 0.0
             
@@ -945,15 +945,15 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _stopped?(sequence: weak_self!)
             
             // send stop status update
-            sendStatusUpdate(.Stopped)
+            sendStatusUpdate(.stopped)
         }
     }
     
     
     public func pause() {
         
-        if (motionState == .Moving) {
-            motionState = .Paused
+        if (motionState == .moving) {
+            motionState = .paused
             
             if let sequence_step = currentStep() {
                 sequence_step.pause()
@@ -964,15 +964,15 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _paused?(sequence: weak_self!)
             
             // send pause status update
-            sendStatusUpdate(.Paused)
+            sendStatusUpdate(.paused)
         }
         
     }
     
     
     public func resume() {
-        if (motionState == .Paused) {
-            motionState = .Moving
+        if (motionState == .paused) {
+            motionState = .moving
             
             if let sequence_step = currentStep() {
                 sequence_step.resume()
@@ -983,7 +983,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _resumed?(sequence: weak_self!)
             
             // send resume status update
-            sendStatusUpdate(.Resumed)
+            sendStatusUpdate(.resumed)
         }
     }
     
@@ -992,11 +992,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /// Resets the sequence and all child motions to its initial state.
     public func reset() {
         
-        motionState = .Stopped
+        motionState = .stopped
         currentSequenceIndex = 0
         motionsCompletedCount = 0
         cyclesCompletedCount = 0
-        motionDirection = .Forward
+        motionDirection = .forward
         motionsReversedCount = 0
         _motionProgress = 0.0
         _cycleProgress = 0.0
@@ -1019,9 +1019,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         
         switch status {
             
-        case .HalfCompleted:
+        case .halfCompleted:
             
-            if (reversing && reversingMode == .Contiguous && motionDirection == .Forward) {
+            if (reversing && reversingMode == .contiguous && motionDirection == .forward) {
                 motionsReversedCount += 1
                 if (motionsReversedCount >= steps.count) {
                     
@@ -1035,16 +1035,16 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 }
             }
             
-        case .Completed:
+        case .completed:
 
-            if ((motionDirection == .Reverse && currentSequenceIndex - 1 >= 0) || (motionDirection == .Forward && currentSequenceIndex + 1 < steps.count)
+            if ((motionDirection == .reverse && currentSequenceIndex - 1 >= 0) || (motionDirection == .forward && currentSequenceIndex + 1 < steps.count)
                 ) {
                 // if there is another sequence step in the direction of movement, then move to the next step
                 nextSequenceStep()
             
             } else {
-                if (reversing && reversingMode == .Sequential && ((motionDirection == .Forward && currentSequenceIndex + 1 >= steps.count)
-                    || (motionDirection == .Reverse && currentSequenceIndex - 1 == 0))) {
+                if (reversing && reversingMode == .sequential && ((motionDirection == .forward && currentSequenceIndex + 1 >= steps.count)
+                    || (motionDirection == .reverse && currentSequenceIndex - 1 == 0))) {
                     // if the sequence is set to reverse its motion and mode is noncontiguous
                     // + if the sequence has no more steps left
                     // then flip the motion direction and play the sequence again
@@ -1058,9 +1058,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                         }
                         
                         // start the same clip again
-                        if (!reversing || (reversing && motionDirection == .Forward)) {
+                        if (!reversing || (reversing && motionDirection == .forward)) {
                             currentSequenceIndex -= 1
-                        } else if (reversing && motionDirection == .Reverse) {
+                        } else if (reversing && motionDirection == .reverse) {
                             currentSequenceIndex += 1
                         }
                         
@@ -1097,7 +1097,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     // MARK: - TempoDelegate methods
     
-    public func tempoBeatUpdate(timestamp: NSTimeInterval) {
+    public func tempoBeatUpdate(_ timestamp: TimeInterval) {
         update(withTimeInterval: timestamp)
         
     }

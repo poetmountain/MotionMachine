@@ -108,7 +108,7 @@ public protocol Moveable: class {
      *
      *  - parameter currentTime: A timestamp that can be used in easing calculations.
      */
-    func update(withTimeInterval currentTime: NSTimeInterval)
+    func update(withTimeInterval currentTime: TimeInterval)
     
 }
 
@@ -187,7 +187,7 @@ public protocol TempoDelegate: class {
      *
      *  - parameter timestamp: A timestamp by which motion classes can calculate new delta values.
      */
-    func tempoBeatUpdate(timestamp: NSTimeInterval)
+    func tempoBeatUpdate(_ timestamp: TimeInterval)
 }
 
 
@@ -301,7 +301,7 @@ public protocol ValueAssistant {
      *
      *  - returns: A Boolean value representing whether the object is supported by this class.
      */
-    func supports(object: AnyObject) -> Bool
+    func supports(_ object: AnyObject) -> Bool
     
     /**
      *  Verifies whether this object can accept a keyPath.
@@ -311,7 +311,7 @@ public protocol ValueAssistant {
      *
      *  - returns: A Boolean value representing whether the object is supported by this class.
      */
-    func acceptsKeypath(object: AnyObject) -> Bool
+    func acceptsKeypath(_ object: AnyObject) -> Bool
     
     
     /**
@@ -337,7 +337,7 @@ public extension ValueAssistant {
         
         guard let unwrapped_object = property.targetObject else { return nil }
         
-        if let path_value = unwrapped_object.valueForKeyPath(property.parentKeyPath) {
+        if let path_value = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
             if let unwrapped_object = path_value as? NSObject {
                 if let retrieved_value = try? retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
                     return retrieved_value
@@ -353,7 +353,7 @@ public extension ValueAssistant {
 // utility methods for ValueAssistant
 public extension ValueAssistant {
     
-    public func applyTo(inout value value: Double, newValue: Double) {
+    public func applyTo(value: inout Double, newValue: Double) {
         if (additive) {
             value += (newValue * additiveWeighting)
         } else {
@@ -362,7 +362,7 @@ public extension ValueAssistant {
         
     }
     
-    public func applyTo(inout value value: CGFloat, newValue: CGFloat) {
+    public func applyTo(value: inout CGFloat, newValue: CGFloat) {
         if (additive) {
             value += (newValue * CGFloat(additiveWeighting))
         } else {
@@ -371,16 +371,16 @@ public extension ValueAssistant {
     }
     
     public func lastComponent(forPath path: String) -> String {
-        let components = path.componentsSeparatedByString(".")
+        let components = path.components(separatedBy: ".")
         return components.last!
     }
     
 }
 
 /// This error is thrown when a `ValueAssistant` receives the wrong type.
-public enum ValueAssistantError : ErrorType {
+public enum ValueAssistantError : ErrorProtocol {
     
-    case TypeRequirement(String)
+    case typeRequirement(String)
     
     public func printError(fromFunction function: String) {
         if (MMConfiguration.sharedInstance.printsErrors) {
@@ -403,31 +403,31 @@ public final class MMConfiguration {
 
 
 /// Any easing types used by a Motion object should implement this closure.
-public typealias EasingUpdateClosure = (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double
+public typealias EasingUpdateClosure = (elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double
 
 
 /// Enum representing the state of a motion operation.
 public enum MotionState {
     /// The state of a motion operation when it is moving.
-    case Moving
+    case moving
     
     /// The state of a motion operation when it is stopped.
-    case Stopped
+    case stopped
     
     /// The state of a motion operation when it is paused.
-    case Paused
+    case paused
     
     /// The state of a motion operation when it is delayed.
-    case Delayed
+    case delayed
 }
 
 
 /// Enum representing the direction a motion is moving in.
 public enum MotionDirection {
     /// The motion is moving in a forward direction, from the starting value to the ending value.
-    case Forward
+    case forward
     /// The motion is moving in a reverse direction, from the ending value to the starting value.
-    case Reverse
+    case reverse
 }
 
 
@@ -436,42 +436,42 @@ public enum MotionDirection {
 public enum MoveableStatus {
     
     /// A `Moveable` object's motion operation has started.
-    case Started
+    case started
     
     /// A `Moveable` object's motion operation has been stopped manually (when the stop() method is called) prior to completion.
-    case Stopped
+    case stopped
     
     /**
      *  A `Moveable` object's motion operation has completed 50% of its total movement.
      *
      *  - remark: This status should only be sent when half of the activity related to the motion has ceased. For instance, if a `Moveable` class is set to repeat two times and its `reversing` property is set to `true`, it should send this status after the second reversal of direction.
      */
-    case HalfCompleted
+    case halfCompleted
     
     /**
      *  A `Moveable` object's motion operation has fully completed.
      *
      *  - remark: This status should only be posted when all activity related to the motion has ceased. For instance, if a `Moveable` class allows a movement to be repeated multiple times, this status should only be sent when all repetitions have finished.
      */
-    case Completed
+    case completed
     
     /// A `Moveable` object's motion operation has updated the properties it is moving.
-    case Updated
+    case updated
     
     /// A `Moveable` object's motion operation has reversed its movement direction.
-    case Reversed
+    case reversed
     
     /// A `Moveable` object's motion operation has started a new repeat cycle.
-    case Repeated
+    case repeated
     
     /// A `Moveable` object's motion operation has paused.
-    case Paused
+    case paused
     
     /// A `Moveable` object's motion operation has resumed.
-    case Resumed
+    case resumed
     
     /// A `Moveable` object sequence collection (such as `MotionSequence`) when its movement has advanced to the next sequence step.
-    case Stepped
+    case stepped
 }
 
 /**
@@ -484,20 +484,20 @@ public enum CollectionReversingMode {
      *
      *  - remark: This mode is useful if you want sequence steps to move consistently, regardless of the state of the `motionDirection` property. For example, this mode would be chosen if you have a series of lights that should blink on and off in sequential order, and the only thing that should change is the order in which they blink.
      */
-    case Sequential
+    case sequential
     
     /**
      *  Specifies that when the sequence's `motionDirection` property is `.Reverse`, all `Moveable` sequence steps will move in a reverse direction to their normal motion. That is, the values of each sequence step will move in reverse, and in reverse order, thus giving the effect that the whole sequence is fluidly moving in reverse. Additionally, when the sequence's `motionDirection` is `.Forward`, each sequence step will pause after completing their forward movement.
      *
      *  - remark: This mode is useful if you want to create a sequence whose sequence steps reverse in a mirror image of their forward motion. This is a really powerful way of making many separate animations appear to be a single, fluid animation when reversing.
      */
-    case Contiguous
+    case contiguous
     
 }
 
 
 /// An integer options set providing possible initialization options for a `Moveable` object.
-public struct MotionOptions : OptionSetType {
+public struct MotionOptions : OptionSet {
     public let rawValue: Int
     
     public init(rawValue: Int) { self.rawValue = rawValue }
@@ -529,8 +529,8 @@ public let REPEAT_INFINITE: UInt = 0
 
 // Extends Array to use Set's isDisjointWith to test for presence of Array members in the Set sequence
 extension Array where Element: Hashable {
-    func containsAny(set: Set<Element>) -> Bool {
-        return !set.isDisjointWith(self)
+    func containsAny(_ set: Set<Element>) -> Bool {
+        return !set.isDisjoint(with: self)
     }
 }
 

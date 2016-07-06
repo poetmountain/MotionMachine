@@ -45,8 +45,8 @@ public class UIKitStructAssistant : ValueAssistant {
     public init() {
         // provide support for UIKit structs
         // doesn't seem like there's a better way to extend the enum array from multiple assistants than this?
-        ValueStructTypes.valueTypes[.UIEdgeInsets] = NSValue(UIEdgeInsets: UIEdgeInsetsZero).objCType
-        ValueStructTypes.valueTypes[.UIOffset] = NSValue(UIOffset: UIOffsetZero).objCType
+        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsetsZero).objCType
+        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffsetZero).objCType
     }
     
     
@@ -55,12 +55,12 @@ public class UIKitStructAssistant : ValueAssistant {
     public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) throws -> [PropertyData] {
         var properties: [PropertyData] = []
         
-        guard let value = object as? NSValue else { throw ValueAssistantError.TypeRequirement("NSValue") }
+        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
 
         let value_type = UIKitStructAssistant.determineType(forValue: value)
         
         switch value_type {
-        case .UIEdgeInsets:
+        case .uiEdgeInsets:
             let base_path: String = path + "."
 
             var org_top: Double?
@@ -70,8 +70,8 @@ public class UIKitStructAssistant : ValueAssistant {
             
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .UIEdgeInsets) {
-                    let org_insets = unwrapped_nsvalue.UIEdgeInsetsValue()
+                if (type == .uiEdgeInsets) {
+                    let org_insets = unwrapped_nsvalue.uiEdgeInsetsValue()
                     org_top = Double(org_insets.top)
                     org_left = Double(org_insets.left)
                     org_bottom = Double(org_insets.bottom)
@@ -79,7 +79,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            let insets = value.UIEdgeInsetsValue()
+            let insets = value.uiEdgeInsetsValue()
             
             if let unwrapped_top = org_top {
                 if (Double(insets.top) !≈ unwrapped_top) {
@@ -110,7 +110,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-        case .UIOffset:
+        case .uiOffset:
             let base_path: String = path + "."
             
             var org_h: Double?
@@ -118,14 +118,14 @@ public class UIKitStructAssistant : ValueAssistant {
             
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .UIOffset) {
-                    let org_offset = unwrapped_nsvalue.UIOffsetValue()
+                if (type == .uiOffset) {
+                    let org_offset = unwrapped_nsvalue.uiOffsetValue()
                     org_h = Double(org_offset.horizontal)
                     org_v = Double(org_offset.vertical)
                 }
             }
             
-            let offset = value.UIOffsetValue()
+            let offset = value.uiOffsetValue()
             
             if let unwrapped_h = org_h {
                 if (Double(offset.horizontal) !≈ unwrapped_h) {
@@ -142,7 +142,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
         
-        case .Unsupported: break
+        case .unsupported: break
 
         default:
             break
@@ -156,15 +156,15 @@ public class UIKitStructAssistant : ValueAssistant {
     public func retrieveValue(inObject object: AnyObject, keyPath path: String) throws -> Double? {
         var retrieved_value: Double?
         
-        guard let value = object as? NSValue else { throw ValueAssistantError.TypeRequirement("NSValue") }
+        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
 
-        if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIEdgeInsets.toObjCType())) {
+        if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .UIEdgeInsets, path: path)
+            retrieved_value = retrieveStructValue(value, type: .uiEdgeInsets, path: path)
         
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIOffset.toObjCType())) {
+        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())) {
             
-            retrieved_value = retrieveStructValue(value, type: .UIOffset, path: path)
+            retrieved_value = retrieveStructValue(value, type: .uiOffset, path: path)
         }
         
         return retrieved_value
@@ -175,7 +175,7 @@ public class UIKitStructAssistant : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         // this code path will execute if the object passed in was an NSValue
         // as such we must replace the value object directly
@@ -194,7 +194,7 @@ public class UIKitStructAssistant : ValueAssistant {
         if let unwrapped_object = property.targetObject {
             // we have a normal object whose property is being changed
             if (unwrapped_target is Double) {
-                if let base_prop = unwrapped_object.valueForKeyPath(property.path) {
+                if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
                     var new_property_value = property.current
                     if (additive) {
                         new_property_value = newValue
@@ -204,7 +204,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 
             } else if (unwrapped_target is NSValue) {
                 if (!property.replaceParentProperty) {
-                    if let base_prop = unwrapped_object.valueForKeyPath(property.path) {
+                    if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
                         
                         if (base_prop is NSObject) {
                             var new_property_value = property.current
@@ -220,7 +220,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 } else {
                     // replace the top-level struct of the property we're trying to alter
                     // e.g.: key path is "frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                    if let base_prop = unwrapped_object.valueForKeyPath(property.parentKeyPath) {
+                    if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
                         var new_property_value = property.current
                         if (additive) {
                             new_property_value = newValue
@@ -249,13 +249,13 @@ public class UIKitStructAssistant : ValueAssistant {
         if let unwrapped_value = object as? NSValue {
             var value = unwrapped_value
             
-            if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIEdgeInsets.toObjCType())) {
+            if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())) {
                 
-                updateStruct(&value, type: .UIEdgeInsets, newValues: newValues)
+                updateStruct(&value, type: .uiEdgeInsets, newValues: newValues)
             
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIOffset.toObjCType())) {
+            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())) {
                 
-                updateStruct(&value, type: .UIOffset, newValues: newValues)
+                updateStruct(&value, type: .uiOffset, newValues: newValues)
             }
             
             new_parent_value = value
@@ -266,12 +266,12 @@ public class UIKitStructAssistant : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         if let unwrapped_value = object as? NSValue {
-            if (MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.UIEdgeInsets.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.UIOffset.toObjCType())
+            if (MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())
+                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())
                 ) {
                 
                 is_supported = true
@@ -280,7 +280,7 @@ public class UIKitStructAssistant : ValueAssistant {
         return is_supported
     }
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = false
         
         if (object is UIEdgeInsets || object is UIOffset) {
@@ -297,12 +297,12 @@ public class UIKitStructAssistant : ValueAssistant {
     public static func determineType(forValue value: NSValue) -> ValueStructTypes {
         let type: ValueStructTypes
         
-        if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIEdgeInsets.toObjCType()) {
-            type = ValueStructTypes.UIEdgeInsets
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.UIOffset.toObjCType()) {
-            type = ValueStructTypes.UIOffset
+        if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType()) {
+            type = ValueStructTypes.uiEdgeInsets
+        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType()) {
+            type = ValueStructTypes.uiOffset
         } else {
-            type = ValueStructTypes.Unsupported
+            type = ValueStructTypes.unsupported
         }
         
         
@@ -310,17 +310,17 @@ public class UIKitStructAssistant : ValueAssistant {
     }
     
     
-    static func valueForStruct(cfStruct: Any) -> NSValue? {
+    static func valueForStruct(_ cfStruct: Any) -> NSValue? {
         var value: NSValue?
         
         let insets = UIEdgeInsetsZero
         let offset = UIOffsetZero
         
         if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: insets.dynamicType)) {
-            value = NSValue.init(UIEdgeInsets: (cfStruct as! UIEdgeInsets))
+            value = NSValue.init(uiEdgeInsets: (cfStruct as! UIEdgeInsets))
             
         } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: offset.dynamicType)) {
-            value = NSValue.init(UIOffset: (cfStruct as! UIOffset))
+            value = NSValue.init(uiOffset: (cfStruct as! UIOffset))
         }
         
         return value
@@ -329,13 +329,13 @@ public class UIKitStructAssistant : ValueAssistant {
     
     // MARK: Private methods
 
-    func updateStruct(inout structValue: NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
+    func updateStruct(_ structValue: inout NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
         
         guard newValues.count > 0 else { return }
         
         switch type {
-        case .UIEdgeInsets:
-            var insets = structValue.UIEdgeInsetsValue()
+        case .uiEdgeInsets:
+            var insets = structValue.uiEdgeInsetsValue()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -354,10 +354,10 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(UIEdgeInsets: insets)
+            structValue = NSValue.init(uiEdgeInsets: insets)
             
-        case .UIOffset:
-            var offset = structValue.UIOffsetValue()
+        case .uiOffset:
+            var offset = structValue.uiOffsetValue()
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -370,9 +370,9 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            structValue = NSValue.init(UIOffset: offset)
+            structValue = NSValue.init(uiOffset: offset)
             
-        case .Unsupported: break
+        case .unsupported: break
             
         default: break
         }
@@ -380,13 +380,13 @@ public class UIKitStructAssistant : ValueAssistant {
     }
     
     
-    func retrieveStructValue(structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
+    func retrieveStructValue(_ structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
         
         var retrieved_value: Double?
         
         switch type {
-        case .UIEdgeInsets:
-            let insets = structValue.UIEdgeInsetsValue()
+        case .uiEdgeInsets:
+            let insets = structValue.uiEdgeInsetsValue()
             
             let last_component = lastComponent(forPath: path)
             
@@ -403,8 +403,8 @@ public class UIKitStructAssistant : ValueAssistant {
                 retrieved_value = Double(insets.right)
             }
             
-        case .UIOffset:
-            let offset = structValue.UIOffsetValue()
+        case .uiOffset:
+            let offset = structValue.uiOffsetValue()
             
             let last_component = lastComponent(forPath: path)
             
@@ -415,7 +415,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 retrieved_value = Double(offset.vertical)
             }
             
-        case .Unsupported: break
+        case .unsupported: break
             
         default:
             break

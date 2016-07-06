@@ -36,7 +36,7 @@ public class TimerTempo : Tempo {
      *
      *  - warning: Do not call the `invalidate` method on this object, as its state is handled by TimerTempo directly.
      */
-    public var timer: NSTimer?
+    public var timer: Timer?
     
     /**
      *  Initializes a new `TimerTempo` object and starts the internal timer.
@@ -44,14 +44,14 @@ public class TimerTempo : Tempo {
      *  - parameter interval: The rate, in number of seconds, between updates of the timer. The default value is 60 updates/second.
      *  - returns: A new `TimerTempo` object.
      */
-    public convenience init(withInterval interval: NSTimeInterval?=(1.0/60.0)) {
+    public convenience init(withInterval interval: TimeInterval?=(1.0/60.0)) {
         self.init(interval: interval)
     }
     
-    private init(interval: NSTimeInterval?) {
+    private init(interval: TimeInterval?) {
         super.init()
         
-        timer = NSTimer.scheduledTimerWithTimeInterval(interval!, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: interval!, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
     
     deinit {

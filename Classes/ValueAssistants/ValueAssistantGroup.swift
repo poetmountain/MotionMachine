@@ -73,7 +73,7 @@ public class ValueAssistantGroup : ValueAssistant {
      *  - note: The added assistant will be assigned the same values for `additive` and `additiveWeighting` as this group's values.
      *  - seealso: additive, additiveWeighting
      */
-    public func add(assistant: ValueAssistant) {
+    public func add(_ assistant: ValueAssistant) {
         var assist = assistant
 
         assist.additive = additive
@@ -113,16 +113,16 @@ public class ValueAssistantGroup : ValueAssistant {
         }
         
         if (retrieved_value == nil) {
-            let path_value = object.valueForKeyPath(path)!
+            let path_value = object.value(forKeyPath: path)!
             
             // cast numeric value to a double
             retrieved_value = MotionSupport.cast(path_value)
             
-            let components = path.componentsSeparatedByString(".")
+            let components = path.components(separatedBy: ".")
             
             
             let first_component = components.first!
-            let child_object = object.valueForKey(first_component)
+            let child_object = object.value(forKey: first_component)
             if let unwrapped_child = child_object {
                 if (acceptsKeypath(unwrapped_child)) {
                     
@@ -176,7 +176,7 @@ public class ValueAssistantGroup : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         // this code path will execute if the object passed in was an NSValue
         // as such we must replace the value object directly
@@ -221,7 +221,7 @@ public class ValueAssistantGroup : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         for assistant in assistants {
@@ -234,7 +234,7 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = true
         
         for assistant in assistants {
