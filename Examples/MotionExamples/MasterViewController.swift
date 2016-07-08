@@ -10,13 +10,13 @@ import UIKit
 
 enum ExampleTypes: Int {
     
-    case Basic                  = 0
-    case Group                  = 1
-    case Sequence               = 2
-    case ContiguousSequence     = 3
-    case Physics                = 4
-    case Additive               = 5
-    case Dynamic                = 6
+    case basic                  = 0
+    case group                  = 1
+    case sequence               = 2
+    case contiguousSequence     = 3
+    case physics                = 4
+    case additive               = 5
+    case dynamic                = 6
     
 }
 
@@ -41,7 +41,7 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
                     ]
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -54,7 +54,7 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
 
         title = "Examples"
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.white()
 
     }
 
@@ -77,83 +77,83 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         tableView.clipsToBounds = true
         tableView.estimatedRowHeight = 44.0
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: CELL_IDENTIFIER)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: CELL_IDENTIFIER)
         self.view.addSubview(tableView)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.init(item: tableView,
-                           attribute: .Width,
-                           relatedBy: .Equal,
+                           attribute: .width,
+                           relatedBy: .equal,
                               toItem: view,
-                           attribute: .Width,
+                           attribute: .width,
                           multiplier: 1.0,
-                            constant: 0.0).active = true
+                            constant: 0.0).isActive = true
         
         NSLayoutConstraint.init(item: tableView,
-                                attribute: .Height,
-                                relatedBy: .Equal,
+                                attribute: .height,
+                                relatedBy: .equal,
                                 toItem: view,
-                                attribute: .Height,
+                                attribute: .height,
                                 multiplier: 1.0,
-                                constant: 0.0).active = true
+                                constant: 0.0).isActive = true
         
     }
     
     
     // MARK: - Table View
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return examples.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_IDENTIFIER, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_IDENTIFIER, for: indexPath)
 
         
-        let label_text = examples[indexPath.row]
+        let label_text = examples[(indexPath as NSIndexPath).row]
         cell.textLabel!.text = label_text
         
         return cell
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let index = ExampleTypes(rawValue: indexPath.row)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = ExampleTypes(rawValue: (indexPath as NSIndexPath).row)
         
         if let type = index {
             var vc: UIViewController
             
             switch type {
-            case .Basic:
+            case .basic:
                 vc = BasicMotionViewController()
                 
-            case .Group:
+            case .group:
                 vc = GroupMotionViewController()
                 
-            case .Sequence:
+            case .sequence:
                 vc = SequenceViewController()
                 
-            case .ContiguousSequence:
+            case .contiguousSequence:
                 vc = SequenceContiguousViewController()
                 
-            case .Physics:
+            case .physics:
                 vc = PhysicsMotionViewController()
                 
-            case .Additive:
+            case .additive:
                 vc = AdditiveViewController()
                 
-            case .Dynamic:
+            case .dynamic:
                 vc = DynamicViewController()
             }
             
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
             
-            vc.title = examples[indexPath.row]
+            vc.title = examples[(indexPath as NSIndexPath).row]
             navigationController?.pushViewController(vc, animated: true)
         }
         

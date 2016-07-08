@@ -341,7 +341,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: start
      */
-    public func started(_ closure: SequenceStarted) -> Self {
+    @discardableResult public func started(_ closure: SequenceStarted) -> Self {
         _started = closure
         
         return self
@@ -353,7 +353,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: stop
      */
-    public func stopped(_ closure: SequenceStopped) -> Self {
+    @discardableResult public func stopped(_ closure: SequenceStopped) -> Self {
         _stopped = closure
         
         return self
@@ -365,7 +365,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(_ closure: SequenceUpdated) -> Self {
+    @discardableResult public func updated(_ closure: SequenceUpdated) -> Self {
         _updated = closure
         
         return self
@@ -377,7 +377,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(_ closure: SequenceRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: SequenceRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -389,7 +389,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(_ closure: SequenceReversed) -> Self {
+    @discardableResult public func reversed(_ closure: SequenceReversed) -> Self {
         _reversed = closure
         
         return self
@@ -401,7 +401,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: pause
      */
-    public func paused(_ closure: SequencePaused) -> Self {
+    @discardableResult public func paused(_ closure: SequencePaused) -> Self {
         _paused = closure
         
         return self
@@ -413,7 +413,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: resume
      */
-    public func resumed(_ closure: SequenceResumed) -> Self {
+    @discardableResult public func resumed(_ closure: SequenceResumed) -> Self {
         _resumed = closure
         
         return self
@@ -424,7 +424,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
      *
      */
-    public func completed(_ closure: SequenceCompleted) -> Self {
+    @discardableResult public func completed(_ closure: SequenceCompleted) -> Self {
         _completed = closure
         
         return self
@@ -435,7 +435,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This notification closure is called when the sequence's movement has advanced to its next sequence step.
      *
      */
-    public func stepCompleted(_ closure: SequenceStepped) -> Self {
+    @discardableResult public func stepCompleted(_ closure: SequenceStepped) -> Self {
         _stepCompleted = closure
         
         return self
@@ -560,7 +560,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     @discardableResult public func add(_ steps: [Moveable]) -> Self {
         
         for step in steps {
-            add(step)
+            _ = add(step)
         }
         
         return self
@@ -702,7 +702,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 if (step.motionState == .paused) {
                     step.resume()
                 }
-                step.start()
+                _ = step.start()
             }
         
         } else {
@@ -740,7 +740,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 if (!reversing
                     || (reversing && reversingMode == .contiguous && motionDirection == .forward)
                     || (reversing && reversingMode == .sequential)) {
-                    next_step.start()
+                    _ = next_step.start()
                     
                 } else {
                     if (next_step.motionState == .paused) {
@@ -886,7 +886,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 motionState = .moving
                 
                 if let step = currentStep() {
-                    step.start()
+                    _ = step.start()
                 }
                 
                 // call start closure
@@ -902,7 +902,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     }
     
     
-    public func start() -> Self {
+    @discardableResult public func start() -> Self {
         if (motionState == .stopped) {
             reset()
             
@@ -910,7 +910,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 motionState = .moving
                
                 if let sequence_step = currentStep() {
-                    sequence_step.start()
+                    _ = sequence_step.start()
                 }
                 
                 // call start closure

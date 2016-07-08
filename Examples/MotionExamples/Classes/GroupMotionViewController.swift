@@ -27,7 +27,7 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -71,14 +71,14 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
     
     
     
-    public override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         group.start()
     }
     
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         group.stop()
@@ -94,16 +94,16 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white()
         let margins = view.layoutMarginsGuide
 
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
 
         // set up motion views
@@ -124,18 +124,18 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
         circle.translatesAutoresizingMaskIntoConstraints = false
         circle2.translatesAutoresizingMaskIntoConstraints = false
         
-        let circle_x = circle.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 0.0)
-        circle_x.active = true
-        let circle_y = circle.topAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+40.0)
-        circle_y.active = true
-        circle.widthAnchor.constraintEqualToConstant(40.0).active = true
-        circle.heightAnchor.constraintEqualToConstant(40.0).active = true
+        let circle_x = circle.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        circle_x.isActive = true
+        let circle_y = circle.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+        circle_y.isActive = true
+        circle.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        circle.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
 
-        let circle2_x = circle2.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 0.0)
-        circle2_x.active = true
-        circle2.topAnchor.constraintEqualToAnchor(circle.layoutMarginsGuide.bottomAnchor, constant: 20.0).active = true
-        circle2.widthAnchor.constraintEqualToConstant(40.0).active = true
-        circle2.heightAnchor.constraintEqualToConstant(40.0).active = true
+        let circle2_x = circle2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        circle2_x.isActive = true
+        circle2.topAnchor.constraint(equalTo: circle.layoutMarginsGuide.bottomAnchor, constant: 20.0).isActive = true
+        circle2.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        circle2.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
         constraints["circleX"] = circle_x
         constraints["circleY"] = circle_y

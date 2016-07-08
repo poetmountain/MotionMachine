@@ -379,7 +379,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: start
      */
-    public func started(_ closure: MotionStarted) -> Self {
+    @discardableResult public func started(_ closure: MotionStarted) -> Self {
         _started = closure
         
         return self
@@ -393,7 +393,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: stop
      */
-    public func stopped(_ closure: MotionStopped) -> Self {
+    @discardableResult public func stopped(_ closure: MotionStopped) -> Self {
         _stopped = closure
         
         return self
@@ -407,7 +407,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(_ closure: MotionUpdated) -> Self {
+    @discardableResult public func updated(_ closure: MotionUpdated) -> Self {
         _updated = closure
         
         return self
@@ -421,7 +421,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(_ closure: MotionRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: MotionRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -435,7 +435,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(_ closure: MotionReversed) -> Self {
+    @discardableResult public func reversed(_ closure: MotionReversed) -> Self {
         _reversed = closure
         
         return self
@@ -449,7 +449,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: pause
      */
-    public func paused(_ closure: MotionPaused) -> Self {
+    @discardableResult public func paused(_ closure: MotionPaused) -> Self {
         _paused = closure
         
         return self
@@ -463,7 +463,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: resume
      */
-    public func resumed(_ closure: MotionResumed) -> Self {
+    @discardableResult public func resumed(_ closure: MotionResumed) -> Self {
         _resumed = closure
         
         return self
@@ -475,7 +475,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - remark: This method can be chained when initializing the object.
      */
-    public func completed(_ closure: MotionCompleted) -> Self {
+    @discardableResult public func completed(_ closure: MotionCompleted) -> Self {
         _completed = closure
         
         return self
@@ -1190,7 +1190,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     }
     
     
-    public func start() -> Self {
+    @discardableResult public func start() -> Self {
         if (motionState == .stopped) {
             reset()
             

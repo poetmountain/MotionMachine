@@ -110,7 +110,7 @@ class MotionGroupTests: XCTestCase {
         XCTAssertNil(motion.tempo, "child tempo should be removed")
         XCTAssertNotNil(group.tempo, "group tempo should not be removed")
         
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
 
         group.completed { (group) in
             let motion = group.motions[0] as? Motion
@@ -124,12 +124,12 @@ class MotionGroupTests: XCTestCase {
         }
         
         group.start()
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(withTimeout: 2.0, handler: nil)
     }
     
     func test_delay() {
         
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
         let tester = Tester()
         let tester2 = Tester()
@@ -150,7 +150,7 @@ class MotionGroupTests: XCTestCase {
         group.delay = 0.2
         
         group.start()
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
@@ -162,8 +162,8 @@ class MotionGroupTests: XCTestCase {
         let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.2)
         
-        let did_repeat = expectationWithDescription("group called cycleRepeated notify closure")
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_repeat = expectation(withDescription: "group called cycleRepeated notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
         
         let group = MotionGroup(motions: [motion, motion2], options: [.Repeat])
         .cycleRepeated({ (group) in
@@ -179,10 +179,11 @@ class MotionGroupTests: XCTestCase {
             let motion = group.motions.first as? Motion
             XCTAssertEqual(motion?.properties[0].current, motion?.properties[0].end)
             XCTAssertEqual(motion?.totalProgress, 1.0)
-            XCTAssertEqual(group.cyclesCompletedCount, group.repeatCycles+1)
+            let new_cycles = group.repeatCycles + 1
+            XCTAssertEqual(group.cyclesCompletedCount, new_cycles)
             XCTAssertEqual(group.cycleProgress, 1.0)
             XCTAssertEqual(group.totalProgress, 1.0)
-            XCTAssertEqual(group.motionState, MotionState.Stopped)
+            XCTAssertEqual(group.motionState, MotionState.stopped)
             
             did_complete.fulfill()
         }
@@ -190,7 +191,7 @@ class MotionGroupTests: XCTestCase {
         
         group.start()
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
         
     }
@@ -202,14 +203,14 @@ class MotionGroupTests: XCTestCase {
         let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.2)
         
-        let did_reverse = expectationWithDescription("group called reversed notify closure")
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_reverse = expectation(withDescription: "group called reversed notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
         
         let group = MotionGroup(motions: [motion, motion2], options: [.Reverse])
             .reversed({ (group) in
                 XCTAssertTrue(group.totalProgress <= 0.5)
                 XCTAssertTrue(group.cycleProgress <= 0.5)
-                XCTAssertEqual(group.motionDirection, MotionDirection.Reverse)
+                XCTAssertEqual(group.motionDirection, MotionDirection.reverse)
                 
                 did_reverse.fulfill()
             })
@@ -222,7 +223,7 @@ class MotionGroupTests: XCTestCase {
                 XCTAssertEqual(group.cyclesCompletedCount, 1)
                 XCTAssertEqual(group.cycleProgress, 1.0)
                 XCTAssertEqual(group.totalProgress, 1.0)
-                XCTAssertEqual(group.motionState, MotionState.Stopped)
+                XCTAssertEqual(group.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
@@ -232,7 +233,7 @@ class MotionGroupTests: XCTestCase {
         XCTAssertTrue(motion2.reversing)
         
         group.start()
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
@@ -243,15 +244,15 @@ class MotionGroupTests: XCTestCase {
         let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.5)
         
-        let did_reverse = expectationWithDescription("group called reversed notify closure")
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_reverse = expectation(withDescription: "group called reversed notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
         
         let group = MotionGroup(motions: [motion, motion2])
             .reversed({ (group) in
                 print("reversed")
                 XCTAssertTrue(group.totalProgress <= 0.5)
                 XCTAssertTrue(group.cycleProgress <= 0.5)
-                XCTAssertEqual(group.motionDirection, MotionDirection.Reverse)
+                XCTAssertEqual(group.motionDirection, MotionDirection.reverse)
                 
                 did_reverse.fulfill()
                 
@@ -265,22 +266,22 @@ class MotionGroupTests: XCTestCase {
                 XCTAssertEqual(group.cyclesCompletedCount, 1)
                 XCTAssertEqual(group.cycleProgress, 1.0)
                 XCTAssertEqual(group.totalProgress, 1.0)
-                XCTAssertEqual(group.motionState, MotionState.Stopped)
+                XCTAssertEqual(group.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
         .reverses(syncsChildMotions: true)
         .start()
 
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.after(when: after_time) {
             // motion with the shorter duration should wait for the other motion to finish before group reverses
-            XCTAssertEqual(motion.motionState, MotionState.Paused)
-            XCTAssertEqual(motion2.motionState, MotionState.Moving)
-            XCTAssertEqual(group.motionDirection, MotionDirection.Forward)
+            XCTAssertEqual(motion.motionState, MotionState.paused)
+            XCTAssertEqual(motion2.motionState, MotionState.moving)
+            XCTAssertEqual(group.motionDirection, MotionDirection.forward)
         }
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(withTimeout: 2.0, handler: nil)
         
     }
     
@@ -289,7 +290,7 @@ class MotionGroupTests: XCTestCase {
     
     func test_start() {
         
-        let did_start = expectationWithDescription("group called started notify closure")
+        let did_start = expectation(withDescription: "group called started notify closure")
 
         let tester = Tester()
         let tester2 = Tester()
@@ -297,7 +298,7 @@ class MotionGroupTests: XCTestCase {
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .started { (group) in
-            XCTAssertEqual(group.motionState, MotionState.Moving)
+            XCTAssertEqual(group.motionState, MotionState.moving)
             
             did_start.fulfill()
         }
@@ -307,14 +308,14 @@ class MotionGroupTests: XCTestCase {
         // should not start when paused
         group.pause()
         group.start()
-        XCTAssertEqual(group.motionState, MotionState.Paused)
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        XCTAssertEqual(group.motionState, MotionState.paused)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
     func test_stop() {
         
-        let did_stop = expectationWithDescription("group called stopped notify closure")
+        let did_stop = expectation(withDescription: "group called stopped notify closure")
         
         let tester = Tester()
         let tester2 = Tester()
@@ -322,24 +323,24 @@ class MotionGroupTests: XCTestCase {
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .stopped { (group) in
-            XCTAssertEqual(group.motionState, MotionState.Stopped)
+            XCTAssertEqual(group.motionState, MotionState.stopped)
             
             did_stop.fulfill()
         }
         
         group.start()
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.after(when: after_time) {
             group.stop()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
     func test_pause() {
         
-        let did_pause = expectationWithDescription("group called paused notify closure")
+        let did_pause = expectation(withDescription: "group called paused notify closure")
         
         let tester = Tester()
         let tester2 = Tester()
@@ -347,7 +348,7 @@ class MotionGroupTests: XCTestCase {
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .paused { (group) in
-            XCTAssertEqual(group.motionState, MotionState.Paused)
+            XCTAssertEqual(group.motionState, MotionState.paused)
             
             did_pause.fulfill()
         }
@@ -355,7 +356,7 @@ class MotionGroupTests: XCTestCase {
         group.start()
         group.pause()
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
@@ -371,13 +372,13 @@ class MotionGroupTests: XCTestCase {
         group.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(group.motionState, MotionState.Stopped)
+        XCTAssertEqual(group.motionState, MotionState.stopped)
     }
     
     func test_resume() {
         
-        let did_resume = expectationWithDescription("group called resumed notify closure")
-        let did_complete = expectationWithDescription("group called completed notify closure")
+        let did_resume = expectation(withDescription: "group called resumed notify closure")
+        let did_complete = expectation(withDescription: "group called completed notify closure")
 
         let tester = Tester()
         let tester2 = Tester()
@@ -385,31 +386,31 @@ class MotionGroupTests: XCTestCase {
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .resumed { (group) in
-            XCTAssertEqual(group.motionState, MotionState.Moving)
+            XCTAssertEqual(group.motionState, MotionState.moving)
             
             did_resume.fulfill()
         }
         .completed { (group) in
             XCTAssertEqual(tester.value, 10.0)
             XCTAssertEqual(group.totalProgress, 1.0)
-            XCTAssertEqual(group.motionState, MotionState.Stopped)
+            XCTAssertEqual(group.motionState, MotionState.stopped)
             
             did_complete.fulfill()
         }
         group.start()
         group.pause()
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.after(when: after_time) {
             group.resume()
         }
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
     func test_update() {
         
-        let did_update = expectationWithDescription("group called updated notify closure")
+        let did_update = expectation(withDescription: "group called updated notify closure")
         
         let tester = Tester()
         let tester2 = Tester()
@@ -417,7 +418,7 @@ class MotionGroupTests: XCTestCase {
         let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
             .updated { (group) in
-                XCTAssertEqual(group.motionState, MotionState.Moving)
+                XCTAssertEqual(group.motionState, MotionState.moving)
                 
                 did_update.fulfill()
                 group.stop()
@@ -425,13 +426,13 @@ class MotionGroupTests: XCTestCase {
         
         group.start()
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
     func test_reset() {
         
-        let did_reset = expectationWithDescription("motion called updated notify closure")
+        let did_reset = expectation(withDescription: "motion called updated notify closure")
 
         let tester = Tester()
         let tester2 = Tester()
@@ -440,8 +441,8 @@ class MotionGroupTests: XCTestCase {
         let group = MotionGroup(motions: [motion, motion2])
         
         group.start()
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.after(when: after_time) {
             group.reset()
             
             XCTAssertEqual(group.totalProgress, 0.0)
@@ -451,7 +452,7 @@ class MotionGroupTests: XCTestCase {
             did_reset.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     

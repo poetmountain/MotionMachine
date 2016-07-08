@@ -11,9 +11,9 @@ import UIKit
 
 class Tester: NSObject {
     var value: Double = 0.0
-    var rect = CGRectZero
-    var transform = CGAffineTransformIdentity
-    var color = UIColor.redColor()
+    var rect = CGRect.zero
+    var transform = CGAffineTransform.identity
+    var color = UIColor.red()
     var insets = UIEdgeInsetsZero
     var offset = UIOffsetZero
 }

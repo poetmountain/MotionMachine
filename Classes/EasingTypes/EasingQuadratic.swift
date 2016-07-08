@@ -45,7 +45,7 @@ public struct EasingQuadratic {
     public static func easeOut() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            let easing_value = -valueRange * (elapsedTime*elapsedTime) / (duration*duration) + 2*valueRange*(elapsedTime/duration) + startValue
+            let easing_value = -valueRange * ((elapsedTime*elapsedTime) / (duration*duration)) + (2*valueRange * (elapsedTime/duration)) + startValue
             
             return easing_value
         }

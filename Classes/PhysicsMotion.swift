@@ -399,7 +399,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: start
      */
-    public func started(_ closure: PhysicsMotionStarted) -> Self {
+    @discardableResult public func started(_ closure: PhysicsMotionStarted) -> Self {
         _started = closure
         
         return self
@@ -413,7 +413,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: stop
      */
-    public func stopped(_ closure: PhysicsMotionStopped) -> Self {
+    @discardableResult public func stopped(_ closure: PhysicsMotionStopped) -> Self {
         _stopped = closure
         
         return self
@@ -427,7 +427,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(_ closure: PhysicsMotionUpdated) -> Self {
+    @discardableResult public func updated(_ closure: PhysicsMotionUpdated) -> Self {
         _updated = closure
         
         return self
@@ -441,7 +441,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(_ closure: PhysicsMotionRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: PhysicsMotionRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -455,7 +455,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(_ closure: PhysicsMotionReversed) -> Self {
+    @discardableResult public func reversed(_ closure: PhysicsMotionReversed) -> Self {
         _reversed = closure
         
         return self
@@ -469,7 +469,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: pause
      */
-    public func paused(_ closure: PhysicsMotionPaused) -> Self {
+    @discardableResult public func paused(_ closure: PhysicsMotionPaused) -> Self {
         _paused = closure
         
         return self
@@ -483,7 +483,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - seealso: resume
      */
-    public func resumed(_ closure: PhysicsMotionResumed) -> Self {
+    @discardableResult public func resumed(_ closure: PhysicsMotionResumed) -> Self {
         _resumed = closure
         
         return self
@@ -495,7 +495,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *
      *  - remark: This method can be chained when initializing the object.
      */
-    public func completed(_ closure: PhysicsMotionCompleted) -> Self {
+    @discardableResult public func completed(_ closure: PhysicsMotionCompleted) -> Self {
         _completed = closure
         
         return self
@@ -886,8 +886,8 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             removePhysicsTimer()
         }
         
-        physicsTimer = DispatchSource.timer(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes(rawValue: DispatchQueueAttributes.qosUserInteractive.rawValue)) )
-        physicsTimer?.scheduleRepeating(deadline: DispatchTime.now(), interval: physicsTimerInterval * Double(NSEC_PER_SEC), leeway: DispatchTimeInterval.milliseconds(1))
+        physicsTimer = DispatchSource.timer(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(attributes: [ .qosUserInteractive ]) )
+        physicsTimer?.scheduleRepeating(deadline: DispatchTime.now(), interval: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
       
         physicsTimer?.setEventHandler(handler: {
             [weak self] in
@@ -900,7 +900,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     
     private func removePhysicsTimer() {
         if let timer = physicsTimer {
-            timer.cancel();
+            timer.cancel()
             physicsTimer = nil
         }
     }
@@ -1171,7 +1171,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     
     
     
-    public func start() -> Self {
+    @discardableResult public func start() -> Self {
         if (motionState == .stopped) {
             reset()
             

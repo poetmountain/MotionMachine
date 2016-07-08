@@ -337,7 +337,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: start
      */
-    public func started(_ closure: GroupStarted) -> Self {
+    @discardableResult public func started(_ closure: GroupStarted) -> Self {
         _started = closure
         
         return self
@@ -349,7 +349,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: stop
      */
-    public func stopped(_ closure: GroupStopped) -> Self {
+    @discardableResult public func stopped(_ closure: GroupStopped) -> Self {
         _stopped = closure
         
         return self
@@ -361,7 +361,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(_ closure: GroupUpdated) -> Self {
+    @discardableResult public func updated(_ closure: GroupUpdated) -> Self {
         _updated = closure
         
         return self
@@ -373,7 +373,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(_ closure: GroupRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: GroupRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -385,7 +385,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(_ closure: GroupReversed) -> Self {
+    @discardableResult public func reversed(_ closure: GroupReversed) -> Self {
         _reversed = closure
         
         return self
@@ -397,7 +397,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: pause
      */
-    public func paused(_ closure: GroupPaused) -> Self {
+    @discardableResult public func paused(_ closure: GroupPaused) -> Self {
         _paused = closure
         
         return self
@@ -409,7 +409,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *
      *  - seealso: resume
      */
-    public func resumed(_ closure: GroupResumed) -> Self {
+    @discardableResult public func resumed(_ closure: GroupResumed) -> Self {
         _resumed = closure
         
         return self
@@ -420,7 +420,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
      *
      */
-    public func completed(_ closure: GroupCompleted) -> Self {
+    @discardableResult public func completed(_ closure: GroupCompleted) -> Self {
         _completed = closure
         
         return self
@@ -541,7 +541,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     @discardableResult public func add(_ motions: [Moveable]) -> Self {
     
         for motion in motions {
-            add(motion)
+            _ = add(motion)
         }
     
         return self
@@ -644,7 +644,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             // restart motions of children for another cycle
             for motion in motions {
-                motion.start()
+                _ = motion.start()
             }
         
         } else {
@@ -783,7 +783,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                 motionState = .moving
                 
                 for motion in motions {
-                    motion.start()
+                    _ = motion.start()
                 }
                 
                 // call start closure
@@ -797,14 +797,14 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     }
     
     
-    public func start() -> Self {
+    @discardableResult public func start() -> Self {
         
         if (motionState == .stopped) {
             reset()
             if (delay == 0.0) {
                 motionState = .moving
                 for motion in motions {
-                    motion.start()
+                    _ = motion.start()
                 }
                 
                 // call start closure
