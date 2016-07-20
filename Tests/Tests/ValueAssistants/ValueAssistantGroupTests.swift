@@ -43,7 +43,7 @@ class ValueAssistantGroupTests: XCTestCase {
         let tester = Tester()
         let rect = CGRect.init(x: 0.0, y: 10.0, width: 50.0, height: 0.0)
         let path = "rect"
-        if let struct_val = CGStructAssistant.valueForCGStruct(rect), target = tester.value(forKeyPath: path) {
+        if let struct_val = CGStructAssistant.valueForCGStruct(rect), let target = tester.value(forKeyPath: path) {
             let props = assistant.generateProperties(fromObject: struct_val, keyPath: path, targetObject: target)
             
             XCTAssertEqual(props.count, 2)

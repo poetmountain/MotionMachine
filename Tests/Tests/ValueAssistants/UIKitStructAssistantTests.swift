@@ -17,7 +17,7 @@ class UIKitStructAssistantTests: XCTestCase {
         let tester = Tester()
         let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
         let path = "insets"
-        if let val = UIKitStructAssistant.valueForStruct(insets), target = tester.value(forKeyPath: path) {
+        if let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
             let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
             
             XCTAssertEqual(props.count, 2)
@@ -37,7 +37,7 @@ class UIKitStructAssistantTests: XCTestCase {
         let tester = Tester()
         let offset = UIOffsetMake(10.0, 20.0)
         let path = "offset"
-        if let val = UIKitStructAssistant.valueForStruct(offset), target = tester.value(forKeyPath: path) {
+        if let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
             let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
             
             XCTAssertEqual(props.count, 2)

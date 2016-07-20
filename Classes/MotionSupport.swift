@@ -98,7 +98,7 @@ public struct MotionSupport {
         let motions_array = MotionSupport.motions.allObjects
         let sorted_motions = motions_array.sorted( isOrderedBefore: { (motion1, motion2) -> Bool in
             var test: Bool = false
-            if let m1 = motion1 as? Additive, m2 = motion2 as? Additive {
+            if let m1 = motion1 as? Additive, let m2 = motion2 as? Additive {
                 test =  m1.operationID < m2.operationID
             }
             return test

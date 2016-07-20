@@ -104,8 +104,8 @@ class MotionSequenceTests: XCTestCase {
     // MARK: Motion tests
 
     func test_should_end_motions_at_proper_ending_values() {
-        let did_start = expectation(withDescription: "sequence called started notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_start = expectation(description: "sequence called started notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -132,12 +132,12 @@ class MotionSequenceTests: XCTestCase {
         }
         
         sequence.start()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
 
     }
     
     func test_delay() {
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -159,12 +159,12 @@ class MotionSequenceTests: XCTestCase {
         
         
         sequence.start()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
  
     func test_repeating() {
-        let did_repeat = expectation(withDescription: "sequence called started notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_repeat = expectation(description: "sequence called started notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -199,13 +199,13 @@ class MotionSequenceTests: XCTestCase {
         sequence.repeatCycles = 1
         
         sequence.start()
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
 
     }
     
     func test_reversing_contiguous() {
-        let did_reverse = expectation(withDescription: "sequence called reversed notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -261,14 +261,14 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(motion3.motionState, MotionState.moving)
         }
         
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
 
     }
     
     
     func test_reversing_nested_sequence_contiguous() {
-        let did_reverse = expectation(withDescription: "sequence called reversed notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -333,14 +333,14 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(motion5.motionState, MotionState.moving)
         }
         
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     func test_reversing_nested_sequence_in_last_position_contiguous() {
-        let did_reverse = expectation(withDescription: "sequence called reversed notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -400,15 +400,15 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(sub_sequence.motionState, MotionState.moving)
         }
         
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     
     func test_reversing_nested_sequence_noncontiguous() {
-        let did_reverse = expectation(withDescription: "sequence called reversed notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -470,14 +470,14 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(motion3.motionState, MotionState.moving)
         }
         
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     func test_reversing_noncontiguous() {
-        let did_reverse = expectation(withDescription: "sequence called reversed notify closure")
-        let did_complete = expectation(withDescription: "sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -532,7 +532,7 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(motion3.motionState, MotionState.moving)
         }
         
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
@@ -542,7 +542,7 @@ class MotionSequenceTests: XCTestCase {
     // MARK: Moveable methods
     
     func test_start() {
-        let did_start = expectation(withDescription: "sequence called started notify closure")
+        let did_start = expectation(description: "sequence called started notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -561,12 +561,12 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         XCTAssertEqual(sequence.motionState, MotionState.paused)
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
 
     }
     
     func test_stop() {
-        let did_stop = expectation(withDescription: "sequence called stopped notify closure")
+        let did_stop = expectation(description: "sequence called stopped notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -585,11 +585,11 @@ class MotionSequenceTests: XCTestCase {
             sequence.stop()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_pause() {
-        let did_pause = expectation(withDescription: "sequence called paused notify closure")
+        let did_pause = expectation(description: "sequence called paused notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -604,7 +604,7 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         sequence.pause()
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
@@ -625,8 +625,8 @@ class MotionSequenceTests: XCTestCase {
     
     
     func test_resume() {
-        let did_resume = expectation(withDescription: "sequence called resumed notify closure")
-        let did_complete = expectation(withDescription: "squence called completed notify closure")
+        let did_resume = expectation(description: "sequence called resumed notify closure")
+        let did_complete = expectation(description: "squence called completed notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -651,12 +651,12 @@ class MotionSequenceTests: XCTestCase {
             sequence.resume()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_update() {
         
-        let did_update = expectation(withDescription: "sequence called updated notify closure")
+        let did_update = expectation(description: "sequence called updated notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -671,13 +671,13 @@ class MotionSequenceTests: XCTestCase {
         
         sequence.start()
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
     func test_reset() {
         
-        let did_reset = expectation(withDescription: "motion called updated notify closure")
+        let did_reset = expectation(description: "motion called updated notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -695,7 +695,7 @@ class MotionSequenceTests: XCTestCase {
             did_reset.fulfill()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     

@@ -59,7 +59,7 @@ class PhysicsMotionTests: XCTestCase {
     // MARK: Motion tests
     
     func test_top_level_prop_should_end_at_specified_value() {
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: 0.0, velocity: 1.5, friction: 0.999)
         .completed { (motion) in
@@ -71,12 +71,12 @@ class PhysicsMotionTests: XCTestCase {
         motion.velocityDecayLimit = 1.0
         
         motion.start()
-        waitForExpectations(withTimeout: 4.0, handler: nil)
+        waitForExpectations(timeout: 4.0, handler: nil)
         
     }
     
     func test_object_prop_should_end_at_specified_value() {
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         let tester = Tester()
 
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.998)
@@ -90,13 +90,13 @@ class PhysicsMotionTests: XCTestCase {
         motion.velocityDecayLimit = 1.0
         
         motion.start()
-        waitForExpectations(withTimeout: 4.0, handler: nil)
+        waitForExpectations(timeout: 4.0, handler: nil)
         
     }
     
     func test_delay() {
         let tester = Tester()
-        let did_start = expectation(withDescription: "motion called started notify closure")
+        let did_start = expectation(description: "motion called started notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 1.5, friction: 0.999)
         .started({ (motion) in
@@ -108,7 +108,7 @@ class PhysicsMotionTests: XCTestCase {
         motion.delay = 0.2
         
         motion.start()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
 
@@ -116,7 +116,7 @@ class PhysicsMotionTests: XCTestCase {
     func test_moving_nested_struct() {
         let tester = Tester()
         
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("rect.origin.x")], velocity: 2.0, friction: 0.998)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
@@ -127,7 +127,7 @@ class PhysicsMotionTests: XCTestCase {
         motion.velocityDecayLimit = 1.0
 
         motion.start()
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
@@ -135,7 +135,7 @@ class PhysicsMotionTests: XCTestCase {
     func test_additive_mode() {
         let tester = Tester()
         
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 10.0, friction: 0.98)
         motion.additive = true
@@ -153,15 +153,15 @@ class PhysicsMotionTests: XCTestCase {
         
         motion.start()
         motion2.start()
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     func test_repeating_should_repeat() {
         let tester = Tester()
         
-        let did_repeat = expectation(withDescription: "motion called cycleRepeated notify closure")
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Repeat])
             .cycleRepeated({ (motion) in
@@ -182,15 +182,15 @@ class PhysicsMotionTests: XCTestCase {
         motion.repeatCycles = 1
         
         motion.start()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
     func test_reversing_should_reverse() {
         let tester = Tester()
         
-        let did_reverse = expectation(withDescription: "motion called reversed notify closure")
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_reverse = expectation(description: "motion called reversed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Reverse])
             .reversed({ (motion) in
@@ -210,15 +210,15 @@ class PhysicsMotionTests: XCTestCase {
         }
         
         motion.start()
-        waitForExpectations(withTimeout: 2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     func test_reversing_and_repeating_should_reverse_and_repeat() {
         let tester = Tester()
         
-        let did_repeat = expectation(withDescription: "motion called cycleRepeated notify closure")
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Reverse, .Repeat])
             .reversed({ (motion) in
@@ -244,7 +244,7 @@ class PhysicsMotionTests: XCTestCase {
         motion.repeatCycles = 1
         
         motion.start()
-        waitForExpectations(withTimeout: 3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         
     }
     
@@ -254,7 +254,7 @@ class PhysicsMotionTests: XCTestCase {
         
         let tester = Tester()
         
-        let did_start = expectation(withDescription: "motion called started notify closure")
+        let did_start = expectation(description: "motion called started notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
         .started { (motion) in
@@ -265,7 +265,7 @@ class PhysicsMotionTests: XCTestCase {
         
         motion.start()
         motion.stop()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
@@ -287,7 +287,7 @@ class PhysicsMotionTests: XCTestCase {
         
         let tester = Tester()
         
-        let did_stop = expectation(withDescription: "motion called stopped notify closure")
+        let did_stop = expectation(description: "motion called stopped notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
         .stopped { (motion) in
@@ -302,13 +302,13 @@ class PhysicsMotionTests: XCTestCase {
             motion.stop()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_pause() {
         
         let tester = Tester()
-        let did_pause = expectation(withDescription: "motion called paused notify closure")
+        let did_pause = expectation(description: "motion called paused notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
         .paused { (motion) in
@@ -319,7 +319,7 @@ class PhysicsMotionTests: XCTestCase {
         motion.start()
         motion.pause()
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
@@ -340,8 +340,8 @@ class PhysicsMotionTests: XCTestCase {
         
         let tester = Tester()
         
-        let did_resume = expectation(withDescription: "motion called resumed notify closure")
-        let did_complete = expectation(withDescription: "motion called completed notify closure")
+        let did_resume = expectation(description: "motion called resumed notify closure")
+        let did_complete = expectation(description: "motion called completed notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
             .resumed { (motion) in
@@ -362,7 +362,7 @@ class PhysicsMotionTests: XCTestCase {
             motion.resume()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
@@ -383,7 +383,7 @@ class PhysicsMotionTests: XCTestCase {
         
         let tester = Tester()
         
-        let did_update = expectation(withDescription: "motion called updated notify closure")
+        let did_update = expectation(description: "motion called updated notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
             .updated { (motion) in
@@ -394,14 +394,14 @@ class PhysicsMotionTests: XCTestCase {
         }
         
         motion.start()
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_reset() {
         
         let tester = Tester()
         
-        let did_reset = expectation(withDescription: "motion called updated notify closure")
+        let did_reset = expectation(description: "motion called updated notify closure")
         
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value", 10.0)], velocity: 2.0, friction: 0.98)
         
@@ -418,7 +418,7 @@ class PhysicsMotionTests: XCTestCase {
             did_reset.fulfill()
         }
         
-        waitForExpectations(withTimeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
 }

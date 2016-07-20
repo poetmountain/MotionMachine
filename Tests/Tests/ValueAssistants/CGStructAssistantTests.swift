@@ -17,7 +17,7 @@ class CGStructAssistantTests: XCTestCase {
         let tester = Tester()
         let rect = CGRect(x: 0.0, y: 10.0, width: 50.0, height: 0.0)
         let path = "rect"
-        if let val = CGStructAssistant.valueForCGStruct(rect), target = tester.value(forKeyPath: path) {
+        if let val = CGStructAssistant.valueForCGStruct(rect), let target = tester.value(forKeyPath: path) {
             let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
             
             XCTAssertEqual(props.count, 2)
