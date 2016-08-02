@@ -38,7 +38,6 @@ public struct MotionSupport {
     // MARK: Additive utility methods
     
     // Holds weak references to all currently-tweening Motion instances which are moving an object's property
-    // NOTE: As of Swift 3 beta 4, HashTable is missing??, so we're temporarily using NSHashTable
     static var motions = NSHashTable<AnyObject>.weakObjects()
     
     static var operationID: UInt = 0
