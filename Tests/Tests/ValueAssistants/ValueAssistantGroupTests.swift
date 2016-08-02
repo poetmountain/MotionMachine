@@ -66,8 +66,8 @@ class ValueAssistantGroupTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["origin.x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgRectValue().origin.x, 10.0)
-        XCTAssertEqual(new_value.cgRectValue().origin.y, old_value.cgRectValue().origin.y)
+        XCTAssertEqual(new_value.cgRectValue.origin.x, 10.0)
+        XCTAssertEqual(new_value.cgRectValue.origin.y, old_value.cgRectValue.origin.y)
     }
     
     func test_updateValue_UIColor() {

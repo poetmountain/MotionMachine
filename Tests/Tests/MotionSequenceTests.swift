@@ -109,7 +109,7 @@ class MotionSequenceTests: XCTestCase {
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -168,7 +168,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -209,7 +209,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -256,10 +256,10 @@ class MotionSequenceTests: XCTestCase {
 
         // should pause first motion while moving the second
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             XCTAssertEqual(group.motionState, MotionState.paused)
             XCTAssertEqual(motion3.motionState, MotionState.moving)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
 
@@ -272,7 +272,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -327,11 +327,11 @@ class MotionSequenceTests: XCTestCase {
         
         // should pause first motion while moving the second
         let after_time = DispatchTime.now() + Double(Int64(0.7 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             XCTAssertEqual(group.motionState, MotionState.paused)
             XCTAssertEqual(sub_sequence.motionState, MotionState.paused)
             XCTAssertEqual(motion5.motionState, MotionState.moving)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
@@ -344,7 +344,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -395,10 +395,10 @@ class MotionSequenceTests: XCTestCase {
         
         // should pause first motion while moving the second
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             XCTAssertEqual(group.motionState, MotionState.paused)
             XCTAssertEqual(sub_sequence.motionState, MotionState.moving)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
@@ -412,7 +412,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -465,10 +465,10 @@ class MotionSequenceTests: XCTestCase {
         
         // should pause first motion while moving the second
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             XCTAssertEqual(group.motionState, MotionState.stopped)
             XCTAssertEqual(motion3.motionState, MotionState.moving)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
@@ -481,7 +481,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -527,10 +527,10 @@ class MotionSequenceTests: XCTestCase {
         
         // should pause first motion while moving the second
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             XCTAssertEqual(group.motionState, MotionState.stopped)
             XCTAssertEqual(motion3.motionState, MotionState.moving)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
@@ -581,9 +581,9 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.stop()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -647,9 +647,9 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         sequence.pause()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.resume()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -686,14 +686,14 @@ class MotionSequenceTests: XCTestCase {
         
         sequence.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.reset()
             
             XCTAssertEqual(sequence.totalProgress, 0.0)
             XCTAssertEqual(sequence.cycleProgress, 0.0)
             
             did_reset.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
         

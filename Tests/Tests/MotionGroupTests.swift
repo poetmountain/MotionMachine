@@ -274,12 +274,12 @@ class MotionGroupTests: XCTestCase {
         .start()
 
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             // motion with the shorter duration should wait for the other motion to finish before group reverses
             XCTAssertEqual(motion.motionState, MotionState.paused)
             XCTAssertEqual(motion2.motionState, MotionState.moving)
             XCTAssertEqual(group.motionDirection, MotionDirection.forward)
-        }
+        })
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
@@ -330,9 +330,9 @@ class MotionGroupTests: XCTestCase {
         
         group.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             group.stop()
-        }
+        })
 
         waitForExpectations(timeout: 1.0, handler: nil)
         
@@ -400,9 +400,9 @@ class MotionGroupTests: XCTestCase {
         group.start()
         group.pause()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             group.resume()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
         
@@ -442,7 +442,7 @@ class MotionGroupTests: XCTestCase {
         
         group.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             group.reset()
             
             XCTAssertEqual(group.totalProgress, 0.0)
@@ -450,7 +450,7 @@ class MotionGroupTests: XCTestCase {
             XCTAssertEqual(group.cyclesCompletedCount, 0)
             
             did_reset.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
         

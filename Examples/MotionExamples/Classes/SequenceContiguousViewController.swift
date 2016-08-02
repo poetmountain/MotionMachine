@@ -113,7 +113,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.white()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
         
         buttonsView = ButtonsView.init(frame: CGRect.zero)

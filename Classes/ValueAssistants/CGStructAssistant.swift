@@ -67,7 +67,7 @@ public class CGStructAssistant : ValueAssistant {
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
                 if (type == .point) {
-                    let org_pt = unwrapped_nsvalue.cgPointValue()
+                    let org_pt = unwrapped_nsvalue.cgPointValue
                     org_x = Double(org_pt.x)
                     org_y = Double(org_pt.y)
                 }
@@ -80,7 +80,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             #endif
             
-            let pt = value.cgPointValue()
+            let pt = value.cgPointValue
             
             if let unwrapped_x = org_x {
                 if (Double(pt.x) !≈ unwrapped_x) {
@@ -114,12 +114,12 @@ public class CGStructAssistant : ValueAssistant {
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
                 if (type == .size) {
-                    let org_size = unwrapped_nsvalue.cgSizeValue()
+                    let org_size = unwrapped_nsvalue.cgSizeValue
                     org_w = Double(org_size.width)
                     org_h = Double(org_size.height)
                 }
             }
-            let size = value.cgSizeValue()
+            let size = value.cgSizeValue
             if let unwrapped_w = org_w {
                 if (Double(size.width) !≈ unwrapped_w) {
                     var prop_w = PropertyData("width", Double(size.width))
@@ -145,7 +145,7 @@ public class CGStructAssistant : ValueAssistant {
                 base_path = "frame."
             }
             #endif
-            let rect = value.cgRectValue()
+            let rect = value.cgRectValue
             let pt_value = NSValue.init(cgPoint: rect.origin)
             var target_pt: NSValue?
             var target_size: NSValue?
@@ -157,7 +157,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             #endif
             if let unwrapped_value = target as? NSValue {
-                let target_rect = unwrapped_value.cgRectValue()
+                let target_rect = unwrapped_value.cgRectValue
                 target_pt = NSValue.init(cgPoint: target_rect.origin)
                 target_size = NSValue.init(cgSize: target_rect.size)
             }
@@ -209,12 +209,12 @@ public class CGStructAssistant : ValueAssistant {
             if (target is NSValue) {
                 let type = CGStructAssistant.determineType(forValue: target as! NSValue)
                 if (type == .vector) {
-                    let org_vec = (target as! NSValue).cgVectorValue()
+                    let org_vec = (target as! NSValue).cgVectorValue
                     org_dx = Double(org_vec.dx)
                     org_dy = Double(org_vec.dy)
                 }
             }
-            let vector = value.cgVectorValue()
+            let vector = value.cgVectorValue
             if let unwrapped_dx = org_dx {
                 if (Double(vector.dx) !≈ unwrapped_dx) {
                     let prop_dx = PropertyData(path + ".dx", Double(vector.dx))
@@ -238,7 +238,7 @@ public class CGStructAssistant : ValueAssistant {
             if let unwrapped_value = target as? NSValue {
                 let type = CGStructAssistant.determineType(forValue: unwrapped_value)
                 if (type == .affineTransform) {
-                    let org_t = unwrapped_value.cgAffineTransform()
+                    let org_t = unwrapped_value.cgAffineTransformValue
                     oa = Double(org_t.a)
                     ob = Double(org_t.b)
                     oc = Double(org_t.c)
@@ -249,7 +249,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             // find all transform properties
-            let transform = value.cgAffineTransform()
+            let transform = value.cgAffineTransformValue
             let base_path = path + "."
             if let ua = oa {
                 if (Double(transform.a) !≈ ua) {
@@ -755,7 +755,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             
         case .point:
-            var point = structValue.cgPointValue()
+            var point = structValue.cgPointValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -771,7 +771,7 @@ public class CGStructAssistant : ValueAssistant {
             structValue = NSValue.init(cgPoint: point)
             
         case .size:
-            var size = structValue.cgSizeValue()
+            var size = structValue.cgSizeValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -788,7 +788,7 @@ public class CGStructAssistant : ValueAssistant {
             
             
         case .rect:
-            var rect = structValue.cgRectValue()
+            var rect = structValue.cgRectValue
             let keys = Array(newValues.keys)
             
             let last_components: [String] = keys.map { (str) -> String in
@@ -800,21 +800,21 @@ public class CGStructAssistant : ValueAssistant {
                 var pt_value = NSValue.init(cgPoint: rect.origin)
                 updateStruct(&pt_value, type: .point, newValues: newValues)
                 
-                rect.origin = pt_value.cgPointValue()
+                rect.origin = pt_value.cgPointValue
             }
             
             if (last_components.containsAny(["width", "height"])) {
                 var size_value = NSValue.init(cgSize: rect.size)
                 updateStruct(&size_value, type: .size, newValues: newValues)
                 
-                rect.size = size_value.cgSizeValue()
+                rect.size = size_value.cgSizeValue
             }
             
             structValue = NSValue.init(cgRect: rect)
             
             
         case .vector:
-            var vector = structValue.cgVectorValue()
+            var vector = structValue.cgVectorValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -830,7 +830,7 @@ public class CGStructAssistant : ValueAssistant {
             structValue = NSValue.init(cgVector: vector)
             
         case .affineTransform:
-            var transform = structValue.cgAffineTransform()
+            var transform = structValue.cgAffineTransformValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -914,7 +914,7 @@ public class CGStructAssistant : ValueAssistant {
             }
             
         case .point:
-            let point = structValue.cgPointValue()
+            let point = structValue.cgPointValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -927,7 +927,7 @@ public class CGStructAssistant : ValueAssistant {
             
             
         case .size:
-            let size = structValue.cgSizeValue()
+            let size = structValue.cgSizeValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -941,7 +941,7 @@ public class CGStructAssistant : ValueAssistant {
             
             
         case .rect:
-            let rect = structValue.cgRectValue()
+            let rect = structValue.cgRectValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -959,7 +959,7 @@ public class CGStructAssistant : ValueAssistant {
             
             
         case .vector:
-            let vector = structValue.cgVectorValue()
+            let vector = structValue.cgVectorValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -972,7 +972,7 @@ public class CGStructAssistant : ValueAssistant {
             
             
         case .affineTransform:
-            let transform = structValue.cgAffineTransform()
+            let transform = structValue.cgAffineTransformValue
             
             let last_component = lastComponent(forPath: path)
             

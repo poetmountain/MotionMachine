@@ -45,8 +45,8 @@ public class UIKitStructAssistant : ValueAssistant {
     public init() {
         // provide support for UIKit structs
         // doesn't seem like there's a better way to extend the enum array from multiple assistants than this?
-        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsetsZero).objCType
-        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffsetZero).objCType
+        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsets.zero).objCType
+        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffset.zero).objCType
     }
     
     
@@ -71,7 +71,7 @@ public class UIKitStructAssistant : ValueAssistant {
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
                 if (type == .uiEdgeInsets) {
-                    let org_insets = unwrapped_nsvalue.uiEdgeInsetsValue()
+                    let org_insets = unwrapped_nsvalue.uiEdgeInsetsValue
                     org_top = Double(org_insets.top)
                     org_left = Double(org_insets.left)
                     org_bottom = Double(org_insets.bottom)
@@ -79,7 +79,7 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            let insets = value.uiEdgeInsetsValue()
+            let insets = value.uiEdgeInsetsValue
             
             if let unwrapped_top = org_top {
                 if (Double(insets.top) !≈ unwrapped_top) {
@@ -119,13 +119,13 @@ public class UIKitStructAssistant : ValueAssistant {
             if let unwrapped_nsvalue = target as? NSValue {
                 let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
                 if (type == .uiOffset) {
-                    let org_offset = unwrapped_nsvalue.uiOffsetValue()
+                    let org_offset = unwrapped_nsvalue.uiOffsetValue
                     org_h = Double(org_offset.horizontal)
                     org_v = Double(org_offset.vertical)
                 }
             }
             
-            let offset = value.uiOffsetValue()
+            let offset = value.uiOffsetValue
             
             if let unwrapped_h = org_h {
                 if (Double(offset.horizontal) !≈ unwrapped_h) {
@@ -313,8 +313,8 @@ public class UIKitStructAssistant : ValueAssistant {
     static func valueForStruct(_ cfStruct: Any) -> NSValue? {
         var value: NSValue?
         
-        let insets = UIEdgeInsetsZero
-        let offset = UIOffsetZero
+        let insets = UIEdgeInsets.zero
+        let offset = UIOffset.zero
         
         if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: insets.dynamicType)) {
             value = NSValue.init(uiEdgeInsets: (cfStruct as! UIEdgeInsets))
@@ -335,7 +335,7 @@ public class UIKitStructAssistant : ValueAssistant {
         
         switch type {
         case .uiEdgeInsets:
-            var insets = structValue.uiEdgeInsetsValue()
+            var insets = structValue.uiEdgeInsetsValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -357,7 +357,7 @@ public class UIKitStructAssistant : ValueAssistant {
             structValue = NSValue.init(uiEdgeInsets: insets)
             
         case .uiOffset:
-            var offset = structValue.uiOffsetValue()
+            var offset = structValue.uiOffsetValue
             
             for (prop, newValue) in newValues {
                 let last_component = lastComponent(forPath: prop)
@@ -386,7 +386,7 @@ public class UIKitStructAssistant : ValueAssistant {
         
         switch type {
         case .uiEdgeInsets:
-            let insets = structValue.uiEdgeInsetsValue()
+            let insets = structValue.uiEdgeInsetsValue
             
             let last_component = lastComponent(forPath: path)
             
@@ -404,7 +404,7 @@ public class UIKitStructAssistant : ValueAssistant {
             }
             
         case .uiOffset:
-            let offset = structValue.uiOffsetValue()
+            let offset = structValue.uiOffsetValue
             
             let last_component = lastComponent(forPath: path)
             

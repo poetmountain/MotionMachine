@@ -13,7 +13,7 @@ class Tester: NSObject {
     var value: Double = 0.0
     var rect = CGRect.zero
     var transform = CGAffineTransform.identity
-    var color = UIColor.red()
-    var insets = UIEdgeInsetsZero
-    var offset = UIOffsetZero
+    var color = UIColor.red
+    var insets = UIEdgeInsets.zero
+    var offset = UIOffset.zero
 }

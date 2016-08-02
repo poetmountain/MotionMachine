@@ -78,15 +78,15 @@ class CGStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgPointValue().x, 10.0)
-        XCTAssertEqual(new_value.cgPointValue().y, old_value.cgPointValue().y)
+        XCTAssertEqual(new_value.cgPointValue.x, 10.0)
+        XCTAssertEqual(new_value.cgPointValue.y, old_value.cgPointValue.y)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(cgPoint: CGPoint(x: 1.0, y: 1.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgPointValue().x, 11.0)
-        XCTAssertEqual(new_value.cgPointValue().y, old_value.cgPointValue().y)
+        XCTAssertEqual(new_value.cgPointValue.x, 11.0)
+        XCTAssertEqual(new_value.cgPointValue.y, old_value.cgPointValue.y)
         
     }
     
@@ -96,15 +96,15 @@ class CGStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["width" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgSizeValue().width, 10.0)
-        XCTAssertEqual(new_value.cgSizeValue().height, old_value.cgSizeValue().height)
+        XCTAssertEqual(new_value.cgSizeValue.width, 10.0)
+        XCTAssertEqual(new_value.cgSizeValue.height, old_value.cgSizeValue.height)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(cgSize: CGSize(width: 10.0, height: 10.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["width" : 1.0]) as! NSValue
-        XCTAssertEqual(new_value.cgSizeValue().width, 11.0)
-        XCTAssertEqual(new_value.cgSizeValue().height, old_value.cgSizeValue().height)
+        XCTAssertEqual(new_value.cgSizeValue.width, 11.0)
+        XCTAssertEqual(new_value.cgSizeValue.height, old_value.cgSizeValue.height)
         
     }
     
@@ -114,15 +114,15 @@ class CGStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["origin.x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgRectValue().origin.x, 10.0)
-        XCTAssertEqual(new_value.cgRectValue().origin.y, old_value.cgRectValue().origin.y)
+        XCTAssertEqual(new_value.cgRectValue.origin.x, 10.0)
+        XCTAssertEqual(new_value.cgRectValue.origin.y, old_value.cgRectValue.origin.y)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(cgRect: CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["size.width" : 1.0]) as! NSValue
-        XCTAssertEqual(new_value.cgRectValue().size.width, 11.0)
-        XCTAssertEqual(new_value.cgRectValue().size.height, old_value.cgRectValue().size.height)
+        XCTAssertEqual(new_value.cgRectValue.size.width, 11.0)
+        XCTAssertEqual(new_value.cgRectValue.size.height, old_value.cgRectValue.size.height)
         
     }
     
@@ -132,15 +132,15 @@ class CGStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["dx" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgVectorValue().dx, 10.0)
-        XCTAssertEqual(new_value.cgVectorValue().dy, old_value.cgVectorValue().dy)
+        XCTAssertEqual(new_value.cgVectorValue.dx, 10.0)
+        XCTAssertEqual(new_value.cgVectorValue.dy, old_value.cgVectorValue.dy)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(cgVector: CGVector(dx: 10.0, dy: 10.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["dx" : 1.0]) as! NSValue
-        XCTAssertEqual(new_value.cgVectorValue().dx, 11.0)
-        XCTAssertEqual(new_value.cgVectorValue().dy, old_value.cgVectorValue().dy)
+        XCTAssertEqual(new_value.cgVectorValue.dx, 11.0)
+        XCTAssertEqual(new_value.cgVectorValue.dy, old_value.cgVectorValue.dy)
         
     }
     
@@ -150,15 +150,15 @@ class CGStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["tx" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgAffineTransform().tx, 10.0)
-        XCTAssertEqual(new_value.cgAffineTransform().ty, old_value.cgAffineTransform().ty)
+        XCTAssertEqual(new_value.cgAffineTransformValue.tx, 10.0)
+        XCTAssertEqual(new_value.cgAffineTransformValue.ty, old_value.cgAffineTransformValue.ty)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(cgAffineTransform: CGAffineTransform.init(a: 0, b: 0, c: 0, d: 0, tx: 1.0, ty: 0.1))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["tx" : 1.0]) as! NSValue
-        XCTAssertEqual(new_value.cgAffineTransform().tx, 2.0)
-        XCTAssertEqual(new_value.cgAffineTransform().ty, old_value.cgAffineTransform().ty)
+        XCTAssertEqual(new_value.cgAffineTransformValue.tx, 2.0)
+        XCTAssertEqual(new_value.cgAffineTransformValue.ty, old_value.cgAffineTransformValue.ty)
         
     }
     

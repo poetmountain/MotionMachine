@@ -45,8 +45,12 @@ public struct EasingExpo {
     public static func easeOut() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            let easing_value = (elapsedTime == duration) ? startValue+valueRange : valueRange * (-pow(2, -10 * elapsedTime/duration) + 1) + startValue
-            
+            var easing_value = 0.0
+            if (elapsedTime == duration) {
+                easing_value = startValue+valueRange
+            } else {
+                easing_value = valueRange * (-pow(2, -10 * elapsedTime/duration) + 1) + startValue
+            }
             return easing_value
         }
         

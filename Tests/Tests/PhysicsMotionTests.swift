@@ -298,9 +298,9 @@ class PhysicsMotionTests: XCTestCase {
         
         motion.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             motion.stop()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -358,9 +358,9 @@ class PhysicsMotionTests: XCTestCase {
         motion.start()
         motion.pause()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             motion.resume()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
         
@@ -407,7 +407,7 @@ class PhysicsMotionTests: XCTestCase {
         
         motion.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-        DispatchQueue.main.after(when: after_time) {
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             motion.reset()
             
             XCTAssertEqual(motion.properties[0].current, motion.properties[0].start)
@@ -416,7 +416,7 @@ class PhysicsMotionTests: XCTestCase {
             XCTAssertEqual(motion.cyclesCompletedCount, 0)
             
             did_reset.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
         

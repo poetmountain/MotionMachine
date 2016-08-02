@@ -56,7 +56,8 @@ public struct EasingSine {
     public static func easeInOut() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            let easing_value = (-valueRange * 0.5) * (cos(M_PI * (elapsedTime / duration)) - 1) + startValue
+            var easing_value = (-valueRange * 0.5) * (cos(M_PI * (elapsedTime / duration)) - 1)
+            easing_value += startValue
             
             return easing_value
         }

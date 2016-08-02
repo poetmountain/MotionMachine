@@ -378,7 +378,7 @@ public extension ValueAssistant {
 }
 
 /// This error is thrown when a `ValueAssistant` receives the wrong type.
-public enum ValueAssistantError : ErrorProtocol {
+public enum ValueAssistantError : Error {
     
     case typeRequirement(String)
     

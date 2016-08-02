@@ -85,15 +85,15 @@ class UIKitStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["top" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.uiEdgeInsetsValue().top, 10.0)
-        XCTAssertEqual(new_value.uiEdgeInsetsValue().bottom, old_value.uiEdgeInsetsValue().bottom)
+        XCTAssertEqual(new_value.uiEdgeInsetsValue.top, 10.0)
+        XCTAssertEqual(new_value.uiEdgeInsetsValue.bottom, old_value.uiEdgeInsetsValue.bottom)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(uiEdgeInsets: UIEdgeInsetsMake(1.0, 0.0, 20.0, 0.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["top" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.uiEdgeInsetsValue().top, 11.0)
-        XCTAssertEqual(new_value.uiEdgeInsetsValue().bottom, old_value.uiEdgeInsetsValue().bottom)
+        XCTAssertEqual(new_value.uiEdgeInsetsValue.top, 11.0)
+        XCTAssertEqual(new_value.uiEdgeInsetsValue.bottom, old_value.uiEdgeInsetsValue.bottom)
     }
     
     func test_updateValue_UIOffset() {
@@ -102,15 +102,15 @@ class UIKitStructAssistantTests: XCTestCase {
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["horizontal" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.uiOffsetValue().horizontal, 10.0)
-        XCTAssertEqual(new_value.uiOffsetValue().vertical, old_value.uiOffsetValue().vertical)
+        XCTAssertEqual(new_value.uiOffsetValue.horizontal, 10.0)
+        XCTAssertEqual(new_value.uiOffsetValue.vertical, old_value.uiOffsetValue.vertical)
         
         // additive
         assistant.additive = true
         old_value = NSValue.init(uiOffset: UIOffsetMake(1.0, 20.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["horizontal" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.uiOffsetValue().horizontal, 11.0)
-        XCTAssertEqual(new_value.uiOffsetValue().vertical, old_value.uiOffsetValue().vertical)
+        XCTAssertEqual(new_value.uiOffsetValue.horizontal, 11.0)
+        XCTAssertEqual(new_value.uiOffsetValue.vertical, old_value.uiOffsetValue.vertical)
     }
 
     

@@ -885,8 +885,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         if (physicsTimer != nil) {
             removePhysicsTimer()
         }
-        
-        physicsTimer = DispatchSource.timer(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(attributes: [ .qosUserInteractive ]) )
+        physicsTimer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(qos: .userInteractive) )
         physicsTimer?.scheduleRepeating(deadline: DispatchTime.now(), interval: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
       
         physicsTimer?.setEventHandler(handler: {

@@ -38,7 +38,8 @@ public struct MotionSupport {
     // MARK: Additive utility methods
     
     // Holds weak references to all currently-tweening Motion instances which are moving an object's property
-    static var motions = HashTable<AnyObject>.weakObjects()
+    // NOTE: As of Swift 3 beta 4, HashTable is missing??, so we're temporarily using NSHashTable
+    static var motions = NSHashTable<AnyObject>.weakObjects()
     
     static var operationID: UInt = 0
     
@@ -96,7 +97,7 @@ public struct MotionSupport {
         
         // create an array from the operations NSSet, using the Motion's operationID as sort key
         let motions_array = MotionSupport.motions.allObjects
-        let sorted_motions = motions_array.sorted( isOrderedBefore: { (motion1, motion2) -> Bool in
+        let sorted_motions = motions_array.sorted( by: { (motion1, motion2) -> Bool in
             var test: Bool = false
             if let m1 = motion1 as? Additive, let m2 = motion2 as? Additive {
                 test =  m1.operationID < m2.operationID
