@@ -13,9 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         window = UIWindow.init(frame: UIScreen.main.bounds)
         
         let master_vc = MasterViewController.init()
@@ -27,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-
 
 
 

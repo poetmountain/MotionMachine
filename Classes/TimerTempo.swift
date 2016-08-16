@@ -60,7 +60,7 @@ public class TimerTempo : Tempo {
     
     
     @objc func update() -> Void {
-        let time_stamp: CFTimeInterval = CFAbsoluteTimeGetCurrent() ?? 0.0
+        let time_stamp: CFTimeInterval = CFAbsoluteTimeGetCurrent()
         delegate?.tempoBeatUpdate(time_stamp)
     }
     

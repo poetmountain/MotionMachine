@@ -74,7 +74,7 @@ class MotionTests: XCTestCase {
     func test_top_level_prop_should_end_at_specified_value() {
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: 0, properties: [PropertyData(end: 100.0)], duration: 0.2)
+        let motion = Motion(target: NSNumber.init(value: 0), properties: [PropertyData(end: 100.0)], duration: 0.2)
         .completed { (motion) in
             XCTAssertTrue(true, "called completed closure")
 

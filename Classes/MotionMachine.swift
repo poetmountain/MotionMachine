@@ -258,7 +258,7 @@ public protocol ValueAssistant {
      *
      *  - returns: An updated version of the object, if the object property was found and is supported.
      */
-    func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject?
+    func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject?
     
     /**
      *  This method retrieves the current value of the target object being moved (as opposed to the saved value within a `PropertyData` instance).
@@ -279,7 +279,7 @@ public protocol ValueAssistant {
      *
      *  - returns: The retrieved value, if the object property was found and is supported.
      */
-    func retrieveValue(inObject object: AnyObject, keyPath path: String) throws -> Double?
+    func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double?
     
     /**
      *  This method calculates a new value an object property.
@@ -403,7 +403,7 @@ public final class MMConfiguration {
 
 
 /// Any easing types used by a Motion object should implement this closure.
-public typealias EasingUpdateClosure = (elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double
+public typealias EasingUpdateClosure = (_ elapsedTime: TimeInterval, _ startValue: Double, _ valueRange: Double, _ duration: TimeInterval) -> Double
 
 
 /// Enum representing the state of a motion operation.
@@ -537,7 +537,7 @@ extension Array where Element: Hashable {
 /// Custom operators to do a "fuzzy" comparison of floating-point numbers.
 /// The fuzzy equal character is created using the Option-X key combination.
 /// see: http://stackoverflow.com/questions/4915462/how-should-i-do-floating-point-comparison
-infix operator ≈≈ {}
+infix operator ≈≈ : ComparisonPrecedence
 
 func ≈≈ (a: Float, b: Float) -> Bool {
 
@@ -579,7 +579,7 @@ func ≈≈ (a: Double, b: Double) -> Bool {
     
 }
 
-infix operator !≈ {}
+infix operator !≈ : ComparisonPrecedence
 
 func !≈ (a: Float, b: Float) -> Bool {
     return !(a ≈≈ b)

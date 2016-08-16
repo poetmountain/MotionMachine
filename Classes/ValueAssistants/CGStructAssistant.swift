@@ -434,7 +434,7 @@ public class CGStructAssistant : ValueAssistant {
     
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) throws -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double? {
         
         var retrieved_value: Double?
         
@@ -549,7 +549,7 @@ public class CGStructAssistant : ValueAssistant {
     
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
         guard newValues.count > 0 else { return nil }
         
@@ -562,7 +562,7 @@ public class CGStructAssistant : ValueAssistant {
                 new_value = unwrapped_double + new_value
             }
             
-            new_parent_value = Double(new_value)
+            new_parent_value = NSNumber.init(value: (new_value as Double))
             
         } else if let unwrapped_value = object as? NSValue {
             var value = unwrapped_value
@@ -687,23 +687,23 @@ public class CGStructAssistant : ValueAssistant {
         let transform = CGAffineTransform.identity
         let transform3D = CATransform3DIdentity
         
-        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: num.dynamicType)) {
+        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: num))) {
             // cast numeric value to a double
-            let double_value = MotionSupport.cast(cfStruct as! AnyObject)
+            let double_value = MotionSupport.cast(cfStruct as AnyObject)
             if let doub = double_value {
                 value = NSNumber.init(value: doub)
             }
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: pt.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: pt))) {
             value = NSValue.init(cgPoint: (cfStruct as! CGPoint))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: size.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: size))) {
             value = NSValue.init(cgSize: (cfStruct as! CGSize))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: rect.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: rect))) {
             value = NSValue.init(cgRect: (cfStruct as! CGRect))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: vector.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: vector))) {
             value = NSValue.init(cgVector: (cfStruct as! CGVector))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: transform.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform))) {
             value = NSValue.init(cgAffineTransform: (cfStruct as! CGAffineTransform))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: transform3D.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform3D))) {
             value = NSValue.init(caTransform3D: (cfStruct as! CATransform3D))
         }
         
@@ -720,12 +720,12 @@ public class CGStructAssistant : ValueAssistant {
         let vector = CGVector(dx: 0.0, dy: 0.0)
         let transform = CGAffineTransform.identity
         let transform3D = CATransform3DIdentity
-        if (MotionSupport.matchesType(forValue: value, typeToMatch: pt.dynamicType)
-            || MotionSupport.matchesType(forValue: value, typeToMatch: size.dynamicType)
-            || MotionSupport.matchesType(forValue: value, typeToMatch: rect.dynamicType)
-            || MotionSupport.matchesType(forValue: value, typeToMatch: vector.dynamicType)
-            || MotionSupport.matchesType(forValue: value, typeToMatch: transform.dynamicType)
-            || MotionSupport.matchesType(forValue: value, typeToMatch: transform3D.dynamicType)
+        if (MotionSupport.matchesType(forValue: value, typeToMatch: type(of: pt))
+            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: size))
+            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: rect))
+            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: vector))
+            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: transform))
+            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: transform3D))
             ) {
             is_supported = true
         }

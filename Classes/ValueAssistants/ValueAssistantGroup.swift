@@ -100,11 +100,11 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
         for assistant in assistants {
-            if (assistant.supports(object)) {
+            if (assistant.supports(object as AnyObject)) {
                 if let retrieved = try? assistant.retrieveValue(inObject: object, keyPath: path) {
                     retrieved_value = retrieved
                     break
@@ -113,17 +113,17 @@ public class ValueAssistantGroup : ValueAssistant {
         }
         
         if (retrieved_value == nil) {
-            let path_value = object.value(forKeyPath: path)!
+            let path_value = (object as AnyObject).value(forKeyPath: path)!
             
             // cast numeric value to a double
-            retrieved_value = MotionSupport.cast(path_value)
+            retrieved_value = MotionSupport.cast(path_value as AnyObject)
             
             let components = path.components(separatedBy: ".")
             
             
             let first_component = components.first!
-            let child_object = object.value(forKey: first_component)
-            if let unwrapped_child = child_object {
+            let child_object = (object as AnyObject).value(forKey: first_component)
+            if let unwrapped_child = child_object as AnyObject? {
                 if (acceptsKeypath(unwrapped_child)) {
                     
                 }
@@ -135,14 +135,14 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
         guard newValues.count > 0 else { return nil }
         
         var new_parent_value:NSObject?
         
         for assistant in assistants {
-            if (assistant.supports(object)) {
+            if (assistant.supports(object as AnyObject)) {
                 new_parent_value = assistant.updateValue(inObject: object, newValues: newValues)
                 break
             }

@@ -153,7 +153,7 @@ public class UIKitStructAssistant : ValueAssistant {
     
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) throws -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double? {
         var retrieved_value: Double?
         
         guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
@@ -241,7 +241,7 @@ public class UIKitStructAssistant : ValueAssistant {
     }
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         guard newValues.count > 0 else { return nil }
         
         var new_parent_value:NSObject?
@@ -316,10 +316,10 @@ public class UIKitStructAssistant : ValueAssistant {
         let insets = UIEdgeInsets.zero
         let offset = UIOffset.zero
         
-        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: insets.dynamicType)) {
+        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: insets))) {
             value = NSValue.init(uiEdgeInsets: (cfStruct as! UIEdgeInsets))
             
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: offset.dynamicType)) {
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: offset))) {
             value = NSValue.init(uiOffset: (cfStruct as! UIOffset))
         }
         

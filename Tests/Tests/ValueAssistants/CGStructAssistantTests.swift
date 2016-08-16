@@ -18,7 +18,7 @@ class CGStructAssistantTests: XCTestCase {
         let rect = CGRect(x: 0.0, y: 10.0, width: 50.0, height: 0.0)
         let path = "rect"
         if let val = CGStructAssistant.valueForCGStruct(rect), let target = tester.value(forKeyPath: path) {
-            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
+            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target as AnyObject)
             
             XCTAssertEqual(props.count, 2)
             
@@ -40,7 +40,7 @@ class CGStructAssistantTests: XCTestCase {
         if let target = tester.value(forKeyPath: path) {
             do {
                 // method needs an NSValue but we pass in a Tester, so this should throw an error
-                try _ = assistant.generateProperties(fromObject: tester, keyPath: path, targetObject: target)
+                try _ = assistant.generateProperties(fromObject: tester, keyPath: path, targetObject: target as AnyObject)
 
             } catch ValueAssistantError.typeRequirement(let valueType) {
                 ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)

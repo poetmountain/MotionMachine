@@ -26,7 +26,7 @@
 
 import Foundation
 
-public typealias PhysicsMotionUpdateClosure = (motion: PhysicsMotion) -> Void
+public typealias PhysicsMotionUpdateClosure = (_ motion: PhysicsMotion) -> Void
 
 /**
  *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
@@ -724,7 +724,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                     let parent_path = parent_keys.joined(separator: ".")
                     
                     if let parent = unwrapped_object.value(forKeyPath: parent_path) {
-                        parent_value = parent
+                        parent_value = parent as AnyObject
                         
                         var is_value_supported = false
                         
@@ -767,7 +767,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         } else if (key_count == 1) {
             // this is a top-level property, so let's see if this property is updatable
             var is_value_supported = false
-            var prop_value: AnyObject?
+            var prop_value: Any?
             let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
             if (keypath_accepted) {
                 do {
@@ -796,7 +796,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             }
             if (is_value_supported) {
                 if let value = prop_value {
-                    property.target = value
+                    property.target = value as AnyObject
                 }
                 
             } else if (unwrapped_object is NSNumber) {
@@ -855,7 +855,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
         // call start closure
         weak var weak_self = self
-        _started?(motion: weak_self!)
+        _started?(weak_self!)
         
         // send start status update
         sendStatusUpdate(.started)
@@ -920,7 +920,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         } else if (targetObject is Double) {
             let new_value = physicsSystem.solve(forPositions: [targetObject as! Double], timestamp: CFAbsoluteTimeGetCurrent()).first
             if (new_value != nil) {
-                targetObject = new_value
+                targetObject = NSNumber.init(value: new_value!)
             }
 
         }
@@ -989,10 +989,10 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
         // call update closure
         weak var weak_self = self
-        _updated?(motion: weak_self!)
+        _updated?(weak_self!)
         
         // call complete closure
-        _completed?(motion: weak_self!)
+        _completed?(weak_self!)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -1035,7 +1035,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             
             // call cycle closure
             weak var weak_self = self
-            _cycleRepeated?(motion: weak_self!)
+            _cycleRepeated?(weak_self!)
             
             // send repeated status update
             sendStatusUpdate(.repeated)
@@ -1068,7 +1068,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
         // call reverse closure
         weak var weak_self = self
-        _reversed?(motion: weak_self!)
+        _reversed?(weak_self!)
         
         // send reverse notification
         // send out 50% complete notification, used by MotionSequence in contiguous mode
@@ -1124,7 +1124,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                 
                 // call update closure
                 weak var weak_self = self
-                _updated?(motion: weak_self!)
+                _updated?(weak_self!)
                 
             } else {
                 
@@ -1225,7 +1225,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             
             // call stop closure
             weak var weak_self = self
-            _stopped?(motion: weak_self!)
+            _stopped?(weak_self!)
             
             // send stopped status update
             sendStatusUpdate(.stopped)
@@ -1248,7 +1248,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             
             // call pause closure
             weak var weak_self = self
-            _paused?(motion: weak_self!)
+            _paused?(weak_self!)
             
             // send paused status update
             sendStatusUpdate(.paused)
@@ -1267,7 +1267,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             
             // call resume closure
             weak var weak_self = self
-            _resumed?(motion: weak_self!)
+            _resumed?(weak_self!)
             
             // send resumed status update
             sendStatusUpdate(.resumed)

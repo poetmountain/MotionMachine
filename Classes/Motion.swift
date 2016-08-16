@@ -26,7 +26,7 @@
 
 import Foundation
 
-public typealias MotionUpdateClosure = (motion: Motion) -> Void
+public typealias MotionUpdateClosure = (_ motion: Motion) -> Void
 
 /**
  *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
@@ -591,7 +591,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             for (path, final_state) in final_object_states {
                 var tobj: AnyObject = targetObject
                 if (path != "" && valueAssistant.acceptsKeypath(targetObject)) {
-                    if let tvalue = targetObject.value(forKeyPath: path) {
+                    if let tvalue = targetObject.value(forKeyPath: path) as AnyObject? {
                         tobj = tvalue
                     }
                 }
@@ -610,7 +610,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                     
                 } else {
                     do {
-                        let generated = try valueAssistant.generateProperties(fromObject: (final_state as! AnyObject), keyPath: path, targetObject: tobj)
+                        let generated = try valueAssistant.generateProperties(fromObject: (final_state as AnyObject), keyPath: path, targetObject: tobj)
                         properties.append(contentsOf: generated)
                         
                     } catch ValueAssistantError.typeRequirement(let valueType) {
@@ -765,7 +765,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 if (parent_keys.count > 0) {
                     let parent_path = parent_keys.joined(separator: ".")
 
-                    if let parent = unwrapped_object.value(forKeyPath: parent_path) {
+                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as AnyObject? {
                         parent_value = parent
                         
                         var is_value_supported = false
@@ -809,7 +809,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         } else if (key_count == 1) {
             // this is a top-level property, so let's see if this property is updatable
             var is_value_supported = false
-            var prop_value: AnyObject?
+            var prop_value: Any?
             let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
             if (keypath_accepted) {
                 do {
@@ -834,7 +834,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             }
             if (is_value_supported) {
                 if let value = prop_value {
-                    property.target = value
+                    property.target = value as AnyObject
                 }
             
             } else if (unwrapped_object is NSNumber) {
@@ -901,7 +901,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call start closure
         weak var weak_self = self
-        _started?(motion: weak_self!)
+        _started?(weak_self!)
         
         // send start status update
         sendStatusUpdate(.started)
@@ -986,10 +986,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call update closure
         weak var weak_self = self
-        _updated?(motion: weak_self!)
+        _updated?(weak_self!)
         
         // call complete closure
-        _completed?(motion: weak_self!)
+        _completed?(weak_self!)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -1030,7 +1030,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
             // call cycle closure
             weak var weak_self = self
-            _cycleRepeated?(motion: weak_self!)
+            _cycleRepeated?(weak_self!)
             
             // send repeated status update
             sendStatusUpdate(.repeated)
@@ -1059,7 +1059,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call reverse closure
         weak var weak_self = self
-        _reversed?(motion: weak_self!)
+        _reversed?(weak_self!)
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
@@ -1120,15 +1120,15 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 let value_range = property.end - property.start
                 if (value_range != 0.0) {
                     if (motionDirection == .forward) {
-                        new_value = easing(elapsedTime: elapsed_time, startValue: property.start, valueRange: value_range, duration: duration)
+                        new_value = easing(elapsed_time, property.start, value_range, duration)
                         progress = fabs((property.current - property.start) / value_range)
                     
                     } else {
                         if let reverse_easing = reverseEasing {
-                            new_value = reverse_easing(elapsedTime: elapsed_time, startValue: property.end, valueRange: -value_range, duration: duration)
+                            new_value = reverse_easing(elapsed_time, property.end, -value_range, duration)
                             
                         } else {
-                            new_value = easing(elapsedTime: elapsed_time, startValue: property.end, valueRange: -value_range, duration: duration)
+                            new_value = easing(elapsed_time, property.end, -value_range, duration)
                         }
 
                         progress = fabs((property.end - property.current) / value_range)
@@ -1145,7 +1145,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 }
                 // call update closure
                 weak var weak_self = self
-                _updated?(motion: weak_self!)
+                _updated?(weak_self!)
                 
             } else {
                 
@@ -1227,7 +1227,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
             // call stop closure
             weak var weak_self = self
-            _stopped?(motion: weak_self!)
+            _stopped?(weak_self!)
             
             // send stopped status update
             sendStatusUpdate(.stopped)
@@ -1244,7 +1244,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
             // call pause closure
             weak var weak_self = self
-            _paused?(motion: weak_self!)
+            _paused?(weak_self!)
             
             // send paused status update
             sendStatusUpdate(.paused)
@@ -1258,7 +1258,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
 
             // call resume closure
             weak var weak_self = self
-            _resumed?(motion: weak_self!)
+            _resumed?(weak_self!)
             
             // send resumed status update
             sendStatusUpdate(.resumed)

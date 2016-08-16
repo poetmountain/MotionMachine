@@ -121,7 +121,7 @@ public class CIColorAssistant : ValueAssistant {
     }
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
         if (object is CIColor) {
@@ -148,7 +148,7 @@ public class CIColorAssistant : ValueAssistant {
     }
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
         guard newValues.count > 0 else { return nil }
         

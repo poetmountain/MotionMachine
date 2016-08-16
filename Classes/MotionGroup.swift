@@ -26,7 +26,7 @@
 
 import Foundation
 
-public typealias GroupUpdateClosure = (group: MotionGroup) -> Void
+public typealias GroupUpdateClosure = (_ group: MotionGroup) -> Void
 
 /**
  *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
@@ -637,7 +637,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             // call cycle closure
             weak var weak_self = self
-            _cycleRepeated?(group: weak_self!)
+            _cycleRepeated?(weak_self!)
             
             // send repeat status update
             sendStatusUpdate(.repeated)
@@ -663,10 +663,10 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
 
         // call update closure
         weak var weak_self = self
-        _updated?(group: weak_self!)
+        _updated?(weak_self!)
         
         // call complete closure
-        _completed?(group: weak_self!)
+        _completed?(weak_self!)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -696,7 +696,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         
         // call reverse closure
         weak var weak_self = self
-        _reversed?(group: weak_self!)
+        _reversed?(weak_self!)
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
@@ -766,7 +766,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             // call update closure, but only if this group is still moving
             if (motionState == .moving) {
                 weak var weak_self = self
-                _updated?(group: weak_self!)
+                _updated?(weak_self!)
             }
 
             
@@ -788,7 +788,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                 
                 // call start closure
                 weak var weak_self = self
-                _started?(group: weak_self!)
+                _started?(weak_self!)
                 
                 // send start status update
                 sendStatusUpdate(.started)
@@ -809,7 +809,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
                 
                 // call start closure
                 weak var weak_self = self as MotionGroup
-                _started?(group: weak_self!)
+                _started?(weak_self!)
                 
                 // send start status update
                 sendStatusUpdate(.started)
@@ -836,7 +836,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             // call stop closure
             weak var weak_self = self as MotionGroup
-            _stopped?(group: weak_self!)
+            _stopped?(weak_self!)
             
             // send stop status update
             sendStatusUpdate(.stopped)
@@ -855,7 +855,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             // call pause closure
             weak var weak_self = self as MotionGroup
-            _paused?(group: weak_self!)
+            _paused?(weak_self!)
             
             // send pause status update
             sendStatusUpdate(.paused)
@@ -875,7 +875,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             
             // call resume closure
             weak var weak_self = self as MotionGroup
-            _resumed?(group: weak_self!)
+            _resumed?(weak_self!)
             
             // send resume status update
             sendStatusUpdate(.resumed)

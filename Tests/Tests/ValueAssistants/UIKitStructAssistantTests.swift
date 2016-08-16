@@ -18,7 +18,7 @@ class UIKitStructAssistantTests: XCTestCase {
         let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
         let path = "insets"
         if let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
-            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
+            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target as AnyObject)
             
             XCTAssertEqual(props.count, 2)
             
@@ -38,7 +38,7 @@ class UIKitStructAssistantTests: XCTestCase {
         let offset = UIOffsetMake(10.0, 20.0)
         let path = "offset"
         if let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
-            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target)
+            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target as AnyObject)
             
             XCTAssertEqual(props.count, 2)
             
@@ -61,7 +61,7 @@ class UIKitStructAssistantTests: XCTestCase {
         if let target = tester.value(forKeyPath: path) {
             do {
                 // method needs an NSValue but we pass in a Tester, so this should throw an error
-                try _ = assistant.generateProperties(fromObject: tester, keyPath: path, targetObject: target)
+                try _ = assistant.generateProperties(fromObject: tester, keyPath: path, targetObject: target as AnyObject)
                 
             } catch ValueAssistantError.typeRequirement(let valueType) {
                 ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)

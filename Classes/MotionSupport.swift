@@ -148,7 +148,7 @@ public struct MotionSupport {
     /// Utility method which determines whether the value is of the specified type.
     public static func matchesType(forValue value: Any, typeToMatch matchType: Any.Type) -> Bool {
         
-        let does_match: Bool = value.dynamicType == matchType || value is NSNumber
+        let does_match: Bool = type(of: value) == matchType || value is NSNumber
         
         return does_match
     }

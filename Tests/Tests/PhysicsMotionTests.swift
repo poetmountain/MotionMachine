@@ -61,7 +61,7 @@ class PhysicsMotionTests: XCTestCase {
     func test_top_level_prop_should_end_at_specified_value() {
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: 0.0, velocity: 1.5, friction: 0.999)
+        let motion = PhysicsMotion(target: NSNumber.init(value: 0.0), velocity: 1.5, friction: 0.999)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
             XCTAssertEqual(motion.totalProgress, 1.0)

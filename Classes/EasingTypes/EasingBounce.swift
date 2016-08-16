@@ -40,7 +40,7 @@ public struct EasingBounce {
 
             let easing_closure = EasingBounce.easeOut()
             let time = duration - elapsedTime
-            let easing_value = valueRange - easing_closure(elapsedTime: time, startValue: 0.0, valueRange: valueRange, duration: duration) + startValue
+            let easing_value = valueRange - easing_closure(time, 0.0, valueRange, duration) + startValue
             
             return easing_value
         }
@@ -79,9 +79,9 @@ public struct EasingBounce {
             let easing_closure = EasingBounce.easeOut()
 
             if (elapsedTime < (duration * 0.5)) {
-                easing_value = easing_closure(elapsedTime: (elapsedTime*2), startValue: 0, valueRange: valueRange, duration: duration) * 0.5 + startValue;
+                easing_value = easing_closure((elapsedTime*2), 0, valueRange, duration) * 0.5 + startValue;
             } else {
-                easing_value = easing_closure(elapsedTime: (elapsedTime*2-duration), startValue: 0, valueRange: valueRange, duration: duration) * 0.5 + (valueRange*0.5) + startValue;
+                easing_value = easing_closure((elapsedTime*2-duration), 0, valueRange, duration) * 0.5 + (valueRange*0.5) + startValue;
             }
             
             
