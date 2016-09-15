@@ -102,7 +102,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'target name here' do
-    pod 'MotionMachine', '~> 1.0.0'
+    pod 'MotionMachine', '~> 1.1.0'
 end
 ```
 

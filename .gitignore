@@ -29,6 +29,9 @@ DerivedData
 timeline.xctimeline
 playground.xcworkspace
 
+# Cocoapods
+.swift-version
+
 # Swift Package Manager
 .build/
 Packages/
