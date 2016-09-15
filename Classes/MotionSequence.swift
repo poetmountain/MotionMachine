@@ -341,7 +341,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: start
      */
-    @discardableResult public func started(_ closure: SequenceStarted) -> Self {
+    @discardableResult public func started(_ closure: @escaping SequenceStarted) -> Self {
         _started = closure
         
         return self
@@ -353,7 +353,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: stop
      */
-    @discardableResult public func stopped(_ closure: SequenceStopped) -> Self {
+    @discardableResult public func stopped(_ closure: @escaping SequenceStopped) -> Self {
         _stopped = closure
         
         return self
@@ -365,7 +365,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: update(withTimeInterval:)
      */
-    @discardableResult public func updated(_ closure: SequenceUpdated) -> Self {
+    @discardableResult public func updated(_ closure: @escaping SequenceUpdated) -> Self {
         _updated = closure
         
         return self
@@ -377,7 +377,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    @discardableResult public func cycleRepeated(_ closure: SequenceRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: @escaping SequenceRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -389,7 +389,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: motionDirection, reversing
      */
-    @discardableResult public func reversed(_ closure: SequenceReversed) -> Self {
+    @discardableResult public func reversed(_ closure: @escaping SequenceReversed) -> Self {
         _reversed = closure
         
         return self
@@ -401,7 +401,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: pause
      */
-    @discardableResult public func paused(_ closure: SequencePaused) -> Self {
+    @discardableResult public func paused(_ closure: @escaping SequencePaused) -> Self {
         _paused = closure
         
         return self
@@ -413,7 +413,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - seealso: resume
      */
-    @discardableResult public func resumed(_ closure: SequenceResumed) -> Self {
+    @discardableResult public func resumed(_ closure: @escaping SequenceResumed) -> Self {
         _resumed = closure
         
         return self
@@ -424,7 +424,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
      *
      */
-    @discardableResult public func completed(_ closure: SequenceCompleted) -> Self {
+    @discardableResult public func completed(_ closure: @escaping SequenceCompleted) -> Self {
         _completed = closure
         
         return self
@@ -435,7 +435,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *  This notification closure is called when the sequence's movement has advanced to its next sequence step.
      *
      */
-    @discardableResult public func stepCompleted(_ closure: SequenceStepped) -> Self {
+    @discardableResult public func stepCompleted(_ closure: @escaping SequenceStepped) -> Self {
         _stepCompleted = closure
         
         return self

@@ -114,7 +114,7 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CELL_IDENTIFIER, for: indexPath)
-
+        cell.accessoryType = .disclosureIndicator
         
         let label_text = examples[(indexPath as NSIndexPath).row]
         cell.textLabel!.text = label_text

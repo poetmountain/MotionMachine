@@ -50,7 +50,7 @@ public protocol Moveable: class {
      *  - note: When this method is called, a motion should only start moving if it is stopped.
      *  - returns: A reference to the Moveable instance; used to method chain initialization methods when the Moveable instance is created.
      */
-    func start() -> Self
+    @discardableResult func start() -> Self
     
     /**
      *  Pauses a motion that is currently moving. (required)
