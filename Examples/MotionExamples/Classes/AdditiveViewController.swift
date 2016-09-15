@@ -28,7 +28,7 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -119,7 +119,7 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     
 
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         group.stop()
@@ -136,13 +136,13 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
         
         
-        let label = UILabel.init(frame: CGRectZero)
-        label.font = UIFont.systemFontOfSize(12.0)
-        label.userInteractionEnabled = false
+        let label = UILabel.init(frame: CGRect.zero)
+        label.font = UIFont.systemFont(ofSize: 12.0)
+        label.isUserInteractionEnabled = false
         label.text = "Tap to expand.\nTap again to shrink.\nThe motions will blend."
         label.numberOfLines = 4
         self.view.addSubview(label)
@@ -156,49 +156,49 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         self.view.addSubview(circle)
         
         circle.translatesAutoresizingMaskIntoConstraints = false
-        circle.centerXAnchor.constraintEqualToAnchor(margins.centerXAnchor).active = true
-        circle.centerYAnchor.constraintEqualToAnchor(margins.centerYAnchor).active = true
+        circle.centerXAnchor.constraint(equalTo: margins.centerXAnchor).isActive = true
+        circle.centerYAnchor.constraint(equalTo: margins.centerYAnchor).isActive = true
 
-        let circle_height = circle.heightAnchor.constraintEqualToConstant(40.0)
-        circle_height.active = true
-        let circle_width = circle.widthAnchor.constraintEqualToConstant(40.0)
-        circle_width.active = true
+        let circle_height = circle.heightAnchor.constraint(equalToConstant: 40.0)
+        circle_height.isActive = true
+        let circle_width = circle.widthAnchor.constraint(equalToConstant: 40.0)
+        circle_width.isActive = true
         
         constraints["width"] = circle_width
         constraints["height"] = circle_height
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.leadingAnchor.constraintEqualToAnchor(circle.trailingAnchor, constant: 10.0).active = true
-        label.centerYAnchor.constraintEqualToAnchor(circle.centerYAnchor, constant: 0.0).active = true
-        label.widthAnchor.constraintEqualToConstant(140.0).active = true
-        label.heightAnchor.constraintEqualToConstant(60.0).active = true
+        label.leadingAnchor.constraint(equalTo: circle.trailingAnchor, constant: 10.0).isActive = true
+        label.centerYAnchor.constraint(equalTo: circle.centerYAnchor, constant: 0.0).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 140.0).isActive = true
+        label.heightAnchor.constraint(equalToConstant: 60.0).isActive = true
         
         
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
-        buttonsView.startButton.hidden = true
-        buttonsView.stopButton.hidden = true
+        buttonsView.startButton.isHidden = true
+        buttonsView.stopButton.isHidden = true
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
     }
     
 
     
-    func viewTappedHandler(gesture: UITapGestureRecognizer) {
+    func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
-        if (gesture.state != UIGestureRecognizerState.Ended) {
+        if (gesture.state != UIGestureRecognizerState.ended) {
             return;
         }
         
         expanding = !expanding
         
-        if (expanding && group.motionState == .Stopped) {
+        if (expanding && group.motionState == .stopped) {
             group.start()
-        } else if (!expanding && reverseGroup.motionState == .Stopped) {
+        } else if (!expanding && reverseGroup.motionState == .stopped) {
             reverseGroup.start()
         }
     }

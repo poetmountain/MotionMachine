@@ -26,7 +26,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -48,7 +48,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     
     
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         for motion in motions {
@@ -67,13 +67,13 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
         
         
-        let label = UILabel.init(frame: CGRectZero)
-        label.font = UIFont.systemFontOfSize(12.0)
-        label.userInteractionEnabled = false
+        let label = UILabel.init(frame: CGRect.zero)
+        label.font = UIFont.systemFont(ofSize: 12.0)
+        label.isUserInteractionEnabled = false
         label.text = "Tap to move the circle to that point.\nThe path will blend as you continue to tap in other locations."
         label.numberOfLines = 4
         self.view.addSubview(label)
@@ -87,45 +87,45 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         self.view.addSubview(circle)
         
         circle.translatesAutoresizingMaskIntoConstraints = false
-        let circle_x = circle.centerXAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 20.0)
-        circle_x.active = true
-        let circle_y = circle.centerYAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+40.0)
-        circle_y.active = true
+        let circle_x = circle.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
+        circle_x.isActive = true
+        let circle_y = circle.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+        circle_y.isActive = true
         
-        circle.heightAnchor.constraintEqualToConstant(40.0).active = true
-        circle.widthAnchor.constraintEqualToConstant(40.0).active = true
+        circle.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
+        circle.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         
         constraints["x"] = circle_x
         constraints["y"] = circle_y
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 50.0).active = true
-        label.centerYAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+40.0).active = true
-        label.widthAnchor.constraintEqualToConstant(220.0).active = true
-        label.heightAnchor.constraintEqualToConstant(60.0).active = true
+        label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 50.0).isActive = true
+        label.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 220.0).isActive = true
+        label.heightAnchor.constraint(equalToConstant: 60.0).isActive = true
         
         
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
-        buttonsView.startButton.hidden = true
-        buttonsView.stopButton.hidden = true
+        buttonsView.startButton.isHidden = true
+        buttonsView.stopButton.isHidden = true
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
     }
     
     
     
-    func viewTappedHandler(gesture: UITapGestureRecognizer) {
+    func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
-        if (gesture.state != UIGestureRecognizerState.Ended) {
+        if (gesture.state != UIGestureRecognizerState.ended) {
             return;
         }
         
-        let pt = gesture.locationInView(self.view)
+        let pt = gesture.location(in: self.view)
         
         // setup new motion
         let x = constraints["x"]!
@@ -149,7 +149,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
             for x in 0..<strong_self.motions.count {
                 let motion = strong_self.motions[x]
                 if (group === motion) {
-                    strong_self.motions.removeAtIndex(x)
+                    strong_self.motions.remove(at: x)
                     break
                 }
             }

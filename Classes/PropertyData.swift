@@ -30,7 +30,7 @@ import Foundation
 public protocol PropertyDataDelegate {
     
     /// Called when the `start` property of a PropertyData instance is updated.
-    func didUpdate(startValue: Double)
+    func didUpdate(_ startValue: Double)
 }
 
 /// This struct represents a single property or object and information about the state of its value interpolation, as well as metadata which allows a Motion instance to get and set these values.

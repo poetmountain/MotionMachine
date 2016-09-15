@@ -41,10 +41,10 @@ class ValueAssistantGroupTests: XCTestCase {
     func test_generateProperties() {
         let assistant = ValueAssistantGroup(assistants: [CGStructAssistant(), CIColorAssistant(), UIColorAssistant()])
         let tester = Tester()
-        let rect = CGRectMake(0.0, 10.0, 50.0, 0.0)
+        let rect = CGRect.init(x: 0.0, y: 10.0, width: 50.0, height: 0.0)
         let path = "rect"
-        if let struct_val = CGStructAssistant.valueForCGStruct(rect), target = tester.valueForKeyPath(path) {
-            let props = assistant.generateProperties(fromObject: struct_val, keyPath: path, targetObject: target)
+        if let struct_val = CGStructAssistant.valueForCGStruct(rect), let target = tester.value(forKeyPath: path) {
+            let props = assistant.generateProperties(fromObject: struct_val, keyPath: path, targetObject: target as AnyObject)
             
             XCTAssertEqual(props.count, 2)
             
@@ -62,12 +62,12 @@ class ValueAssistantGroupTests: XCTestCase {
     func test_updateValue_CGRect() {
         let assistant = ValueAssistantGroup(assistants: [CGStructAssistant()])
 
-        let old_value = NSValue.init(CGRect: CGRectMake(0.0, 0.0, 10.0, 10.0))
+        let old_value = NSValue.init(cgRect: CGRect.init(x: 0.0, y: 0.0, width: 10.0, height: 10.0))
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["origin.x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.CGRectValue().origin.x, 10.0)
-        XCTAssertEqual(new_value.CGRectValue().origin.y, old_value.CGRectValue().origin.y)
+        XCTAssertEqual(new_value.cgRectValue.origin.x, 10.0)
+        XCTAssertEqual(new_value.cgRectValue.origin.y, old_value.cgRectValue.origin.y)
     }
     
     func test_updateValue_UIColor() {
@@ -87,7 +87,7 @@ class ValueAssistantGroupTests: XCTestCase {
     func test_retrieveValue() {
         let assistant = ValueAssistantGroup(assistants: [CGStructAssistant(), UIColorAssistant()])
 
-        let object = NSValue.init(CGRect: CGRectMake(0.0, 0.0, 10.0, 10.0))
+        let object = NSValue.init(cgRect: CGRect.init(x: 0.0, y: 0.0, width: 10.0, height: 10.0))
         let value = assistant.retrieveValue(inObject: object, keyPath: "size.width")
         XCTAssertEqual(value, 10.0)
         

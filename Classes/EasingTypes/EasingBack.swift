@@ -42,7 +42,7 @@ public struct EasingBack {
      */
     public static func easeIn(overshoot over: Double=0.1) -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let time = elapsedTime / duration
             let overshoot = over * magic100
             let easing_value = valueRange * time*time*((overshoot + 1.0)*time - overshoot) + startValue
@@ -60,7 +60,7 @@ public struct EasingBack {
      */
     public static func easeOut(overshoot over: Double=0.1) -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let time = elapsedTime / duration - 1
             let overshoot = over * magic100
             let easing_value = valueRange * (time*time * ((overshoot+1.0) * time + overshoot) + 1.0) + startValue
@@ -78,7 +78,7 @@ public struct EasingBack {
      */
     public static func easeInOut(overshoot over: Double=0.1) -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var easing_value = 0.0
             var time = elapsedTime / (duration * 0.5)
             let overshoot = (over * magic100) * 1.525

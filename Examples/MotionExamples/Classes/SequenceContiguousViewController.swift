@@ -26,7 +26,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -80,7 +80,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
             .completed({ (sequence) in
                 print("sequence complete")
             })
-            sequence.reversingMode = .Contiguous
+            sequence.reversingMode = .contiguous
             
             
             createdUI = true
@@ -90,14 +90,14 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
     
     
     
-    public override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         sequence.start()
     }
     
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         sequence.stop()
@@ -113,16 +113,16 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
         
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
         
         // set up motion views
@@ -137,14 +137,14 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
         // set up motion constraints
         square.translatesAutoresizingMaskIntoConstraints = false
         
-        let square_x = square.centerXAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 20.0)
-        square_x.active = true
-        let square_y = square.centerYAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+40.0)
-        square_y.active = true
-        let square_height = square.heightAnchor.constraintEqualToConstant(40.0)
-        square_height.active = true
-        let square_width = square.widthAnchor.constraintEqualToConstant(40.0)
-        square_width.active = true
+        let square_x = square.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
+        square_x.isActive = true
+        let square_y = square.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+        square_y.isActive = true
+        let square_height = square.heightAnchor.constraint(equalToConstant: 40.0)
+        square_height.isActive = true
+        let square_width = square.widthAnchor.constraint(equalToConstant: 40.0)
+        square_width.isActive = true
         
         constraints["x"] = square_x
         constraints["y"] = square_y

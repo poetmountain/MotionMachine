@@ -24,7 +24,7 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -56,14 +56,14 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
     
     
     
-    public override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         motion.start()
     }
     
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         motion.stop()
@@ -79,16 +79,16 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
         
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
         
         
@@ -97,11 +97,11 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         self.view.addSubview(square)
         square.translatesAutoresizingMaskIntoConstraints = false
         
-        xConstraint = square.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 0.0)
-        xConstraint.active = true
-        square.topAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+20.0).active = true
-        square.widthAnchor.constraintEqualToConstant(40.0).active = true
-        square.heightAnchor.constraintEqualToConstant(40.0).active = true
+        xConstraint = square.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        xConstraint.isActive = true
+        square.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+20.0).isActive = true
+        square.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        square.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
     }
     

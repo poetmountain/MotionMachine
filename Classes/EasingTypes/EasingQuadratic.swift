@@ -33,7 +33,7 @@ public struct EasingQuadratic {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value = valueRange * (elapsedTime*elapsedTime) / (duration*duration) + startValue
             
             return easing_value
@@ -44,8 +44,8 @@ public struct EasingQuadratic {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
-            let easing_value = -valueRange * (elapsedTime*elapsedTime) / (duration*duration) + 2*valueRange*elapsedTime/duration + startValue
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
+            let easing_value = -valueRange * ((elapsedTime*elapsedTime) / (duration*duration)) + (2*valueRange * (elapsedTime/duration)) + startValue
             
             return easing_value
         }
@@ -55,7 +55,7 @@ public struct EasingQuadratic {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value: Double
             if (elapsedTime < duration*0.5) {
                 easing_value = 2*valueRange * (elapsedTime*elapsedTime) / (duration*duration) + startValue

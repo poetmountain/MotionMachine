@@ -36,11 +36,11 @@ public struct EasingBounce {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
 
             let easing_closure = EasingBounce.easeOut()
             let time = duration - elapsedTime
-            let easing_value = valueRange - easing_closure(elapsedTime: time, startValue: 0.0, valueRange: valueRange, duration: duration) + startValue
+            let easing_value = valueRange - easing_closure(time, 0.0, valueRange, duration) + startValue
             
             return easing_value
         }
@@ -50,7 +50,7 @@ public struct EasingBounce {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime / duration
             let easing_value: Double
             if (time < (1/2.75)) {
@@ -74,14 +74,14 @@ public struct EasingBounce {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value: Double
             let easing_closure = EasingBounce.easeOut()
 
             if (elapsedTime < (duration * 0.5)) {
-                easing_value = easing_closure(elapsedTime: (elapsedTime*2), startValue: 0, valueRange: valueRange, duration: duration) * 0.5 + startValue;
+                easing_value = easing_closure((elapsedTime*2), 0, valueRange, duration) * 0.5 + startValue;
             } else {
-                easing_value = easing_closure(elapsedTime: (elapsedTime*2-duration), startValue: 0, valueRange: valueRange, duration: duration) * 0.5 + (valueRange*0.5) + startValue;
+                easing_value = easing_closure((elapsedTime*2-duration), 0, valueRange, duration) * 0.5 + (valueRange*0.5) + startValue;
             }
             
             

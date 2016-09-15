@@ -38,7 +38,7 @@ public struct MotionSupport {
     // MARK: Additive utility methods
     
     // Holds weak references to all currently-tweening Motion instances which are moving an object's property
-    static var motions = NSHashTable.weakObjectsHashTable()
+    static var motions = NSHashTable<AnyObject>.weakObjects()
     
     static var operationID: UInt = 0
     
@@ -50,8 +50,8 @@ public struct MotionSupport {
      *  - returns: An operation ID that should be assigned to the `Additive` object's `operationID` property.
      */
     public static func register(additiveMotion motion: Additive) -> UInt {
-        if !(MotionSupport.motions.containsObject(motion)) {
-            MotionSupport.motions.addObject(motion)
+        if !(MotionSupport.motions.contains(motion)) {
+            MotionSupport.motions.add(motion)
         }
         
         return MotionSupport.currentAdditiveOperationID()
@@ -63,7 +63,7 @@ public struct MotionSupport {
      *  - parameter additiveMotion: The `Additive` object to remove.
      */
     public static func unregister(additiveMotion motion: Additive) {
-        MotionSupport.motions.removeObject(motion)
+        MotionSupport.motions.remove(motion)
     }
     
     
@@ -96,9 +96,9 @@ public struct MotionSupport {
         
         // create an array from the operations NSSet, using the Motion's operationID as sort key
         let motions_array = MotionSupport.motions.allObjects
-        let sorted_motions = motions_array.sort( { (motion1, motion2) -> Bool in
+        let sorted_motions = motions_array.sorted( by: { (motion1, motion2) -> Bool in
             var test: Bool = false
-            if let m1 = motion1 as? Additive, m2 = motion2 as? Additive {
+            if let m1 = motion1 as? Additive, let m2 = motion2 as? Additive {
                 test =  m1.operationID < m2.operationID
             }
             return test
@@ -123,7 +123,7 @@ public struct MotionSupport {
     
     // MARK: Utility methods
     
-    public static func cast(number: AnyObject) -> Double? {
+    public static func cast(_ number: AnyObject) -> Double? {
         var value: Double?
         
         if (number is NSNumber) {
@@ -148,7 +148,7 @@ public struct MotionSupport {
     /// Utility method which determines whether the value is of the specified type.
     public static func matchesType(forValue value: Any, typeToMatch matchType: Any.Type) -> Bool {
         
-        let does_match: Bool = value.dynamicType == matchType || value is NSNumber
+        let does_match: Bool = type(of: value) == matchType || value is NSNumber
         
         return does_match
     }
@@ -177,9 +177,9 @@ public struct MotionSupport {
     static func propertySetter(forName name: String) -> Selector {
         
         var selector_name = name
-        let capped_first_letter = String(name[name.startIndex]).capitalizedString
-        let replace_range: Range = selector_name.startIndex ..< selector_name.startIndex.successor()
-        selector_name.replaceRange(replace_range, with: capped_first_letter)
+        let capped_first_letter = String(name[name.startIndex]).capitalized
+        let replace_range: Range = selector_name.startIndex ..< selector_name.index(after: selector_name.startIndex)
+        selector_name.replaceSubrange(replace_range, with: capped_first_letter)
         let setter_string = String.localizedStringWithFormat("%@%@:", "set", selector_name)
         let selector = NSSelectorFromString(setter_string)
         
@@ -192,26 +192,26 @@ public struct MotionSupport {
 
 /// An enum representing NSValue-encoded structs supported by MotionMachine.
 public enum ValueStructTypes {
-    case Number
-    case Point
-    case Size
-    case Rect
-    case Vector
-    case AffineTransform
-    case Transform3D
+    case number
+    case point
+    case size
+    case rect
+    case vector
+    case affineTransform
+    case transform3D
     #if os(iOS) || os(tvOS)
-    case UIEdgeInsets
-    case UIOffset
+    case uiEdgeInsets
+    case uiOffset
     #endif
-    case Unsupported
+    case unsupported
     
-    static var valueTypes: [ValueStructTypes: UnsafePointer<Int8>] = [ValueStructTypes.Number : NSNumber.init(int: 0).objCType,
-                                                                  ValueStructTypes.Point : NSValue(CGPoint: CGPointZero).objCType,
-                                                                  ValueStructTypes.Size : NSValue(CGSize: CGSizeZero).objCType,
-                                                                  ValueStructTypes.Rect : NSValue(CGRect: CGRectZero).objCType,
-                                                                  ValueStructTypes.Vector : NSValue(CGVector: CGVectorMake(0.0, 0.0)).objCType,
-                                                                  ValueStructTypes.AffineTransform : NSValue(CGAffineTransform: CGAffineTransformIdentity).objCType,
-                                                                  ValueStructTypes.Transform3D : NSValue.init(CATransform3D: CATransform3DIdentity).objCType
+    static var valueTypes: [ValueStructTypes: UnsafePointer<Int8>] = [ValueStructTypes.number : NSNumber.init(value: 0).objCType,
+                                                                  ValueStructTypes.point : NSValue(cgPoint: CGPoint.zero).objCType,
+                                                                  ValueStructTypes.size : NSValue(cgSize: CGSize.zero).objCType,
+                                                                  ValueStructTypes.rect : NSValue(cgRect: CGRect.zero).objCType,
+                                                                  ValueStructTypes.vector : NSValue(cgVector: CGVector(dx: 0.0, dy: 0.0)).objCType,
+                                                                  ValueStructTypes.affineTransform : NSValue(cgAffineTransform: CGAffineTransform.identity).objCType,
+                                                                  ValueStructTypes.transform3D : NSValue.init(caTransform3D: CATransform3DIdentity).objCType
     ]
     
     
@@ -219,7 +219,7 @@ public enum ValueStructTypes {
      *  Provides a C string returned by Foundation's `objCType` method for a specific ValueStructTypes type; this represents a specific Objective-C type. This is useful for Foundation structs which can't be used with Swift's `as` type checking.
      */
     func toObjCType() -> UnsafePointer<Int8> {
-        guard let type_value = ValueStructTypes.valueTypes[self] else { return NSNumber(bool: false).objCType }
+        guard let type_value = ValueStructTypes.valueTypes[self] else { return NSNumber(value: false).objCType }
         
         return type_value
     }

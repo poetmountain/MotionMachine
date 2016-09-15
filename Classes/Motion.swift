@@ -26,7 +26,7 @@
 
 import Foundation
 
-public typealias MotionUpdateClosure = (motion: Motion) -> Void
+public typealias MotionUpdateClosure = (_ motion: Motion) -> Void
 
 /**
  *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
@@ -100,7 +100,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - warning: Setting this parameter after a motion operation has begun has no effect.
      */
-    public var delay: NSTimeInterval = 0.0
+    public var delay: TimeInterval = 0.0
     
     /**
      *  The duration of a motion operation, in seconds, as it moves from its starting property values to its ending values. (read-only)
@@ -109,7 +109,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - warning: Do not set this parameter while a motion operation is in progress.
      */
-    public var duration: NSTimeInterval = 0.0
+    public var duration: TimeInterval = 0.0
     
     /**
      *  A Boolean which determines whether a motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
@@ -258,9 +258,9 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .Forward) {
+            if (reversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .Reverse) {
+            } else if (reversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -379,7 +379,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: start
      */
-    public func started(closure: MotionStarted) -> Self {
+    @discardableResult public func started(_ closure: @escaping MotionStarted) -> Self {
         _started = closure
         
         return self
@@ -393,7 +393,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: stop
      */
-    public func stopped(closure: MotionStopped) -> Self {
+    @discardableResult public func stopped(_ closure: @escaping MotionStopped) -> Self {
         _stopped = closure
         
         return self
@@ -407,7 +407,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: update(withTimeInterval:)
      */
-    public func updated(closure: MotionUpdated) -> Self {
+    @discardableResult public func updated(_ closure: @escaping MotionUpdated) -> Self {
         _updated = closure
         
         return self
@@ -421,7 +421,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: repeating, cyclesCompletedCount
      */
-    public func cycleRepeated(closure: MotionRepeated) -> Self {
+    @discardableResult public func cycleRepeated(_ closure: @escaping MotionRepeated) -> Self {
         _cycleRepeated = closure
         
         return self
@@ -435,7 +435,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: motionDirection, reversing
      */
-    public func reversed(closure: MotionReversed) -> Self {
+    @discardableResult public func reversed(_ closure: @escaping MotionReversed) -> Self {
         _reversed = closure
         
         return self
@@ -449,7 +449,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: pause
      */
-    public func paused(closure: MotionPaused) -> Self {
+    @discardableResult public func paused(_ closure: @escaping MotionPaused) -> Self {
         _paused = closure
         
         return self
@@ -463,7 +463,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - seealso: resume
      */
-    public func resumed(closure: MotionResumed) -> Self {
+    @discardableResult public func resumed(_ closure: @escaping MotionResumed) -> Self {
         _resumed = closure
         
         return self
@@ -475,7 +475,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - remark: This method can be chained when initializing the object.
      */
-    public func completed(closure: MotionCompleted) -> Self {
+    @discardableResult public func completed(_ closure: @escaping MotionCompleted) -> Self {
         _completed = closure
         
         return self
@@ -487,13 +487,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     // MARK: - Private Properties
     
     /// The starting time of the current motion operation. A value of 0.0 means that the motion is not in progress.
-    private var startTime: NSTimeInterval = 0.0
+    private var startTime: TimeInterval = 0.0
     
     /// The most recent update timestamp sent to the `update` method.
-    private var currentTime: NSTimeInterval = 0.0
+    private var currentTime: TimeInterval = 0.0
     
     /// The ending time of the motion, which is determined by adding the motion's duration to the starting time.
-    private var endTime: NSTimeInterval = 0.0
+    private var endTime: TimeInterval = 0.0
     
     /// Boolean value representing whether the object of the property should be reset when we repeat or restart the motion.
     private var resetObjectStateOnRepeat: Bool = false
@@ -506,7 +506,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     private var completedCount: UInt = 0
     
     /// Timestamp set the `pause` method is called; used to track the amount of time paused.
-    private var pauseTimestamp: NSTimeInterval = 0.0
+    private var pauseTimestamp: TimeInterval = 0.0
     
     
     
@@ -522,7 +522,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: NSTimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
         self.init(target: targetObject, properties: properties, finalStates: nil, duration: duration, easing: easing, options: options)
         
@@ -537,7 +537,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, duration: NSTimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
         self.init(target: targetObject, properties: [], finalStates: nil, duration: duration, easing: easing, options: options)
     }
@@ -552,13 +552,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, finalState templateObjects: [String:Any], duration: NSTimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, finalState templateObjects: [String:Any], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
         self.init(target: targetObject, properties: nil, finalStates: templateObjects, duration: duration, easing: easing, options: options)
     }
     
     
-    private init(target targetObject: NSObject, properties props: [PropertyData]?, finalStates: [String:Any]?, duration: NSTimeInterval, easing: EasingUpdateClosure?, options: MotionOptions?) {
+    private init(target targetObject: NSObject, properties props: [PropertyData]?, finalStates: [String:Any]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions?) {
         
         var properties = props ?? []
         
@@ -582,8 +582,8 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         reversing = options!.contains(.Reverse)
         resetObjectStateOnRepeat = options!.contains(.ResetStateOnRepeat)
         
-        motionState = .Stopped
-        motionDirection = .Forward
+        motionState = .stopped
+        motionDirection = .forward
         
         _tempo?.delegate = self
         
@@ -591,7 +591,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             for (path, final_state) in final_object_states {
                 var tobj: AnyObject = targetObject
                 if (path != "" && valueAssistant.acceptsKeypath(targetObject)) {
-                    if let tvalue = targetObject.valueForKeyPath(path) {
+                    if let tvalue = targetObject.value(forKeyPath: path) as AnyObject? {
                         tobj = tvalue
                     }
                 }
@@ -599,10 +599,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 if let val = CGStructAssistant.valueForCGStruct(final_state) {
                     do {
                         let generated = try valueAssistant.generateProperties(fromObject: val, keyPath: path, targetObject: tobj)
-                        properties.appendContentsOf(generated)
+                        properties.append(contentsOf: generated)
 
-                    } catch ValueAssistantError.TypeRequirement(let valueType) {
-                        ValueAssistantError.TypeRequirement(valueType).printError(fromFunction: #function)
+                    } catch ValueAssistantError.typeRequirement(let valueType) {
+                        ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
 
                     } catch {
                         // any other errors
@@ -610,11 +610,11 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                     
                 } else {
                     do {
-                        let generated = try valueAssistant.generateProperties(fromObject: (final_state as! AnyObject), keyPath: path, targetObject: tobj)
-                        properties.appendContentsOf(generated)
+                        let generated = try valueAssistant.generateProperties(fromObject: (final_state as AnyObject), keyPath: path, targetObject: tobj)
+                        properties.append(contentsOf: generated)
                         
-                    } catch ValueAssistantError.TypeRequirement(let valueType) {
-                        ValueAssistantError.TypeRequirement(valueType).printError(fromFunction: #function)
+                    } catch ValueAssistantError.typeRequirement(let valueType) {
+                        ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                         
                     } catch {
                         // any other errors
@@ -660,7 +660,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - warning: This method should not be called after the Motion has started.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      */
-    public func add(property: PropertyData) -> Motion {
+    @discardableResult public func add(_ property: PropertyData) -> Motion {
         
         var prop = property
         setup(forProperty: &prop)
@@ -679,7 +679,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - parameter amount: The number of seconds to wait.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      */
-    public func afterDelay(amount: NSTimeInterval) -> Motion {
+    @discardableResult public func afterDelay(_ amount: TimeInterval) -> Motion {
         
         delay = amount
         
@@ -696,7 +696,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: repeatCycles, repeating
      */
-    public func repeats(numberOfCycles: UInt = REPEAT_INFINITE) -> Motion {
+    @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> Motion {
         
         repeatCycles = numberOfCycles
         repeating = true
@@ -714,7 +714,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: reversing, reverseEasing
      */
-    public func reverses(withEasing easing: EasingUpdateClosure? = nil) -> Motion {
+    @discardableResult public func reverses(withEasing easing: EasingUpdateClosure? = nil) -> Motion {
         
         reversing = true
         reverseEasing = easing
@@ -730,7 +730,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter property: The `PropertyData` instance to modify.
      */
-    private func setup(inout forProperty property: PropertyData) {
+    private func setup(forProperty property: inout PropertyData) {
         
         guard let unwrapped_object = targetObject else { return }
         
@@ -750,7 +750,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // determine if target property is a value we can update directly, or if it's an element of a struct we need to replace
         property.parentKeyPath = property.path
-        var keys: [String] = property.path.componentsSeparatedByString(".")
+        var keys: [String] = property.path.components(separatedBy: ".")
         let key_count = keys.count
         
         if (key_count > 1) {
@@ -759,13 +759,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             // descend keypath tree until we find a key in the path that isn't a struct or integer
             var parent_value: AnyObject?
             
-            for (index, key) in keys.enumerate() {
+            for (index, key) in keys.enumerated() {
                 let parent_keys = keys[0 ... index]
                 
                 if (parent_keys.count > 0) {
-                    let parent_path = parent_keys.joinWithSeparator(".")
+                    let parent_path = parent_keys.joined(separator: ".")
 
-                    if let parent = unwrapped_object.valueForKeyPath(parent_path) {
+                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as AnyObject? {
                         parent_value = parent
                         
                         var is_value_supported = false
@@ -809,14 +809,14 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         } else if (key_count == 1) {
             // this is a top-level property, so let's see if this property is updatable
             var is_value_supported = false
-            var prop_value: AnyObject?
+            var prop_value: Any?
             let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
             if (keypath_accepted) {
                 do {
                     prop_value = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
                     
-                } catch ValueAssistantError.TypeRequirement(let valueType) {
-                    ValueAssistantError.TypeRequirement(valueType).printError(fromFunction: #function)
+                } catch ValueAssistantError.typeRequirement(let valueType) {
+                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                     
                 } catch {
                     // any other errors
@@ -834,12 +834,12 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             }
             if (is_value_supported) {
                 if let value = prop_value {
-                    property.target = value
+                    property.target = value as AnyObject
                 }
             
             } else if (unwrapped_object is NSNumber) {
                 // target property's value could be nil if it's a NSNumber, so set it to the starting value
-                let start_value = NSNumber.init(double: property.start)
+                let start_value = NSNumber.init(value: property.start)
                 property.target = start_value
             } else {
                 property.target = unwrapped_object
@@ -861,7 +861,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter property: The `PropertyData` instance to modify.
      */
-    private func assignStartingPropertyValue(inout property: PropertyData) {
+    private func assignStartingPropertyValue(_ property: inout PropertyData) {
         if (property.useExistingStartValue && completedCount == 0) {
             if let current_value = valueAssistant.retrieveCurrentObjectValue(forProperty: property) {
                 property.start = current_value
@@ -892,7 +892,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             properties[index].current = properties[index].start
         }
         
-        motionState = .Moving
+        motionState = .moving
         startTime = 0.0
         
         if (additive && targetObject != nil) {
@@ -901,10 +901,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call start closure
         weak var weak_self = self
-        _started?(motion: weak_self!)
+        _started?(weak_self!)
         
         // send start status update
-        sendStatusUpdate(.Started)
+        sendStatusUpdate(.started)
         
     }
     
@@ -916,7 +916,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter status: The `MoveableStatus` enum value to send to the delegate.
      */
-    private func sendStatusUpdate(status: MoveableStatus) {
+    private func sendStatusUpdate(_ status: MoveableStatus) {
         
         weak var weak_self = self
         updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
@@ -932,7 +932,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter property: The property to update.
      */
-    private func updatePropertyValue(inout forProperty property: PropertyData) {
+    private func updatePropertyValue(forProperty property: inout PropertyData) {
         
         let new_value = (additive) ? property.delta : property.current
         if (property.targetObject == nil) {
@@ -963,7 +963,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     /// Called when the motion has completed.
     private func motionCompleted() {
         
-        motionState = .Stopped
+        motionState = .stopped
         _motionProgress = 1.0
         _cycleProgress = 1.0
         if (!repeating) { cyclesCompletedCount += 1 }
@@ -986,13 +986,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call update closure
         weak var weak_self = self
-        _updated?(motion: weak_self!)
+        _updated?(weak_self!)
         
         // call complete closure
-        _completed?(motion: weak_self!)
+        _completed?(weak_self!)
         
         // send completion status update
-        sendStatusUpdate(.Completed)
+        sendStatusUpdate(.completed)
     }
     
     
@@ -1030,12 +1030,12 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
             // call cycle closure
             weak var weak_self = self
-            _cycleRepeated?(motion: weak_self!)
+            _cycleRepeated?(weak_self!)
             
             // send repeated status update
-            sendStatusUpdate(.Repeated)
+            sendStatusUpdate(.repeated)
         
-            motionState = .Moving
+            motionState = .moving
             
         } else {
             motionCompleted()
@@ -1047,10 +1047,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     /// Reverses the direction of the motion.
     private func reverseMotionDirection() {
         
-        if (motionDirection == .Forward) {
-            motionDirection = .Reverse
-        } else if (motionDirection == .Reverse) {
-            motionDirection = .Forward
+        if (motionDirection == .forward) {
+            motionDirection = .reverse
+        } else if (motionDirection == .reverse) {
+            motionDirection = .forward
         }
         
         // reset the times to get ready for the new reverse motion
@@ -1059,15 +1059,15 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // call reverse closure
         weak var weak_self = self
-        _reversed?(motion: weak_self!)
+        _reversed?(weak_self!)
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
-        if (motionDirection == .Reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
-            sendStatusUpdate(.HalfCompleted)
+        if (motionDirection == .reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
+            sendStatusUpdate(.halfCompleted)
         
         } else {
-            sendStatusUpdate(.Reversed)
+            sendStatusUpdate(.reversed)
         }
         
     }
@@ -1079,9 +1079,9 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     
     // MARK: - Moveable protocol methods
     
-    public func update(withTimeInterval currentTime: NSTimeInterval) {
+    public func update(withTimeInterval currentTime: TimeInterval) {
         
-        if (motionState == .Moving) {
+        if (motionState == .moving) {
             
             if (pauseTimestamp > 0.0 && startTime > 0.0) {
                 // we just resumed from a pause, so adjust the times to account for paused length
@@ -1119,16 +1119,16 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
                 let value_range = property.end - property.start
                 if (value_range != 0.0) {
-                    if (motionDirection == .Forward) {
-                        new_value = easing(elapsedTime: elapsed_time, startValue: property.start, valueRange: value_range, duration: duration)
+                    if (motionDirection == .forward) {
+                        new_value = easing(elapsed_time, property.start, value_range, duration)
                         progress = fabs((property.current - property.start) / value_range)
                     
                     } else {
                         if let reverse_easing = reverseEasing {
-                            new_value = reverse_easing(elapsedTime: elapsed_time, startValue: property.end, valueRange: -value_range, duration: duration)
+                            new_value = reverse_easing(elapsed_time, property.end, -value_range, duration)
                             
                         } else {
-                            new_value = easing(elapsedTime: elapsed_time, startValue: property.end, valueRange: -value_range, duration: duration)
+                            new_value = easing(elapsed_time, property.end, -value_range, duration)
                         }
 
                         progress = fabs((property.end - property.current) / value_range)
@@ -1145,19 +1145,19 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 }
                 // call update closure
                 weak var weak_self = self
-                _updated?(motion: weak_self!)
+                _updated?(weak_self!)
                 
             } else {
                 
                 // motion has completed
                 if (reversing || repeating) {
-                    if ((repeating && !reversing) || (reversing && repeating && motionDirection == .Reverse)) {
+                    if ((repeating && !reversing) || (reversing && repeating && motionDirection == .reverse)) {
                         nextRepeatCycle()
                         
-                    } else if (!repeating && reversing && motionDirection == .Reverse) {
+                    } else if (!repeating && reversing && motionDirection == .reverse) {
                         motionCompleted()
                         
-                    } else if (reversing && motionState == .Moving) {
+                    } else if (reversing && motionState == .moving) {
                         reverseMotionDirection()
                     }
                     
@@ -1167,7 +1167,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 }
             }
             
-        } else if (motionState == .Delayed) {
+        } else if (motionState == .delayed) {
             
             self.currentTime = currentTime
             
@@ -1190,8 +1190,8 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     }
     
     
-    public func start() -> Self {
-        if (motionState == .Stopped) {
+    @discardableResult public func start() -> Self {
+        if (motionState == .stopped) {
             reset()
             
             let no_delay_set: Bool = ((delay == 0.0) ? true : false)
@@ -1202,7 +1202,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 startMotion()
                 
             } else {
-                motionState = .Delayed
+                motionState = .delayed
             }
             
         }
@@ -1213,8 +1213,8 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     
     public func stop() {
         
-        if (motionState == .Moving || motionState == .Paused || motionState == .Delayed) {
-            motionState = .Stopped
+        if (motionState == .moving || motionState == .paused || motionState == .delayed) {
+            motionState = .stopped
             
             startTime = 0.0
             currentTime = 0.0
@@ -1227,49 +1227,49 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             
             // call stop closure
             weak var weak_self = self
-            _stopped?(motion: weak_self!)
+            _stopped?(weak_self!)
             
             // send stopped status update
-            sendStatusUpdate(.Stopped)
+            sendStatusUpdate(.stopped)
         }
     }
     
     public func pause() {
         
-        if (motionState == .Moving) {
-            motionState = .Paused
+        if (motionState == .moving) {
+            motionState = .paused
             
             // saves current time so we can determine length of pause time
             pauseTimestamp = currentTime
             
             // call pause closure
             weak var weak_self = self
-            _paused?(motion: weak_self!)
+            _paused?(weak_self!)
             
             // send paused status update
-            sendStatusUpdate(.Paused)
+            sendStatusUpdate(.paused)
             
         }
     }
     
     public func resume() {
-        if (motionState == .Paused) {
-            motionState = .Moving
+        if (motionState == .paused) {
+            motionState = .moving
 
             // call resume closure
             weak var weak_self = self
-            _resumed?(motion: weak_self!)
+            _resumed?(weak_self!)
             
             // send resumed status update
-            sendStatusUpdate(.Resumed)
+            sendStatusUpdate(.resumed)
         }
     }
     
     
     /// Resets the motion to its initial state.
     public func reset() {
-        motionState = .Stopped
-        motionDirection = .Forward
+        motionState = .stopped
+        motionDirection = .forward
         
         for index in 0 ..< properties.count {
             let property = properties[index]
@@ -1306,7 +1306,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     
     // MARK: TempoDelegate methods
     
-    public func tempoBeatUpdate(timestamp: NSTimeInterval) {
+    public func tempoBeatUpdate(_ timestamp: TimeInterval) {
 
         update(withTimeInterval: timestamp)
         
@@ -1314,7 +1314,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     
     // MARK: PropertyDataDelegate methods
     
-    public func didUpdate(startValue: Double) {
+    public func didUpdate(_ startValue: Double) {
         motionProgress = 0.0
         
         // setting startTime to 0 causes motionUpdate method to re-init the motion

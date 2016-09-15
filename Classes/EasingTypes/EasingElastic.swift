@@ -35,7 +35,7 @@ public struct EasingElastic {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime
             var easing_value = 0.0
 
@@ -63,7 +63,7 @@ public struct EasingElastic {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime
             var easing_value = 0.0
             if (time ≈≈ 0.0) {
@@ -89,7 +89,7 @@ public struct EasingElastic {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime
             var easing_value = 0.0
             
@@ -111,7 +111,8 @@ public struct EasingElastic {
                 } else {
                     
                     time -= 1
-                    easing_value = amplitude*pow(2, -10*time) * sin( (time*duration-overshoot) * M_PI2/period ) * 0.5 + valueRange + startValue
+                    easing_value = amplitude*pow(2, -10*time) * sin( (time*duration-overshoot) * M_PI2/period ) * 0.5
+                    easing_value += valueRange + startValue
                 }
             }
             

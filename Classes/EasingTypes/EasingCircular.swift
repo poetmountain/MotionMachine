@@ -33,7 +33,7 @@ public struct EasingCircular {
     
     public static func easeIn() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let time = elapsedTime / duration
             let easing_value = -valueRange * (sqrt(1 - time*time) - 1) + startValue
             
@@ -45,7 +45,7 @@ public struct EasingCircular {
     
     public static func easeOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var time = elapsedTime / duration
             time -= 1
             let easing_value = valueRange * sqrt(1 - time*time) + startValue
@@ -58,7 +58,7 @@ public struct EasingCircular {
     
     public static func easeInOut() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             var easing_value = 0.0
             var time = elapsedTime / (duration * 0.5)
             

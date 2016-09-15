@@ -60,14 +60,14 @@ class MotionSequenceTests: XCTestCase {
         let motion2 = Motion(target: tester, duration: 1.0)
         
         // reverses should set reversing and reversingMode
-        let sequence = MotionSequence(steps: [motion, motion2]).reverses(.Contiguous)
+        let sequence = MotionSequence(steps: [motion, motion2]).reverses(.contiguous)
         XCTAssertTrue(sequence.reversing)
-        XCTAssertTrue(sequence.reversingMode == .Contiguous)
+        XCTAssertTrue(sequence.reversingMode == .contiguous)
         
         // if no value provided, reversingMode should be .Sequential
         let sequence2 = MotionSequence(steps: [motion, motion2]).reverses()
         XCTAssertTrue(sequence2.reversing)
-        XCTAssertTrue(sequence2.reversingMode == .Sequential)
+        XCTAssertTrue(sequence2.reversingMode == .sequential)
     }
     
     
@@ -104,12 +104,12 @@ class MotionSequenceTests: XCTestCase {
     // MARK: Motion tests
 
     func test_should_end_motions_at_proper_ending_values() {
-        let did_start = expectationWithDescription("sequence called started notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_start = expectation(description: "sequence called started notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -132,12 +132,12 @@ class MotionSequenceTests: XCTestCase {
         }
         
         sequence.start()
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
 
     }
     
     func test_delay() {
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -159,16 +159,16 @@ class MotionSequenceTests: XCTestCase {
         
         
         sequence.start()
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
  
     func test_repeating() {
-        let did_repeat = expectationWithDescription("sequence called started notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_repeat = expectation(description: "sequence called started notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -188,27 +188,28 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertTrue(sequence.currentStep() === motion, "should end with last motion")
             XCTAssertEqual(motion.properties[0].current, motion.properties[0].end)
             XCTAssertEqual(motion.totalProgress, 1.0)
-            XCTAssertEqual(sequence.cyclesCompletedCount, sequence.repeatCycles+1)
+            let new_cycles = sequence.repeatCycles + 1
+            XCTAssertEqual(sequence.cyclesCompletedCount, new_cycles)
             XCTAssertEqual(sequence.cycleProgress, 1.0)
             XCTAssertEqual(sequence.totalProgress, 1.0)
-            XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+            XCTAssertEqual(sequence.motionState, MotionState.stopped)
             
             did_complete.fulfill()
         }
         sequence.repeatCycles = 1
         
         sequence.start()
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
 
     }
     
     func test_reversing_contiguous() {
-        let did_reverse = expectationWithDescription("sequence called reversed notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -219,9 +220,9 @@ class MotionSequenceTests: XCTestCase {
 
             XCTAssertTrue(sequence.totalProgress <= 0.5)
             XCTAssertTrue(sequence.cycleProgress <= 0.5)
-            XCTAssertEqual(sequence.motionDirection, MotionDirection.Reverse)
+            XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
             XCTAssertTrue(sequence.currentStep() === motion, "step after reversing should be same step")
-            XCTAssertEqual(motion.motionDirection, MotionDirection.Reverse, "sequence when reversing should move in reverse")
+            XCTAssertEqual(motion.motionDirection, MotionDirection.reverse, "sequence when reversing should move in reverse")
 
             did_reverse.fulfill()
         })
@@ -240,12 +241,12 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(sequence.cyclesCompletedCount, 1)
             XCTAssertEqual(sequence.cycleProgress, 1.0)
             XCTAssertEqual(sequence.totalProgress, 1.0)
-            XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+            XCTAssertEqual(sequence.motionState, MotionState.stopped)
 
             did_complete.fulfill()
         }
         
-        sequence.reversingMode = .Contiguous
+        sequence.reversingMode = .contiguous
         
         // should turn reversing property on sequence steps
         XCTAssertTrue(group.reversing)
@@ -254,24 +255,24 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
 
         // should pause first motion while moving the second
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
-            XCTAssertEqual(group.motionState, MotionState.Paused)
-            XCTAssertEqual(motion3.motionState, MotionState.Moving)
-        }
+        let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            XCTAssertEqual(group.motionState, MotionState.paused)
+            XCTAssertEqual(motion3.motionState, MotionState.moving)
+        })
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
 
     }
     
     
     func test_reversing_nested_sequence_contiguous() {
-        let did_reverse = expectationWithDescription("sequence called reversed notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -285,10 +286,10 @@ class MotionSequenceTests: XCTestCase {
                 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
-                XCTAssertEqual(sequence.motionDirection, MotionDirection.Reverse)
-                XCTAssertEqual(subsequence.motionDirection, MotionDirection.Reverse, "sub sequence when reversing should move in reverse")
+                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
+                XCTAssertEqual(subsequence.motionDirection, MotionDirection.reverse, "sub sequence when reversing should move in reverse")
                 XCTAssertTrue(sequence.currentStep() === motion, "step after reversing should be same step")
-                XCTAssertEqual(motion.motionDirection, MotionDirection.Reverse, "sequence when reversing should move in reverse")
+                XCTAssertEqual(motion.motionDirection, MotionDirection.reverse, "sequence when reversing should move in reverse")
                 
                 did_reverse.fulfill()
             })
@@ -310,12 +311,12 @@ class MotionSequenceTests: XCTestCase {
                 XCTAssertEqual(sequence.cyclesCompletedCount, 1)
                 XCTAssertEqual(sequence.cycleProgress, 1.0)
                 XCTAssertEqual(sequence.totalProgress, 1.0)
-                XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+                XCTAssertEqual(sequence.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
         
-        sequence.reversingMode = .Contiguous
+        sequence.reversingMode = .contiguous
         
         // should turn reversing property on sequence steps
         XCTAssertTrue(group.reversing)
@@ -325,25 +326,25 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         
         // should pause first motion while moving the second
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.7 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
-            XCTAssertEqual(group.motionState, MotionState.Paused)
-            XCTAssertEqual(sub_sequence.motionState, MotionState.Paused)
-            XCTAssertEqual(motion5.motionState, MotionState.Moving)
-        }
+        let after_time = DispatchTime.now() + Double(Int64(0.7 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            XCTAssertEqual(group.motionState, MotionState.paused)
+            XCTAssertEqual(sub_sequence.motionState, MotionState.paused)
+            XCTAssertEqual(motion5.motionState, MotionState.moving)
+        })
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     func test_reversing_nested_sequence_in_last_position_contiguous() {
-        let did_reverse = expectationWithDescription("sequence called reversed notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -356,10 +357,10 @@ class MotionSequenceTests: XCTestCase {
                 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
-                XCTAssertEqual(sequence.motionDirection, MotionDirection.Reverse)
-                XCTAssertEqual(subsequence.motionDirection, MotionDirection.Reverse, "sub sequence when reversing should move in reverse")
+                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
+                XCTAssertEqual(subsequence.motionDirection, MotionDirection.reverse, "sub sequence when reversing should move in reverse")
                 XCTAssertTrue(sequence.currentStep() === subsequence, "step after reversing should be same step")
-                XCTAssertEqual(motion.motionDirection, MotionDirection.Reverse, "sequence when reversing should move in reverse")
+                XCTAssertEqual(motion.motionDirection, MotionDirection.reverse, "sequence when reversing should move in reverse")
                 
                 did_reverse.fulfill()
             })
@@ -379,12 +380,12 @@ class MotionSequenceTests: XCTestCase {
                 XCTAssertEqual(sequence.cyclesCompletedCount, 1)
                 XCTAssertEqual(sequence.cycleProgress, 1.0)
                 XCTAssertEqual(sequence.totalProgress, 1.0)
-                XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+                XCTAssertEqual(sequence.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
         
-        sequence.reversingMode = .Contiguous
+        sequence.reversingMode = .contiguous
         
         // should turn reversing property on sequence steps
         XCTAssertTrue(group.reversing)
@@ -393,25 +394,25 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         
         // should pause first motion while moving the second
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
-            XCTAssertEqual(group.motionState, MotionState.Paused)
-            XCTAssertEqual(sub_sequence.motionState, MotionState.Moving)
-        }
+        let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            XCTAssertEqual(group.motionState, MotionState.paused)
+            XCTAssertEqual(sub_sequence.motionState, MotionState.moving)
+        })
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     
     func test_reversing_nested_sequence_noncontiguous() {
-        let did_reverse = expectationWithDescription("sequence called reversed notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -425,10 +426,10 @@ class MotionSequenceTests: XCTestCase {
 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
-                XCTAssertEqual(sequence.motionDirection, MotionDirection.Reverse)
-                XCTAssertEqual(subsequence.motionDirection, MotionDirection.Forward, "sub sequence when reversing should move in reverse")
+                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
+                XCTAssertEqual(subsequence.motionDirection, MotionDirection.forward, "sub sequence when reversing should move in reverse")
                 XCTAssertTrue(sequence.currentStep() === sequence.steps.last, "step after reversing should be same step")
-                XCTAssertEqual(motion.motionDirection, MotionDirection.Forward, "sequence when reversing should move forwards")
+                XCTAssertEqual(motion.motionDirection, MotionDirection.forward, "sequence when reversing should move forwards")
 
                 did_reverse.fulfill()
             })
@@ -451,7 +452,7 @@ class MotionSequenceTests: XCTestCase {
                 XCTAssertEqual(sequence.cyclesCompletedCount, 1)
                 XCTAssertEqual(sequence.cycleProgress, 1.0)
                 XCTAssertEqual(sequence.totalProgress, 1.0)
-                XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+                XCTAssertEqual(sequence.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
@@ -463,24 +464,24 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         
         // should pause first motion while moving the second
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
-            XCTAssertEqual(group.motionState, MotionState.Stopped)
-            XCTAssertEqual(motion3.motionState, MotionState.Moving)
-        }
+        let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            XCTAssertEqual(group.motionState, MotionState.stopped)
+            XCTAssertEqual(motion3.motionState, MotionState.moving)
+        })
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
     
     func test_reversing_noncontiguous() {
-        let did_reverse = expectationWithDescription("sequence called reversed notify closure")
-        let did_complete = expectationWithDescription("sequence called completed notify closure")
+        let did_reverse = expectation(description: "sequence called reversed notify closure")
+        let did_complete = expectation(description: "sequence called completed notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blueColor()], duration: 0.2)
+        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -491,9 +492,9 @@ class MotionSequenceTests: XCTestCase {
 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
-                XCTAssertEqual(sequence.motionDirection, MotionDirection.Reverse)
+                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
                 XCTAssertTrue(sequence.currentStep() === sequence.steps.last, "step after reversing should be same step")
-                XCTAssertEqual(motion.motionDirection, MotionDirection.Forward, "sequence when reversing should move forwards")
+                XCTAssertEqual(motion.motionDirection, MotionDirection.forward, "sequence when reversing should move forwards")
                 
                 did_reverse.fulfill()
             })
@@ -513,7 +514,7 @@ class MotionSequenceTests: XCTestCase {
                 XCTAssertEqual(sequence.cyclesCompletedCount, 1)
                 XCTAssertEqual(sequence.cycleProgress, 1.0)
                 XCTAssertEqual(sequence.totalProgress, 1.0)
-                XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+                XCTAssertEqual(sequence.motionState, MotionState.stopped)
                 
                 did_complete.fulfill()
         }
@@ -525,13 +526,13 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         
         // should pause first motion while moving the second
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
-            XCTAssertEqual(group.motionState, MotionState.Stopped)
-            XCTAssertEqual(motion3.motionState, MotionState.Moving)
-        }
+        let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            XCTAssertEqual(group.motionState, MotionState.stopped)
+            XCTAssertEqual(motion3.motionState, MotionState.moving)
+        })
         
-        waitForExpectationsWithTimeout(2.0, handler: nil)
+        waitForExpectations(timeout: 2.0, handler: nil)
         
     }
     
@@ -541,14 +542,14 @@ class MotionSequenceTests: XCTestCase {
     // MARK: Moveable methods
     
     func test_start() {
-        let did_start = expectationWithDescription("sequence called started notify closure")
+        let did_start = expectation(description: "sequence called started notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let sequence = MotionSequence(steps: [motion, motion2])
         .started { (sequence) in
-            XCTAssertEqual(sequence.motionState, MotionState.Moving)
+            XCTAssertEqual(sequence.motionState, MotionState.moving)
             
             did_start.fulfill()
         }
@@ -558,44 +559,44 @@ class MotionSequenceTests: XCTestCase {
         // should not start when paused
         sequence.pause()
         sequence.start()
-        XCTAssertEqual(sequence.motionState, MotionState.Paused)
+        XCTAssertEqual(sequence.motionState, MotionState.paused)
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
 
     }
     
     func test_stop() {
-        let did_stop = expectationWithDescription("sequence called stopped notify closure")
+        let did_stop = expectation(description: "sequence called stopped notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let sequence = MotionSequence(steps: [motion, motion2])
         .stopped { (sequence) in
-            XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+            XCTAssertEqual(sequence.motionState, MotionState.stopped)
             
             did_stop.fulfill()
         }
         
         sequence.start()
         
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.stop()
-        }
+        })
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_pause() {
-        let did_pause = expectationWithDescription("sequence called paused notify closure")
+        let did_pause = expectation(description: "sequence called paused notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let sequence = MotionSequence(steps: [motion, motion2])
         .paused { (sequence) in
-            XCTAssertEqual(sequence.motionState, MotionState.Paused)
+            XCTAssertEqual(sequence.motionState, MotionState.paused)
             
             did_pause.fulfill()
         }
@@ -603,7 +604,7 @@ class MotionSequenceTests: XCTestCase {
         sequence.start()
         sequence.pause()
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
@@ -619,50 +620,50 @@ class MotionSequenceTests: XCTestCase {
         sequence.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+        XCTAssertEqual(sequence.motionState, MotionState.stopped)
     }
     
     
     func test_resume() {
-        let did_resume = expectationWithDescription("sequence called resumed notify closure")
-        let did_complete = expectationWithDescription("squence called completed notify closure")
+        let did_resume = expectation(description: "sequence called resumed notify closure")
+        let did_complete = expectation(description: "squence called completed notify closure")
 
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let sequence = MotionSequence(steps: [motion, motion2])
         .resumed { (sequence) in
-            XCTAssertEqual(sequence.motionState, MotionState.Moving)
+            XCTAssertEqual(sequence.motionState, MotionState.moving)
             
             did_resume.fulfill()
         }
         .completed { (sequence) in
             XCTAssertEqual(tester.value, 40.0)
             XCTAssertEqual(sequence.totalProgress, 1.0)
-            XCTAssertEqual(sequence.motionState, MotionState.Stopped)
+            XCTAssertEqual(sequence.motionState, MotionState.stopped)
             
             did_complete.fulfill()
         }
         sequence.start()
         sequence.pause()
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.resume()
-        }
+        })
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func test_update() {
         
-        let did_update = expectationWithDescription("sequence called updated notify closure")
+        let did_update = expectation(description: "sequence called updated notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let sequence = MotionSequence(steps: [motion, motion2])
         .updated { (sequence) in
-            XCTAssertEqual(sequence.motionState, MotionState.Moving)
+            XCTAssertEqual(sequence.motionState, MotionState.moving)
             
             did_update.fulfill()
             sequence.stop()
@@ -670,13 +671,13 @@ class MotionSequenceTests: XCTestCase {
         
         sequence.start()
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     
     func test_reset() {
         
-        let did_reset = expectationWithDescription("motion called updated notify closure")
+        let did_reset = expectation(description: "motion called updated notify closure")
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
@@ -684,17 +685,17 @@ class MotionSequenceTests: XCTestCase {
         let sequence = MotionSequence(steps: [motion, motion2])
         
         sequence.start()
-        let after_time = dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_SEC)));
-        dispatch_after(after_time, dispatch_get_main_queue()) {
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             sequence.reset()
             
             XCTAssertEqual(sequence.totalProgress, 0.0)
             XCTAssertEqual(sequence.cycleProgress, 0.0)
             
             did_reset.fulfill()
-        }
+        })
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
         
     }
     

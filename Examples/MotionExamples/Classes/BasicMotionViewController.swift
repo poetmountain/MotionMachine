@@ -24,7 +24,7 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -54,14 +54,14 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
 
   
     
-    public override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         motion.start()
     }
     
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         motion.stop()
@@ -77,16 +77,16 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
     // MARK: - Private methods
     
     private func setupUI() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         let margins = view.layoutMarginsGuide
 
-        buttonsView = ButtonsView.init(frame: CGRectZero)
+        buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
 
-        buttonsView.widthAnchor.constraintEqualToAnchor(margins.widthAnchor, constant: 0.0).active = true
-        buttonsView.heightAnchor.constraintEqualToAnchor(margins.heightAnchor, constant: 0.0).active = true
+        buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
+        buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
         
         
@@ -95,11 +95,11 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         self.view.addSubview(motionView)
         motionView.translatesAutoresizingMaskIntoConstraints = false
         
-        xConstraint = motionView.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor, constant: 0.0)
-        xConstraint.active = true
-        motionView.topAnchor.constraintEqualToAnchor(margins.topAnchor, constant: topLayoutGuide.length+20.0).active = true
-        motionView.widthAnchor.constraintEqualToConstant(40.0).active = true
-        motionView.heightAnchor.constraintEqualToConstant(40.0).active = true
+        xConstraint = motionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        xConstraint.isActive = true
+        motionView.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+20.0).isActive = true
+        motionView.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        motionView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
         
     }

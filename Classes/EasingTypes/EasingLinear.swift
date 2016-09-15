@@ -33,7 +33,7 @@ public struct EasingLinear {
 
     public static func easeNone() -> EasingUpdateClosure {
         
-        func easing (elapsedTime: NSTimeInterval, startValue: Double, valueRange: Double, duration: NSTimeInterval) -> Double {
+        func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
             let easing_value = valueRange * (elapsedTime / duration) + startValue
             
             return easing_value

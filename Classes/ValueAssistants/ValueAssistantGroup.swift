@@ -73,7 +73,7 @@ public class ValueAssistantGroup : ValueAssistant {
      *  - note: The added assistant will be assigned the same values for `additive` and `additiveWeighting` as this group's values.
      *  - seealso: additive, additiveWeighting
      */
-    public func add(assistant: ValueAssistant) {
+    public func add(_ assistant: ValueAssistant) {
         var assist = assistant
 
         assist.additive = additive
@@ -100,11 +100,11 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
         for assistant in assistants {
-            if (assistant.supports(object)) {
+            if (assistant.supports(object as AnyObject)) {
                 if let retrieved = try? assistant.retrieveValue(inObject: object, keyPath: path) {
                     retrieved_value = retrieved
                     break
@@ -113,17 +113,17 @@ public class ValueAssistantGroup : ValueAssistant {
         }
         
         if (retrieved_value == nil) {
-            let path_value = object.valueForKeyPath(path)!
+            let path_value = (object as AnyObject).value(forKeyPath: path)!
             
             // cast numeric value to a double
-            retrieved_value = MotionSupport.cast(path_value)
+            retrieved_value = MotionSupport.cast(path_value as AnyObject)
             
-            let components = path.componentsSeparatedByString(".")
+            let components = path.components(separatedBy: ".")
             
             
             let first_component = components.first!
-            let child_object = object.valueForKey(first_component)
-            if let unwrapped_child = child_object {
+            let child_object = (object as AnyObject).value(forKey: first_component)
+            if let unwrapped_child = child_object as AnyObject? {
                 if (acceptsKeypath(unwrapped_child)) {
                     
                 }
@@ -135,14 +135,14 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
         guard newValues.count > 0 else { return nil }
         
         var new_parent_value:NSObject?
         
         for assistant in assistants {
-            if (assistant.supports(object)) {
+            if (assistant.supports(object as AnyObject)) {
                 new_parent_value = assistant.updateValue(inObject: object, newValues: newValues)
                 break
             }
@@ -176,7 +176,7 @@ public class ValueAssistantGroup : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         // this code path will execute if the object passed in was an NSValue
         // as such we must replace the value object directly
@@ -221,7 +221,7 @@ public class ValueAssistantGroup : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         for assistant in assistants {
@@ -234,7 +234,7 @@ public class ValueAssistantGroup : ValueAssistant {
     }
     
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = true
         
         for assistant in assistants {

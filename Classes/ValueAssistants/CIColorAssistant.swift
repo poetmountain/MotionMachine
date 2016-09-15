@@ -107,7 +107,7 @@ public class CIColorAssistant : ValueAssistant {
         var path_value :Double?
         
         if let unwrapped_object = property.targetObject {
-            if let parent = unwrapped_object.valueForKeyPath(property.parentKeyPath)! as? NSObject {
+            if let parent = unwrapped_object.value(forKeyPath: property.parentKeyPath)! as? NSObject {
                 path_value = retrieveValue(inObject: parent, keyPath: property.path)
             }
             
@@ -121,7 +121,7 @@ public class CIColorAssistant : ValueAssistant {
     }
     
     
-    public func retrieveValue(inObject object: AnyObject, keyPath path: String) -> Double? {
+    public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
         if (object is CIColor) {
@@ -148,7 +148,7 @@ public class CIColorAssistant : ValueAssistant {
     }
     
     
-    public func updateValue(inObject object: AnyObject, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
         guard newValues.count > 0 else { return nil }
         
@@ -197,7 +197,7 @@ public class CIColorAssistant : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(double: property.current)
+        var new_prop: NSObject? = NSNumber.init(value: property.current)
         
         
         if let unwrapped_object = property.targetObject {
@@ -210,7 +210,7 @@ public class CIColorAssistant : ValueAssistant {
                 
                 // replace the top-level struct of the property we're trying to alter
                 // e.g.: keyPath is @"frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                if let base_prop = unwrapped_object.valueForKeyPath(property.parentKeyPath) {
+                if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
                     
                     new_prop = updateValue(inObject: (base_prop as! NSObject), newValues: [property.path : new_property_value])
                 }
@@ -238,7 +238,7 @@ public class CIColorAssistant : ValueAssistant {
     
     
     
-    public func supports(object: AnyObject) -> Bool {
+    public func supports(_ object: AnyObject) -> Bool {
         var is_supported: Bool = false
         
         if (object is CIColor) {
@@ -249,7 +249,7 @@ public class CIColorAssistant : ValueAssistant {
     }
     
     
-    public func acceptsKeypath(object: AnyObject) -> Bool {
+    public func acceptsKeypath(_ object: AnyObject) -> Bool {
         return false
     }
     
