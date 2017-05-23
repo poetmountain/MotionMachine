@@ -31,7 +31,7 @@ import Foundation
  */
 public struct EasingElastic {
     
-    static let M_PI2 = M_PI * 2
+    static let M_PI2 = Double.pi * 2
     
     public static func easeIn() -> EasingUpdateClosure {
         

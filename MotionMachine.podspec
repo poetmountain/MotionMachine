@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'MotionMachine'
-  s.version = '1.1.0'
+  s.version = '1.1.1'
   s.license = { :type => 'MIT' }
   s.summary = 'An elegant, powerful, and modular animation library for Swift.'
   s.description = <<-DESC

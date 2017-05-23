@@ -539,7 +539,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         tempoOverrides.append(!useChildTempo) // use the opposite Boolean value in order to represent which tempos should be overriden by the sequence
         
         // subscribe to this motion's status updates
-        sequenceStep.updateDelegate = (self as? MotionUpdateDelegate)
+        sequenceStep.updateDelegate = self
         
         
         return self

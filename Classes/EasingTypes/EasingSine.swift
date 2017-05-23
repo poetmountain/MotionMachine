@@ -34,7 +34,7 @@ public struct EasingSine {
     public static func easeIn() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            let easing_value = -valueRange * cos((elapsedTime / duration) * M_PI_2) + valueRange + startValue
+            let easing_value = -valueRange * cos((elapsedTime / duration) * MotionUtils.MM_PI_2) + valueRange + startValue
             
             return easing_value
         }
@@ -45,7 +45,7 @@ public struct EasingSine {
     public static func easeOut() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            let easing_value = valueRange * sin((elapsedTime / duration) * M_PI_2) + startValue
+            let easing_value = valueRange * sin((elapsedTime / duration) * MotionUtils.MM_PI_2) + startValue
             
             return easing_value
         }
@@ -56,7 +56,7 @@ public struct EasingSine {
     public static func easeInOut() -> EasingUpdateClosure {
         
         func easing (_ elapsedTime: TimeInterval, startValue: Double, valueRange: Double, duration: TimeInterval) -> Double {
-            var easing_value = (-valueRange * 0.5) * (cos(M_PI * (elapsedTime / duration)) - 1)
+            var easing_value = (-valueRange * 0.5) * (cos(Double.pi * (elapsedTime / duration)) - 1)
             easing_value += startValue
             
             return easing_value

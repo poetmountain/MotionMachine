@@ -1188,7 +1188,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                     }
                     
                     if (no_delay_set) {
-                        operationID = MotionSupport.register(additiveMotion: self as! Additive)
+                        operationID = MotionSupport.register(additiveMotion: self as Additive)
                     }
                 }
             }

@@ -520,7 +520,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         tempoOverrides.append(!useChildTempo) // use the opposite Boolean value in order to represent which tempos should be overriden by the group
         
         // subscribe to this motion's status updates
-        motion.updateDelegate = (self as? MotionUpdateDelegate)
+        motion.updateDelegate = self
         
         
         return self

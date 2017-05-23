@@ -523,6 +523,12 @@ public struct MotionOptions : OptionSet {
 /// Represents an infinite number of repeat motion cycles.
 public let REPEAT_INFINITE: UInt = 0
 
+/// Utility methods
+public struct MotionUtils {
+    
+    static let MM_PI_2 = Double.pi / 2
+    
+}
 
 
 // MARK: - Utility extensions
@@ -549,13 +555,13 @@ func ≈≈ (a: Float, b: Float) -> Bool {
     let fabs_b = fabs(b)
     let diff = fabs(fabs_a - fabs_b)
     
-    if (a == 0.0 || b == 0.0 || diff < FLT_MIN) {
+    if (a == 0.0 || b == 0.0 || diff < Float.leastNormalMagnitude) {
         // a or b is zero or both are extremely close to it
         // relative error is less meaningful here
-        return diff < (FLT_EPSILON * FLT_MIN)
+        return diff < (Float.ulpOfOne * Float.leastNormalMagnitude)
     } else {
 
-        return (diff / (fabs_a + fabs_b)) < FLT_EPSILON
+        return (diff / (fabs_a + fabs_b)) < Float.ulpOfOne
     }
 }
 
@@ -569,12 +575,12 @@ func ≈≈ (a: Double, b: Double) -> Bool {
     let fabs_b = fabs(b)
     let diff = fabs(fabs_a - fabs_b)
     
-    if (a == 0.0 || b == 0.0 || diff < DBL_MIN) {
+    if (a == 0.0 || b == 0.0 || diff < Double.leastNormalMagnitude) {
         // a or b is zero or both are extremely close to it
         // relative error is less meaningful here
-        return diff < (DBL_EPSILON * DBL_MIN)
+        return diff < (Double.ulpOfOne * Double.leastNormalMagnitude)
     } else {
-        return (diff / (fabs_a + fabs_b)) < DBL_EPSILON
+        return (diff / (fabs_a + fabs_b)) < Double.ulpOfOne
     }
     
 }
