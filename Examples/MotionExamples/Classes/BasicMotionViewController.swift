@@ -78,7 +78,20 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
+        
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
 
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
@@ -95,9 +108,9 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         self.view.addSubview(motionView)
         motionView.translatesAutoresizingMaskIntoConstraints = false
         
-        xConstraint = motionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        xConstraint = motionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
         xConstraint.isActive = true
-        motionView.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+20.0).isActive = true
+        motionView.topAnchor.constraint(equalTo: top_anchor, constant: 20.0).isActive = true
         motionView.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         motionView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         

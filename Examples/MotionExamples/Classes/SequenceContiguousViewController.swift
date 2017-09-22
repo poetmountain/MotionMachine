@@ -32,21 +32,21 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
     
     
     
-    public override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         if (!createdUI) {
             setupUI()
             
             // setup motion
-            let new_x = Double((view.bounds.size.width * 0.5) - 20.0)
+            let new_x = Double((view.bounds.size.width * 0.5))
             let move_right = Motion(target: constraints["x"]!,
                                 properties: [PropertyData("constant", new_x)],
                                   duration: 1.0,
                                     easing: EasingCubic.easeInOut())
             
             let move_down = Motion(target: constraints["y"]!,
-                               properties: [PropertyData("constant", 250.0)],
+                                   properties: [PropertyData("constant", Double(250.0))],
                                  duration: 0.8,
                                    easing: EasingQuartic.easeInOut())
             
@@ -114,7 +114,15 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        let top_offset : CGFloat = 40.0
+        
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
         
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
@@ -137,9 +145,16 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
         // set up motion constraints
         square.translatesAutoresizingMaskIntoConstraints = false
         
-        let square_x = square.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
+        
+        let square_x = square.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: top_offset)
         square_x.isActive = true
-        let square_y = square.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+        let square_y = square.centerYAnchor.constraint(equalTo: top_anchor, constant: top_offset)
         square_y.isActive = true
         let square_height = square.heightAnchor.constraint(equalToConstant: 40.0)
         square_height.isActive = true

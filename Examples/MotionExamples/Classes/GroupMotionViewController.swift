@@ -95,7 +95,13 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
 
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
@@ -124,14 +130,23 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
         circle.translatesAutoresizingMaskIntoConstraints = false
         circle2.translatesAutoresizingMaskIntoConstraints = false
         
-        let circle_x = circle.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        let xoffset : CGFloat = 20.0
+        
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
+
+        let circle_x = circle.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: xoffset)
         circle_x.isActive = true
-        let circle_y = circle.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+        let circle_y = circle.topAnchor.constraint(equalTo: top_anchor, constant: 20.0)
         circle_y.isActive = true
         circle.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         circle.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
 
-        let circle2_x = circle2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        let circle2_x = circle2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: xoffset)
         circle2_x.isActive = true
         circle2.topAnchor.constraint(equalTo: circle.layoutMarginsGuide.bottomAnchor, constant: 20.0).isActive = true
         circle2.widthAnchor.constraint(equalToConstant: 40.0).isActive = true

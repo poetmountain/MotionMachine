@@ -886,7 +886,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             removePhysicsTimer()
         }
         physicsTimer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(qos: .userInteractive) )
-        physicsTimer?.scheduleRepeating(deadline: DispatchTime.now(), interval: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
+        physicsTimer?.schedule(deadline: DispatchTime.now(), repeating: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
       
         physicsTimer?.setEventHandler(handler: {
             [weak self] in

@@ -94,7 +94,22 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        let top_offset : CGFloat = 20.0
+        
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
+        
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
         
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
@@ -107,7 +122,7 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
         
         // set up motion views
         
-        var currx: CGFloat = 20.0
+        var currx: CGFloat = 48.0
         let spacer: CGFloat = 20.0
         
         for _ in 0..<4 {
@@ -123,7 +138,7 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
             // set up motion constraints
             let square_x = square.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: currx)
             square_x.isActive = true
-            let square_y = square.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+            let square_y = square.topAnchor.constraint(equalTo: top_anchor, constant: top_offset)
             square_y.isActive = true
             let square_height = square.heightAnchor.constraint(equalToConstant: w)
             square_height.isActive = true

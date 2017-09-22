@@ -80,7 +80,20 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
+        
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
         
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
@@ -97,9 +110,9 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         self.view.addSubview(square)
         square.translatesAutoresizingMaskIntoConstraints = false
         
-        xConstraint = square.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0.0)
+        xConstraint = square.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
         xConstraint.isActive = true
-        square.topAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+20.0).isActive = true
+        square.topAnchor.constraint(equalTo: top_anchor, constant: 20.0).isActive = true
         square.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         square.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         

@@ -1,3 +1,6 @@
+#### 1.2.0
+Support for Swift 4.0.
+
 #### 1.1.1
 Fixes for compiler warnings and deprecations.
 

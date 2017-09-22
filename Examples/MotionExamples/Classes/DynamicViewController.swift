@@ -32,8 +32,9 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     
     
     
-    public override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    public override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
         
         if (!createdUI) {
             setupUI()
@@ -68,8 +69,15 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
         
+        var margins : UILayoutGuide
+        let top_offset : CGFloat = 20.0
+
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = topLayoutGuide as! UILayoutGuide
+        }
         
         let label = UILabel.init(frame: CGRect.zero)
         label.font = UIFont.systemFont(ofSize: 12.0)
@@ -85,11 +93,20 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         circle.layer.masksToBounds = true
         circle.layer.cornerRadius = w * 0.5
         self.view.addSubview(circle)
+  
+        
+        var top_anchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+            top_anchor = margins.topAnchor
+        } else {
+            top_anchor = margins.bottomAnchor
+        }
         
         circle.translatesAutoresizingMaskIntoConstraints = false
-        let circle_x = circle.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
+        let circle_x = circle.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: 48.0)
         circle_x.isActive = true
-        let circle_y = circle.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0)
+  
+        let circle_y = circle.topAnchor.constraint(equalTo: top_anchor, constant: top_offset)
         circle_y.isActive = true
         
         circle.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
@@ -99,8 +116,8 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         constraints["y"] = circle_y
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 50.0).isActive = true
-        label.centerYAnchor.constraint(equalTo: margins.topAnchor, constant: topLayoutGuide.length+40.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 80.0).isActive = true
+        label.firstBaselineAnchor.constraint(equalTo: top_anchor, constant: top_offset).isActive = true
         label.widthAnchor.constraint(equalToConstant: 220.0).isActive = true
         label.heightAnchor.constraint(equalToConstant: 60.0).isActive = true
         
@@ -119,25 +136,35 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     
     
     
-    func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
+    @objc func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
         if (gesture.state != UIGestureRecognizerState.ended) {
             return;
         }
         
         let pt = gesture.location(in: self.view)
+        //print("gesture pt \(pt)")
+        
+        var y_offset : CGFloat = 0.0
+        
+        if #available(iOS 11.0, *) {
+            y_offset = CGFloat(view.safeAreaInsets.top) + 20.0
+            
+        } else {
+            y_offset = CGFloat(topLayoutGuide.length) + 20.0
+        }
         
         // setup new motion
         let x = constraints["x"]!
         let y = constraints["y"]!
         let motion_x = Motion(target: x,
-                              properties: [PropertyData(path: "constant", start: Double(x.constant), end: Double(pt.x-20.0))],
+                              properties: [PropertyData(path: "constant", start: Double(x.constant), end: Double(pt.x))],
                               duration: 1.5,
                               easing: EasingQuadratic.easeInOut())
         motion_x.additive = true
         
         let motion_y = Motion(target: y,
-                              properties: [PropertyData(path: "constant", start: Double(y.constant), end: Double(pt.y))],
+                              properties: [PropertyData(path: "constant", start: Double(y.constant), end: Double(pt.y-y_offset))],
                               duration: 1.5,
                               easing: EasingQuadratic.easeInOut())
         motion_y.additive = true

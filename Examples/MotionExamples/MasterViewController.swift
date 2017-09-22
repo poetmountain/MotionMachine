@@ -82,21 +82,20 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.init(item: tableView,
-                           attribute: .width,
-                           relatedBy: .equal,
-                              toItem: view,
-                           attribute: .width,
-                          multiplier: 1.0,
-                            constant: 0.0).isActive = true
+        var margins : UILayoutGuide
         
-        NSLayoutConstraint.init(item: tableView,
-                                attribute: .height,
-                                relatedBy: .equal,
-                                toItem: view,
-                                attribute: .height,
-                                multiplier: 1.0,
-                                constant: 0.0).isActive = true
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+            
+        } else {
+            margins = view.layoutMarginsGuide
+        }
+        
+        tableView.topAnchor.constraint(equalTo: margins.topAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: margins.bottomAnchor).isActive = true
+        
         
     }
     

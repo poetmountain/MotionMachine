@@ -149,19 +149,19 @@ public class ButtonsView: UIView {
     
 
     
-    func start() {
+    @objc func start() {
         delegate?.didStart()
     }
     
-    func stop() {
+    @objc func stop() {
         delegate?.didStop()
     }
     
-    func pause() {
+    @objc func pause() {
         delegate?.didPause()
     }
     
-    func resume() {
+    @objc func resume() {
         delegate?.didResume()
     }
 

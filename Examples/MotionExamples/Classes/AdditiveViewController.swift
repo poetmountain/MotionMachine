@@ -43,9 +43,15 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
             tapRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(viewTappedHandler))
             view.addGestureRecognizer(tapRecognizer)
             
+            var margins : UILayoutGuide
+            if #available(iOS 11.0, *) {
+                margins = view.safeAreaLayoutGuide
+            } else {
+                margins = view.layoutMarginsGuide
+            }
             
             // setup motion
-            let expanded_amount = Double(view.layoutMarginsGuide.layoutFrame.size.height) * 1.2
+            let expanded_amount = Double(margins.layoutFrame.size.height) * 1.2
             let normal_amount = 40.0
             
             let change_color = Motion(target: circle,
@@ -137,7 +143,13 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     
     private func setupUI() {
         view.backgroundColor = UIColor.white
-        let margins = view.layoutMarginsGuide
+        
+        var margins : UILayoutGuide
+        if #available(iOS 11.0, *) {
+            margins = view.safeAreaLayoutGuide
+        } else {
+            margins = view.layoutMarginsGuide
+        }
         
         
         let label = UILabel.init(frame: CGRect.zero)
@@ -155,9 +167,18 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         circle.layer.cornerRadius = w * 0.5
         self.view.addSubview(circle)
         
+        var y_offset : CGFloat = 0.0
+        
+        if #available(iOS 11.0, *) {
+            y_offset = CGFloat(view.safeAreaInsets.top)
+            
+        } else {
+            y_offset = CGFloat(topLayoutGuide.length)
+        }
+        
         circle.translatesAutoresizingMaskIntoConstraints = false
-        circle.centerXAnchor.constraint(equalTo: margins.centerXAnchor).isActive = true
-        circle.centerYAnchor.constraint(equalTo: margins.centerYAnchor).isActive = true
+        circle.centerXAnchor.constraint(equalTo: margins.centerXAnchor, constant: 0.0).isActive = true
+        circle.centerYAnchor.constraint(equalTo: margins.centerYAnchor, constant: -y_offset).isActive = true
 
         let circle_height = circle.heightAnchor.constraint(equalToConstant: 40.0)
         circle_height.isActive = true
@@ -188,7 +209,7 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     
 
     
-    func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
+    @objc func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
         if (gesture.state != UIGestureRecognizerState.ended) {
             return;
