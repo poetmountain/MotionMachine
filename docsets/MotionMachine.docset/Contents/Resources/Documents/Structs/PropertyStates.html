@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>MoveableCollection Protocol Reference</title>
+    <title>PropertyStates Structure Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Protocol/MoveableCollection" class="dashAnchor"></a>
-    <a title="MoveableCollection Protocol Reference"></a>
+    <a name="//apple_ref/swift/Struct/PropertyStates" class="dashAnchor"></a>
+    <a title="PropertyStates Structure Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">MotionMachine Docs</a> (100% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">MotionMachine Reference</a>
         <img id="carat" src="../img/carat.png" />
-        MoveableCollection Protocol Reference
+        PropertyStates Structure Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -306,14 +306,19 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>MoveableCollection</h1>
+            <h1>PropertyStates</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">MoveableCollection</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PropertyStates</span></code></pre>
 
                 </div>
               </div>
-            <p>This protocol declares methods and properties that must be adopted by custom classes which control other <code><a href="../Protocols/Moveable.html">Moveable</a></code> classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine collection classes (MotionSequence, MotionGroup) conform to this protocol.</p>
+            <p>This struct represents the states of a single object property, to be used in a motion operation. Because the <code>start</code> and <code>end</code> properties can represent any value type, it is used to create <code><a href="../Classes/Motion.html">Motion</a></code> objects that conveniently handle many property value interpolations by simply passing in representations of that object at its starting and ending points.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    These state values must be of the same object type as the property located at the keypath. For instance, if the <code>path</code> property points to a CGRect object, you must provide CGRect objects for the <code>start</code> and <code>end</code> properties.
+
+</div>
 
           </section>
           <section class="section task-group-section">
@@ -322,9 +327,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine18MoveableCollectionP13reversingModeAA0d9ReversingF0Ov"></a>
-                    <a name="//apple_ref/swift/Property/reversingMode" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine18MoveableCollectionP13reversingModeAA0d9ReversingF0Ov">reversingMode</a>
+                    <a name="/s:13MotionMachine14PropertyStatesV4pathSSv"></a>
+                    <a name="//apple_ref/swift/Property/path" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine14PropertyStatesV4pathSSv">path</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -332,10 +337,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A <code><a href="../Enums/CollectionReversingMode.html">CollectionReversingMode</a></code> enum which defines the behavior of a <code><a href="../Protocols/Moveable.html">Moveable</a></code> class when its <code>reversing</code> property is set to <code>true</code>. In the standard MotionMachine classes only <code><a href="../Classes/MotionSequence.html">MotionSequence</a></code> currently uses this property to alter its behavior, but they all propagate changes to this property down to their collection children.</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    Though classes implementing this property don&rsquo;t need to alter their own behavior based on the value that is set, they do need to pass the value to all of its children which conform to this protocol.
+                        <p>The keyPath of the property to be transformed. The keyPath must be a valid, KVC-compliant keyPath of <code>targetObject</code>. For your own classes, you must flag the property with <code>@objc</code> for Swift to find it.</p>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    targetObject
 
 </div>
 
@@ -344,9 +349,158 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">reversingMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/CollectionReversingMode.html">CollectionReversingMode</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine14PropertyStatesV5startypSgv"></a>
+                    <a name="//apple_ref/swift/Property/start" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine14PropertyStatesV5startypSgv">start</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An optional starting value of the motion operation.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    In typical cases, not specifying a starting value will result in the Motion class using the property&rsquo;s current value at the time the Motion is created. Note that for non-numeric properties like structs this may affect multiple values, such as the x and y properties of CGPoint.
+
+</div>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <p>This value must be of the same object type as the property located at the specified path. For instance, if you&rsquo;re modifying a CGRect object, you must provide a CGRect object here.</p>
+
+</div>
+<div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>end</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">start</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine14PropertyStatesV3endypv"></a>
+                    <a name="//apple_ref/swift/Property/end" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine14PropertyStatesV3endypv">end</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The ending value of the motion operation.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    Note that for non-numeric properties like structs this may affect multiple values, such as the x and y properties of CGPoint.
+
+</div>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    This value must be of the same object type as the property located at the specified path. For instance, if you&rsquo;re modifying a CGRect object, you must provide a CGRect object here.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">end</span><span class="p">:</span> <span class="kt">Any</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine14PropertyStatesVACSS4path_ypSg5startyp3endtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(path:start:end:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine14PropertyStatesVACSS4path_ypSg5startyp3endtcfc">init(path:start:end:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">start</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span><span class="o">=</span><span class="kc">nil</span><span class="p">,</span> <span class="nv">end</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The keypath of the property to modify, relative to the target object provided to a Motion.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>start</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional starting value for the motion.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>end</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ending value of the motion.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
