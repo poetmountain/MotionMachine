@@ -18,19 +18,61 @@ class UIKitStructAssistantTests: XCTestCase {
         let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
         let path = "insets"
         if let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
-            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target as AnyObject)
+            let states = PropertyStates(path: path, end: val)
+            let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
             
+            // should only have 2 props because left and right are unchanged from original insets
             XCTAssertEqual(props.count, 2)
             
-            let top_prop = props[0]
-            let bottom_prop = props[1]
-            XCTAssertEqual(top_prop.path, "insets.top")
-            XCTAssertEqual(top_prop.end, 10.0)
-            XCTAssertEqual(bottom_prop.path, "insets.bottom")
-            XCTAssertEqual(bottom_prop.end, 20.0)
+            if (props.count == 2) {
+                let top_prop = props[0]
+                let bottom_prop = props[1]
+                // should test that ending property states were captured and start states are set to existing inset values
+                XCTAssertEqual(top_prop.path, "insets.top")
+                XCTAssertEqual(top_prop.start, 0.0)
+                XCTAssertEqual(top_prop.end, 10.0)
+                XCTAssertEqual(bottom_prop.path, "insets.bottom")
+                XCTAssertEqual(bottom_prop.start, 0.0)
+                XCTAssertEqual(bottom_prop.end, 20.0)
+            }
         }
         
     }
+    
+    func test_generateProperties_UIEdgeInsets_start_state() {
+        let assistant = UIKitStructAssistant()
+        let tester = Tester()
+        let start_insets = UIEdgeInsetsMake(5.0, 5.0, 10.0, 0.0)
+        let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
+        let path = "insets"
+        if let start_val = UIKitStructAssistant.valueForStruct(start_insets), let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
+            let states = PropertyStates(path: path, start: start_val, end: val)
+            let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
+            
+            // should only have 3 props because right is unchanged from original insets
+            XCTAssertEqual(props.count, 3)
+            
+            if (props.count == 3) {
+                let top_prop = props[0]
+                let left_prop = props[1]
+                let bottom_prop = props[2]
+                // should test that both the starting and ending property states were captured
+                // the left prop is included by MotionMachine because even though the ending value is equal to the original inset value,
+                // a different starting value was specified
+                XCTAssertEqual(top_prop.path, "insets.top")
+                XCTAssertEqual(top_prop.start, 5.0)
+                XCTAssertEqual(top_prop.end, 10.0)
+                XCTAssertEqual(left_prop.path, "insets.left")
+                XCTAssertEqual(left_prop.start, 5.0)
+                XCTAssertEqual(left_prop.end, 0.0)
+                XCTAssertEqual(bottom_prop.path, "insets.bottom")
+                XCTAssertEqual(bottom_prop.start, 10.0)
+                XCTAssertEqual(bottom_prop.end, 20.0)
+            }
+        }
+        
+    }
+    
     
     func test_generateProperties_UIOffset() {
         let assistant = UIKitStructAssistant()
@@ -38,16 +80,51 @@ class UIKitStructAssistantTests: XCTestCase {
         let offset = UIOffsetMake(10.0, 20.0)
         let path = "offset"
         if let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
-            let props = try! assistant.generateProperties(fromObject: val, keyPath: path, targetObject: target as AnyObject)
+            let states = PropertyStates(path: path, end: val)
+            let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
             
+            // should  have 2 props both offset values are changed from original
             XCTAssertEqual(props.count, 2)
             
-            let h_prop = props[0]
-            let v_prop = props[1]
-            XCTAssertEqual(h_prop.path, "offset.horizontal")
-            XCTAssertEqual(h_prop.end, 10.0)
-            XCTAssertEqual(v_prop.path, "offset.vertical")
-            XCTAssertEqual(v_prop.end, 20.0)
+            if (props.count == 2) {
+                let h_prop = props[0]
+                let v_prop = props[1]
+                // should test that ending property states were captured and start states are set to original offset values
+                XCTAssertEqual(h_prop.path, "offset.horizontal")
+                XCTAssertEqual(h_prop.start, 0.0)
+                XCTAssertEqual(h_prop.end, 10.0)
+                XCTAssertEqual(v_prop.path, "offset.vertical")
+                XCTAssertEqual(v_prop.start, 0.0)
+                XCTAssertEqual(v_prop.end, 20.0)
+            }
+        }
+        
+    }
+    
+    func test_generateProperties_UIOffset_start_state() {
+        let assistant = UIKitStructAssistant()
+        let tester = Tester()
+        let start_offset = UIOffsetMake(5.0, 10.0)
+        let offset = UIOffsetMake(10.0, 20.0)
+        let path = "offset"
+        if let start_val = UIKitStructAssistant.valueForStruct(start_offset), let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
+            let states = PropertyStates(path: path, start: start_val, end: val)
+            let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
+            
+            // should  have 2 props both offset values are changed from original
+            XCTAssertEqual(props.count, 2)
+            
+            if (props.count == 2) {
+                let h_prop = props[0]
+                let v_prop = props[1]
+                // should test that both the starting and ending property states were captured
+                XCTAssertEqual(h_prop.path, "offset.horizontal")
+                XCTAssertEqual(h_prop.start, 5.0)
+                XCTAssertEqual(h_prop.end, 10.0)
+                XCTAssertEqual(v_prop.path, "offset.vertical")
+                XCTAssertEqual(v_prop.start, 10.0)
+                XCTAssertEqual(v_prop.end, 20.0)
+            }
         }
         
     }
@@ -61,8 +138,9 @@ class UIKitStructAssistantTests: XCTestCase {
         if let target = tester.value(forKeyPath: path) {
             do {
                 // method needs an NSValue but we pass in a Tester, so this should throw an error
-                try _ = assistant.generateProperties(fromObject: tester, keyPath: path, targetObject: target as AnyObject)
-                
+                let states = PropertyStates(path: path, end: tester)
+                try _ = assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
+                                
             } catch ValueAssistantError.typeRequirement(let valueType) {
                 ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                 

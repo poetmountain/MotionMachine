@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 5/26/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -38,14 +38,19 @@ public class CIColorAssistant : ValueAssistant {
         }
     }
     
+    public required init() {}
+
+    
     // MARK: ValueAssistant methods
     
-    public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) -> [PropertyData] {
+    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+        
         var properties: [PropertyData] = []
         
-        if (object is CIColor) {
+        if (propertyStates.end is CIColor) {
+
             
-            let new_color = object as! CIColor
+            let new_color = propertyStates.end as! CIColor
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
             
             var add_alpha = false
@@ -61,37 +66,67 @@ public class CIColorAssistant : ValueAssistant {
                 alpha = tcolor.alpha
             }
             
+            var start_color: CIColor?
+            if let unwrapped_start = propertyStates.start {
+                if (propertyStates.start is CIColor) {
+                    start_color = unwrapped_start as? CIColor
+                    // we need to save start color values so we can compare to new color below
+                    let scolor = unwrapped_start as! CIColor
+                    red = scolor.red
+                    blue = scolor.blue
+                    green = scolor.green
+                    alpha = scolor.alpha
+                }
+            }
+            
+            // check each component to avoid building PropertyData objects for color components whose start and end values are the same
             if (Double(red) !≈ Double(new_color.red)) { add_red = true }
             if (Double(blue) !≈ Double(new_color.blue)) { add_blue = true }
             if (Double(green) !≈ Double(new_color.green)) { add_green = true }
             if (Double(alpha) !≈ Double(new_color.alpha)) { add_alpha = true }
             
             if (add_red) {
-                let p = PropertyData("red", Double(new_color.red))
+                var start_state: Double?
+                if let unwrapped_start_color = start_color {
+                    start_state = Double(unwrapped_start_color.red)
+                }
+                let p = PropertyData(path: "red", start: start_state, end: Double(new_color.red))
                 properties.append(p)
             }
             if (add_green) {
-                let p = PropertyData("green", Double(new_color.green))
+                var start_state: Double?
+                if let unwrapped_start_color = start_color {
+                    start_state = Double(unwrapped_start_color.green)
+                }
+                let p = PropertyData(path: "green", start: start_state, end: Double(new_color.green))
                 properties.append(p)
             }
             if (add_blue) {
-                let p = PropertyData("blue", Double(new_color.blue))
+                var start_state: Double?
+                if let unwrapped_start_color = start_color {
+                    start_state = Double(unwrapped_start_color.blue)
+                }
+                let p = PropertyData(path: "blue", start: start_state, end: Double(new_color.blue))
                 properties.append(p)
             }
             if (add_alpha) {
-                let p = PropertyData("alpha", Double(new_color.alpha))
+                var start_state: Double?
+                if let unwrapped_start_color = start_color {
+                    start_state = Double(unwrapped_start_color.alpha)
+                }
+                let p = PropertyData(path: "alpha", start: start_state, end: Double(new_color.alpha))
                 properties.append(p)
             }
             
         }
         
         
-        if (path != "") {
+        if (propertyStates.path != "") {
             for index in 0 ..< properties.count {
                 if (properties[index].path != "") {
-                    properties[index].path = path + "." + properties[index].path
+                    properties[index].path = propertyStates.path + "." + properties[index].path
                 } else {
-                    properties[index].path = path
+                    properties[index].path = propertyStates.path
                 }
             }
         }

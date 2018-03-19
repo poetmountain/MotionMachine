@@ -9,7 +9,7 @@ These value updates are made as the motion moves through time. This movement is 
 
 ## Motion
 
-`Motion` uses a keypath (i.e. "frame.origin.x") to target specific properties of an object and transform their values over a period of time via an easing equation. The keypath is relative to the parent object passed in, and normally you'd want to pass in the parent object of the object you actually want to modify (i.e. passing in a UIView object if you wish to modify its frame). This is necessary for MotionMachine to be able to modify the original object. However, you may pass in a target object directly for MotionMachine to modify, but that object will only be modified internally. In such cases you may access the object through the Motion's `PropertyData` objects, which are accessible from the `properties` property.
+`Motion` uses a keyPath (i.e. "frame.origin.x") to target specific properties of an object and transform their values over a period of time via an easing equation. The keyPath is relative to the parent object passed in, and normally you'd want to pass in the parent object of the object you actually want to modify (i.e. passing in a UIView object if you wish to modify its frame). This is necessary for MotionMachine to be able to modify the original object. However, you may pass in a target object directly for MotionMachine to modify, but that object will only be modified internally. In such cases you may access the object through the Motion's `PropertyData` objects, which are accessible from the `properties` property.
 
 Here's a basic example using this workhorse of MotionMachine. We've supplied the `Motion` with a single `PropertyData` object which defines a property keyPath and an ending value, along with a duration of 1 second and a Quadratic easing equation. This easing parameter defines the easing equation assigned to the `easing` property. If your `Motion` is `reversing`, you can also specify a separate easing equation for the reverse movement via the `reverseEasing` property. If that property is undefined, the `Motion` will use the `easing` property for both motion directions.
 
@@ -22,12 +22,14 @@ let motion = Motion(target: view,
                    ).start()
 ```
 
-Here we add multiple `PropertyData` objects to control multiple properties. Notice that we're setting the UIView's `backgroundColor` and the end of the keypath is `blue`. But UIColor doesn't have an accessible `blue` property, you say? True, but `Motion` has a `UIColorAssistant` which understands this syntactic shorthand and knows to update the `blue` component of the UIColor. You can use this path structure for any of UIColor's value components.
+This is a really convenient way to animate complex objects. Here we add  `PropertyStates` objects to easily animate multiple properties by passing in representations of their start and end states for each animation. MotionMachine will take care of the rest. In the case of the frame being animated, the `Motion` initializer will setup animations for the x, width, and height properties because those values change between the two state presentations we've passed in with the `PropertyStates` object. 
 
-Also notice that we only have one Double value in each `PropertyData` object's constructor. If you don't provide a start parameter, `Motion` will use the target object's current value of the property specified in the keypath as a starting value. And if you don't use parameter labels, the `Motion` will assume the value after the path is the ending value.
+Notice that we're setting the UIView's `backgroundColor` and the end of the keypath is `blue`. But UIColor doesn't have an accessible `blue` property, you say? True, but `Motion` has a `UIColorAssistant` which understands this syntactic shorthand and knows to update the `blue` component of the UIColor. You can use this path structure for any of UIColor's value components. MotionMachine comes with many value assistants by default which provide similar shortcuts to Foundation objects, and you can extend this functionality with your own assistants.
+
+Also notice that we only have an ending value for the UIView's `PropertyStates` object for its backgroundColor. If you don't provide a start parameter for a `PropertyStaes` or a `PropertyData` object, `Motion` will use the target object's current value of the property specified in the keyPath as a starting value.
 ```swift
 let motion = Motion(target: view,
-                properties: [PropertyData("frame.origin.x", 200.0), PropertyData("backgroundColor.blue", 0.5)],
+       statesForProperties: [PropertyStates(path: "frame", start: CGRect(x: 20.0, y: 50.0, width: 50.0, height: 50.0), end: CGRect(x: 50.0, y: 50.0, width: 200.0, height: 200.0)), PropertyStates(path: "backgroundColor.blue", end: 0.5)],
                   duration: 1.0,
                     easing: EasingQuadratic.easeInOut()
                    ).start()
@@ -86,7 +88,7 @@ MotionMachine includes all the standard Robert Penner easing equations, which ar
 
 ## PhysicsMotion
 
-`PhysicsMotion` uses a keypath (i.e. "frame.origin.x") to target specific properties of an object and transform their values, using a physics system to update values with decaying velocity. The physics system conforms to the `PhysicsSolving` protocol, and though `PhysicsMotion` uses the (very basic) `PhysicsSystem` class by default you can replace it with your own custom `PhysicsSolving` system.
+`PhysicsMotion` uses a keyPath (i.e. "frame.origin.x") to target specific properties of an object and transform their values, using a physics system to update values with decaying velocity. The physics system conforms to the `PhysicsSolving` protocol, and though `PhysicsMotion` uses the (very basic) `PhysicsSystem` class by default you can replace it with your own custom `PhysicsSolving` system.
 
 Here's a simple example. We pass in an initial `velocity`, along with a `friction` value which reduces the velocity over time. The `friction` value should be within a range of 0.0 to 1.0, but there is no limitation on the `velocity` value due to the differing magnitudes of property values you may want to alter. Note that the only necessary `PropertyData` parameter is `path:`; we can't guarantee a certain ending value, so the physics system will determine the value's resting place. (You can still specify a `start:` value though!) Likewise, there is also no duration property because the total movement time is determined by the `velocity` and `friction` interaction.
 ```swift

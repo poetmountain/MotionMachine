@@ -106,10 +106,10 @@ class MotionSequenceTests: XCTestCase {
     func test_should_end_motions_at_proper_ending_values() {
         let did_start = expectation(description: "sequence called started notify closure")
         let did_complete = expectation(description: "sequence called completed notify closure")
-
+        
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -151,7 +151,7 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(sequence.totalProgress, 1.0)
             let new_timestamp = CFAbsoluteTimeGetCurrent()
             let motion = sequence.steps.first as! Motion
-            XCTAssertEqualWithAccuracy(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
+            XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
             
             did_complete.fulfill()
         }
@@ -168,7 +168,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -209,7 +209,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -272,7 +272,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -344,7 +344,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -412,7 +412,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
@@ -481,7 +481,7 @@ class MotionSequenceTests: XCTestCase {
         
         let tester = Tester()
         let motion = Motion(target: tester, properties: [PropertyData("value", 20.0)], duration: 0.2)
-        let motion2 = Motion(target: tester, finalState: ["color" : UIColor.blue], duration: 0.2)
+        let motion2 = Motion(target: tester, statesForProperties: [PropertyStates(path: "color", end: UIColor.blue)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)

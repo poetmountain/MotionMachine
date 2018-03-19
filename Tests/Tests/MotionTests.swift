@@ -139,7 +139,7 @@ class MotionTests: XCTestCase {
                 XCTAssertEqual(final_value, 100.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
                 let new_timestamp = CFAbsoluteTimeGetCurrent()
-                XCTAssertEqualWithAccuracy(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
+                XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
                 
                 did_complete.fulfill()
         }
@@ -155,12 +155,34 @@ class MotionTests: XCTestCase {
         
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: tester, finalState: ["value" : 10.0], duration: 0.2)
+        let motion = Motion(target: tester, statesForProperties: [PropertyStates.init(path: "value", end: 10.0)], duration: 0.2)
             .completed { (motion) in
                 let final_value = tester.value
                 XCTAssertEqual(motion.properties[0].current, 10.0)
                 XCTAssertEqual(final_value, 10.0)
 
+                did_complete.fulfill()
+        }
+        
+        motion.start()
+        waitForExpectations(timeout: 1.0, handler: nil)
+        
+    }
+    
+    func test_object_prop_should_follow_property_states() {
+        let tester = Tester()
+        
+        let did_complete = expectation(description: "motion called completed notify closure")
+        
+        let motion = Motion(target: tester, statesForProperties: [PropertyStates.init(path: "value", start: 10.0, end: 50.0)], duration: 0.2)
+            .started({ (motion) in
+                XCTAssertEqual(motion.properties[0].current, 10.0)
+            })
+            .completed { (motion) in
+                let final_value = tester.value
+                XCTAssertEqual(motion.properties[0].current, 50.0)
+                XCTAssertEqual(final_value, 50.0)
+                
                 did_complete.fulfill()
         }
         
@@ -193,7 +215,7 @@ class MotionTests: XCTestCase {
         
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: tester, finalState: ["rect" : CGRect(x: 10.0, y: 0.0, width: 0.0, height: 0.0)], duration: 0.2)
+        let motion = Motion(target: tester, statesForProperties: [PropertyStates(path: "rect", end: CGRect(x: 10.0, y: 0.0, width: 0.0, height: 0.0))], duration: 0.2)
             .updated({ (motion) in
                 print(tester.rect)
             })
@@ -220,7 +242,7 @@ class MotionTests: XCTestCase {
         
         let motion2 = Motion(target: tester, properties: [PropertyData("value", -10.0)], duration: 0.4)
         .completed { (motion) in
-            XCTAssertEqualWithAccuracy(tester.value, motion.properties[0].end, accuracy: 0.0000001)
+            XCTAssertEqual(tester.value, motion.properties[0].end, accuracy: 0.0000001)
             did_complete.fulfill()
         }
         motion2.additive = true
@@ -244,7 +266,7 @@ class MotionTests: XCTestCase {
         let motion2 = Motion(target: tester, properties: [PropertyData("value", 0.0)], duration: 0.4)
         .completed { (motion) in
             // tester value should be halfway between the motions' ending values because second starts at 50% of duration of first
-            XCTAssertEqualWithAccuracy(tester.value, 5.0, accuracy: 0.0000001)
+            XCTAssertEqual(tester.value, 5.0, accuracy: 0.0000001)
             
             did_complete.fulfill()
         }

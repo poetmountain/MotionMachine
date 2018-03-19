@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 5/30/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ public class UIKitStructAssistant : ValueAssistant {
      *  Initializer.
      *
      */
-    public init() {
+    public required init() {
         // provide support for UIKit structs
         // doesn't seem like there's a better way to extend the enum array from multiple assistants than this?
         ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsets.zero).objCType
@@ -52,16 +52,25 @@ public class UIKitStructAssistant : ValueAssistant {
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) throws -> [PropertyData] {
+    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+        
         var properties: [PropertyData] = []
         
-        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-
-        let value_type = UIKitStructAssistant.determineType(forValue: value)
+        guard let end_value = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
+        var start_value: NSValue?
+        var start_type: ValueStructTypes = .unsupported
+        if let unwrapped_start = propertyStates.start {
+            if (propertyStates.start is NSValue) {
+                start_value = unwrapped_start as? NSValue
+                start_type = UIKitStructAssistant.determineType(forValue: start_value!)
+            }
+        }
         
-        switch value_type {
+        let end_type = UIKitStructAssistant.determineType(forValue: end_value)
+        
+        switch end_type {
         case .uiEdgeInsets:
-            let base_path: String = path + "."
+            let base_path: String = propertyStates.path + "."
 
             var org_top: Double?
             var org_left: Double?
@@ -79,39 +88,63 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            let insets = value.uiEdgeInsetsValue
+            let insets = end_value.uiEdgeInsetsValue
             
             if let unwrapped_top = org_top {
-                if (Double(insets.top) !≈ unwrapped_top) {
-                    var prop = PropertyData("top", Double(insets.top))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiEdgeInsets) {
+                    start_state = Double(start_value!.uiEdgeInsetsValue.top)
+                } else {
+                    start_state = unwrapped_top
+                }
+                
+                if (Double(insets.top) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "top", start: start_state, end: Double(insets.top))
                     properties.append(prop)
                 }
             }
             if let unwrapped_left = org_left {
-                if (Double(insets.left) !≈ unwrapped_left) {
-                    var prop = PropertyData("left", Double(insets.left))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiEdgeInsets) {
+                    start_state = Double(start_value!.uiEdgeInsetsValue.left)
+                } else {
+                    start_state = unwrapped_left
+                }
+                
+                if (Double(insets.left) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "left", start: start_state, end: Double(insets.left))
                     properties.append(prop)
                 }
             }
             if let unwrapped_bottom = org_bottom {
-                if (Double(insets.bottom) !≈ unwrapped_bottom) {
-                    var prop = PropertyData("bottom", Double(insets.bottom))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiEdgeInsets) {
+                    start_state = Double(start_value!.uiEdgeInsetsValue.bottom)
+                } else {
+                    start_state = unwrapped_bottom
+                }
+                
+                if (Double(insets.bottom) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "bottom", start: start_state, end: Double(insets.bottom))
                     properties.append(prop)
                 }
             }
             if let unwrapped_right = org_right {
-                if (Double(insets.right) !≈ unwrapped_right) {
-                    var prop = PropertyData("right", Double(insets.right))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiEdgeInsets) {
+                    start_state = Double(start_value!.uiEdgeInsetsValue.right)
+                } else {
+                    start_state = unwrapped_right
+                }
+                
+                if (Double(insets.right) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "right", start: start_state, end: Double(insets.right))
                     properties.append(prop)
                 }
             }
             
         case .uiOffset:
-            let base_path: String = path + "."
+            let base_path: String = propertyStates.path + "."
             
             var org_h: Double?
             var org_v: Double?
@@ -125,19 +158,31 @@ public class UIKitStructAssistant : ValueAssistant {
                 }
             }
             
-            let offset = value.uiOffsetValue
+            let offset = end_value.uiOffsetValue
             
             if let unwrapped_h = org_h {
-                if (Double(offset.horizontal) !≈ unwrapped_h) {
-                    var prop = PropertyData("horizontal", Double(offset.horizontal))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiOffset) {
+                    start_state = Double(start_value!.uiOffsetValue.horizontal)
+                } else {
+                    start_state = unwrapped_h
+                }
+                
+                if (Double(offset.horizontal) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "horizontal", start: start_state, end: Double(offset.horizontal))
                     properties.append(prop)
                 }
             }
             if let unwrapped_v = org_v {
-                if (Double(offset.vertical) !≈ unwrapped_v) {
-                    var prop = PropertyData("vertical", Double(offset.vertical))
-                    prop.path = base_path + prop.path
+                var start_state: Double
+                if (start_value != nil && start_type == .uiOffset) {
+                    start_state = Double(start_value!.uiOffsetValue.vertical)
+                } else {
+                    start_state = unwrapped_v
+                }
+                
+                if (Double(offset.vertical) !≈ start_state) {
+                    let prop = PropertyData(path: base_path + "vertical", start: start_state, end: Double(offset.vertical))
                     properties.append(prop)
                 }
             }

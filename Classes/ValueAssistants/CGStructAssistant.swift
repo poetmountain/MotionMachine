@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 5/18/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -43,24 +43,40 @@ public class CGStructAssistant : ValueAssistant {
         }
     }
     
+    public required init() {}
+    
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) throws -> [PropertyData] {
+    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+        
         var properties: [PropertyData] = []
 
-        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-
-        let value_type = CGStructAssistant.determineType(forValue: value)
+        guard let end_value = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
+        var start_value: NSValue?
+        var start_type: ValueStructTypes = .unsupported
+        if let unwrapped_start = propertyStates.start {
+            if (propertyStates.start is NSValue) {
+                start_value = unwrapped_start as? NSValue
+                start_type = CGStructAssistant.determineType(forValue: start_value!)
+            }
+        }
         
-        switch value_type {
+        let end_type = CGStructAssistant.determineType(forValue: end_value)
+
+        
+        switch end_type {
         case .number:
-            let number = value as! NSNumber
-            let property = PropertyData(path, number.doubleValue)
+            var start_state: Double?
+            if (start_value != nil && start_type == .number) {
+                start_state = (start_value as! NSNumber).doubleValue
+            }
+            let end_state = (end_value as! NSNumber).doubleValue
+            let property = PropertyData(path: propertyStates.path, start: start_state, end: end_state)
             properties.append(property)
             
         case .point:
-            var base_path: String = path + "."
+            var base_path: String = propertyStates.path + "."
             var org_x: Double?
             var org_y: Double?
 
@@ -80,27 +96,37 @@ public class CGStructAssistant : ValueAssistant {
             }
             #endif
             
-            let pt = value.cgPointValue
+            let end_pt = end_value.cgPointValue
             
             if let unwrapped_x = org_x {
-                if (Double(pt.x) !≈ unwrapped_x) {
-                    var prop_x = PropertyData("x", Double(pt.x))
-                    prop_x.path = base_path + prop_x.path
-                    
+                var start_state: Double
+                if (start_value != nil && start_type == .point) {
+                    start_state = Double(start_value!.cgPointValue.x)
+                } else {
+                    start_state = unwrapped_x
+                }
+                
+                if (Double(end_pt.x) !≈ start_state) {
+                    let prop_x = PropertyData(path: base_path + "x", start: start_state, end: Double(end_pt.x))
                     properties.append(prop_x)
                 }
             }
             if let unwrapped_y = org_y {
-                if (Double(pt.y) !≈ unwrapped_y) {
-                    var prop_y = PropertyData("y", Double(pt.y))
-                    prop_y.path = base_path + prop_y.path
-                    
+                var start_state: Double
+                if (start_value != nil && start_type == .point) {
+                    start_state = Double(start_value!.cgPointValue.y)
+                } else {
+                    start_state = unwrapped_y
+                }
+                
+                if (Double(end_pt.y) !≈ start_state) {
+                    let prop_y = PropertyData(path: base_path + "y", start: start_state, end: Double(end_pt.y))
                     properties.append(prop_y)
                 }
             }
             
         case .size:
-            var base_path: String = path + "."
+            var base_path: String = propertyStates.path + "."
             var org_w: Double?
             var org_h: Double?
             
@@ -119,51 +145,73 @@ public class CGStructAssistant : ValueAssistant {
                     org_h = Double(org_size.height)
                 }
             }
-            let size = value.cgSizeValue
+            let end_size = end_value.cgSizeValue
             if let unwrapped_w = org_w {
-                if (Double(size.width) !≈ unwrapped_w) {
-                    var prop_w = PropertyData("width", Double(size.width))
-                    prop_w.path = base_path + prop_w.path
-                    
+                var start_state: Double
+                if (start_value != nil && start_type == .size) {
+                    start_state = Double(start_value!.cgSizeValue.width)
+                } else {
+                    start_state = unwrapped_w
+                }
+                
+                if (Double(end_size.width) !≈ start_state) {
+                    let prop_w = PropertyData(path: base_path + "width", start: start_state, end: Double(end_size.width))
                     properties.append(prop_w)
                 }
             }
             if let unwrapped_h = org_h {
-                if (Double(size.height) !≈ unwrapped_h) {
-                    var prop_h = PropertyData("height", Double(size.height))
-                    prop_h.path = base_path + prop_h.path
-                    
+                var start_state: Double
+                if (start_value != nil && start_type == .size) {
+                    start_state = Double(start_value!.cgSizeValue.height)
+                } else {
+                    start_state = unwrapped_h
+                }
+                
+                if (Double(end_size.height) !≈ start_state) {
+                    let prop_h = PropertyData(path: base_path + "height", start: start_state, end: Double(end_size.height))
                     properties.append(prop_h)
                 }
             }
             
             
         case .rect:
-            var base_path: String = path + "."
+            var base_path: String = propertyStates.path + "."
             #if os(iOS) || os(tvOS)
-            if (target is UIView && path == "") {
+            if (target is UIView && propertyStates.path == "") {
                 base_path = "frame."
             }
             #endif
-            let rect = value.cgRectValue
-            let pt_value = NSValue.init(cgPoint: rect.origin)
+            let end_rect = end_value.cgRectValue
             var target_pt: NSValue?
             var target_size: NSValue?
             
-            #if os(iOS) || os(tvOS)
-            if let unwrapped_view = target as? UIView {
-                target_pt = NSValue.init(cgPoint: unwrapped_view.frame.origin)
-                target_size = NSValue.init(cgSize: unwrapped_view.frame.size)
-            }
-            #endif
+
             if let unwrapped_value = target as? NSValue {
                 let target_rect = unwrapped_value.cgRectValue
                 target_pt = NSValue.init(cgPoint: target_rect.origin)
                 target_size = NSValue.init(cgSize: target_rect.size)
             }
+            #if os(iOS) || os(tvOS)
+                if let unwrapped_view = target as? UIView {
+                    target_pt = NSValue.init(cgPoint: unwrapped_view.frame.origin)
+                    target_size = NSValue.init(cgSize: unwrapped_view.frame.size)
+                }
+            #endif
+            
             if let unwrapped_pt = target_pt {
+                let end_pt_value = NSValue.init(cgPoint: end_rect.origin)
+
                 do {
-                    var pt_props = try generateProperties(fromObject: pt_value, keyPath: "", targetObject: unwrapped_pt)
+                    let start_pt: NSValue
+                    if (start_value != nil && start_type == .rect) {
+                        let start_rect = start_value!.cgRectValue
+                        start_pt = NSValue.init(cgPoint: start_rect.origin)
+                    } else {
+                        start_pt = unwrapped_pt
+                    }
+
+                    let states = PropertyStates(path: "", start: start_pt, end: end_pt_value)
+                    var pt_props = try generateProperties(targetObject: unwrapped_pt, propertyStates: states)
                     var mid_path = ""
                     if (target is NSValue) {
                         mid_path = "origin"
@@ -182,10 +230,20 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             if let unwrapped_size = target_size {
-                let size_value = NSValue.init(cgSize: rect.size)
+                let end_size_value = NSValue.init(cgSize: end_rect.size)
                 
                 do {
-                    var size_props = try generateProperties(fromObject: size_value, keyPath: "", targetObject: unwrapped_size)
+                    let start_size: NSValue
+                    if (start_value != nil && start_type == .rect) {
+                        let start_rect = start_value!.cgRectValue
+                        start_size = NSValue.init(cgSize: start_rect.size)
+                    } else {
+                        start_size = unwrapped_size
+                    }
+                    
+                    let states = PropertyStates(path: "", start: start_size, end: end_size_value)
+
+                    var size_props = try generateProperties(targetObject: unwrapped_size, propertyStates: states)
                     var mid_path = ""
                     if (target is NSValue) {
                         mid_path = "size"
@@ -204,6 +262,8 @@ public class CGStructAssistant : ValueAssistant {
             }
             
         case .vector:
+            let base_path: String = propertyStates.path + "."
+
             var org_dx: Double?
             var org_dy: Double?
             if (target is NSValue) {
@@ -214,16 +274,30 @@ public class CGStructAssistant : ValueAssistant {
                     org_dy = Double(org_vec.dy)
                 }
             }
-            let vector = value.cgVectorValue
+            let end_vector = end_value.cgVectorValue
             if let unwrapped_dx = org_dx {
-                if (Double(vector.dx) !≈ unwrapped_dx) {
-                    let prop_dx = PropertyData(path + ".dx", Double(vector.dx))
+                var start_state: Double
+                if (start_value != nil && start_type == .vector) {
+                    start_state = Double(start_value!.cgVectorValue.dx)
+                } else {
+                    start_state = unwrapped_dx
+                }
+                
+                if (Double(end_vector.dx) !≈ start_state) {
+                    let prop_dx = PropertyData(path: base_path + "dx", start: start_state, end: Double(end_vector.dx))
                     properties.append(prop_dx)
                 }
             }
             if let unwrapped_dy = org_dy {
-                if (Double(vector.dy) !≈ unwrapped_dy) {
-                    let prop_dy = PropertyData(path + ".dy", Double(vector.dy))
+                var start_state: Double
+                if (start_value != nil && start_type == .vector) {
+                    start_state = Double(start_value!.cgVectorValue.dy)
+                } else {
+                    start_state = unwrapped_dy
+                }
+                
+                if (Double(end_vector.dy) !≈ start_state) {
+                    let prop_dy = PropertyData(path: base_path + "dy", start: start_state, end: Double(end_vector.dy))
                     properties.append(prop_dy)
                 }
             }
@@ -249,41 +323,83 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             // find all transform properties
-            let transform = value.cgAffineTransformValue
-            let base_path = path + "."
+            let end_transform = end_value.cgAffineTransformValue
+            let base_path = propertyStates.path + "."
             if let ua = oa {
-                if (Double(transform.a) !≈ ua) {
-                    let p = PropertyData(base_path + "a", Double(transform.a))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.a)
+                } else {
+                    start_state = ua
+                }
+                
+                if (Double(end_transform.a) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "a", start: start_state, end: Double(end_transform.a))
                     properties.append(p)
                 }
             }
             if let ub = ob {
-                if (Double(transform.b) !≈ ub) {
-                    let p = PropertyData(base_path + "b", Double(transform.b))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.b)
+                } else {
+                    start_state = ub
+                }
+                
+                if (Double(end_transform.b) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "b", start: start_state, end: Double(end_transform.b))
                     properties.append(p)
                 }
             }
             if let uc = oc {
-                if (Double(transform.c) !≈ uc) {
-                    let p = PropertyData(base_path + "c", Double(transform.c))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.c)
+                } else {
+                    start_state = uc
+                }
+                
+                if (Double(end_transform.c) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "c", start: start_state, end: Double(end_transform.c))
                     properties.append(p)
                 }
             }
             if let ud = od {
-                if (Double(transform.d) !≈ ud) {
-                    let p = PropertyData(base_path + "d", Double(transform.d))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.d)
+                } else {
+                    start_state = ud
+                }
+                
+                if (Double(end_transform.d) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "d", start: start_state, end: Double(end_transform.d))
                     properties.append(p)
                 }
             }
             if let utx = otx {
-                if (Double(transform.tx) !≈ utx) {
-                    let p = PropertyData(base_path + "tx", Double(transform.tx))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.tx)
+                } else {
+                    start_state = utx
+                }
+                
+                if (Double(end_transform.tx) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "tx", start: start_state, end: Double(end_transform.tx))
                     properties.append(p)
                 }
             }
             if let uty = oty {
-                if (Double(transform.ty) !≈ uty) {
-                    let p = PropertyData(base_path + "ty", Double(transform.ty))
+                var start_state: Double
+                if (start_value != nil && start_type == .affineTransform) {
+                    start_state = Double(start_value!.cgAffineTransformValue.ty)
+                } else {
+                    start_state = uty
+                }
+                
+                if (Double(end_transform.ty) !≈ start_state) {
+                    let p = PropertyData(path: base_path + "ty", start: start_state, end: Double(end_transform.ty))
                     properties.append(p)
                 }
             }
@@ -314,111 +430,216 @@ public class CGStructAssistant : ValueAssistant {
                     o44 = Double(org_t.m44)
                 }
             }
-            let base_path = path + "."
+            let base_path = propertyStates.path + "."
             
-            let transform = value.caTransform3DValue
+            let transform = end_value.caTransform3DValue
             if let u11 = o11 {
                 let double_val = Double(transform.m11)
-                if (double_val !≈ u11) {
-                    let p = PropertyData(base_path + "m11", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m11)
+                } else {
+                    start_state = u11
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m11", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u12 = o12 {
                 let double_val = Double(transform.m12)
-                if (double_val !≈ u12) {
-                    let p = PropertyData(base_path + "m12", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m12)
+                } else {
+                    start_state = u12
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m12", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u13 = o13 {
                 let double_val = Double(transform.m13)
-                if (double_val !≈ u13) {
-                    let p = PropertyData(base_path + "m13", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m13)
+                } else {
+                    start_state = u13
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m13", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u14 = o14 {
                 let double_val = Double(transform.m14)
-                if (double_val !≈ u14) {
-                    let p = PropertyData(base_path + "m14", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m14)
+                } else {
+                    start_state = u14
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m14", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u21 = o21 {
                 let double_val = Double(transform.m21)
-                if (double_val !≈ u21) {
-                    let p = PropertyData(base_path + "m21", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m21)
+                } else {
+                    start_state = u21
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m21", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u22 = o22 {
                 let double_val = Double(transform.m22)
-                if (double_val !≈ u22) {
-                    let p = PropertyData(base_path + "m22", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m22)
+                } else {
+                    start_state = u22
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m22", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u23 = o23 {
                 let double_val = Double(transform.m23)
-                if (double_val !≈ u23) {
-                    let p = PropertyData(base_path + "m23", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m23)
+                } else {
+                    start_state = u23
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m23", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u24 = o24 {
                 let double_val = Double(transform.m24)
-                if (double_val !≈ u24) {
-                    let p = PropertyData(base_path + "m24", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m24)
+                } else {
+                    start_state = u24
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m24", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u31 = o31 {
                 let double_val = Double(transform.m31)
-                if (double_val !≈ u31) {
-                    let p = PropertyData(base_path + "m31", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m31)
+                } else {
+                    start_state = u31
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m31", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u32 = o32 {
                 let double_val = Double(transform.m32)
-                if (double_val !≈ u32) {
-                    let p = PropertyData(base_path + "m32", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m32)
+                } else {
+                    start_state = u32
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m32", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u33 = o33 {
                 let double_val = Double(transform.m33)
-                if (double_val !≈ u33) {
-                    let p = PropertyData(base_path + "m33", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m33)
+                } else {
+                    start_state = u33
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m33", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u34 = o34 {
                 let double_val = Double(transform.m34)
-                if (double_val !≈ u34) {
-                    let p = PropertyData(base_path + "m34", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m34)
+                } else {
+                    start_state = u34
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m34", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u42 = o42 {
                 let double_val = Double(transform.m42)
-                if (double_val !≈ u42) {
-                    let p = PropertyData(base_path + "m42", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m42)
+                } else {
+                    start_state = u42
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m42", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u43 = o43 {
                 let double_val = Double(transform.m43)
-                if (double_val !≈ u43) {
-                    let p = PropertyData(base_path + "m43", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m43)
+                } else {
+                    start_state = u43
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m43", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }
             if let u44 = o44 {
                 let double_val = Double(transform.m44)
-                if (double_val !≈ u44) {
-                    let p = PropertyData(base_path + "m44", double_val)
+                var start_state: Double
+                if (start_value != nil && start_type == .transform3D) {
+                    start_state = Double(start_value!.caTransform3DValue.m44)
+                } else {
+                    start_state = u44
+                }
+                
+                if (double_val !≈ start_state) {
+                    let p = PropertyData(path: base_path + "m44", start: start_state, end: double_val)
                     properties.append(p)
                 }
             }

@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 4/19/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -524,7 +524,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      */
     public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
-        self.init(target: targetObject, properties: properties, finalStates: nil, duration: duration, easing: easing, options: options)
+        self.init(target: targetObject, properties: properties, statesForProperties: nil, duration: duration, easing: easing, options: options)
         
     }
     
@@ -539,26 +539,26 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      */
     public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
-        self.init(target: targetObject, properties: [], finalStates: nil, duration: duration, easing: easing, options: options)
+        self.init(target: targetObject, properties: [], statesForProperties: nil, duration: duration, easing: easing, options: options)
     }
     
     /**
-     *  Initializer.
+     *  Initializer. Using this convenience method, you can pass in objects of the value type you're modifying without having to manually create `PropertyData` objects for each object property you wish to modify. For instance, if you're modifying a CGRect object, you can provide CGRect objects that represent its starting and ending states and it will handle the setup for all the properties of the CGRect that have changed between the two states.
      *
      *  - parameters:
      *      - target: The target object whose properties should be modified.
-     *      - finalState: A Dictionary of template objects, with keys representing property keypaths (relative to the target object), and values that represent their final states. These final states must be of the same object type as the property located at the keypath.
+     *      - statesForProperties: An Array of `PropertyStates` objects which represent property keypaths (relative to the target object), and values that represent their starting and ending states. By using `PropertyStates` objects, you can pass in objects of the value type you're modifying without having to manually create `PropertyData` objects for each object property you wish to modify. Please see the `PropertyStates` documentation for usage information.
      *      - duration: The length of the motion, in seconds.
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, finalState templateObjects: [String:Any], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, statesForProperties templateObjects: [PropertyStates], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
         
-        self.init(target: targetObject, properties: nil, finalStates: templateObjects, duration: duration, easing: easing, options: options)
+        self.init(target: targetObject, properties: nil, statesForProperties: templateObjects, duration: duration, easing: easing, options: options)
     }
     
     
-    private init(target targetObject: NSObject, properties props: [PropertyData]?, finalStates: [String:Any]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions?) {
+    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions?) {
         
         var properties = props ?? []
         
@@ -587,43 +587,8 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         _tempo?.delegate = self
         
-        if let final_object_states = finalStates {
-            for (path, final_state) in final_object_states {
-                var tobj: AnyObject = targetObject
-                if (path != "" && valueAssistant.acceptsKeypath(targetObject)) {
-                    if let tvalue = targetObject.value(forKeyPath: path) as AnyObject? {
-                        tobj = tvalue
-                    }
-                }
-                
-                if let val = CGStructAssistant.valueForCGStruct(final_state) {
-                    do {
-                        let generated = try valueAssistant.generateProperties(fromObject: val, keyPath: path, targetObject: tobj)
-                        properties.append(contentsOf: generated)
-
-                    } catch ValueAssistantError.typeRequirement(let valueType) {
-                        ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
-
-                    } catch {
-                        // any other errors
-                    }
-                    
-                } else {
-                    do {
-                        let generated = try valueAssistant.generateProperties(fromObject: (final_state as AnyObject), keyPath: path, targetObject: tobj)
-                        properties.append(contentsOf: generated)
-                        
-                    } catch ValueAssistantError.typeRequirement(let valueType) {
-                        ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
-                        
-                    } catch {
-                        // any other errors
-                    }
-                    
-                }
-
-            }
-            
+        if let unwrapped_states = statesForProperties {
+            properties = buildPropertyData(forObject: targetObject,  propertyStates: unwrapped_states)
         }
         
         for property in properties {
@@ -710,7 +675,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *
      *  - remark: When this method is used there is no need to specify `.Reverse` in the `options` parameter of the init method.
      *
-     *  - parameter easing: The easing equation to be used while reversing. When no equation is provided, the normal `easing` closure will be used in both movement directions.
+     *  - parameter withEasing: The easing equation to be used while reversing. When no equation is provided, the normal `easing` closure will be used in both movement directions.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      *  - seealso: reversing, reverseEasing
      */
@@ -721,6 +686,64 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         return self
     }
+    
+    
+    /**
+     *  Builds `PropertyData` objects for the supplied PropertyStates objects.
+     *
+     *  - parameter forObject: The object to be modified, and the base object for the paths of the `PropertyStates` objects.
+     *  - parameter propertyStates: An Array of `PropertyStates` objects that define how the `PropertyData` objects are constructed.
+     *  - remark: This method is used internally by the initializer when the `statesForProperties` convenience method is used, but you can also call it directly to build an array of `PropertyData` objects.
+     *  - returns: An Array of `PropertyData` objects.
+     */
+    public func buildPropertyData(forObject targetObject: AnyObject, propertyStates: [PropertyStates]) -> [PropertyData] {
+        var data: [PropertyData] = []
+        
+        for var property_states in propertyStates {
+            var tobj: AnyObject = targetObject
+            if (property_states.path != "" && valueAssistant.acceptsKeypath(targetObject)) {
+                if let tvalue = targetObject.value(forKeyPath: property_states.path) as AnyObject? {
+                    tobj = tvalue
+                }
+            }
+            
+            if let end_val = CGStructAssistant.valueForCGStruct(property_states.end) {
+                do {
+                    // the `generateProperties` method expects AnyObject for the states, so convert them to NSValue if we have a CGStruct
+                    property_states.end = end_val
+                    if let unwrapped_start = property_states.start, let start_val = CGStructAssistant.valueForCGStruct(unwrapped_start) {
+                        property_states.start = start_val
+                    }
+                    
+                    let generated = try valueAssistant.generateProperties(targetObject: tobj, propertyStates: property_states)
+                    data.append(contentsOf: generated)
+                    
+                } catch ValueAssistantError.typeRequirement(let valueType) {
+                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
+                    
+                } catch {
+                    // any other errors
+                }
+                
+            } else {
+                do {
+                    let generated = try valueAssistant.generateProperties(targetObject: tobj, propertyStates: property_states)
+                    data.append(contentsOf: generated)
+                    
+                } catch ValueAssistantError.typeRequirement(let valueType) {
+                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
+                    
+                } catch {
+                    // any other errors
+                }
+                
+            }
+            
+        }
+        
+        return data
+    }
+    
     
     
     // MARK: - Private methods
@@ -935,6 +958,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     private func updatePropertyValue(forProperty property: inout PropertyData) {
         
         let new_value = (additive) ? property.delta : property.current
+        
         if (property.targetObject == nil) {
             
             if let new_prop = valueAssistant.calculateValue(forProperty: property, newValue: new_value) {

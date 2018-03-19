@@ -101,7 +101,7 @@ class PhysicsMotionTests: XCTestCase {
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 1.5, friction: 0.999)
         .started({ (motion) in
             let new_timestamp = CFAbsoluteTimeGetCurrent()
-            XCTAssertEqualWithAccuracy(new_timestamp, timestamp + motion.delay, accuracy: 0.9)
+            XCTAssertEqual(new_timestamp, timestamp + motion.delay, accuracy: 0.9)
             
             did_start.fulfill()
         })
@@ -144,7 +144,7 @@ class PhysicsMotionTests: XCTestCase {
         let motion2 = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: -10.0, friction: 0.98)
         .completed { (m) in
             // velocity should basically be 0 as the two velocities cancel each other out
-            XCTAssertEqualWithAccuracy(tester.value, 0.0, accuracy: 0.1)
+            XCTAssertEqual(tester.value, 0.0, accuracy: 0.1)
             
             did_complete.fulfill()
         }

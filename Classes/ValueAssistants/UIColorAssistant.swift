@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 5/18/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -38,13 +38,18 @@ public class UIColorAssistant : ValueAssistant {
         }
     }
     
+    public required init() {}
+
+    
     // MARK: ValueAssistant methods
     
-    public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) -> [PropertyData] {
+    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+        
         var properties: [PropertyData] = []
         
-        if (object is UIColor) {
-            let color = object as! UIColor
+        if (propertyStates.end is UIColor) {
+            
+            let new_color = propertyStates.end as! UIColor
             var hue: CGFloat = 0.0, saturation: CGFloat = 0.0, brightness: CGFloat = 0.0, alpha: CGFloat = 0.0
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0
             var white: CGFloat = 0.0, walpha: CGFloat = 0.0
@@ -59,9 +64,19 @@ public class UIColorAssistant : ValueAssistant {
             var add_white = false
             
             var ocolor: UIColor?
+            
+            // first check if target is a UIColor, and if so use that as the ocolor base
             if (target is UIColor) {
                 ocolor = target as? UIColor
             }
+            
+            // if there's a start value in the PropertyStates object and it's a UIColor then use that instead
+            if let unwrapped_start = propertyStates.start {
+                if (propertyStates.start is UIColor) {
+                    ocolor = unwrapped_start as? UIColor
+                }
+            }
+
             var ohue: CGFloat = 0.0, osaturation: CGFloat = 0.0, obrightness: CGFloat = 0.0, oalpha: CGFloat = 0.0
             var ored: CGFloat = 0.0, ogreen: CGFloat = 0.0, oblue: CGFloat = 0.0
             var owhite: CGFloat = 0.0, owalpha: CGFloat = 0.0
@@ -72,11 +87,12 @@ public class UIColorAssistant : ValueAssistant {
                 ocolor!.getWhite(&owhite, alpha: &owalpha)
             }
             
-            color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-            color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-            color.getWhite(&white, alpha: &walpha)
+            new_color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+            new_color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            new_color.getWhite(&white, alpha: &walpha)
             
             if (ocolor != nil) {
+                // check each component to avoid building PropertyData objects for color components whose start and end values are the same
                 if (Double(red) !≈ Double(ored)) { add_red = true }
                 if (Double(blue) !≈ Double(oblue)) { add_blue = true }
                 if (Double(green) !≈ Double(ogreen)) { add_green = true }
@@ -95,35 +111,35 @@ public class UIColorAssistant : ValueAssistant {
             }
             
             if (add_hue) {
-                let p = PropertyData("hue", Double(hue))
+                let p = PropertyData(path: "hue", start: Double(ohue), end: Double(hue))
                 properties.append(p)
             }
             if (add_sat) {
-                let p = PropertyData("saturation", Double(saturation))
+                let p = PropertyData(path: "saturation", start: Double(osaturation), end: Double(saturation))
                 properties.append(p)
             }
             if (add_brightness) {
-                let p = PropertyData("brightness", Double(brightness))
+                let p = PropertyData(path: "brightness", start: Double(obrightness), end: Double(brightness))
                 properties.append(p)
             }
             if (add_alpha) {
-                let p = PropertyData("alpha", Double(alpha))
+                let p = PropertyData(path: "alpha", start: Double(oalpha), end: Double(alpha))
                 properties.append(p)
             }
             if (add_red) {
-                let p = PropertyData("red", Double(red))
+                let p = PropertyData(path: "red", start: Double(ored), end: Double(red))
                 properties.append(p)
             }
             if (add_green) {
-                let p = PropertyData("green", Double(green))
+                let p = PropertyData(path: "green", start: Double(ogreen), end: Double(green))
                 properties.append(p)
             }
             if (add_blue) {
-                let p = PropertyData("blue", Double(blue))
+                let p = PropertyData(path: "blue", start: Double(oblue), end: Double(blue))
                 properties.append(p)
             }
             if (add_white) {
-                let p = PropertyData("white", Double(white))
+                let p = PropertyData(path: "white", start: Double(owhite), end: Double(white))
                 properties.append(p)
             }
             
@@ -136,12 +152,12 @@ public class UIColorAssistant : ValueAssistant {
         }
         
         
-        if (path != "") {
+        if (propertyStates.path != "") {
             for index in 0 ..< properties.count {
                 if (properties[index].path != "") {
-                    properties[index].path = path + "." + properties[index].path
+                    properties[index].path = propertyStates.path + "." + properties[index].path
                 } else {
-                    properties[index].path = path
+                    properties[index].path = propertyStates.path
                 }
             }
         }

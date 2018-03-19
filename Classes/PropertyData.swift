@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 4/26/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -83,7 +83,7 @@ public struct PropertyData {
     public weak var targetObject: NSObject?
     
     /**
-     *  The keyPath of the property to be moved. The keyPath must be a valid, KVC-compliant keyPath of `targetObject`.
+     *  The keyPath of the property to be transformed. The keyPath must be a valid, KVC-compliant keyPath of `targetObject`. For your own classes, you must flag the property with `@objc` for Swift to find it.
      *
      *  - seealso: targetObject
      */

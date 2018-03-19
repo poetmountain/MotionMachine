@@ -143,7 +143,7 @@ class MotionGroupTests: XCTestCase {
             XCTAssertEqual(group.totalProgress, 1.0)
             let new_timestamp = CFAbsoluteTimeGetCurrent()
             let motion = group.motions.first as! Motion
-            XCTAssertEqualWithAccuracy(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
+            XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
             
             did_complete.fulfill()
         }

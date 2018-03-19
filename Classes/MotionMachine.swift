@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 4/19/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -237,6 +237,8 @@ public protocol MotionUpdateDelegate: class {
 /// This protocol defines methods and properties that must be adopted for any value assistant.
 public protocol ValueAssistant {
     
+    init()
+    
     /**
      *  This method returns an array of PropertyData instances based on the values of the provided object.
      *
@@ -247,7 +249,7 @@ public protocol ValueAssistant {
      *
      *  - returns: An array of PropertyData instances representing the values of the provided object.
      */
-    func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) throws -> [PropertyData]
+    func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData]
     
     /**
      *  This method replaces an element of an AnyObject subclass by assigning new values.

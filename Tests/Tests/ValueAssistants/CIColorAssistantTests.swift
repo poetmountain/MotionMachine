@@ -14,14 +14,40 @@ class CIColorAssistantTests: XCTestCase {
         let assistant = CIColorAssistant()
         let color = CIColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         let new_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.5, alpha: 1.0)
-        let props = assistant.generateProperties(fromObject: new_color, keyPath: "", targetObject: color)
+        let states = PropertyStates(path: "", end: new_color)
+        let props = try! assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
         
+        // should only have 1 prop because only blue value is changed from original color
         XCTAssertEqual(props.count, 1)
         
-        let color_prop = props[0]
-        XCTAssertEqual(color_prop.path, "blue")
-        XCTAssertEqual(color_prop.end, 0.5)
+        if (props.count == 1) {
+            let color_prop = props[0]
+            // should test that ending property state was captured and start state is set to original color value
+            XCTAssertEqual(color_prop.path, "blue")
+            XCTAssertEqual(color_prop.start, 0.0)
+            XCTAssertEqual(color_prop.end, 0.5)
+        }
         
+    }
+    
+    func test_generateProperties_start_state() {
+        let assistant = CIColorAssistant()
+        let color = CIColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        let start_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.2, alpha: 1.0)
+        let new_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.5, alpha: 1.0)
+        let states = PropertyStates(path: "", start: start_color, end: new_color)
+        let props = try! assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
+        
+        // should only have 1 prop because only blue value is changed from original color
+        XCTAssertEqual(props.count, 1)
+        
+        if (props.count == 1) {
+            let color_prop = props[0]
+            // should test that both the starting and ending property states were captured
+            XCTAssertEqual(color_prop.path, "blue")
+            XCTAssertEqual(color_prop.start, 0.2)
+            XCTAssertEqual(color_prop.end, 0.5)
+        }
     }
     
     func test_updateValue() {

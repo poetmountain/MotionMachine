@@ -51,7 +51,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
                                    easing: EasingQuartic.easeInOut())
             
             let change_color = Motion(target: square,
-                                  finalState: ["backgroundColor" : UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)],
+                                      statesForProperties: [PropertyStates(path: "backgroundColor", end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0))],
                                     duration: 0.9,
                                       easing: EasingQuadratic.easeInOut())
             

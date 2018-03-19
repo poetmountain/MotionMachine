@@ -8,48 +8,49 @@
 
 /* Begin PBXBuildFile section */
 		8B62C0761CEFA2F00087727A /* MotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0751CEFA2F00087727A /* MotionTests.swift */; };
-		8B62C0931CEFA34C0087727A /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0781CEFA34C0087727A /* MotionSequence.swift */; };
-		8B62C0941CEFA34C0087727A /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0791CEFA34C0087727A /* MotionGroup.swift */; };
-		8B62C0951CEFA34C0087727A /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07A1CEFA34C0087727A /* Motion.swift */; };
-		8B62C0981CEFA34C0087727A /* ValueAssistantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */; };
-		8B62C0991CEFA34C0087727A /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */; };
-		8B62C09A1CEFA34C0087727A /* MotionSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0801CEFA34C0087727A /* MotionSupport.swift */; };
-		8B62C09B1CEFA34C0087727A /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */; };
-		8B62C09C1CEFA34C0087727A /* CATempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0821CEFA34C0087727A /* CATempo.swift */; };
-		8B62C09E1CEFA34C0087727A /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0841CEFA34C0087727A /* MotionMachine.swift */; };
-		8B62C09F1CEFA34C0087727A /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0861CEFA34C0087727A /* EasingBack.swift */; };
-		8B62C0A01CEFA34C0087727A /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0871CEFA34C0087727A /* EasingBounce.swift */; };
-		8B62C0A11CEFA34C0087727A /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0881CEFA34C0087727A /* EasingCircular.swift */; };
-		8B62C0A21CEFA34C0087727A /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0891CEFA34C0087727A /* EasingCubic.swift */; };
-		8B62C0A31CEFA34C0087727A /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08A1CEFA34C0087727A /* EasingElastic.swift */; };
-		8B62C0A41CEFA34C0087727A /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08B1CEFA34C0087727A /* EasingExpo.swift */; };
-		8B62C0A51CEFA34C0087727A /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08C1CEFA34C0087727A /* EasingLinear.swift */; };
-		8B62C0A61CEFA34C0087727A /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */; };
-		8B62C0A71CEFA34C0087727A /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */; };
-		8B62C0A81CEFA34C0087727A /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */; };
-		8B62C0A91CEFA34C0087727A /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0901CEFA34C0087727A /* EasingSine.swift */; };
-		8B62C0AA1CEFA34C0087727A /* Tempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0911CEFA34C0087727A /* Tempo.swift */; };
 		8B62C0BC1CF014210087727A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BB1CF014210087727A /* AppDelegate.swift */; };
 		8B62C0BE1CF014210087727A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BD1CF014210087727A /* ViewController.swift */; };
 		8B62C0C11CF014210087727A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0BF1CF014210087727A /* Main.storyboard */; };
 		8B62C0C31CF014210087727A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0C21CF014210087727A /* Assets.xcassets */; };
 		8B62C0C61CF014210087727A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B62C0C41CF014210087727A /* LaunchScreen.storyboard */; };
-		8B62C0CE1CF017640087727A /* TimerTempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0CD1CF017640087727A /* TimerTempo.swift */; };
 		8B6B031B1CF3CC6300C1E216 /* PhysicsMotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */; };
 		8B6B031D1CF3F57500C1E216 /* CGStructAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6B031C1CF3F57500C1E216 /* CGStructAssistantTests.swift */; };
+		8BA85013205F206C00F1FA7B /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF5205F206C00F1FA7B /* Motion.swift */; };
+		8BA85014205F206C00F1FA7B /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */; };
+		8BA85015205F206C00F1FA7B /* CATempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF7205F206C00F1FA7B /* CATempo.swift */; };
+		8BA85016205F206C00F1FA7B /* PropertyStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF8205F206C00F1FA7B /* PropertyStates.swift */; };
+		8BA85017205F206C00F1FA7B /* MotionSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */; };
+		8BA85018205F206C00F1FA7B /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */; };
+		8BA85019205F206C00F1FA7B /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */; };
+		8BA8501A205F206C00F1FA7B /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFD205F206C00F1FA7B /* EasingSine.swift */; };
+		8BA8501B205F206C00F1FA7B /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFE205F206C00F1FA7B /* EasingQuadratic.swift */; };
+		8BA8501C205F206C00F1FA7B /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFF205F206C00F1FA7B /* EasingCubic.swift */; };
+		8BA8501D205F206C00F1FA7B /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85000205F206C00F1FA7B /* EasingCircular.swift */; };
+		8BA8501E205F206C00F1FA7B /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85001205F206C00F1FA7B /* EasingExpo.swift */; };
+		8BA8501F205F206C00F1FA7B /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85002205F206C00F1FA7B /* EasingQuartic.swift */; };
+		8BA85020205F206C00F1FA7B /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85003205F206C00F1FA7B /* EasingBounce.swift */; };
+		8BA85021205F206C00F1FA7B /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85004205F206C00F1FA7B /* EasingQuintic.swift */; };
+		8BA85022205F206C00F1FA7B /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85005205F206C00F1FA7B /* EasingBack.swift */; };
+		8BA85023205F206C00F1FA7B /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85006205F206C00F1FA7B /* PropertyData.swift */; };
+		8BA85024205F206C00F1FA7B /* Tempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85007205F206C00F1FA7B /* Tempo.swift */; };
+		8BA85025205F206C00F1FA7B /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */; };
+		8BA85026205F206C00F1FA7B /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85009205F206C00F1FA7B /* MotionMachine.swift */; };
+		8BA85027205F206C00F1FA7B /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500A205F206C00F1FA7B /* MotionGroup.swift */; };
+		8BA85028205F206C00F1FA7B /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500B205F206C00F1FA7B /* MotionSequence.swift */; };
+		8BA85029205F206C00F1FA7B /* TimerTempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500C205F206C00F1FA7B /* TimerTempo.swift */; };
+		8BA8502A205F206C00F1FA7B /* UIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500E205F206C00F1FA7B /* UIColorAssistant.swift */; };
+		8BA8502B205F206C00F1FA7B /* CGStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500F205F206C00F1FA7B /* CGStructAssistant.swift */; };
+		8BA8502C205F206C00F1FA7B /* UIKitStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85010205F206C00F1FA7B /* UIKitStructAssistant.swift */; };
+		8BA8502D205F206C00F1FA7B /* CIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85011205F206C00F1FA7B /* CIColorAssistant.swift */; };
+		8BA8502E205F206C00F1FA7B /* ValueAssistantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85012205F206C00F1FA7B /* ValueAssistantGroup.swift */; };
 		8BAA9C481CF2574D0079A9DC /* EasingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C471CF2574D0079A9DC /* EasingTests.swift */; };
 		8BAA9C4A1CF27DA40079A9DC /* MotionGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */; };
 		8BAA9C4C1CF2A4C90079A9DC /* MotionSequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */; };
 		8BC143D11CF0439A00E8EBC5 /* Tester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC143D01CF0439A00E8EBC5 /* Tester.swift */; };
 		8BC8EC6F1CF432DA00B3B0A3 /* UIColorAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC8EC6E1CF432DA00B3B0A3 /* UIColorAssistantTests.swift */; };
-		8BD8878A1CFCEBA00085107A /* CGStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD887891CFCEBA00085107A /* CGStructAssistant.swift */; };
 		8BD8878C1CFD69C60085107A /* UIKitStructAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */; };
-		8BD8878E1CFD69E60085107A /* UIKitStructAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */; };
 		8BF304E21CF50B5900B8BE67 /* ValueAssistantGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E11CF50B5900B8BE67 /* ValueAssistantGroupTests.swift */; };
-		8BF304E61CF6C4E300B8BE67 /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */; };
 		8BF304EA1CF7D42D00B8BE67 /* CIColorAssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304E91CF7D42D00B8BE67 /* CIColorAssistantTests.swift */; };
-		8BF304ED1CF7D44700B8BE67 /* UIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */; };
-		8BF304EE1CF7D44700B8BE67 /* CIColorAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,27 +66,6 @@
 /* Begin PBXFileReference section */
 		8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionMachineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B62C0751CEFA2F00087727A /* MotionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionTests.swift; sourceTree = "<group>"; };
-		8B62C0781CEFA34C0087727A /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSequence.swift; path = ../Classes/MotionSequence.swift; sourceTree = "<group>"; };
-		8B62C0791CEFA34C0087727A /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionGroup.swift; path = ../Classes/MotionGroup.swift; sourceTree = "<group>"; };
-		8B62C07A1CEFA34C0087727A /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Motion.swift; path = ../Classes/Motion.swift; sourceTree = "<group>"; };
-		8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueAssistantGroup.swift; sourceTree = "<group>"; };
-		8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsMotion.swift; path = ../Classes/PhysicsMotion.swift; sourceTree = "<group>"; };
-		8B62C0801CEFA34C0087727A /* MotionSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionSupport.swift; path = ../Classes/MotionSupport.swift; sourceTree = "<group>"; };
-		8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhysicsSystem.swift; path = ../Classes/PhysicsSystem.swift; sourceTree = "<group>"; };
-		8B62C0821CEFA34C0087727A /* CATempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CATempo.swift; path = ../Classes/CATempo.swift; sourceTree = "<group>"; };
-		8B62C0841CEFA34C0087727A /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionMachine.swift; path = ../Classes/MotionMachine.swift; sourceTree = "<group>"; };
-		8B62C0861CEFA34C0087727A /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
-		8B62C0871CEFA34C0087727A /* EasingBounce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBounce.swift; sourceTree = "<group>"; };
-		8B62C0881CEFA34C0087727A /* EasingCircular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCircular.swift; sourceTree = "<group>"; };
-		8B62C0891CEFA34C0087727A /* EasingCubic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCubic.swift; sourceTree = "<group>"; };
-		8B62C08A1CEFA34C0087727A /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
-		8B62C08B1CEFA34C0087727A /* EasingExpo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingExpo.swift; sourceTree = "<group>"; };
-		8B62C08C1CEFA34C0087727A /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
-		8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuadratic.swift; sourceTree = "<group>"; };
-		8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuartic.swift; sourceTree = "<group>"; };
-		8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuintic.swift; sourceTree = "<group>"; };
-		8B62C0901CEFA34C0087727A /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
-		8B62C0911CEFA34C0087727A /* Tempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tempo.swift; path = ../Classes/Tempo.swift; sourceTree = "<group>"; };
 		8B62C0AC1CEFA3730087727A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MotionMachineTests/Info.plist; sourceTree = "<group>"; };
 		8B62C0B91CF014210087727A /* MotionMachine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionMachine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B62C0BB1CF014210087727A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -94,22 +74,44 @@
 		8B62C0C21CF014210087727A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B62C0C51CF014210087727A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B62C0C71CF014210087727A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8B62C0CD1CF017640087727A /* TimerTempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimerTempo.swift; path = ../Classes/TimerTempo.swift; sourceTree = "<group>"; };
 		8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsMotionTests.swift; sourceTree = "<group>"; };
 		8B6B031C1CF3F57500C1E216 /* CGStructAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGStructAssistantTests.swift; path = ValueAssistants/CGStructAssistantTests.swift; sourceTree = "<group>"; };
+		8BA84FF5205F206C00F1FA7B /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsMotion.swift; sourceTree = "<group>"; };
+		8BA84FF7205F206C00F1FA7B /* CATempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATempo.swift; sourceTree = "<group>"; };
+		8BA84FF8205F206C00F1FA7B /* PropertyStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyStates.swift; sourceTree = "<group>"; };
+		8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSupport.swift; sourceTree = "<group>"; };
+		8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
+		8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
+		8BA84FFD205F206C00F1FA7B /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
+		8BA84FFE205F206C00F1FA7B /* EasingQuadratic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuadratic.swift; sourceTree = "<group>"; };
+		8BA84FFF205F206C00F1FA7B /* EasingCubic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCubic.swift; sourceTree = "<group>"; };
+		8BA85000205F206C00F1FA7B /* EasingCircular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCircular.swift; sourceTree = "<group>"; };
+		8BA85001205F206C00F1FA7B /* EasingExpo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingExpo.swift; sourceTree = "<group>"; };
+		8BA85002205F206C00F1FA7B /* EasingQuartic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuartic.swift; sourceTree = "<group>"; };
+		8BA85003205F206C00F1FA7B /* EasingBounce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBounce.swift; sourceTree = "<group>"; };
+		8BA85004205F206C00F1FA7B /* EasingQuintic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuintic.swift; sourceTree = "<group>"; };
+		8BA85005205F206C00F1FA7B /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
+		8BA85006205F206C00F1FA7B /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyData.swift; sourceTree = "<group>"; };
+		8BA85007205F206C00F1FA7B /* Tempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tempo.swift; sourceTree = "<group>"; };
+		8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsSystem.swift; sourceTree = "<group>"; };
+		8BA85009205F206C00F1FA7B /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionMachine.swift; sourceTree = "<group>"; };
+		8BA8500A205F206C00F1FA7B /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroup.swift; sourceTree = "<group>"; };
+		8BA8500B205F206C00F1FA7B /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequence.swift; sourceTree = "<group>"; };
+		8BA8500C205F206C00F1FA7B /* TimerTempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTempo.swift; sourceTree = "<group>"; };
+		8BA8500E205F206C00F1FA7B /* UIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorAssistant.swift; sourceTree = "<group>"; };
+		8BA8500F205F206C00F1FA7B /* CGStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGStructAssistant.swift; sourceTree = "<group>"; };
+		8BA85010205F206C00F1FA7B /* UIKitStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitStructAssistant.swift; sourceTree = "<group>"; };
+		8BA85011205F206C00F1FA7B /* CIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIColorAssistant.swift; sourceTree = "<group>"; };
+		8BA85012205F206C00F1FA7B /* ValueAssistantGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueAssistantGroup.swift; sourceTree = "<group>"; };
 		8BAA9C471CF2574D0079A9DC /* EasingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingTests.swift; sourceTree = "<group>"; };
 		8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroupTests.swift; sourceTree = "<group>"; };
 		8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequenceTests.swift; sourceTree = "<group>"; };
 		8BC143D01CF0439A00E8EBC5 /* Tester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tester.swift; path = Helpers/Tester.swift; sourceTree = "<group>"; };
 		8BC8EC6E1CF432DA00B3B0A3 /* UIColorAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIColorAssistantTests.swift; path = ValueAssistants/UIColorAssistantTests.swift; sourceTree = "<group>"; };
-		8BD887891CFCEBA00085107A /* CGStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGStructAssistant.swift; sourceTree = "<group>"; };
 		8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIKitStructAssistantTests.swift; path = ValueAssistants/UIKitStructAssistantTests.swift; sourceTree = "<group>"; };
-		8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitStructAssistant.swift; sourceTree = "<group>"; };
 		8BF304E11CF50B5900B8BE67 /* ValueAssistantGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ValueAssistantGroupTests.swift; path = ValueAssistants/ValueAssistantGroupTests.swift; sourceTree = "<group>"; };
-		8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyData.swift; path = ../Classes/PropertyData.swift; sourceTree = "<group>"; };
 		8BF304E91CF7D42D00B8BE67 /* CIColorAssistantTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CIColorAssistantTests.swift; path = ValueAssistants/CIColorAssistantTests.swift; sourceTree = "<group>"; };
-		8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorAssistant.swift; sourceTree = "<group>"; };
-		8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIColorAssistant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,8 +135,8 @@
 		8B62C0081CEF9C0F0087727A = {
 			isa = PBXGroup;
 			children = (
+				8BA84FF4205F206C00F1FA7B /* Classes */,
 				8B62C0AC1CEFA3730087727A /* Info.plist */,
-				8B62C0771CEFA32F0087727A /* MotionMachine */,
 				8B62C0341CEF9CA80087727A /* Tests */,
 				8B62C0BA1CF014210087727A /* App */,
 				8B62C0121CEF9C0F0087727A /* Products */,
@@ -164,58 +166,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		8B62C0771CEFA32F0087727A /* MotionMachine */ = {
-			isa = PBXGroup;
-			children = (
-				8BF304E51CF6C4E300B8BE67 /* PropertyData.swift */,
-				8B62C0CD1CF017640087727A /* TimerTempo.swift */,
-				8B62C0781CEFA34C0087727A /* MotionSequence.swift */,
-				8B62C0791CEFA34C0087727A /* MotionGroup.swift */,
-				8B62C07A1CEFA34C0087727A /* Motion.swift */,
-				8B62C07B1CEFA34C0087727A /* ValueAssistants */,
-				8B62C07F1CEFA34C0087727A /* PhysicsMotion.swift */,
-				8B62C0801CEFA34C0087727A /* MotionSupport.swift */,
-				8B62C0811CEFA34C0087727A /* PhysicsSystem.swift */,
-				8B62C0821CEFA34C0087727A /* CATempo.swift */,
-				8B62C0841CEFA34C0087727A /* MotionMachine.swift */,
-				8B62C0851CEFA34C0087727A /* EasingTypes */,
-				8B62C0911CEFA34C0087727A /* Tempo.swift */,
-			);
-			name = MotionMachine;
-			sourceTree = "<group>";
-		};
-		8B62C07B1CEFA34C0087727A /* ValueAssistants */ = {
-			isa = PBXGroup;
-			children = (
-				8BD8878D1CFD69E60085107A /* UIKitStructAssistant.swift */,
-				8BD887891CFCEBA00085107A /* CGStructAssistant.swift */,
-				8BF304EB1CF7D44700B8BE67 /* UIColorAssistant.swift */,
-				8BF304EC1CF7D44700B8BE67 /* CIColorAssistant.swift */,
-				8B62C07E1CEFA34C0087727A /* ValueAssistantGroup.swift */,
-			);
-			name = ValueAssistants;
-			path = ../Classes/ValueAssistants;
-			sourceTree = "<group>";
-		};
-		8B62C0851CEFA34C0087727A /* EasingTypes */ = {
-			isa = PBXGroup;
-			children = (
-				8B62C0861CEFA34C0087727A /* EasingBack.swift */,
-				8B62C0871CEFA34C0087727A /* EasingBounce.swift */,
-				8B62C0881CEFA34C0087727A /* EasingCircular.swift */,
-				8B62C0891CEFA34C0087727A /* EasingCubic.swift */,
-				8B62C08A1CEFA34C0087727A /* EasingElastic.swift */,
-				8B62C08B1CEFA34C0087727A /* EasingExpo.swift */,
-				8B62C08C1CEFA34C0087727A /* EasingLinear.swift */,
-				8B62C08D1CEFA34C0087727A /* EasingQuadratic.swift */,
-				8B62C08E1CEFA34C0087727A /* EasingQuartic.swift */,
-				8B62C08F1CEFA34C0087727A /* EasingQuintic.swift */,
-				8B62C0901CEFA34C0087727A /* EasingSine.swift */,
-			);
-			name = EasingTypes;
-			path = ../Classes/EasingTypes;
-			sourceTree = "<group>";
-		};
 		8B62C0BA1CF014210087727A /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +190,58 @@
 				8BD8878B1CFD69C60085107A /* UIKitStructAssistantTests.swift */,
 			);
 			name = ValueAssistants;
+			sourceTree = "<group>";
+		};
+		8BA84FF4205F206C00F1FA7B /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				8BA84FF5205F206C00F1FA7B /* Motion.swift */,
+				8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */,
+				8BA84FF7205F206C00F1FA7B /* CATempo.swift */,
+				8BA84FF8205F206C00F1FA7B /* PropertyStates.swift */,
+				8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */,
+				8BA84FFA205F206C00F1FA7B /* EasingTypes */,
+				8BA85006205F206C00F1FA7B /* PropertyData.swift */,
+				8BA85007205F206C00F1FA7B /* Tempo.swift */,
+				8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */,
+				8BA85009205F206C00F1FA7B /* MotionMachine.swift */,
+				8BA8500A205F206C00F1FA7B /* MotionGroup.swift */,
+				8BA8500B205F206C00F1FA7B /* MotionSequence.swift */,
+				8BA8500C205F206C00F1FA7B /* TimerTempo.swift */,
+				8BA8500D205F206C00F1FA7B /* ValueAssistants */,
+			);
+			name = Classes;
+			path = ../Classes;
+			sourceTree = "<group>";
+		};
+		8BA84FFA205F206C00F1FA7B /* EasingTypes */ = {
+			isa = PBXGroup;
+			children = (
+				8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */,
+				8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */,
+				8BA84FFD205F206C00F1FA7B /* EasingSine.swift */,
+				8BA84FFE205F206C00F1FA7B /* EasingQuadratic.swift */,
+				8BA84FFF205F206C00F1FA7B /* EasingCubic.swift */,
+				8BA85000205F206C00F1FA7B /* EasingCircular.swift */,
+				8BA85001205F206C00F1FA7B /* EasingExpo.swift */,
+				8BA85002205F206C00F1FA7B /* EasingQuartic.swift */,
+				8BA85003205F206C00F1FA7B /* EasingBounce.swift */,
+				8BA85004205F206C00F1FA7B /* EasingQuintic.swift */,
+				8BA85005205F206C00F1FA7B /* EasingBack.swift */,
+			);
+			path = EasingTypes;
+			sourceTree = "<group>";
+		};
+		8BA8500D205F206C00F1FA7B /* ValueAssistants */ = {
+			isa = PBXGroup;
+			children = (
+				8BA8500E205F206C00F1FA7B /* UIColorAssistant.swift */,
+				8BA8500F205F206C00F1FA7B /* CGStructAssistant.swift */,
+				8BA85010205F206C00F1FA7B /* UIKitStructAssistant.swift */,
+				8BA85011205F206C00F1FA7B /* CIColorAssistant.swift */,
+				8BA85012205F206C00F1FA7B /* ValueAssistantGroup.swift */,
+			);
+			path = ValueAssistants;
 			sourceTree = "<group>";
 		};
 		8BC143D21CF043A200E8EBC5 /* Helpers */ = {
@@ -295,18 +297,18 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Poet & Mountain, LLC";
 				TargetAttributes = {
 					8B62C0241CEF9C0F0087727A = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
 						TestTargetID = 8B62C0B81CF014210087727A;
 					};
 					8B62C0B81CF014210087727A = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -355,44 +357,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BA85020205F206C00F1FA7B /* EasingBounce.swift in Sources */,
 				8BC8EC6F1CF432DA00B3B0A3 /* UIColorAssistantTests.swift in Sources */,
+				8BA85017205F206C00F1FA7B /* MotionSupport.swift in Sources */,
+				8BA85013205F206C00F1FA7B /* Motion.swift in Sources */,
+				8BA85019205F206C00F1FA7B /* EasingLinear.swift in Sources */,
 				8BAA9C481CF2574D0079A9DC /* EasingTests.swift in Sources */,
-				8B62C0A21CEFA34C0087727A /* EasingCubic.swift in Sources */,
-				8B62C0941CEFA34C0087727A /* MotionGroup.swift in Sources */,
-				8B62C0A51CEFA34C0087727A /* EasingLinear.swift in Sources */,
-				8B62C0AA1CEFA34C0087727A /* Tempo.swift in Sources */,
+				8BA85024205F206C00F1FA7B /* Tempo.swift in Sources */,
 				8BC143D11CF0439A00E8EBC5 /* Tester.swift in Sources */,
-				8BF304ED1CF7D44700B8BE67 /* UIColorAssistant.swift in Sources */,
-				8B62C09B1CEFA34C0087727A /* PhysicsSystem.swift in Sources */,
+				8BA8501F205F206C00F1FA7B /* EasingQuartic.swift in Sources */,
 				8BD8878C1CFD69C60085107A /* UIKitStructAssistantTests.swift in Sources */,
-				8B62C0951CEFA34C0087727A /* Motion.swift in Sources */,
-				8BF304EE1CF7D44700B8BE67 /* CIColorAssistant.swift in Sources */,
-				8B62C09E1CEFA34C0087727A /* MotionMachine.swift in Sources */,
-				8B62C09C1CEFA34C0087727A /* CATempo.swift in Sources */,
-				8B62C0A91CEFA34C0087727A /* EasingSine.swift in Sources */,
-				8B62C0931CEFA34C0087727A /* MotionSequence.swift in Sources */,
-				8B62C0A31CEFA34C0087727A /* EasingElastic.swift in Sources */,
-				8B62C0A71CEFA34C0087727A /* EasingQuartic.swift in Sources */,
-				8B62C0A81CEFA34C0087727A /* EasingQuintic.swift in Sources */,
 				8B6B031D1CF3F57500C1E216 /* CGStructAssistantTests.swift in Sources */,
-				8BD8878A1CFCEBA00085107A /* CGStructAssistant.swift in Sources */,
+				8BA8502B205F206C00F1FA7B /* CGStructAssistant.swift in Sources */,
+				8BA85028205F206C00F1FA7B /* MotionSequence.swift in Sources */,
+				8BA85022205F206C00F1FA7B /* EasingBack.swift in Sources */,
+				8BA8502D205F206C00F1FA7B /* CIColorAssistant.swift in Sources */,
+				8BA85025205F206C00F1FA7B /* PhysicsSystem.swift in Sources */,
+				8BA8501E205F206C00F1FA7B /* EasingExpo.swift in Sources */,
+				8BA85023205F206C00F1FA7B /* PropertyData.swift in Sources */,
+				8BA85027205F206C00F1FA7B /* MotionGroup.swift in Sources */,
 				8BAA9C4A1CF27DA40079A9DC /* MotionGroupTests.swift in Sources */,
+				8BA8501C205F206C00F1FA7B /* EasingCubic.swift in Sources */,
 				8BF304E21CF50B5900B8BE67 /* ValueAssistantGroupTests.swift in Sources */,
+				8BA8502A205F206C00F1FA7B /* UIColorAssistant.swift in Sources */,
+				8BA8501A205F206C00F1FA7B /* EasingSine.swift in Sources */,
+				8BA85018205F206C00F1FA7B /* EasingElastic.swift in Sources */,
 				8BF304EA1CF7D42D00B8BE67 /* CIColorAssistantTests.swift in Sources */,
+				8BA8501B205F206C00F1FA7B /* EasingQuadratic.swift in Sources */,
+				8BA8501D205F206C00F1FA7B /* EasingCircular.swift in Sources */,
 				8B62C0761CEFA2F00087727A /* MotionTests.swift in Sources */,
-				8B62C0A61CEFA34C0087727A /* EasingQuadratic.swift in Sources */,
-				8B62C0A01CEFA34C0087727A /* EasingBounce.swift in Sources */,
-				8B62C0A41CEFA34C0087727A /* EasingExpo.swift in Sources */,
-				8B62C0A11CEFA34C0087727A /* EasingCircular.swift in Sources */,
-				8B62C0981CEFA34C0087727A /* ValueAssistantGroup.swift in Sources */,
-				8BD8878E1CFD69E60085107A /* UIKitStructAssistant.swift in Sources */,
-				8B62C0CE1CF017640087727A /* TimerTempo.swift in Sources */,
-				8B62C09A1CEFA34C0087727A /* MotionSupport.swift in Sources */,
-				8B62C0991CEFA34C0087727A /* PhysicsMotion.swift in Sources */,
+				8BA85021205F206C00F1FA7B /* EasingQuintic.swift in Sources */,
+				8BA8502E205F206C00F1FA7B /* ValueAssistantGroup.swift in Sources */,
+				8BA85029205F206C00F1FA7B /* TimerTempo.swift in Sources */,
 				8BAA9C4C1CF2A4C90079A9DC /* MotionSequenceTests.swift in Sources */,
-				8B62C09F1CEFA34C0087727A /* EasingBack.swift in Sources */,
-				8BF304E61CF6C4E300B8BE67 /* PropertyData.swift in Sources */,
 				8B6B031B1CF3CC6300C1E216 /* PhysicsMotionTests.swift in Sources */,
+				8BA8502C205F206C00F1FA7B /* UIKitStructAssistant.swift in Sources */,
+				8BA85026205F206C00F1FA7B /* MotionMachine.swift in Sources */,
+				8BA85016205F206C00F1FA7B /* PropertyStates.swift in Sources */,
+				8BA85014205F206C00F1FA7B /* PhysicsMotion.swift in Sources */,
+				8BA85015205F206C00F1FA7B /* CATempo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,14 +447,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -479,6 +488,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -491,14 +502,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -519,6 +536,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -533,7 +552,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
 			};
 			name = Debug;
@@ -547,7 +567,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
 			};
 			name = Release;
@@ -560,7 +581,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -572,7 +594,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

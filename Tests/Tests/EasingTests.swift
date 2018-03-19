@@ -140,7 +140,7 @@ class EasingTests: XCTestCase {
         let mid_in = ease_in(50, 0, 100, 100)
         let end_in = ease_in(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_in, 29.29, accuracy: 0.01)
+        XCTAssertEqual(mid_in, 29.29, accuracy: 0.01)
         XCTAssertEqual(end_in, 100)
         
         // easeOut
@@ -148,7 +148,7 @@ class EasingTests: XCTestCase {
         let mid_out = ease_out(50, 0, 100, 100)
         let end_out = ease_out(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_out, 70.71, accuracy: 0.01)
+        XCTAssertEqual(mid_out, 70.71, accuracy: 0.01)
         XCTAssertEqual(end_out, 100)
         
         // easeInOut
@@ -156,7 +156,7 @@ class EasingTests: XCTestCase {
         let mid_inout = ease_inout(50, 0, 100, 100)
         let end_inout = ease_inout(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_inout, 50.0, accuracy: 0.0000001)
+        XCTAssertEqual(mid_inout, 50.0, accuracy: 0.0000001)
         XCTAssertEqual(end_inout, 100)
     }
     
@@ -192,7 +192,7 @@ class EasingTests: XCTestCase {
         let mid_in = ease_in(50, 0, 100, 100)
         let end_in = ease_in(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_in, 13.39, accuracy: 0.01)
+        XCTAssertEqual(mid_in, 13.39, accuracy: 0.01)
         XCTAssertEqual(end_in, 100)
         
         // easeOut
@@ -200,7 +200,7 @@ class EasingTests: XCTestCase {
         let mid_out = ease_out(50, 0, 100, 100)
         let end_out = ease_out(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_out, 86.6, accuracy: 0.01)
+        XCTAssertEqual(mid_out, 86.6, accuracy: 0.01)
         XCTAssertEqual(end_out, 100)
         
         // easeInOut
@@ -218,7 +218,7 @@ class EasingTests: XCTestCase {
         let mid_in = ease_in(50, 0, 100, 100)
         let end_in = ease_in(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_in, -1.5625, accuracy: 0.00001)
+        XCTAssertEqual(mid_in, -1.5625, accuracy: 0.00001)
         XCTAssertEqual(end_in, 100)
         
         // easeOut
@@ -226,7 +226,7 @@ class EasingTests: XCTestCase {
         let mid_out = ease_out(50, 0, 100, 100)
         let end_out = ease_out(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_out, 101.5625, accuracy: 0.00001)
+        XCTAssertEqual(mid_out, 101.5625, accuracy: 0.00001)
         XCTAssertEqual(end_out, 100)
         
         // easeInOut
@@ -244,7 +244,7 @@ class EasingTests: XCTestCase {
         let mid_in = ease_in(50, 0, 100, 100)
         let end_in = ease_in(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_in, -8.76975, accuracy: 0.000001)
+        XCTAssertEqual(mid_in, -8.76975, accuracy: 0.000001)
         XCTAssertEqual(end_in, 100)
         
         // easeOut
@@ -252,7 +252,7 @@ class EasingTests: XCTestCase {
         let mid_out = ease_out(50, 0, 100, 100)
         let end_out = ease_out(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_out, 108.76975, accuracy: 0.000001)
+        XCTAssertEqual(mid_out, 108.76975, accuracy: 0.000001)
         XCTAssertEqual(end_out, 100)
         
         // easeInOut
@@ -270,7 +270,7 @@ class EasingTests: XCTestCase {
         let mid_in = ease_in(50, 0, 100, 100)
         let end_in = ease_in(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_in, 23.4375, accuracy: 0.00001)
+        XCTAssertEqual(mid_in, 23.4375, accuracy: 0.00001)
         XCTAssertEqual(end_in, 100)
         
         // easeOut
@@ -278,7 +278,7 @@ class EasingTests: XCTestCase {
         let mid_out = ease_out(50, 0, 100, 100)
         let end_out = ease_out(100, 0, 100, 100)
         
-        XCTAssertEqualWithAccuracy(mid_out, 76.5625, accuracy: 0.00001)
+        XCTAssertEqual(mid_out, 76.5625, accuracy: 0.00001)
         XCTAssertEqual(end_out, 100)
         
         // easeInOut

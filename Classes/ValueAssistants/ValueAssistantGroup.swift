@@ -3,7 +3,7 @@
 //  MotionMachine
 //
 //  Created by Brett Walker on 5/18/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -55,13 +55,16 @@ public class ValueAssistantGroup : ValueAssistant {
      *  - parameters:
      *      - assistants: An optional array of `ValueAssistant` objects to which the ValueAssistantGroup should delegate `ValueAssistant` method calls.
      */
-    public init(assistants: [ValueAssistant]? = []) {
-        
+    public convenience init(assistants: [ValueAssistant]? = []) {
+        self.init()
         if let unwrapped_assists = assistants {
             self.assistants = unwrapped_assists
         }
         
     }
+    
+    public required init() {}
+
     
     
     // MARK: Public Methods
@@ -84,16 +87,18 @@ public class ValueAssistantGroup : ValueAssistant {
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(fromObject object: AnyObject, keyPath path: String, targetObject target: AnyObject) -> [PropertyData] {
+    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+        
         var properties: [PropertyData] = []
         
         for assistant in assistants {
-            if (assistant.supports(object)) {
-                if let generated = try? assistant.generateProperties(fromObject: object, keyPath: path, targetObject: target) {
-                    properties = generated
+            if (assistant.supports(propertyStates.end as AnyObject)) {
+                if let generated = try? assistant.generateProperties(targetObject: target, propertyStates: propertyStates) {
+                    properties += generated
                     break
                 }
             }
+            
         }
         
         return properties
