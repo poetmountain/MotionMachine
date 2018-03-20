@@ -29,11 +29,5 @@ import PackageDescription
 
 let package = Package(
     name: "MotionMachine",
-    products: [
-        .library(name: "MotionMachine", targets: ["MotionMachine"]),
-    ],
-    targets: [
-        .target(name: "MotionMachine", dependencies: [], sources: "Sources"),
-    ],
     swiftLanguageVersions: [4]
 )
