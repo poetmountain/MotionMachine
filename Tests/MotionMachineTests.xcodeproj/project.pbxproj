@@ -135,7 +135,7 @@
 		8B62C0081CEF9C0F0087727A = {
 			isa = PBXGroup;
 			children = (
-				8BA84FF4205F206C00F1FA7B /* Classes */,
+				8BA84FF4205F206C00F1FA7B /* Sources */,
 				8B62C0AC1CEFA3730087727A /* Info.plist */,
 				8B62C0341CEF9CA80087727A /* Tests */,
 				8B62C0BA1CF014210087727A /* App */,
@@ -192,7 +192,7 @@
 			name = ValueAssistants;
 			sourceTree = "<group>";
 		};
-		8BA84FF4205F206C00F1FA7B /* Classes */ = {
+		8BA84FF4205F206C00F1FA7B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				8BA84FF5205F206C00F1FA7B /* Motion.swift */,
@@ -210,8 +210,8 @@
 				8BA8500C205F206C00F1FA7B /* TimerTempo.swift */,
 				8BA8500D205F206C00F1FA7B /* ValueAssistants */,
 			);
-			name = Classes;
-			path = ../Classes;
+			name = Sources;
+			path = ../Sources;
 			sourceTree = "<group>";
 		};
 		8BA84FFA205F206C00F1FA7B /* EasingTypes */ = {

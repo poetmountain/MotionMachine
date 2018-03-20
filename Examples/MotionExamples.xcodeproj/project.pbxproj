@@ -105,7 +105,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8BA8502F205F73E100F1FA7B /* Classes */ = {
+		8BA8502F205F73E100F1FA7B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				8BA85030205F73E100F1FA7B /* Motion.swift */,
@@ -123,8 +123,8 @@
 				8BA85047205F73E100F1FA7B /* TimerTempo.swift */,
 				8BA85048205F73E100F1FA7B /* ValueAssistants */,
 			);
-			name = Classes;
-			path = ../Classes;
+			name = Sources;
+			path = ../Sources;
 			sourceTree = "<group>";
 		};
 		8BA85035205F73E100F1FA7B /* EasingTypes */ = {
@@ -160,7 +160,7 @@
 		8BB379CB1CFFA17D00A35AFD = {
 			isa = PBXGroup;
 			children = (
-				8BA8502F205F73E100F1FA7B /* Classes */,
+				8BA8502F205F73E100F1FA7B /* Sources */,
 				8BB379D61CFFA17E00A35AFD /* MotionExamples */,
 				8BB379D51CFFA17D00A35AFD /* Products */,
 			);
