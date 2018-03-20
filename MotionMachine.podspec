@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'MotionMachine'
-  s.version = '1.3.0'
+  s.version = '1.3.1'
   s.swift_version = '4.0'
   s.license = { :type => 'MIT' }
   s.summary = 'An elegant, powerful, and modular animation library for Swift.'
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/petsound'
   s.authors = { 'Brett Walker' => 'brett@brettwalker.net' }
   s.source = { :git => 'https://github.com/poetmountain/MotionMachine.git', :tag => "#{s.version}" }
-  s.source_files = 'Classes/**/*.{m,h,swift}'
+  s.source_files = 'Sources/**/*.{m,h,swift}'
   s.frameworks = 'CoreGraphics', 'QuartzCore'
   s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
