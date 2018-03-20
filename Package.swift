@@ -4,8 +4,10 @@ import PackageDescription
 
 let package = Package(
     name: "MotionMachine",
+    products: [
+        .library(name: "MotionMachine", targets: ["MotionMachine"]),
+    ],
     targets: [
-        .target(name: "MotionMachine", dependencies: []),
-        .testTarget(name: "MotionMachineTests", dependencies: []),
+        .target(name: "MotionMachine", dependencies: [], path: "Sources", exclude: "Tests"),
     ]
 )
