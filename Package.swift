@@ -33,7 +33,7 @@ let package = Package(
         .library(name: "MotionMachine", targets: ["MotionMachine"]),
     ],
     targets: [
-        .target(name: "MotionMachine", dependencies: []),
+        .target(name: "MotionMachine", dependencies: [], sources: "Sources"),
     ],
     swiftLanguageVersions: [4]
 )
