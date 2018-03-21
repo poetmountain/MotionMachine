@@ -234,7 +234,7 @@ sequence.start()
 
 
 
-Here is the same `MotionSequence` with its `reversingMode` set to ``contiguous`. You can see how each child motion waits after its forward motion, and then plays their reverse motion in reverse sequence.
+Here is the same `MotionSequence` with its `reversingMode` set to `contiguous`. You can see how each child motion waits after its forward motion, and then plays their reverse motion in reverse sequence.
 
 ```swift
 
