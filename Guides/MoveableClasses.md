@@ -22,7 +22,7 @@ let motion = Motion(target: view,
                    ).start()
 ```
 
-<br />
+
 Here's a really convenient way to animate complex objects. With the statesForProperties convenience initializer we can add  `PropertyStates` objects to easily animate multiple properties by passing in representations of their start and end states for each animation. MotionMachine will take care of the rest. In the case of the frame being animated, the `Motion` initializer will setup animations for the x, width, and height properties because those values change between the two state presentations we've passed in with the `PropertyStates` object.
 
 Notice that we're setting the UIView's `backgroundColor` and the end of the keypath is `blue`. But UIColor doesn't have an accessible `blue` property, you say? True, but `Motion` has a `UIColorAssistant` which understands this syntactic shorthand and knows to update the `blue` component of the UIColor. You can use this path structure for any of UIColor's value components. MotionMachine comes with many value assistants by default which provide similar shortcuts to Foundation objects, and you can extend this functionality with your own assistants.
@@ -36,7 +36,7 @@ let motion = Motion(target: view,
                    ).start()
 ```
 
-<br />
+
 That's fairly compact, but by using the `finalState:` init parameter we can supply objects that represent the final state. `Motion` will use these state objects to create `PropertyData` objects for values that are different than the object's current state. This example provides the final state of a UIView's frame. You could also for instance provide a UIColor object for the UIView's backgroundColor, or both the CGRect and the UIColor! For complex animations this can be a timesaver and a bit more compact.
 ```swift
 let motion = Motion(target: view,
@@ -46,7 +46,7 @@ let motion = Motion(target: view,
                    ).start()
 ```
 
-<br />
+
 To create more complex movements you can set other behaviors in the `options:` init parameter by using one or more `MotionOptions` value. For example, you can set a `Motion` to repeat its motion cycle, to reverse the direction of the value's movement, or both at the same time. A *motion cycle* is one cycle of a `Motion`'s specified value movements. For a normal motion, that will be a movement from the starting values to the ending values. For a reversing motion, a motion cycle comprises both the forward movement and the reverse movement. Thus, a `Motion` that is both reversing and repeating will repeat its motion after moving forwards and then returning back to its starting values.
 
 Note that if you don't set a value to `repeatCycles`, the `Motion` will repeat infinitely.
@@ -60,7 +60,7 @@ motion.repeatCycles = 1
 motion.start()
 ```
 
-<br />
+
 An alternate and more succinct way to set up a repeating `Motion` is to use the chained method `repeats(numberOfCycles:)`. We'll also add the chained method `.reverses(withEasing:)` to tell the `Motion` to reverse and give it a separate easing equation when reversing. Note that you don't need to pass in the `.Repeat` and `.Reverse` init options when using these methods, so we omitted that parameter.
 ```swift
 let motion = Motion(target: view,
@@ -72,7 +72,7 @@ let motion = Motion(target: view,
 .start()
 ```
 
-<br />
+
 #### Easing Equations
 
 MotionMachine includes all the standard Robert Penner easing equations, which are available to `Motion`. All of the easing types have `easeIn()`, `easeOut()`, and `easeInOut()` methods, except for `EasingLinear` which only has `easeNone()`. Of course you can also use your own custom easing equations with `Motion` by conforming to the `EasingUpdateClosure` type.
@@ -90,7 +90,7 @@ MotionMachine includes all the standard Robert Penner easing equations, which ar
 * EasingBounce
 * EasingBack
 
-<br />
+
 ## PhysicsMotion
 
 `PhysicsMotion` uses a keyPath (i.e. "frame.origin.x") to target specific properties of an object and transform their values, using a physics system to update values with decaying velocity. The physics system conforms to the `PhysicsSolving` protocol, and though `PhysicsMotion` uses the (very basic) `PhysicsSystem` class by default you can replace it with your own custom `PhysicsSolving` system.
@@ -104,7 +104,7 @@ let motion = PhysicsMotion(target: view,
                           ).start()
 ```
 
-<br />
+
 Although `PhysicsMotion` uses a physics simulation instead of specifying discrete ending values, we can still apply `.Repeat` and `.Reverse` options, and `PhysicsMotion` has the same chainable `repeats()` method. Repeating and reversing act in the same way as `Motion` and interacts with `MoveableCollection` classes as you would expect.
 ```swift
 let motion = PhysicsMotion(target: view,
@@ -115,8 +115,7 @@ let motion = PhysicsMotion(target: view,
 .repeats(1).start()
 ```
 
-<br />
-<br />
+
 ## MotionGroup
 
 `MotionGroup` is a `MoveableCollection` class that manages a group of `Moveable` objects, controlling their movements in parallel.. It's handy for controlling and synchronizing multiple `Moveable` objects. `MotionGroup` can hold `Motion` objects and even other `MoveableCollection` objects. As with all `Moveable` classes, you can `pause()` and `resume()` a `MotionGroup`, which pauses and resumes all of its child motions.
@@ -129,7 +128,7 @@ let motion2 = Motion(view2, property: PropertyData("frame.origin.y", 200.0), dur
 let group = MotionGroup(motions: [motion1, motion2]).start()
 ```
 
-<br />
+
 If you don't need to do anything individually with the child objects of a `MotionGroup`, you can just instantiate them directly; the `MotionGroup` will keep a reference to all objects it manages. In this example we're creating `Motion` objects within the `add(motion:)` method, which is chainable with the constructor.
 
 Note that we've added a `reverses(syncsChildMotions:)` method to the init chain, which tells the `MotionGroup` to set all of its child motions to reverse. Passing `true` to the `syncsChildMotions:` parameter specifies that the `MotionGroup` should synchronize its child motions before reversing their movement direction. That is, the `Motion` with the `duration` of 1.0 will wait until the `Motion` with a 1.2 second duration has finished its forward movement. Only then will both reverse directions and move back to their starting values.
@@ -147,7 +146,7 @@ let group = MotionGroup()
 .start()
 
 ```
-<br />
+
 
 `Motion` objects have just been used so far to populate each `MotionGroup`, but any `Moveable` class can be added. In this example we're adding a `Motion` and another `MotionGroup` to a different `MotionGroup` which is set to reverse. Reversing and repeating options work as expected with child groups. You can build up very complex motions by nesting groups like this, as many levels deep as you need.
 ```swift
@@ -169,8 +168,8 @@ let group2 = MotionGroup(options: [.Reverse])
             easing: EasingSine.easeInOut()))
 .start()
 ```
-<br />
-<br />
+
+
 ## MotionSequence
 
 `MotionSequence` is a `MoveableCollection` class which moves a collection of `Moveable` objects in sequential order. `MotionSequence` provides a powerful and easy way of chaining together individual motions to create complex animations. `MotionSequence` can hold `Motion` objects and even other `MoveableCollection` objects. The order of its `steps` Array property is the order in which the sequence steps are triggered.
@@ -182,7 +181,8 @@ let motion2 = Motion(view, property: PropertyData("frame.origin.y", 300.0), dura
 
 let sequence = MotionSequence(steps: [motion1, motion2]).start()
 ```
-<br />
+
+
 As with `MotionGroup`, if you don't need to do anything individually the child objects of a `MotionSequence`, you can instantiate them directly; the `MotionSequence` will keep a reference to all objects it manages. In this example we're creating `Motion` objects with the `add(motion:)` method, which is chainable with the constructor. These motions will be triggered in the order they are added.
 ```swift
 let sequence = MotionSequence(options: [.Reverse])
@@ -197,7 +197,7 @@ let sequence = MotionSequence(options: [.Reverse])
 .start()
 ```
 
-<br />
+
 One of the most powerful aspects of `MotionSequence` is the ability for it to coordinate the movements of its child motions when it is reversing. This is set with the `reversingMode` property, or by passing a `CollectionReversingMode` value into the chainable `.reverses(_:)` method as shown in the example below. When in `sequential` mode, all of its sequence steps will move in a forward direction when the `MotionSequence` is reversing direction. That is, when reversing the `MotionSequence` will signal each of its `Moveable` steps to move normally, just in a reversed order. This mode is useful if for example you have a series of lights that should blink on and off in sequential order, and the only thing that should change is the order in which they blink. But the `contiguous` mode is where things get interesting. When in this mode and the `MotionSequence` is moving in the reverse direction, the values of each sequence step will move in reverse, and in reverse order, thus giving the effect that the whole sequence is fluidly moving in reverse. This is a really powerful way of making many separate animations appear to be a single animation when reversing.
 
 In the below example, four circles are set up to animate their topAnchor constraints and then reverse. Each of these `MotionGroup` objects is then added to a `MotionSequence` which also reverses, with its `reversingMode` set to `sequential` in order to have each circle motion play and reverse independently and serially.
@@ -277,7 +277,7 @@ let motion = Motion(square, duration: 2.0, property: PropertyData("frame.origin.
 })
 ```
 
-<br />
+
 ## Supported Value Types
 
 `Motion` and `PhysicsMotion` use classes that conform to the `ValueAssistant` protocol to retrieve and update property values. Several assistants for common Quartz and UIKit framework value types are included in MotionMachine. These assistants provide direct keypath access to struct properties that wouldn't be directly accessible, such as the `width` property of a CGSize struct. You can also add your own custom assistants to extend the types that `Motion` and `PhysicsMotion` can work with.

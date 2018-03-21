@@ -58,12 +58,12 @@ let group = MotionGroup()
 .start()
 ```
 
-<br />
+
 #### How does this work?
 
 All of the included motion classes in MotionMachine adopt the `Moveable` protocol, which enables them to work seamlessly together. By using the `MotionGroup` and `MotionSequence` collection classes to control multiple motion objects – even nesting multiple layers – you can create complex animations with little effort. If you want to use your own custom motion classes within the MotionMachine ecosystem, simply have them adopt the `Moveable` protocol. However, the base `Motion` class offers such modularity that in most cases you can just add to or replace the components you need with your own implementation.
 
-<br />
+
 #### Motion
 
 `Motion` uses a KVC keyPath (i.e. "frame.origin.x") to target specific properties of an object and transform their values over a period of time via an easing equation. In this example, we pass in `PropertyStates` structs to the statesForProperties convenience initializer to provide ending value states for the transform and backgroundColor properties of the target object.
@@ -86,7 +86,7 @@ motion = Motion(target: circle,
 
 ![Motion animation](Guides/mm_motion.gif)
 
-<br />
+
 #### MotionGroup
 
 `MotionGroup` is a `MoveableCollection` class that manages a group of `Moveable` objects, controlling their movements in parallel. It's handy for controlling and synchronizing multiple `Moveable` objects. `MotionGroup` can even control other `MoveableCollection` objects. In the below example, we told the MotionGroup to reverse and synchronize its child motions while doing so. What this means is that it will pause all motions after the forward movement is done, and only then will it reverse them. In this case, the horizontal movements pause while waiting for the Motion which modifies the second circle's backgroundColor to finish its 3 second duration.
@@ -124,7 +124,7 @@ group.add(color)
 
 ![MotionGroup animation](Guides/mm_group.gif)
 
-<br />
+
 #### MotionSequence
 
 `MotionSequence` is a `MoveableCollection` class which moves a collection of `Moveable` objects in sequential order, even other `MoveableCollection` objects. `MotionSequence` provides a powerful and easy way of chaining together value transformations of object properties to do keyframing or to create complex and fluid compound animations of many objects.
