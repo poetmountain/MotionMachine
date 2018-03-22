@@ -581,6 +581,92 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine0A7SupportV17buildPropertyDataAA0eF0VSgSS4path_SdSg13originalValueAI05startI0Sd03endI0tFZ"></a>
+                    <a name="//apple_ref/swift/Method/buildPropertyData(path:originalValue:startValue:endValue:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine0A7SupportV17buildPropertyDataAA0eF0VSgSS4path_SdSg13originalValueAI05startI0Sd03endI0tFZ">buildPropertyData(path:originalValue:startValue:endValue:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builds and returns a <code><a href="../Structs/PropertyData.html">PropertyData</a></code> object if the values you supply pass one of the following tests: 1) there&rsquo;s a specified start value and that value is different than either the original value or the ending value, or 2) there&rsquo;s just an original value and that value is different than the ending value, or 3) there&rsquo;s no start value passed in, which will return a <code><a href="../Structs/PropertyData.html">PropertyData</a></code> object with only an end value. In cases 1 and 2, a <code><a href="../Structs/PropertyData.html">PropertyData</a></code> object with both start and end values will be returned. In the third case, a <code><a href="../Structs/PropertyData.html">PropertyData</a></code> object that only has an ending value will be returned. If all those tests fail, no object will be returned.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">buildPropertyData</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">originalValue</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span><span class="o">=</span><span class="kc">nil</span><span class="p">,</span> <span class="nv">startValue</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?,</span> <span class="nv">endValue</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/PropertyData.html">PropertyData</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A base path to be used for the <code><a href="../Structs/PropertyData.html">PropertyData</a></code>&lsquo;s <code>path</code> property.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>originalValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional value representing the current value of the target object property.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>startValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional value to be supplied to the <code><a href="../Structs/PropertyData.html">PropertyData</a></code>&lsquo;s <code>start</code> property.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>endValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A value to be supplied to the <code><a href="../Structs/PropertyData.html">PropertyData</a></code>&lsquo;s <code>end</code> property.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An optional <code><a href="../Structs/PropertyData.html">PropertyData</a></code> object using the supplied values.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
