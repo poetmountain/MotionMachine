@@ -587,6 +587,9 @@ func ≈≈ (a: Double, b: Double) -> Bool {
     
 }
 
+/// Custom operators to do a "fuzzy" not-equal comparison of floating-point numbers.
+/// The fuzzy equal character is created using the Option-X key combination.
+/// see: http://stackoverflow.com/questions/4915462/how-should-i-do-floating-point-comparison
 infix operator !≈ : ComparisonPrecedence
 
 func !≈ (a: Float, b: Float) -> Bool {

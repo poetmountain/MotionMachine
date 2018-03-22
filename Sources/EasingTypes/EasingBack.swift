@@ -27,8 +27,9 @@
 import Foundation
 
 /**
- *  EasingBack provides easing equations which move beyond the specified starting and ending values and snap back, as if attached to a rubber band.
+ *  EasingBack provides easing equations which move beyond the specified starting and ending values and snap back, as if attached to a rubber band. With modest overshoot values, this easing type can provide a more organic feel when animating visual elements like UIViews and UI.
  *
+ *  - remark: See http://easings.net for visual examples.
  *  - warning: These equations produce easing values extending beyond the starting and ending values, which may produce unpredictable results for properties which have strict bounds limits.
  */
 public struct EasingBack {

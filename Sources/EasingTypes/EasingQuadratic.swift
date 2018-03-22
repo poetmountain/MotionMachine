@@ -28,6 +28,8 @@ import Foundation
 
 /**
  *  EasingQuadratic provides quadratic easing equations.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingQuadratic {
     

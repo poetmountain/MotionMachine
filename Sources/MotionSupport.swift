@@ -186,6 +186,34 @@ public struct MotionSupport {
         return selector
     }
     
+    /**
+     *  Builds and returns a `PropertyData` object if the values you supply pass one of the following tests: 1) there's a specified start value and that value is different than either the original value or the ending value, or 2) there's just an original value and that value is different than the ending value, or 3) there's no start value passed in, which will return a `PropertyData` object with only an end value. In cases 1 and 2, a `PropertyData` object with both start and end values will be returned. In the third case, a `PropertyData` object that only has an ending value will be returned. If all those tests fail, no object will be returned.
+     *
+     *  - parameter path: A base path to be used for the `PropertyData`'s `path` property.
+     *  - parameter originalValue: An optional value representing the current value of the target object property.
+     *  - parameter startValue: An optional value to be supplied to the `PropertyData`'s `start` property.
+     *  - parameter endValue: A value to be supplied to the `PropertyData`'s `end` property.
+     *  - returns: An optional `PropertyData` object using the supplied values.
+     */
+    public static func buildPropertyData(path: String, originalValue: Double?=nil, startValue: Double?, endValue: Double) -> PropertyData? {
+        var data: PropertyData?
+        
+        if let unwrapped_start = startValue {
+            if ((originalValue != nil && unwrapped_start !≈ originalValue!) || endValue !≈ unwrapped_start) {
+                data = PropertyData(path: path, start: unwrapped_start, end: endValue)
+            }
+        } else if let unwrapped_org = originalValue {
+            if (endValue !≈ unwrapped_org) {
+                data = PropertyData(path: path, start: unwrapped_org, end: endValue)
+            }
+        } else {
+            data = PropertyData(path: path, end: endValue)
+
+        }
+        
+        return data
+    }
+    
 }
 
 // MARK: - Declarations
@@ -205,13 +233,13 @@ public enum ValueStructTypes {
     #endif
     case unsupported
     
-    static var valueTypes: [ValueStructTypes: UnsafePointer<Int8>] = [ValueStructTypes.number : NSNumber.init(value: 0).objCType,
-                                                                  ValueStructTypes.point : NSValue(cgPoint: CGPoint.zero).objCType,
-                                                                  ValueStructTypes.size : NSValue(cgSize: CGSize.zero).objCType,
-                                                                  ValueStructTypes.rect : NSValue(cgRect: CGRect.zero).objCType,
-                                                                  ValueStructTypes.vector : NSValue(cgVector: CGVector(dx: 0.0, dy: 0.0)).objCType,
-                                                                  ValueStructTypes.affineTransform : NSValue(cgAffineTransform: CGAffineTransform.identity).objCType,
-                                                                  ValueStructTypes.transform3D : NSValue.init(caTransform3D: CATransform3DIdentity).objCType
+    static var valueTypes: [ValueStructTypes: NSValue] = [ValueStructTypes.number : NSNumber.init(value: 0),
+                                                                  ValueStructTypes.point : NSValue(cgPoint: CGPoint.zero),
+                                                                  ValueStructTypes.size : NSValue(cgSize: CGSize.zero),
+                                                                  ValueStructTypes.rect : NSValue(cgRect: CGRect.zero),
+                                                                  ValueStructTypes.vector : NSValue(cgVector: CGVector(dx: 0.0, dy: 0.0)),
+                                                                  ValueStructTypes.affineTransform : NSValue(cgAffineTransform: CGAffineTransform.identity),
+                                                                  ValueStructTypes.transform3D : NSValue.init(caTransform3D: CATransform3DIdentity)
     ]
     
     
@@ -219,7 +247,7 @@ public enum ValueStructTypes {
      *  Provides a C string returned by Foundation's `objCType` method for a specific ValueStructTypes type; this represents a specific Objective-C type. This is useful for Foundation structs which can't be used with Swift's `as` type checking.
      */
     func toObjCType() -> UnsafePointer<Int8> {
-        guard let type_value = ValueStructTypes.valueTypes[self] else { return NSNumber(value: false).objCType }
+        guard let type_value = ValueStructTypes.valueTypes[self]?.objCType else { return NSNumber(value: false).objCType }
         
         return type_value
     }

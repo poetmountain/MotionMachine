@@ -31,16 +31,68 @@ class CGStructAssistantTests: XCTestCase {
                 // should test that ending property states were captured and start states are set to existing rect values
                 XCTAssertEqual(y_prop.path, "rect.origin.y")
                 XCTAssertEqual(y_prop.start, 0.0)
-                XCTAssertEqual(y_prop.end, 20.0)
+                XCTAssertEqual(y_prop.end, Double(end_rect.origin.y))
                 XCTAssertEqual(width_prop.path, "rect.size.width")
                 XCTAssertEqual(width_prop.start, 0.0)
-                XCTAssertEqual(width_prop.end, 50.0)
+                XCTAssertEqual(width_prop.end, Double(end_rect.size.width))
                 XCTAssertEqual(height_prop.path, "rect.size.height")
                 XCTAssertEqual(height_prop.start, 0.0)
-                XCTAssertEqual(height_prop.end, 100.0)
+                XCTAssertEqual(height_prop.end, Double(end_rect.size.height))
             }
         }
         
+    }
+    
+    func test_generateProperties_rect_origin() {
+        let assistant = CGStructAssistant()
+        let tester = Tester()
+        let end_pt = CGPoint(x: 50.0, y: 75.0)
+        let path = "rect.origin"
+        if let end_val = CGStructAssistant.valueForCGStruct(end_pt) {
+            let states = PropertyStates(path: path, end: end_val)
+            let props = try! assistant.generateProperties(targetObject: tester as AnyObject, propertyStates: states)
+            
+            // should have 2 props because both props changed
+            XCTAssertEqual(props.count, 2)
+            
+            if (props.count == 2) {
+                let x_prop = props[0]
+                let y_prop = props[1]
+                // should test that ending property states were captured and start states are set to existing rect origin
+                XCTAssertEqual(x_prop.path, "rect.origin.x")
+                XCTAssertEqual(x_prop.start, 0.0)
+                XCTAssertEqual(x_prop.end, Double(end_pt.x))
+                XCTAssertEqual(y_prop.path, "rect.origin.y")
+                XCTAssertEqual(y_prop.start, 0.0)
+                XCTAssertEqual(y_prop.end, Double(end_pt.y))
+            }
+        }
+    }
+    
+    func test_generateProperties_rect_size() {
+        let assistant = CGStructAssistant()
+        let tester = Tester()
+        let end_size = CGSize(width: 100.0, height: 150.0)
+        let path = "rect.size"
+        if let end_val = CGStructAssistant.valueForCGStruct(end_size) {
+            let states = PropertyStates(path: path, end: end_val)
+            let props = try! assistant.generateProperties(targetObject: tester as AnyObject, propertyStates: states)
+            
+            // should have 2 props because both props changed
+            XCTAssertEqual(props.count, 2)
+            
+            if (props.count == 2) {
+                let width_prop = props[0]
+                let height_prop = props[1]
+                // should test that ending property states were captured and start states are set to existing rect size
+                XCTAssertEqual(width_prop.path, "rect.size.width")
+                XCTAssertEqual(width_prop.start, 0.0)
+                XCTAssertEqual(width_prop.end, Double(end_size.width))
+                XCTAssertEqual(height_prop.path, "rect.size.height")
+                XCTAssertEqual(height_prop.start, 0.0)
+                XCTAssertEqual(height_prop.end, Double(end_size.height))
+            }
+        }
     }
     
     func test_generateProperties_start_states() {
@@ -75,6 +127,31 @@ class CGStructAssistantTests: XCTestCase {
             }
         }
         
+    }
+    
+    // test to make sure sub-CGStructs get starting states set
+    func test_generateProperties_rect_size_with_start_states() {
+        let assistant = CGStructAssistant()
+        let tester = Tester()
+        let start_size = CGSize(width: 20.0, height: 50.0)
+        let end_size = CGSize(width: 20.0, height: 150.0)
+        let path = "rect.size"
+        if let start_val = CGStructAssistant.valueForCGStruct(start_size), let end_val = CGStructAssistant.valueForCGStruct(end_size) {
+            let states = PropertyStates(path: path, start: start_val, end: end_val)
+            let props = try! assistant.generateProperties(targetObject: tester as AnyObject, propertyStates: states)
+            
+            // this tests that optimization comparison is done between start and end values of PropertyStates object
+            // start value is different than original rect width, but end value is same so no prop should be generated
+            XCTAssertEqual(props.count, 1)
+            
+            if (props.count == 1) {
+                let height_prop = props[0]
+                // should test that start gets the start value from the PropertyStates object
+                XCTAssertEqual(height_prop.path, "rect.size.height")
+                XCTAssertEqual(height_prop.start, Double(start_size.height))
+                XCTAssertEqual(height_prop.end, Double(end_size.height))
+            }
+        }
     }
     
     func test_generateProperties_vector() {
@@ -118,12 +195,14 @@ class CGStructAssistantTests: XCTestCase {
             let states = PropertyStates(path: path, start: start_val, end: end_val)
             let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
             
-            XCTAssertEqual(props.count, 3)
+            // there are 4 props instead of 3 because if the supplied start value is different than the original prop value
+            // that PropertyData will get created so the starting value gets set, even if start and end are the same
+            XCTAssertEqual(props.count, 4)
             
-            if (props.count == 3) {
-                let d_prop = props[0]
-                let tx_prop = props[1]
-                let ty_prop = props[2]
+            if (props.count == 4) {
+                let d_prop = props[1]
+                let tx_prop = props[2]
+                let ty_prop = props[3]
                 // should test that both the starting and ending property states were captured
                 // the d prop is included by MotionMachine because even though the ending value is equal to the original value,
                 // a different starting value was specified
@@ -152,9 +231,11 @@ class CGStructAssistantTests: XCTestCase {
             let states = PropertyStates(path: path, start: start_val, end: end_val)
             let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
             
-            XCTAssertEqual(props.count, 3)
+            // there are 6 props instead of 3 because if the supplied start value is different than the original prop value
+            // that PropertyData will get created so the starting value gets set, even if start and end are the same
+            XCTAssertEqual(props.count, 6)
             
-            if (props.count == 3) {
+            if (props.count == 6) {
                 let m11_prop = props[0]
                 let m12_prop = props[1]
                 let m13_prop = props[2]
@@ -401,5 +482,27 @@ class CGStructAssistantTests: XCTestCase {
             
         }
         
+    }
+    
+    
+    // MARK: utility methods
+    
+    func test_hasNestedStruct() {
+        let tester = Tester()
+
+        // rect at top level should return false
+        let top_path = "rect"
+        let targets_nested_top = CGStructAssistant.targetsNestedStruct(object: tester, path: top_path)
+        XCTAssertFalse(targets_nested_top)
+        
+        // test that rect in a sub-class should return false
+        let sub_path = "sub.rect"
+        let targets_nested_sub = CGStructAssistant.targetsNestedStruct(object: tester, path: sub_path)
+        XCTAssertFalse(targets_nested_sub)
+        
+        // test that path which includes component of rect returns true
+        let component_path = "sub.rect.origin"
+        let targets_component = CGStructAssistant.targetsNestedStruct(object: tester, path: component_path)
+        XCTAssertTrue(targets_component)
     }
 }

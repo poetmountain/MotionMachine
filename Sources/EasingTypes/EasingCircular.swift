@@ -28,6 +28,8 @@ import Foundation
 
 /**
  *  EasingCircular provides circular easing equations.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingCircular {
     

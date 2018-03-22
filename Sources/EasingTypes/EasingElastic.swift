@@ -28,6 +28,8 @@ import Foundation
 
 /**
  *  EasingElastic provides easing equations that behave in an elastic fashion.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingElastic {
     

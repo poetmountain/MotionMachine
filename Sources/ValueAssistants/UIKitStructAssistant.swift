@@ -45,8 +45,8 @@ public class UIKitStructAssistant : ValueAssistant {
     public required init() {
         // provide support for UIKit structs
         // doesn't seem like there's a better way to extend the enum array from multiple assistants than this?
-        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsets.zero).objCType
-        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffset.zero).objCType
+        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsets.zero)
+        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffset.zero)
     }
     
     

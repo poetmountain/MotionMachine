@@ -28,6 +28,8 @@ import Foundation
 
 /**
  *  EasingQuintic provides quintic easing equations.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingQuintic {
     

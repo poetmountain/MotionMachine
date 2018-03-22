@@ -29,6 +29,8 @@ import Foundation
 /**
  *  EasingBounce provides easing equations that have successively smaller value peaks, like a bouncing ball.
  *
+ *  - remark: See http://easings.net for visual examples.
+ *
  */
 public struct EasingBounce {
     

@@ -27,7 +27,9 @@
 import Foundation
 
 /**
- *  EasingLinear provides a linear easing equation.
+ *  EasingLinear provides a linear easing equation, which increments by a constant value over time.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingLinear {
 

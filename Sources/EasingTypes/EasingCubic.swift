@@ -28,6 +28,8 @@ import Foundation
 
 /**
  *  EasingCubic provides cubic easing equations.
+ *
+ *  - remark: See http://easings.net for visual examples.
  */
 public struct EasingCubic {
     

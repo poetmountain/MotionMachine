@@ -588,7 +588,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         _tempo?.delegate = self
         
         if let unwrapped_states = statesForProperties {
-            properties = buildPropertyData(forObject: targetObject,  propertyStates: unwrapped_states)
+            properties = buildPropertyData(forObject: targetObject,  statesForProperties: unwrapped_states)
         }
         
         for property in properties {
@@ -692,18 +692,24 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  Builds `PropertyData` objects for the supplied PropertyStates objects.
      *
      *  - parameter forObject: The object to be modified, and the base object for the paths of the `PropertyStates` objects.
-     *  - parameter propertyStates: An Array of `PropertyStates` objects that define how the `PropertyData` objects are constructed.
+     *  - parameter statesForProperties: An Array of `PropertyStates` objects that define how the `PropertyData` objects are constructed.
      *  - remark: This method is used internally by the initializer when the `statesForProperties` convenience method is used, but you can also call it directly to build an array of `PropertyData` objects.
      *  - returns: An Array of `PropertyData` objects.
      */
-    public func buildPropertyData(forObject targetObject: AnyObject, propertyStates: [PropertyStates]) -> [PropertyData] {
+    public func buildPropertyData(forObject targetObject: AnyObject, statesForProperties: [PropertyStates]) -> [PropertyData] {
         var data: [PropertyData] = []
         
-        for var property_states in propertyStates {
+        for var property_states in statesForProperties {
             var tobj: AnyObject = targetObject
             if (property_states.path != "" && valueAssistant.acceptsKeypath(targetObject)) {
-                if let tvalue = targetObject.value(forKeyPath: property_states.path) as AnyObject? {
-                    tobj = tvalue
+                
+                // here we search for a nested struct by traversing the keyPath
+                // protects from a runtime exception since calling value(forKeyPath:) on a nested CG struct (aka CGRect) will tend to do that
+                let is_nested_struct = CGStructAssistant.targetsNestedStruct(object: targetObject, path: property_states.path)
+                if (!is_nested_struct) {
+                    if let tvalue = targetObject.value(forKeyPath: property_states.path) as AnyObject? {
+                        tobj = tvalue
+                    }
                 }
             }
             
@@ -885,7 +891,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - parameter property: The `PropertyData` instance to modify.
      */
     private func assignStartingPropertyValue(_ property: inout PropertyData) {
-        if (property.useExistingStartValue && completedCount == 0) {
+        if ((property.useExistingStartValue || property.start == 0) && completedCount == 0) {
             if let current_value = valueAssistant.retrieveCurrentObjectValue(forProperty: property) {
                 property.start = current_value
             }
@@ -931,7 +937,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
     }
     
-    
+
     
     
     /**
