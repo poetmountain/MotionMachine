@@ -4,11 +4,7 @@
 ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20tvOS-005AA5.svg)
 ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
-MotionMachine is a powerful yet elegant animation library for Swift. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. But MotionMachine also makes it easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
-
-## Overview
-
-MotionMachine provides a modular, generic platform for manipulating values. Its animation engine was built from the ground up to support not just UIKit values, but property values of any class you want to manipulate. MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them.
+MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
 
 * Animation engine built from the ground up (not tied to Core Animation).
 * Motions can be grouped, sequenced, and nested in any arrangement and have reversing and repeating actions applied at any level.
@@ -27,7 +23,7 @@ MotionMachine provides a modular, generic platform for manipulating values. Its 
 Also check out the [Examples project](Examples) to see all the MotionMachine classes in action, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
 
 
-#### Example
+## Introduction
 ![MotionGroup animation](Guides/group.gif)
 
 This complex animation was created with the code sample below. These `Motion` classes animate the NSLayoutConstraints of the circle views (_the constraints object in the `target` parameter is a dictionary of NSLayoutConstraint references_) as well as one of their `backgroundColor` properties. A `MotionGroup` object is used to synchronize the four `Motion` objects and reverse their movements.
@@ -61,7 +57,7 @@ let group = MotionGroup()
 
 #### How does this work?
 
-All of the included motion classes in MotionMachine adopt the `Moveable` protocol, which enables them to work seamlessly together. By using the `MotionGroup` and `MotionSequence` collection classes to control multiple motion objects – even nesting multiple layers – you can create complex animations with little effort. If you want to use your own custom motion classes within the MotionMachine ecosystem, simply have them adopt the `Moveable` protocol. However, the base `Motion` class offers such modularity that in most cases you can just add to or replace the components you need with your own implementation.
+All of the included motion classes in MotionMachine adopt the `Moveable` protocol, which enables them to work seamlessly together. By using the `MotionGroup` and `MotionSequence` collection classes to control multiple motion objects – even nesting multiple layers – you can create complex animations with little effort.
 
 
 #### Motion
@@ -166,7 +162,7 @@ If you use CocoaPods, add this pod to your Podfile:
 
 ##### Podfile
 ```ruby
-    pod 'MotionMachine', '~> 1.3.0'
+pod 'MotionMachine', '~> 1.3'
 ```
 
 Or add the Sources directory to your project.
@@ -182,7 +178,7 @@ MotionMachine currently requires:
 
 * MotionMachine uses Key-Value Coding (KVC) to introspect objects and retrieve and set their property values using keypaths. Because Swift currently offers no native ability in this regard, objects whose properties should be modified by MotionMachine must inherit from `NSObject`. If and when more dynamism is added to Swift (and the author of this library hopes that is the case), MotionMachine will hopefully be able to do away with this restriction. Note that as of Swift 4.0, any properties of a custom class you wish to manipulate must be prefixed with `@objc`, or add `@objcMembers` above the class if all properties should be exposed.
 
-* Because native Swift structs cannot inherit from `NSObject`, Swift structs unfortunately cannot be used directly with MotionMachine at this time.
+* Because native Swift structs cannot inherit from `NSObject`, Swift structs unfortunately cannot be used directly with MotionMachine at this time, though you can use them in a keyPath if you're not targeting one of their properties directly.
 
 * The KVC provided by `NSObject` is not able to evaluate Optional values. Properties you wish to modify with MotionMachine must not be Optionals.
 
@@ -190,7 +186,7 @@ MotionMachine currently requires:
 
 ## Credits
 
-MotionMachine was created by [Brett Walker](https://twitter.com/petsound). It is based on the author's Objective-C library [PMTween](https://github.com/poetmountain/PMTween).
+MotionMachine was created by [Brett Walker](https://twitter.com/petsound). It is loosely based on the author's Objective-C library [PMTween](https://github.com/poetmountain/PMTween).
 
 
 ## License
