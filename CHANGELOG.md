@@ -1,3 +1,6 @@
+#### 1.3.3
+- Support for Swift 4.2
+
 #### 1.3.2
 - fixed bugs which prevented some CGStructs from being updated when using `Motion`’s statesForProperties convenience initializer
 - added targetsNestedStruct static method to `CGStructAssistant`, which determines whether a specified keyPath targets a struct of a CGRect
