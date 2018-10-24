@@ -29,5 +29,5 @@ import PackageDescription
 
 let package = Package(
     name: "MotionMachine",
-    swiftLanguageVersions: [4]
+    swiftLanguageVersions: [4.2]
 )
