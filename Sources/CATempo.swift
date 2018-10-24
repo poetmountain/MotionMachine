@@ -47,7 +47,7 @@ public class CATempo : Tempo {
     public override init() {
         super.init()
         displayLink = CADisplayLink.init(target: self, selector: #selector(update))
-        displayLink?.add(to: RunLoop.main, forMode: RunLoopMode(rawValue: RunLoopMode.commonModes.rawValue))
+        displayLink?.add(to: RunLoop.main, forMode: RunLoop.Mode(rawValue: RunLoop.Mode.common.rawValue))
     }
     
     deinit {

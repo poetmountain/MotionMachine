@@ -553,9 +553,9 @@ func ≈≈ (a: Float, b: Float) -> Bool {
         return true
     }
     
-    let fabs_a = fabs(a)
-    let fabs_b = fabs(b)
-    let diff = fabs(fabs_a - fabs_b)
+    let fabs_a = abs(a)
+    let fabs_b = abs(b)
+    let diff = abs(fabs_a - fabs_b)
     
     if (a == 0.0 || b == 0.0 || diff < Float.leastNormalMagnitude) {
         // a or b is zero or both are extremely close to it
