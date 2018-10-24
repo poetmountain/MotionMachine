@@ -45,22 +45,22 @@ public class ButtonsView: UIView {
     private func setupUI() {
         
         startButton = UIButton.init(type: .system)
-        startButton.setTitle("Start", for: UIControlState())
+        startButton.setTitle("Start", for: UIControl.State())
         startButton.addTarget(self, action: #selector(start), for: .touchUpInside)
         self.addSubview(startButton)
         
         stopButton = UIButton.init(type: .system)
-        stopButton.setTitle("Stop", for: UIControlState())
+        stopButton.setTitle("Stop", for: UIControl.State())
         stopButton.addTarget(self, action: #selector(stop), for: .touchUpInside)
         self.addSubview(stopButton)
         
         pauseButton = UIButton.init(type: .system)
-        pauseButton.setTitle("Pause", for: UIControlState())
+        pauseButton.setTitle("Pause", for: UIControl.State())
         pauseButton.addTarget(self, action: #selector(pause), for: .touchUpInside)
         self.addSubview(pauseButton)
         
         resumeButton = UIButton.init(type: .system)
-        resumeButton.setTitle("Resume", for: UIControlState())
+        resumeButton.setTitle("Resume", for: UIControl.State())
         resumeButton.addTarget(self, action: #selector(resume), for: .touchUpInside)
         self.addSubview(resumeButton)
         

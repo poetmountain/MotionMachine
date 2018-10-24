@@ -13,12 +13,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         window = UIWindow.init(frame: UIScreen.main.bounds)
         
         let master_vc = MasterViewController.init()
         let nav = UINavigationController.init()
-        nav.addChildViewController(master_vc)
+        nav.addChild(master_vc)
         window?.rootViewController = nav
         
         window?.makeKeyAndVisible()

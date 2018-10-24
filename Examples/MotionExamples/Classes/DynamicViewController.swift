@@ -138,7 +138,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
     
     @objc func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
-        if (gesture.state != UIGestureRecognizerState.ended) {
+        if (gesture.state != UIGestureRecognizer.State.ended) {
             return;
         }
         
