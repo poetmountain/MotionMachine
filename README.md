@@ -1,6 +1,6 @@
 ![MotionMachine logo](Guides/mmlogo.png)
 
-![swift](https://img.shields.io/badge/Swift-4.0-005AA5.svg)
+![swift](https://img.shields.io/badge/Swift-4.2-005AA5.svg)
 ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20tvOS-005AA5.svg)
 ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
@@ -170,8 +170,8 @@ Or add the Sources directory to your project.
 ## Compatibility
 
 MotionMachine currently requires:
-* Swift 4.0
-* Xcode 9.0 or later
+* Swift 4.2
+* Xcode 10.0 or later
 * iOS 8.0 or later, tvOS 9.0 or later
 
 #### Caveats
