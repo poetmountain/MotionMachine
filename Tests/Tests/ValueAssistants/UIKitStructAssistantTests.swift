@@ -15,7 +15,7 @@ class UIKitStructAssistantTests: XCTestCase {
     func test_generateProperties_UIEdgeInsets() {
         let assistant = UIKitStructAssistant()
         let tester = Tester()
-        let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
+        let insets = UIEdgeInsets(top: 10.0, left: 0.0, bottom: 20.0, right: 0.0)
         let path = "insets"
         if let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
             let states = PropertyStates(path: path, end: val)
@@ -42,8 +42,8 @@ class UIKitStructAssistantTests: XCTestCase {
     func test_generateProperties_UIEdgeInsets_start_state() {
         let assistant = UIKitStructAssistant()
         let tester = Tester()
-        let start_insets = UIEdgeInsetsMake(5.0, 5.0, 10.0, 0.0)
-        let insets = UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0)
+        let start_insets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 10.0, right: 0.0)
+        let insets = UIEdgeInsets(top: 10.0, left: 0.0, bottom: 20.0, right: 0.0)
         let path = "insets"
         if let start_val = UIKitStructAssistant.valueForStruct(start_insets), let val = UIKitStructAssistant.valueForStruct(insets), let target = tester.value(forKeyPath: path) {
             let states = PropertyStates(path: path, start: start_val, end: val)
@@ -77,7 +77,7 @@ class UIKitStructAssistantTests: XCTestCase {
     func test_generateProperties_UIOffset() {
         let assistant = UIKitStructAssistant()
         let tester = Tester()
-        let offset = UIOffsetMake(10.0, 20.0)
+        let offset = UIOffset(horizontal: 10.0, vertical: 20.0)
         let path = "offset"
         if let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
             let states = PropertyStates(path: path, end: val)
@@ -104,8 +104,8 @@ class UIKitStructAssistantTests: XCTestCase {
     func test_generateProperties_UIOffset_start_state() {
         let assistant = UIKitStructAssistant()
         let tester = Tester()
-        let start_offset = UIOffsetMake(5.0, 10.0)
-        let offset = UIOffsetMake(10.0, 20.0)
+        let start_offset = UIOffset(horizontal: 5.0, vertical: 10.0)
+        let offset = UIOffset(horizontal: 10.0, vertical: 20.0)
         let path = "offset"
         if let start_val = UIKitStructAssistant.valueForStruct(start_offset), let val = UIKitStructAssistant.valueForStruct(offset), let target = tester.value(forKeyPath: path) {
             let states = PropertyStates(path: path, start: start_val, end: val)
@@ -159,7 +159,7 @@ class UIKitStructAssistantTests: XCTestCase {
     
     func test_updateValue_UIEdgeOffsets() {
         let assistant = UIKitStructAssistant()
-        var old_value = NSValue.init(uiEdgeInsets: UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0))
+        var old_value = NSValue.init(uiEdgeInsets: UIEdgeInsets(top: 10.0, left: 0.0, bottom: 20.0, right: 0.0))
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["top" : 10.0]) as! NSValue
@@ -168,7 +168,7 @@ class UIKitStructAssistantTests: XCTestCase {
         
         // additive
         assistant.additive = true
-        old_value = NSValue.init(uiEdgeInsets: UIEdgeInsetsMake(1.0, 0.0, 20.0, 0.0))
+        old_value = NSValue.init(uiEdgeInsets: UIEdgeInsets(top: 1.0, left: 0.0, bottom: 20.0, right: 0.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["top" : 10.0]) as! NSValue
         XCTAssertEqual(new_value.uiEdgeInsetsValue.top, 11.0)
         XCTAssertEqual(new_value.uiEdgeInsetsValue.bottom, old_value.uiEdgeInsetsValue.bottom)
@@ -176,7 +176,7 @@ class UIKitStructAssistantTests: XCTestCase {
     
     func test_updateValue_UIOffset() {
         let assistant = UIKitStructAssistant()
-        var old_value = NSValue.init(uiOffset: UIOffsetMake(10.0, 20.0))
+        var old_value = NSValue.init(uiOffset: UIOffset(horizontal: 10.0, vertical: 20.0))
         var new_value: NSValue
         
         new_value = assistant.updateValue(inObject: old_value, newValues: ["horizontal" : 10.0]) as! NSValue
@@ -185,7 +185,7 @@ class UIKitStructAssistantTests: XCTestCase {
         
         // additive
         assistant.additive = true
-        old_value = NSValue.init(uiOffset: UIOffsetMake(1.0, 20.0))
+        old_value = NSValue.init(uiOffset: UIOffset(horizontal: 1.0, vertical: 20.0))
         new_value = assistant.updateValue(inObject: old_value, newValues: ["horizontal" : 10.0]) as! NSValue
         XCTAssertEqual(new_value.uiOffsetValue.horizontal, 11.0)
         XCTAssertEqual(new_value.uiOffsetValue.vertical, old_value.uiOffsetValue.vertical)
@@ -196,14 +196,14 @@ class UIKitStructAssistantTests: XCTestCase {
     
     func test_retrieveValue_UIEdgeInsets() {
         let assistant = UIKitStructAssistant()
-        let object = NSValue.init(uiEdgeInsets: UIEdgeInsetsMake(10.0, 0.0, 20.0, 0.0))
+        let object = NSValue.init(uiEdgeInsets: UIEdgeInsets(top: 10.0, left: 0.0, bottom: 20.0, right: 0.0))
         let value = try! assistant.retrieveValue(inObject: object, keyPath: "top")
         XCTAssertEqual(value, 10.0)
     }
     
     func test_retrieveValue_UIOffset() {
         let assistant = UIKitStructAssistant()
-        let object = NSValue.init(uiOffset: UIOffsetMake(10.0, 20.0))
+        let object = NSValue.init(uiOffset: UIOffset(horizontal: 10.0, vertical: 20.0))
         let value = try! assistant.retrieveValue(inObject: object, keyPath: "horizontal")
         XCTAssertEqual(value, 10.0)
     }
