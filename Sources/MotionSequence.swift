@@ -574,7 +574,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     public func remove(_ sequenceStep: Moveable) {
         
         // first grab the index of the object in the motions array so we can remove the corresponding tempoOverrides value
-        let index = steps.index {
+        let index = steps.firstIndex {
             $0 == sequenceStep
         }
         

@@ -555,7 +555,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     public func remove(_ motion: Moveable) {
         
         // first grab the index of the object in the motions array so we can remove the corresponding tempoOverrides value
-        let index = motions.index {
+        let index = motions.firstIndex {
             $0 == motion
         }
         if let motion_index = index {

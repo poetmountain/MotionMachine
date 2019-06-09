@@ -335,7 +335,7 @@ public protocol ValueAssistant {
 
 public extension ValueAssistant {
     
-    public func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
+    func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
         
         guard let unwrapped_object = property.targetObject else { return nil }
         
@@ -355,7 +355,7 @@ public extension ValueAssistant {
 // utility methods for ValueAssistant
 public extension ValueAssistant {
     
-    public func applyTo(value: inout Double, newValue: Double) {
+    func applyTo(value: inout Double, newValue: Double) {
         if (additive) {
             value += (newValue * additiveWeighting)
         } else {
@@ -364,7 +364,7 @@ public extension ValueAssistant {
         
     }
     
-    public func applyTo(value: inout CGFloat, newValue: CGFloat) {
+    func applyTo(value: inout CGFloat, newValue: CGFloat) {
         if (additive) {
             value += (newValue * CGFloat(additiveWeighting))
         } else {
@@ -372,7 +372,7 @@ public extension ValueAssistant {
         }
     }
     
-    public func lastComponent(forPath path: String) -> String {
+    func lastComponent(forPath path: String) -> String {
         let components = path.components(separatedBy: ".")
         return components.last!
     }
