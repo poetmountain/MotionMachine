@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 
 //  Package.swift
 //  MotionMachine
@@ -29,5 +29,16 @@ import PackageDescription
 
 let package = Package(
     name: "MotionMachine",
-    swiftLanguageVersions: [4.2]
+    platforms: [
+        .iOS(.v8), .tvOS(.v9)
+    ],
+    targets: [
+        .target(name: "MotionMachine", path: "Sources/"),
+        .testTarget(
+          name: "MotionMachineTests",
+          dependencies: ["MotionMachine"],
+          path: "Tests/Tests/"
+      )
+    ],
+    swiftLanguageVersions: [.v5]
 )
