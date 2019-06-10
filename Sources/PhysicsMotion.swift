@@ -547,7 +547,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], velocity: Double, friction: Double, options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], velocity: Double, friction: Double, options: MotionOptions? = .none) {
         
         self.init(targetObject: targetObject, properties: properties, velocity: velocity, friction: friction, options: options)
         
@@ -562,13 +562,13 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, velocity: Double, friction: Double, options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, velocity: Double, friction: Double, options: MotionOptions? = .none) {
         
         self.init(targetObject: targetObject, properties: [], velocity: velocity, friction: friction, options: options)
     }
     
     
-    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, options: MotionOptions?) {
+    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, options: MotionOptions? = .none) {
         
         let properties = props ?? []
         
@@ -583,9 +583,11 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         #endif
         
         // unpack options values
-        repeating = options!.contains(.Repeat)
-        reversing = options!.contains(.Reverse)
-        resetObjectStateOnRepeat = options!.contains(.ResetStateOnRepeat)
+        if let unwrappedOptions = options {
+            repeating = unwrappedOptions.contains(.repeats)
+            reversing = unwrappedOptions.contains(.reverses)
+            resetObjectStateOnRepeat = unwrappedOptions.contains(.resetsStateOnRepeat)
+        }
         
         motionState = .stopped
         motionDirection = .forward

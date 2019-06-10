@@ -522,7 +522,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
         
         self.init(target: targetObject, properties: properties, statesForProperties: nil, duration: duration, easing: easing, options: options)
         
@@ -537,7 +537,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
         
         self.init(target: targetObject, properties: [], statesForProperties: nil, duration: duration, easing: easing, options: options)
     }
@@ -552,13 +552,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, statesForProperties templateObjects: [PropertyStates], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions?=MotionOptions.None) {
+    public convenience init(target targetObject: NSObject, statesForProperties templateObjects: [PropertyStates], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
         
         self.init(target: targetObject, properties: nil, statesForProperties: templateObjects, duration: duration, easing: easing, options: options)
     }
     
     
-    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions?) {
+    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions? = .none) {
         
         var properties = props ?? []
         
@@ -578,9 +578,11 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         #endif
         
         // unpack options values
-        repeating = options!.contains(.Repeat)
-        reversing = options!.contains(.Reverse)
-        resetObjectStateOnRepeat = options!.contains(.ResetStateOnRepeat)
+        if let unwrappedOptions = options {
+            repeating = unwrappedOptions.contains(.repeats)
+            reversing = unwrappedOptions.contains(.reverses)
+            resetObjectStateOnRepeat = unwrappedOptions.contains(.resetsStateOnRepeat)
+        }
         
         motionState = .stopped
         motionDirection = .forward

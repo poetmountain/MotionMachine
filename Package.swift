@@ -32,13 +32,16 @@ let package = Package(
     platforms: [
         .iOS(.v8), .tvOS(.v9)
     ],
+    products: [
+        .library(name: "MotionMachine", targets: ["MotionMachine"])
+    ],
     targets: [
         .target(name: "MotionMachine", path: "Sources/"),
         .testTarget(
-          name: "MotionMachineTests",
-          dependencies: ["MotionMachine"],
-          path: "Tests/Tests/"
-      )
+            name: "MotionMachineTests",
+            dependencies: ["MotionMachine"],
+            path: "Tests/Tests/"
+        )
     ],
     swiftLanguageVersions: [.v5]
 )

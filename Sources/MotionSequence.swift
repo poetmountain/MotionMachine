@@ -485,11 +485,13 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *      - steps: An array of `Moveable` objects the MotionSequence should control. The positions of the objects in the Array will determine the order in which the child motions should move.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public init(steps: [Moveable]=[], options: MotionOptions?=MotionOptions.None) {
+    public init(steps: [Moveable] = [], options: MotionOptions? = .none) {
         
         // unpack options values
-        repeating = options!.contains(.Repeat)
-        _reversing = options!.contains(.Reverse)
+        if let unwrappedOptions = options {
+            repeating = unwrappedOptions.contains(.repeats)
+            _reversing = unwrappedOptions.contains(.reverses)
+        }
         
         motionState = .stopped
         motionDirection = .forward

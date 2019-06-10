@@ -287,7 +287,7 @@ class MotionTests: XCTestCase {
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2, options:[.Repeat])
+        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2, options:[.repeats])
             .cycleRepeated({ (motion) in
                 XCTAssertEqual(motion.totalProgress, 0.5)
                 XCTAssertEqual(motion.cycleProgress, 0.0)
@@ -318,7 +318,7 @@ class MotionTests: XCTestCase {
         let did_reverse = expectation(description: "motion called reversed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.4, options:[.Reverse])
+        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.4, options:[.reverses])
             .reversed({ (motion) in
                 XCTAssertTrue(motion.totalProgress <= 0.5)
                 XCTAssertTrue(motion.cycleProgress <= 0.5)
@@ -348,7 +348,7 @@ class MotionTests: XCTestCase {
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.4, options:[.Reverse, .Repeat])
+        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.4, options:[.reverses, .repeats])
             .reversed({ (motion) in
                 if (motion.cyclesCompletedCount == 0) {
                     XCTAssertTrue(motion.totalProgress <= 0.25)

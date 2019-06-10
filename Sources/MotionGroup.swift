@@ -468,11 +468,13 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *      - motions: An array of `Moveable` objects which the MotionGroup should control.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public init(motions: [Moveable]=[], options: MotionOptions?=MotionOptions.None) {
+    public init(motions: [Moveable] = [], options: MotionOptions? = .none) {
         
         // unpack options values
-        repeating = options!.contains(.Repeat)
-        _reversing = options!.contains(.Reverse)
+        if let unwrappedOptions = options {
+            repeating = unwrappedOptions.contains(.repeats)
+            _reversing = unwrappedOptions.contains(.reverses)
+        }
         
         motionState = .stopped
         motionDirection = .forward
