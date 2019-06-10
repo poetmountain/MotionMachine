@@ -335,7 +335,7 @@ public protocol ValueAssistant {
 
 public extension ValueAssistant {
     
-    public func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
+    func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
         
         guard let unwrapped_object = property.targetObject else { return nil }
         
@@ -355,7 +355,7 @@ public extension ValueAssistant {
 // utility methods for ValueAssistant
 public extension ValueAssistant {
     
-    public func applyTo(value: inout Double, newValue: Double) {
+    func applyTo(value: inout Double, newValue: Double) {
         if (additive) {
             value += (newValue * additiveWeighting)
         } else {
@@ -364,7 +364,7 @@ public extension ValueAssistant {
         
     }
     
-    public func applyTo(value: inout CGFloat, newValue: CGFloat) {
+    func applyTo(value: inout CGFloat, newValue: CGFloat) {
         if (additive) {
             value += (newValue * CGFloat(additiveWeighting))
         } else {
@@ -372,7 +372,7 @@ public extension ValueAssistant {
         }
     }
     
-    public func lastComponent(forPath path: String) -> String {
+    func lastComponent(forPath path: String) -> String {
         let components = path.components(separatedBy: ".")
         return components.last!
     }
@@ -505,20 +505,20 @@ public struct MotionOptions : OptionSet {
     public init(rawValue: Int) { self.rawValue = rawValue }
     
     /// No options are specified.
-    public static let None                     = MotionOptions(rawValue: 0)
+    public static let none                     = MotionOptions(rawValue: 0)
     
     /// Specifies that a motion should repeat.
-    public static let Repeat                   = MotionOptions(rawValue: 1 << 0)
+    public static let repeats                   = MotionOptions(rawValue: 1 << 0)
     
     /// Specifies that a motion should reverse directions after moving in the forward direction.
-    public static let Reverse                  = MotionOptions(rawValue: 1 << 1)
+    public static let reverses                  = MotionOptions(rawValue: 1 << 1)
     
     /**
      *  Specifies that a motion's property (or parent, if property is not KVC-compliant) should be reset to its starting value on repeats or restarts.
      *
      *  - remark: `Motion` and `PhysicsMotion` are the only MotionMachine classes that currently accept this option.
      */
-    public static let ResetStateOnRepeat       = MotionOptions(rawValue: 1 << 2)
+    public static let resetsStateOnRepeat       = MotionOptions(rawValue: 1 << 2)
 }
 
 

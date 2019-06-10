@@ -163,7 +163,7 @@ class PhysicsMotionTests: XCTestCase {
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Repeat])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.repeats])
             .cycleRepeated({ (motion) in
                 XCTAssertEqual(motion.totalProgress, 0.5)
                 XCTAssertEqual(motion.cycleProgress, 0.0)
@@ -192,7 +192,7 @@ class PhysicsMotionTests: XCTestCase {
         let did_reverse = expectation(description: "motion called reversed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Reverse])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.reverses])
             .reversed({ (motion) in
                 XCTAssertTrue(motion.totalProgress <= 0.5)
                 XCTAssertTrue(motion.cycleProgress <= 0.5)
@@ -220,7 +220,7 @@ class PhysicsMotionTests: XCTestCase {
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.Reverse, .Repeat])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.reverses, .repeats])
             .reversed({ (motion) in
                 if (motion.cyclesCompletedCount == 0) {
                     XCTAssertTrue(motion.totalProgress <= 0.25)

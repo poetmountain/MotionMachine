@@ -173,7 +173,7 @@ class MotionSequenceTests: XCTestCase {
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
         
-        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.Repeat])
+        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.repeats])
         .cycleRepeated { (sequence) in
             let motion = sequence.steps.first as! MotionGroup
             XCTAssertTrue(sequence.currentStep() === motion)
@@ -214,7 +214,7 @@ class MotionSequenceTests: XCTestCase {
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
         
-        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.Reverse])
+        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.reverses])
         .reversed({ (sequence) in
             let motion = sequence.steps.last as! Motion
 
@@ -279,7 +279,7 @@ class MotionSequenceTests: XCTestCase {
         let motion5 = Motion(target: tester, properties: [PropertyData("value", 80.0)], duration: 0.2)
         let sub_sequence = MotionSequence(steps: [motion3, motion4])
         
-        let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.Reverse])
+        let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.reverses])
             .reversed({ (sequence) in
                 let motion = sequence.steps.last as! Motion
                 let subsequence = sequence.steps[1] as! MotionSequence
@@ -350,7 +350,7 @@ class MotionSequenceTests: XCTestCase {
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
         let sub_sequence = MotionSequence(steps: [motion3, motion4])
         
-        let sequence = MotionSequence(steps: [group, sub_sequence], options: [.Reverse])
+        let sequence = MotionSequence(steps: [group, sub_sequence], options: [.reverses])
             .reversed({ (sequence) in
                 let motion = sequence.steps.first as! MotionGroup
                 let subsequence = sequence.steps.last as! MotionSequence
@@ -419,7 +419,7 @@ class MotionSequenceTests: XCTestCase {
         let sub_sequence = MotionSequence(steps: [motion3, motion4])
         let motion5 = Motion(target: tester, properties: [PropertyData("value", 80.0)], duration: 0.2)
 
-        let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.Reverse])
+        let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.reverses])
             .reversed({ (sequence) in
                 let motion = sequence.steps.last as! Motion
                 let subsequence = sequence.steps[1] as! MotionSequence
@@ -486,7 +486,7 @@ class MotionSequenceTests: XCTestCase {
         let motion3 = Motion(target: tester, properties: [PropertyData("value", 40.0)], duration: 0.2)
         let motion4 = Motion(target: tester, properties: [PropertyData("value", 60.0)], duration: 0.2)
         
-        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.Reverse])
+        let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.reverses])
             .reversed({ (sequence) in
                 let motion = sequence.steps.last as! Motion
 

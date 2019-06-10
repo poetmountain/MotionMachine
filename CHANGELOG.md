@@ -1,3 +1,9 @@
+#### 2.0.0
+- Support for Swift 5.0
+- Updated syntax in MotionOptions for newer Swift naming conventions
+- Updated Swift package file to newest version, requires Xcode 11 to import
+- Bumped version to 2.0.0 due to breaking change in MotionOptions (Swift Package Manager requires packages use semantic versioning)
+
 #### 1.3.3
 - Support for Swift 4.2
 

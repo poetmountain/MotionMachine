@@ -165,7 +165,7 @@ class MotionGroupTests: XCTestCase {
         let did_repeat = expectation(description: "group called cycleRepeated notify closure")
         let did_complete = expectation(description: "group called completed notify closure")
         
-        let group = MotionGroup(motions: [motion, motion2], options: [.Repeat])
+        let group = MotionGroup(motions: [motion, motion2], options: [.repeats])
         .cycleRepeated({ (group) in
             XCTAssertEqual(group.totalProgress, 0.5)
             XCTAssertEqual(group.cycleProgress, 0.0)
@@ -206,7 +206,7 @@ class MotionGroupTests: XCTestCase {
         let did_reverse = expectation(description: "group called reversed notify closure")
         let did_complete = expectation(description: "group called completed notify closure")
         
-        let group = MotionGroup(motions: [motion, motion2], options: [.Reverse])
+        let group = MotionGroup(motions: [motion, motion2], options: [.reverses])
             .reversed({ (group) in
                 XCTAssertTrue(group.totalProgress <= 0.5)
                 XCTAssertTrue(group.cycleProgress <= 0.5)
