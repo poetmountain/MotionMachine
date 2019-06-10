@@ -158,11 +158,13 @@ sequence.start()
 
 ## Installation
 
+MotionMachine supports Swift Packages in Xcode 11 and above.
+
 If you use CocoaPods, add this pod to your Podfile:
 
 ##### Podfile
 ```ruby
-pod 'MotionMachine', '~> 1.3'
+pod 'MotionMachine', '~> 2.0'
 ```
 
 Or add the Sources directory to your project.
