@@ -257,7 +257,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     
     /// Provides a delegate for updates to a Moveable object's status, used by Moveable collections.
-    public var updateDelegate: MotionUpdateDelegate?
+    public weak var updateDelegate: MotionUpdateDelegate?
     
     
     // MARK: MoveableCollection protocol properties
@@ -468,7 +468,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      *      - motions: An array of `Moveable` objects which the MotionGroup should control.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public init(motions: [Moveable] = [], options: MotionOptions? = .none) {
+    public init(motions: [Moveable] = [], options: MotionOptions? = MotionOptions.none) {
         
         // unpack options values
         if let unwrappedOptions = options {

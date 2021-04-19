@@ -73,7 +73,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
             let group = MotionGroup(motions: [move_right, change_color])
             let expand_group = MotionGroup(motions: [expand_width, expand_height, corner_radius])
             
-            sequence = MotionSequence(steps: [group, move_down, expand_group], options: [.Reverse])
+            sequence = MotionSequence(steps: [group, move_down, expand_group], options: [.reverses])
             .stepCompleted({ (sequence) in
                 print("step complete")
             })
@@ -101,10 +101,9 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
         super.viewWillDisappear(animated)
         
         sequence.stop()
-    }
-    
-    deinit {
-        (view as! ButtonsView).delegate = nil
+        for step in sequence.steps {
+            sequence.remove(step)
+        }
     }
     
     

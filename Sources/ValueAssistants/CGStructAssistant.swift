@@ -906,7 +906,7 @@ public class CGStructAssistant : ValueAssistant {
     static func targetsNestedStruct(object: AnyObject, path: String) -> Bool {
         var nested = false
         
-        var keys: [String] = path.components(separatedBy: ".")
+        let keys: [String] = path.components(separatedBy: ".")
         let key_count = keys.count
         if (key_count <= 1) { return false }
         

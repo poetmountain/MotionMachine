@@ -235,7 +235,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     // MARK: Motion state properties
     
     /// The target object whose property should be moved.
-    private(set) public var targetObject: NSObject?
+    private(set) public weak var targetObject: NSObject?
     
     /// A `MotionState` enum which represents the current state of the motion operation. (read-only)
     private(set) public var motionState: MotionState
@@ -336,7 +336,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     public var reversing: Bool = false
     
     /// Provides a delegate for updates to a Moveable object's status, used by `Moveable` collections.
-    public var updateDelegate: MotionUpdateDelegate?
+    public weak var updateDelegate: MotionUpdateDelegate?
     
     
     
@@ -522,7 +522,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = MotionOptions.none) {
         
         self.init(target: targetObject, properties: properties, statesForProperties: nil, duration: duration, easing: easing, options: options)
         
@@ -537,7 +537,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
+    public convenience init(target targetObject: NSObject, duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = MotionOptions.none) {
         
         self.init(target: targetObject, properties: [], statesForProperties: nil, duration: duration, easing: easing, options: options)
     }
@@ -552,13 +552,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *      - easing: An optional `EasingUpdateClosure` easing equation to use when moving the values of the given properties. `EasingLinear.easeNone()` is the default equation if none is provided.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, statesForProperties templateObjects: [PropertyStates], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = .none) {
+    public convenience init(target targetObject: NSObject, statesForProperties templateObjects: [PropertyStates], duration: TimeInterval, easing: EasingUpdateClosure?=EasingLinear.easeNone(), options: MotionOptions? = MotionOptions.none) {
         
         self.init(target: targetObject, properties: nil, statesForProperties: templateObjects, duration: duration, easing: easing, options: options)
     }
     
     
-    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions? = .none) {
+    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions? = MotionOptions.none) {
         
         var properties = props ?? []
         
@@ -781,7 +781,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         // determine if target property is a value we can update directly, or if it's an element of a struct we need to replace
         property.parentKeyPath = property.path
-        var keys: [String] = property.path.components(separatedBy: ".")
+        let keys: [String] = property.path.components(separatedBy: ".")
         let key_count = keys.count
         
         if (key_count > 1) {
@@ -1145,7 +1145,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             let elapsed_time = self.currentTime - startTime
  
             for index in 0 ..< properties.count {
-                var property = properties[index]
+                let property = properties[index]
                 
                 var new_value: Double = 0.0
             

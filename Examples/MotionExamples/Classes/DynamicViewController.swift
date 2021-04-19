@@ -55,10 +55,10 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         for motion in motions {
             motion.stop()
         }
+        motions.removeAll()
     }
     
     deinit {
-        (view as! ButtonsView).delegate = nil
         view.removeGestureRecognizer(tapRecognizer)
     }
     
@@ -143,7 +143,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         }
         
         let pt = gesture.location(in: self.view)
-        //print("gesture pt \(pt)")
+        print("gesture pt \(pt)")
         
         var y_offset : CGFloat = 0.0
         
@@ -170,6 +170,10 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         motion_y.additive = true
         
         let group = MotionGroup(motions: [motion_x, motion_y])
+        group.updated { [weak self] (group) in
+            guard let strong_self = self else { return }
+            //print("constraints \(strong_self.constraints)")
+        }
         group.completed { [weak self] (group) in
             guard let strong_self = self else { return }
             

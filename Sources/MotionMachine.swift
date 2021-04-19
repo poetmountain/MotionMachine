@@ -26,6 +26,7 @@
 
 import Foundation
 import CoreGraphics
+import QuartzCore
 
 // MARK: Moveable protocol
 
@@ -393,6 +394,42 @@ public enum ValueAssistantError : Error {
 }
 
 
+// Taken from: https://gist.github.com/stephanecopin/c746993d7431ceaaee718a9a491a5cfa
+/// Avoids retain cycles for Timers and CADisplayLinks
+class WeakTarget: NSObject {
+    private(set) weak var target: AnyObject?
+    let selector: Selector
+
+    static let triggerSelector = #selector(WeakTarget.timerDidTrigger(parameter:))
+
+    init(_ target: AnyObject, selector: Selector) {
+        self.target = target
+        self.selector = selector
+    }
+
+    @objc private func timerDidTrigger(parameter: Any) {
+        _ = self.target?.perform(self.selector, with: parameter)
+    }
+}
+
+extension Timer {
+    convenience init(timeInterval ti: TimeInterval, weakTarget: AnyObject, selector: Selector, userInfo: Any?, repeats: Bool) {
+        self.init(timeInterval: ti, target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector, userInfo: userInfo, repeats: repeats)
+    }
+
+    class func scheduledTimer(timeInterval ti: TimeInterval, weakTarget: AnyObject, selector: Selector, userInfo: Any?, repeats: Bool) -> Timer {
+        return self.scheduledTimer(timeInterval: ti, target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector, userInfo: userInfo, repeats: repeats)
+    }
+}
+
+extension CADisplayLink {
+    convenience init(weakTarget: AnyObject, selector: Selector) {
+        self.init(target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector)
+    }
+}
+
+
+
 public final class MMConfiguration {
     public static let sharedInstance = MMConfiguration()
     
@@ -505,7 +542,7 @@ public struct MotionOptions : OptionSet {
     public init(rawValue: Int) { self.rawValue = rawValue }
     
     /// No options are specified.
-    public static let none                     = MotionOptions(rawValue: 0)
+    public static let none                     = MotionOptions([])
     
     /// Specifies that a motion should repeat.
     public static let repeats                   = MotionOptions(rawValue: 1 << 0)

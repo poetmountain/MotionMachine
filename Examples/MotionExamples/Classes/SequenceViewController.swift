@@ -40,7 +40,7 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
             
             
             // setup motion
-            sequence = MotionSequence(options: [.Reverse])
+            sequence = MotionSequence(options: [.reverses])
             .stepCompleted({ (sequence) in
                 print("step complete")
             })
@@ -59,7 +59,7 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
                                     duration: 0.7,
                                     easing: EasingQuadratic.easeInOut())
                 
-                let group = MotionGroup(motions: [down, color], options: [.Reverse])
+                let group = MotionGroup(motions: [down, color], options: [.reverses])
                 
                 sequence.add(group)
             }
@@ -81,11 +81,11 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
         super.viewWillDisappear(animated)
         
         sequence.stop()
+        for step in sequence.steps {
+            sequence.remove(step)
+        }
     }
     
-    deinit {
-        (view as! ButtonsView).delegate = nil
-    }
     
     
     

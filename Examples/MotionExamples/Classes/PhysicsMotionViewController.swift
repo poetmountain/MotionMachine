@@ -38,16 +38,7 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
             
             
             // setup motion
-            motion = PhysicsMotion(target: xConstraint, properties: [PropertyData("constant")], velocity: 300.0, friction: 0.72)
-            .paused({ (motion) in
-                print("paused!")
-            })
-            .resumed({ (motion) in
-                print("resumed!")
-            })
-            .completed({ (motion) in
-                print("completed!")
-            })
+            createMotion()
             
             createdUI = true
         }
@@ -67,10 +58,6 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         super.viewWillDisappear(animated)
         
         motion.stop()
-    }
-    
-    deinit {
-        (view as! ButtonsView).delegate = nil
     }
     
     
@@ -116,6 +103,20 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         square.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         square.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
+    }
+    
+    
+    private func createMotion() {
+        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData("constant")], velocity: 300.0, friction: 0.72)
+        .paused({ (motion) in
+            print("paused!")
+        })
+        .resumed({ (motion) in
+            print("resumed!")
+        })
+        .completed({ (motion) in
+            print("completed!")
+        })
     }
     
     

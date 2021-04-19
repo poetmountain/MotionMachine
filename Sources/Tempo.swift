@@ -33,6 +33,6 @@ import Foundation
     - warning: This class should not be instantiated directly, as it provides no updates on its own.
  */
 public class Tempo {
-    public var delegate: TempoDelegate?
+    public weak var delegate: TempoDelegate?
 
 }

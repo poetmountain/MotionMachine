@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ButtonsViewDelegate {
+protocol ButtonsViewDelegate: class {
     func didStart()
     func didStop()
     func didPause()
@@ -24,7 +24,7 @@ public class ButtonsView: UIView {
     
     var uiCreated: Bool = false
     
-    var delegate: ButtonsViewDelegate?
+    weak var delegate: ButtonsViewDelegate?
     
     
     class func instanceFromNib() -> UIView {

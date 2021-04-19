@@ -83,7 +83,7 @@ class PhysicsMotionTests: XCTestCase {
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
             XCTAssertEqual(motion.totalProgress, 1.0)
-            XCTAssertEqual(tester.value, motion.properties[0].current)
+            XCTAssertEqual(tester.value, motion.properties[0].current, accuracy: 0.9)
             
             did_complete.fulfill()
         }
@@ -120,7 +120,7 @@ class PhysicsMotionTests: XCTestCase {
         let motion = PhysicsMotion(target: tester, properties: [PropertyData("rect.origin.x")], velocity: 2.0, friction: 0.998)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
-            XCTAssertEqual(Double(tester.rect.origin.x), motion.properties[0].current)
+            XCTAssertEqual(Double(tester.rect.origin.x), motion.properties[0].current, accuracy: 0.9)
             
             did_complete.fulfill()
         }
@@ -137,14 +137,14 @@ class PhysicsMotionTests: XCTestCase {
         
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 10.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 10.0, friction: 0.99)
         motion.additive = true
         motion.additiveWeighting = 0.5
         
-        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: -10.0, friction: 0.98)
+        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: -10.0, friction: 0.99)
         .completed { (m) in
             // velocity should basically be 0 as the two velocities cancel each other out
-            XCTAssertEqual(tester.value, 0.0, accuracy: 0.1)
+            XCTAssertEqual(tester.value, 0.0, accuracy: 0.12)
             
             did_complete.fulfill()
         }
@@ -306,21 +306,25 @@ class PhysicsMotionTests: XCTestCase {
     }
     
     func test_pause() {
-        
+
         let tester = Tester()
         let did_pause = expectation(description: "motion called paused notify closure")
-        
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let data = PropertyData(path: "value", start: 0.0, end: 100.0)
+        let motion = PhysicsMotion(target: tester, properties: [data], velocity: 2.0, friction: 0.98)
         .paused { (motion) in
+            print("physics paused with state \(motion.motionState)")
             XCTAssertEqual(motion.motionState, MotionState.paused)
-            
+
             did_pause.fulfill()
         }
         motion.start()
-        motion.pause()
-        
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            motion.pause()
+        })
+
         waitForExpectations(timeout: 1.0, handler: nil)
-        
+
     }
     
     func test_pause_while_stopped() {

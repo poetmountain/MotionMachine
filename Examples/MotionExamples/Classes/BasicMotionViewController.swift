@@ -38,7 +38,7 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
             
             
             // setup motion
-            motion = Motion(target: xConstraint, duration: 1.0, easing: EasingQuadratic.easeInOut(), options: [.Reverse])
+            motion = Motion(target: xConstraint, duration: 1.0, easing: EasingQuadratic.easeInOut(), options: [.reverses])
                 .add(PropertyData("constant", 200.0))
                 .paused({ (motion) in
                     print("paused!")
@@ -66,11 +66,7 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         
         motion.stop()
     }
-    
-    deinit {
-        (view as! ButtonsView).delegate = nil
-    }
-    
+
 
     
     

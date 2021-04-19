@@ -50,8 +50,9 @@ public class TimerTempo : Tempo {
     
     private init(interval: TimeInterval?) {
         super.init()
-        
-        timer = Timer.scheduledTimer(timeInterval: interval!, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer(timeInterval: interval!, weakTarget: self, selector: #selector(update), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer!, forMode: .common)
+
     }
     
     deinit {

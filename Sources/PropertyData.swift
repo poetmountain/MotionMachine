@@ -27,7 +27,7 @@
 import Foundation
 
 /// Provides delegate updates when property values change.
-public protocol PropertyDataDelegate {
+public protocol PropertyDataDelegate: class {
     
     /// Called when the `start` property of a PropertyData instance is updated.
     func didUpdate(_ startValue: Double)
@@ -80,7 +80,7 @@ public struct PropertyData {
      *  - seealso: target
      *
      */
-    public weak var targetObject: NSObject?
+    public var targetObject: NSObject?
     
     /**
      *  The keyPath of the property to be transformed. The keyPath must be a valid, KVC-compliant keyPath of `targetObject`. For your own classes, you must flag the property with `@objc` for Swift to find it.
@@ -111,10 +111,10 @@ public struct PropertyData {
     var replaceParentProperty: Bool = false
     
     /// Used to reset the parent object state when `resetObjectStateOnRepeat` is `true`.
-    var startingParentProperty: AnyObject?
+    weak var startingParentProperty: AnyObject?
     
     /// A delegate that listens for property updates from this instance.
-    public var delegate: PropertyDataDelegate?
+    public weak var delegate: PropertyDataDelegate?
     
     /**
      *  Initializer.

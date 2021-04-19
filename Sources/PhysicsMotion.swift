@@ -209,7 +209,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         }
         
         set {
-            physicsSystem.velocity = velocity
+            physicsSystem.velocity = newValue
             initialVelocity = velocity
         }
  
@@ -547,7 +547,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], velocity: Double, friction: Double, options: MotionOptions? = .none) {
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
         
         self.init(targetObject: targetObject, properties: properties, velocity: velocity, friction: friction, options: options)
         
@@ -562,13 +562,13 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
      *      - options: An optional set of `MotionsOptions`.
      */
-    public convenience init(target targetObject: NSObject, velocity: Double, friction: Double, options: MotionOptions? = .none) {
+    public convenience init(target targetObject: NSObject, velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
         
         self.init(targetObject: targetObject, properties: [], velocity: velocity, friction: friction, options: options)
     }
     
     
-    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, options: MotionOptions? = .none) {
+    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
         
         let properties = props ?? []
         
@@ -613,15 +613,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     
     
     deinit {
-        tempo?.delegate = nil
-        
-        for index in 0 ..< properties.count {
-            properties[index].delegate = nil
-        }
-        
-        if let timer = physicsTimer {
-            timer.cancel();
-        }
+        removePhysicsTimer()
     }
     
     
@@ -710,7 +702,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
         // determine if target property is a value we can update directly, or if it's an element of a struct we need to replace
         property.parentKeyPath = property.path
-        var keys: [String] = property.path.components(separatedBy: ".")
+        let keys: [String] = property.path.components(separatedBy: ".")
         let key_count = keys.count
         
         if (key_count > 1) {
@@ -836,7 +828,6 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     
     /// Prepares the PhysicsMotion's state for movement and starts
     private func startMotion() {
-        
         for index in 0 ..< properties.count {
             // modify start value if we should use the existing value instead
             if (!additive) { assignStartingPropertyValue(&properties[index]) }
@@ -845,15 +836,15 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
         motionState = .moving
         startTime = 0.0
+        initialVelocity = physicsSystem.velocity
         
         if (additive && targetObject != nil) {
             operationID = MotionSupport.register(additiveMotion: self)
         }
         
         setupPhysicsTimer()
-        if let timer = physicsTimer {
-            timer.resume()
-        }
+        physicsTimerState = .suspended
+        resumePhysicsTimer()
         
         // call start closure
         weak var weak_self = self
@@ -883,17 +874,16 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     // MARK: Physics methods
     
     private func setupPhysicsTimer() {
-        
         if (physicsTimer != nil) {
             removePhysicsTimer()
         }
-        physicsTimer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: UInt(0)), queue: DispatchQueue.global(qos: .userInteractive) )
+        physicsTimer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.global(qos: .userInteractive) )
         physicsTimer?.schedule(deadline: DispatchTime.now(), repeating: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
       
         physicsTimer?.setEventHandler(handler: {
             [weak self] in
-            guard let weak_self = self else { return }
-            weak_self.updatePhysicsSystem()
+            guard let strongSelf = self else { return }
+            strongSelf.updatePhysicsSystem()
         })
         
     }
@@ -901,13 +891,40 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     
     private func removePhysicsTimer() {
         if let timer = physicsTimer {
+            timer.setEventHandler {}
             timer.cancel()
+            resumePhysicsTimer()
             physicsTimer = nil
         }
     }
     
-    private func updatePhysicsSystem() {
+    enum TimerRunningState {
+        case suspended
+        case resumed
+    }
+    private var physicsTimerState: TimerRunningState = .suspended
+    
+    private func suspendPhysicsTimer() {
+        guard physicsTimer != nil else { return }
         
+        if physicsTimerState == .suspended {
+            return
+        }
+        physicsTimerState = .suspended
+        physicsTimer?.suspend()
+    }
+    
+    private func resumePhysicsTimer() {
+        //guard physicsTimer != nil else { return }
+
+        if physicsTimerState == .resumed {
+            return
+        }
+        physicsTimerState = .resumed
+        physicsTimer?.resume()
+    }
+    
+    private func updatePhysicsSystem() {
         if (properties.count > 0) {
             let current_positions = properties.map({ (property) -> Double in
                 return property.current
@@ -971,10 +988,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     private func motionCompleted() {
         
         motionState = .stopped
-        if let timer = physicsTimer {
-            timer.cancel()
-            physicsTimer = nil
-        }
+        removePhysicsTimer()
         _motionProgress = 1.0
         _cycleProgress = 1.0
         completedCount += 1
@@ -1243,11 +1257,6 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             // saves current time so we can determine length of pause time
             pauseTimestamp = currentTime
             
-            physicsSystem.pause()
-            if let timer = physicsTimer {
-                timer.suspend()
-            }
-            
             // call pause closure
             weak var weak_self = self
             _paused?(weak_self!)
@@ -1255,24 +1264,24 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             // send paused status update
             sendStatusUpdate(.paused)
             
+            physicsSystem.pause()
+            suspendPhysicsTimer()
         }
     }
     
     public func resume() {
         if (motionState == .paused) {
             motionState = .moving
-            
-            physicsSystem.resume()
-            if let timer = physicsTimer {
-                timer.resume()
-            }
-            
+
             // call resume closure
             weak var weak_self = self
             _resumed?(weak_self!)
             
             // send resumed status update
             sendStatusUpdate(.resumed)
+            
+            physicsSystem.resume()
+            resumePhysicsTimer()
         }
     }
     

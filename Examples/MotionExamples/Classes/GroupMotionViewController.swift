@@ -41,7 +41,7 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
             
             
             // setup motion
-            group = MotionGroup(options: [.Reverse])
+            group = MotionGroup(options: [.reverses])
             .add(Motion(target: constraints["circleX"]!,
                     properties: [PropertyData("constant", 200.0)],
                       duration: 1.0,
@@ -82,12 +82,12 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
         super.viewWillDisappear(animated)
         
         group.stop()
+        for motion in group.motions {
+            group.remove(motion)
+        }
     }
     
-    deinit {
-        (view as! ButtonsView).delegate = nil
-    }
-    
+
     
     
     

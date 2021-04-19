@@ -129,11 +129,13 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         super.viewWillDisappear(animated)
         
         group.stop()
+        for motion in group.motions {
+            group.remove(motion)
+        }
         reverseGroup.stop()
-    }
-    
-    deinit {
-        (view as! ButtonsView).delegate = nil
+        for motion in reverseGroup.motions {
+            reverseGroup.remove(motion)
+        }
     }
     
     
