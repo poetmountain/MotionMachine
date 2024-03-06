@@ -27,7 +27,7 @@
 import Foundation
 
 /// Provides delegate updates when property values change.
-public protocol PropertyDataDelegate: class {
+public protocol PropertyDataDelegate: AnyObject {
     
     /// Called when the `start` property of a PropertyData instance is updated.
     func didUpdate(_ startValue: Double)

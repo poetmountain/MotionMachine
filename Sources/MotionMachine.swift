@@ -33,7 +33,7 @@ import QuartzCore
 /**
  *  This protocol declares methods and properties that must be adopted by custom motion classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine motion classes conform to this protocol.
  */
-public protocol Moveable: class {
+public protocol Moveable: AnyObject {
     
     // Controlling a motion
     
@@ -133,7 +133,7 @@ public protocol MoveableCollection {
 
 // MARK: PropertyCollection protocol
 
-public protocol PropertyCollection: class {
+public protocol PropertyCollection: AnyObject {
     
     /**
      *  A collection of `PropertyData` instances.
@@ -181,7 +181,7 @@ public protocol Additive: PropertyCollection {
 /**
  *  This protocol defines methods that are called on delegate objects which listen for update beats from a `Tempo` object.
  */
-public protocol TempoDelegate: class {
+public protocol TempoDelegate: AnyObject {
     
     /**
      *  Sends an update beat that should prompt motion classes to recalculate movement values.
@@ -219,7 +219,7 @@ public protocol TempoDriven: TempoDelegate {
 // MARK: MotionUpdateDelegate protocol
 
 /// This delegate protocol defines a status update method in order for `Moveable` objects to communicate with one another. MotionMachine collection classes use this protocol method to keep track of child motion status changes. Any custom `Moveable` classes must send `MoveableStatus` status updates using this protocol.
-public protocol MotionUpdateDelegate: class {
+public protocol MotionUpdateDelegate: AnyObject {
     
     /**
      *  This delegate method is called when a `Moveable` object has updated its status.
