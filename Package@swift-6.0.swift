@@ -1,9 +1,10 @@
-//
-//  MotionTempo.swift
+// swift-tools-version: 6.0
+
+//  Package.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 4/19/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Created by Brett Walker on 11/12/24.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +25,23 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
+import PackageDescription
 
-
-/**
- *  `Tempo` is an abstract class that provides a basic structure for sending update beats. `Moveable` classes use these beats to calculate new motion interpolation values. Concrete subclasses should call `tempoBeatUpdate` with incremental timestamps as necessary.
- 
-    - warning: This class should not be instantiated directly, as it provides no updates on its own.
- */
-@MainActor public class Tempo {
-    public weak var delegate: TempoDelegate?
-
-    public func cleanupResources() {}
-}
+let package = Package(
+    name: "MotionMachine",
+    platforms: [
+        .iOS(.v13), .tvOS(.v13)
+    ],
+    products: [
+        .library(name: "MotionMachine", targets: ["MotionMachine"])
+    ],
+    targets: [
+        .target(name: "MotionMachine", path: "Sources/"),
+        .testTarget(
+            name: "MotionMachineTests",
+            dependencies: ["MotionMachine"],
+            path: "Tests/Tests/"
+        )
+    ],
+    swiftLanguageModes: [.v6]
+)

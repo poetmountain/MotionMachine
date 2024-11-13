@@ -8,7 +8,7 @@
 
 import XCTest
 
-class EasingTests: XCTestCase {
+@MainActor class EasingTests: XCTestCase {
 
     override func setUp() {
         super.setUp()

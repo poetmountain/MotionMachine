@@ -56,14 +56,11 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
             motion.stop()
         }
         motions.removeAll()
-    }
-    
-    deinit {
+        
         view.removeGestureRecognizer(tapRecognizer)
     }
     
-    
-    
+
     
     // MARK: - Private methods
     
@@ -170,10 +167,6 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         motion_y.additive = true
         
         let group = MotionGroup(motions: [motion_x, motion_y])
-        group.updated { [weak self] (group) in
-            guard let strong_self = self else { return }
-            //print("constraints \(strong_self.constraints)")
-        }
         group.completed { [weak self] (group) in
             guard let strong_self = self else { return }
             

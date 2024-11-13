@@ -87,7 +87,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
 /**
  *  PhysicsMotion handles a single motion operation on one or more properties, using a physics system to update values with decaying velocity.
  */
-public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
+@MainActor public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
 
     // Default limit for a velocity's decay.
     static let DEFAULT_DECAY_LIMIT: Double = 0.96
@@ -528,8 +528,8 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     /// Timestamp set when the `pause` method is called; used to track the amount of time paused.
     private var pauseTimestamp: TimeInterval = 0.0
     
-    /// A dispatch timer which calls the physics update calculation at fixed rate, separate from display rate
-    private var physicsTimer: DispatchSourceTimer?
+    /// A Timer which calls the physics update calculation at fixed rate, separate from display rate
+    private var physicsTimer: Timer?
     
     // The last initial velocity set.
     private var initialVelocity: Double = 0.0
@@ -611,11 +611,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         
     }
     
-    
-    deinit {
-        removePhysicsTimer()
-    }
-    
+
     
     // MARK: - Public methods
     
@@ -674,6 +670,10 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     }
     
     
+    public func cleanupResources() {
+        removePhysicsTimer()
+    }
+    
     
     // MARK: - Private methods
     
@@ -717,12 +717,11 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                 if (parent_keys.count > 0) {
                     let parent_path = parent_keys.joined(separator: ".")
                     
-                    if let parent = unwrapped_object.value(forKeyPath: parent_path) {
-                        parent_value = parent as AnyObject
-                        
+                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as? NSObject {
+                        parent_value = parent
                         var is_value_supported = false
                         
-                        if ((parent is NSObject) && (valueAssistant.updateValue(inObject: (parent as! NSObject), newValues: [property.path : 1]) != nil)) {
+                        if (valueAssistant.updateValue(inObject: parent, newValues: [property.path : 1]) != nil) {
                             is_value_supported = true
                         }
                         
@@ -749,10 +748,9 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                     property.target = value
                 }
                 
-            } else {
-                let last_prop = keys.last!
-                property.getter = MotionSupport.propertyGetter(forName: last_prop)
-                property.setter = MotionSupport.propertySetter(forName: last_prop)
+            } else if let lastProp = keys.last {
+                property.getter = MotionSupport.propertyGetter(forName: lastProp)
+                property.setter = MotionSupport.propertySetter(forName: lastProp)
             }
             
             // modify start value if we should use the existing value instead
@@ -761,11 +759,11 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         } else if (key_count == 1) {
             // this is a top-level property, so let's see if this property is updatable
             var is_value_supported = false
-            var prop_value: Any?
+            var propValue: Any?
             let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
             if (keypath_accepted) {
                 do {
-                    prop_value = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
+                    propValue = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
 
                 } catch ValueAssistantError.typeRequirement(let valueType) {
                     ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
@@ -774,22 +772,22 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                     // any other errors
                 }
                 
-                if (prop_value == nil) {
+                if (propValue == nil) {
                     
                     // this should be wrapped in a do/catch, but Swift doesn't catch obj-c exceptions :(
-                    prop_value = valueAssistant.updateValue(inObject: unwrapped_object, newValues: [property.path : property.start])
+                    propValue = valueAssistant.updateValue(inObject: unwrapped_object, newValues: [property.path : property.start])
 
                     if let retrieved = try? valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
-                        prop_value = retrieved
+                        propValue = retrieved
                     }
                 }
                 
-                if (prop_value is NSObject && valueAssistant.supports((prop_value as! NSObject))) {
+                if let propValue = propValue as? NSObject, valueAssistant.supports(propValue) {
                     is_value_supported = true
                 }
             }
             if (is_value_supported) {
-                if let value = prop_value {
+                if let value = propValue {
                     property.target = value as AnyObject
                 }
                 
@@ -847,8 +845,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         resumePhysicsTimer()
         
         // call start closure
-        weak var weak_self = self
-        _started?(weak_self!)
+        _started?(self)
         
         // send start status update
         sendStatusUpdate(.started)
@@ -864,8 +861,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
      */
     private func sendStatusUpdate(_ status: MoveableStatus) {
         
-        weak var weak_self = self
-        updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
+        updateDelegate?.motionStatusUpdated(forMotion: self, updateType: status)
     }
     
     
@@ -877,23 +873,18 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         if (physicsTimer != nil) {
             removePhysicsTimer()
         }
-        physicsTimer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.global(qos: .userInteractive) )
-        physicsTimer?.schedule(deadline: DispatchTime.now(), repeating: physicsTimerInterval, leeway: DispatchTimeInterval.milliseconds(1))
-      
-        physicsTimer?.setEventHandler(handler: {
-            [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.updatePhysicsSystem()
-        })
+        physicsTimer = Timer.scheduledTimer(timeInterval: physicsTimerInterval, target: self, selector: #selector(handleTimerUpdated), userInfo: nil, repeats: true)
         
     }
     
     
+    @objc private func handleTimerUpdated() {
+        updatePhysicsSystem()
+    }
+    
     private func removePhysicsTimer() {
         if let timer = physicsTimer {
-            timer.setEventHandler {}
-            timer.cancel()
-            resumePhysicsTimer()
+            timer.invalidate()
             physicsTimer = nil
         }
     }
@@ -911,17 +902,17 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             return
         }
         physicsTimerState = .suspended
-        physicsTimer?.suspend()
+        removePhysicsTimer()
+        
     }
     
     private func resumePhysicsTimer() {
-        //guard physicsTimer != nil else { return }
 
         if physicsTimerState == .resumed {
             return
         }
         physicsTimerState = .resumed
-        physicsTimer?.resume()
+        setupPhysicsTimer()
     }
     
     private func updatePhysicsSystem() {
@@ -936,10 +927,9 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                 properties[index].current = new_positions[index]
             }
             
-        } else if (targetObject is Double) {
-            let new_value = physicsSystem.solve(forPositions: [targetObject as! Double], timestamp: CFAbsoluteTimeGetCurrent()).first
-            if (new_value != nil) {
-                targetObject = NSNumber.init(value: new_value!)
+        } else if let targetObject = targetObject as? Double {
+            if let new_value = physicsSystem.solve(forPositions: [targetObject], timestamp: CFAbsoluteTimeGetCurrent()).first {
+                self.targetObject = NSNumber.init(value: new_value)
             }
 
         }
@@ -968,15 +958,15 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             return
         }
         
-        if (property.targetObject != nil) {
+        if let targetObject = property.targetObject {
             
             if let new_prop = valueAssistant.calculateValue(forProperty: property, newValue: new_value) {
                 
                 if (!property.replaceParentProperty) {
-                    property.targetObject!.setValue(new_prop, forKey: property.path)
+                    targetObject.setValue(new_prop, forKey: property.path)
                     
                 } else {
-                    property.targetObject!.setValue(new_prop, forKeyPath: property.parentKeyPath)
+                    targetObject.setValue(new_prop, forKeyPath: property.parentKeyPath)
                     
                 }
             }
@@ -1004,11 +994,10 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         }
         
         // call update closure
-        weak var weak_self = self
-        _updated?(weak_self!)
+        _updated?(self)
         
         // call complete closure
-        _completed?(weak_self!)
+        _completed?(self)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -1050,8 +1039,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             }
             
             // call cycle closure
-            weak var weak_self = self
-            _cycleRepeated?(weak_self!)
+            _cycleRepeated?(self)
             
             // send repeated status update
             sendStatusUpdate(.repeated)
@@ -1083,8 +1071,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
         physicsSystem.reset()
         
         // call reverse closure
-        weak var weak_self = self
-        _reversed?(weak_self!)
+        _reversed?(self)
         
         // send reverse notification
         // send out 50% complete notification, used by MotionSequence in contiguous mode
@@ -1139,8 +1126,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
                 }
                 
                 // call update closure
-                weak var weak_self = self
-                _updated?(weak_self!)
+                _updated?(self)
                 
             } else {
                 
@@ -1216,7 +1202,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             } else {
                 motionState = .delayed
             }
-            
+
         }
         
         return self
@@ -1240,12 +1226,14 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             }
             
             // call stop closure
-            weak var weak_self = self
-            _stopped?(weak_self!)
+            _stopped?(self)
             
             // send stopped status update
             sendStatusUpdate(.stopped)
+            
         }
+        
+        cleanupResources()
     }
     
     
@@ -1258,14 +1246,14 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             pauseTimestamp = currentTime
             
             // call pause closure
-            weak var weak_self = self
-            _paused?(weak_self!)
+            _paused?(self)
             
             // send paused status update
             sendStatusUpdate(.paused)
             
             physicsSystem.pause()
             suspendPhysicsTimer()
+            
         }
     }
     
@@ -1274,8 +1262,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
             motionState = .moving
 
             // call resume closure
-            weak var weak_self = self
-            _resumed?(weak_self!)
+            _resumed?(self)
             
             // send resumed status update
             sendStatusUpdate(.resumed)
@@ -1320,6 +1307,7 @@ public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegat
     public func stopTempoUpdates() {
         
         tempo?.delegate = nil
+        tempo?.cleanupResources()
         tempo = nil
         
     }

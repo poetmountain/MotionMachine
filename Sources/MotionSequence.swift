@@ -504,15 +504,6 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     }
     
     
-    deinit {
-        tempo?.delegate = nil
-        
-        for index in 0 ..< steps.count {
-            steps[index].updateDelegate = nil
-        }
-    }
-    
-    
     // MARK: - Public methods
     
     /**
@@ -658,6 +649,15 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     }
     
     
+    public func cleanupResources() {
+        tempo?.delegate = nil
+        
+        for index in 0 ..< steps.count {
+            let step = steps[index]
+            step.cleanupResources()
+            step.updateDelegate = nil
+        }
+    }
     
     
     // MARK: Private methods
@@ -770,8 +770,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         motionsReversedCount = 0
         
         // call reverse closure
-        weak var weak_self = self
-        _reversed?(weak_self!)
+        _reversed?(self)
         
         let half_complete = round(Double(repeatCycles) * 0.5)
         if (motionDirection == .reverse && (Double(cyclesCompletedCount) ≈≈ half_complete)) {
@@ -792,11 +791,10 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         if (!repeating) { cyclesCompletedCount += 1 }
         
         // call update closure
-        weak var weak_self = self
-        _updated?(weak_self!)
+        _updated?(self)
         
         // call complete closure
-        _completed?(weak_self!)
+        _completed?(self)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -814,8 +812,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      */
     private func sendStatusUpdate(_ status: MoveableStatus) {
         
-        weak var weak_self = self
-        updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
+        updateDelegate?.motionStatusUpdated(forMotion: self, updateType: status)
     }
     
     
@@ -871,8 +868,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             
             // call update closure, but only if this sequence is still moving
             if (motionState == .moving) {
-                weak var weak_self = self as MotionSequence
-                _updated?(weak_self!)
+                _updated?(self)
             }
             
         } else if (motionState == .delayed) {
@@ -892,8 +888,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 }
                 
                 // call start closure
-                weak var weak_self = self as MotionSequence
-                _started?(weak_self!)
+                _started?(self)
                 
                 // send start status update
                 sendStatusUpdate(.started)
@@ -916,8 +911,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 }
                 
                 // call start closure
-                weak var weak_self = self as MotionSequence
-                _started?(weak_self!)
+                _started?(self)
                 
                 // send start status update
                 sendStatusUpdate(.started)
@@ -943,8 +937,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             }
             
             // call stop closure
-            weak var weak_self = self as MotionSequence
-            _stopped?(weak_self!)
+            _stopped?(self)
             
             // send stop status update
             sendStatusUpdate(.stopped)
@@ -962,8 +955,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             }
             
             // call pause closure
-            weak var weak_self = self as MotionSequence
-            _paused?(weak_self!)
+            _paused?(self)
             
             // send pause status update
             sendStatusUpdate(.paused)
@@ -981,8 +973,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             }
             
             // call resume closure
-            weak var weak_self = self as MotionSequence
-            _resumed?(weak_self!)
+            _resumed?(self)
             
             // send resume status update
             sendStatusUpdate(.resumed)

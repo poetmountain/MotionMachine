@@ -47,9 +47,9 @@ public class UIColorAssistant : ValueAssistant {
         
         var properties: [PropertyData] = []
         
-        if (propertyStates.end is UIColor) {
+        if let endProperty = propertyStates.end as? UIColor {
             
-            let new_color = propertyStates.end as! UIColor
+            let new_color = endProperty
             var hue: CGFloat = 0.0, saturation: CGFloat = 0.0, brightness: CGFloat = 0.0, alpha: CGFloat = 0.0
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0
             var white: CGFloat = 0.0, walpha: CGFloat = 0.0
@@ -81,10 +81,10 @@ public class UIColorAssistant : ValueAssistant {
             var ored: CGFloat = 0.0, ogreen: CGFloat = 0.0, oblue: CGFloat = 0.0
             var owhite: CGFloat = 0.0, owalpha: CGFloat = 0.0
             
-            if (ocolor != nil) {
-                ocolor!.getHue(&ohue, saturation: &osaturation, brightness: &obrightness, alpha: &oalpha)
-                ocolor!.getRed(&ored, green: &ogreen, blue: &oblue, alpha: &oalpha)
-                ocolor!.getWhite(&owhite, alpha: &owalpha)
+            if let ocolor {
+                ocolor.getHue(&ohue, saturation: &osaturation, brightness: &obrightness, alpha: &oalpha)
+                ocolor.getRed(&ored, green: &ogreen, blue: &oblue, alpha: &oalpha)
+                ocolor.getWhite(&owhite, alpha: &owalpha)
             }
             
             new_color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
@@ -169,23 +169,22 @@ public class UIColorAssistant : ValueAssistant {
     
     public func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
         
-        guard let unwrapped_target = property.target else { return nil }
+        guard let unwrappedTarget = property.target else { return nil }
         
         var object_value :Double?
         
-        if let unwrapped_object = property.targetObject {
+        if let unwrapped_object = property.targetObject, let getter = property.getter {
             // BEWARE, THIS BE UNSAFE MUCKING ABOUT
             // this would normally be in a do/catch but unfortunately Swift can't catch exceptions from Obj-C methods
             typealias GetterFunction = @convention(c) (AnyObject, Selector) -> AnyObject
-            let implementation: IMP = unwrapped_object.method(for: property.getter!)
+            let implementation: IMP = unwrapped_object.method(for: getter)
             let curried = unsafeBitCast(implementation, to: GetterFunction.self)
-            let obj = curried(unwrapped_object, property.getter!)
-            
-            object_value = retrieveValue(inObject: obj as! NSObject, keyPath: property.path)
+            if let obj = curried(unwrapped_object, getter) as? NSObject {
+                object_value = retrieveValue(inObject: obj, keyPath: property.path)
+            }
 
-        } else if (unwrapped_target is UIColor) {
-
-            object_value = retrieveValue(inObject: unwrapped_target as! NSObject, keyPath: property.path)
+        } else if let unwrappedTarget = unwrappedTarget as? UIColor {
+            object_value = retrieveValue(inObject: unwrappedTarget, keyPath: property.path)
         }
         
         return object_value
@@ -196,8 +195,8 @@ public class UIColorAssistant : ValueAssistant {
     public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
-        if (object is UIColor) {
-            let color = object as! UIColor
+        if let object = object as? UIColor {
+            let color = object
             var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
             var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, white: CGFloat = 0
             
@@ -244,8 +243,8 @@ public class UIColorAssistant : ValueAssistant {
         
         var new_parent_value:NSObject?
         
-        if (object is UIColor) {
-            let color = object as! UIColor
+        if let object = object as? UIColor {
+            let color = object
             var hue: CGFloat = 0.0, saturation: CGFloat = 0.0, brightness: CGFloat = 0.0, alpha: CGFloat = 0.0
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, white: CGFloat = 0.0
             
@@ -312,8 +311,7 @@ public class UIColorAssistant : ValueAssistant {
         
         guard let unwrapped_target = property.target else { return nil }
         
-        var new_prop: NSObject? = NSNumber.init(value: property.current)
-        
+        var newProp: NSObject? = NSNumber.init(value: property.current)
         
         if let unwrapped_object = property.targetObject {
             // we have a normal object whose property is being changed
@@ -325,41 +323,41 @@ public class UIColorAssistant : ValueAssistant {
                 
                 // replace the top-level struct of the property we're trying to alter
                 // e.g.: keyPath is @"frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
+                if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) as? NSObject, let newColor = updateValue(inObject: base_prop, newValues: [property.path : new_property_value]) as? UIColor, let propertySetter = property.setter {
                     
-                    let new_color = updateValue(inObject: (base_prop as! NSObject), newValues: [property.path : new_property_value]) as! UIColor
-                    new_prop = new_color
+                    newProp = newColor
                     
                     // BEWARE, THIS BE UNSAFE MUCKING ABOUT
                     // this would normally be in a do/catch but unfortunately Swift can't catch exceptions from Obj-C methods
                     
                     // letting the runtime know about result and argument types
                     typealias SetterFunction = @convention(c) (AnyObject, Selector, UIColor) -> Void
-                    let implementation: IMP = unwrapped_object.method(for: property.setter!)
+                    let implementation: IMP = unwrapped_object.method(for: propertySetter)
                     let curried = unsafeBitCast(implementation, to: SetterFunction.self)
-                    curried(unwrapped_object, property.setter!, new_color)
+                    curried(unwrapped_object, propertySetter, newColor)
                 }
                 
             }
             
-            return new_prop
+            return newProp
         }
         
         // we have no base object, so we must be changing the UIColor directly
-        if (unwrapped_target is UIColor) {
+        if let unwrappedTarget = unwrapped_target as? UIColor {
             
             var new_property_value = property.current
             if (additive) {
                 new_property_value = newValue
             }
             
-            let new_color = updateValue(inObject: (unwrapped_target as! NSObject), newValues: [property.path : new_property_value]) as! UIColor
-            new_prop = new_color
+            if let newColor = updateValue(inObject: unwrappedTarget, newValues: [property.path : new_property_value]) as? UIColor {
+                newProp = newColor
+            }
             
         }
         
         
-        return new_prop
+        return newProp
         
     }
     

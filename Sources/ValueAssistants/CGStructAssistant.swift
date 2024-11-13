@@ -52,28 +52,27 @@ public class CGStructAssistant : ValueAssistant {
         
         var properties: [PropertyData] = []
 
-        guard let end_value = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-        var start_value: NSValue?
-        var start_type: ValueStructTypes = .unsupported
-        if let unwrapped_start = propertyStates.start {
-            if (propertyStates.start is NSValue) {
-                start_value = unwrapped_start as? NSValue
-                start_type = CGStructAssistant.determineType(forValue: start_value!)
-            }
+        guard let endValue = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
+        var startValue: NSValue?
+        var startType: ValueStructTypes = .unsupported
+        if let statesStart = propertyStates.start as? NSValue {
+            startValue = statesStart
+            startType = CGStructAssistant.determineType(forValue: statesStart)
         }
         
-        let end_type = CGStructAssistant.determineType(forValue: end_value)
+        let end_type = CGStructAssistant.determineType(forValue: endValue)
 
         
         switch end_type {
         case .number:
             var start_state: Double?
-            if (start_value != nil && start_type == .number) {
-                start_state = (start_value as! NSNumber).doubleValue
+            if let startValue = startValue as? NSNumber, startType == .number {
+                start_state = startValue.doubleValue
             }
-            let end_state = (end_value as! NSNumber).doubleValue
-            let property = PropertyData(path: propertyStates.path, start: start_state, end: end_state)
-            properties.append(property)
+            if let endValue = endValue as? NSNumber {
+                let property = PropertyData(path: propertyStates.path, start: start_state, end: endValue.doubleValue)
+                properties.append(property)
+            }
             
         case .point:
             var base_path: String = propertyStates.path + "."
@@ -96,12 +95,12 @@ public class CGStructAssistant : ValueAssistant {
             }
             #endif
             
-            let end_pt = end_value.cgPointValue
+            let end_pt = endValue.cgPointValue
             
             // x
             var start_state_x: Double?
-            if (start_value != nil && start_type == .point) {
-                start_state_x = Double(start_value!.cgPointValue.x)
+            if let startValue, startType == .point {
+                start_state_x = Double(startValue.cgPointValue.x)
             }
             
             // if we've found a starting value either via the PropertyStates object or the original target, use that,
@@ -116,8 +115,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // y
             var start_state_y: Double?
-            if (start_value != nil && start_type == .point) {
-                start_state_y = Double(start_value!.cgPointValue.y)
+            if let startValue, startType == .point {
+                start_state_y = Double(startValue.cgPointValue.y)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "y", originalValue: org_y, startValue: start_state_y, endValue: Double(end_pt.y)) {
@@ -147,12 +146,12 @@ public class CGStructAssistant : ValueAssistant {
                 }
             }
             
-            let end_size = end_value.cgSizeValue
+            let end_size = endValue.cgSizeValue
             
             // width
             var start_state_w: Double?
-            if (start_value != nil && start_type == .size) {
-                start_state_w = Double(start_value!.cgSizeValue.width)
+            if let startValue, startType == .size {
+                start_state_w = Double(startValue.cgSizeValue.width)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "width", originalValue: org_w, startValue: start_state_w, endValue: Double(end_size.width)) {
@@ -162,8 +161,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // height
             var start_state_h: Double?
-            if (start_value != nil && start_type == .size) {
-                start_state_h = Double(start_value!.cgSizeValue.height)
+            if let startValue, startType == .size {
+                start_state_h = Double(startValue.cgSizeValue.height)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "height", originalValue: org_h, startValue: start_state_h, endValue: Double(end_size.height)) {
@@ -178,7 +177,7 @@ public class CGStructAssistant : ValueAssistant {
                 base_path = "frame."
             }
             #endif
-            let end_rect = end_value.cgRectValue
+            let end_rect = endValue.cgRectValue
             var target_pt: NSValue?
             var target_size: NSValue?
             
@@ -200,8 +199,8 @@ public class CGStructAssistant : ValueAssistant {
 
                 do {
                     let start_pt: NSValue
-                    if (start_value != nil && start_type == .rect) {
-                        let start_rect = start_value!.cgRectValue
+                    if let startValue, startType == .rect {
+                        let start_rect = startValue.cgRectValue
                         start_pt = NSValue.init(cgPoint: start_rect.origin)
                     } else {
                         start_pt = unwrapped_pt
@@ -231,8 +230,8 @@ public class CGStructAssistant : ValueAssistant {
                 
                 do {
                     let start_size: NSValue
-                    if (start_value != nil && start_type == .rect) {
-                        let start_rect = start_value!.cgRectValue
+                    if let startValue, startType == .rect {
+                        let start_rect = startValue.cgRectValue
                         start_size = NSValue.init(cgSize: start_rect.size)
                     } else {
                         start_size = unwrapped_size
@@ -263,20 +262,20 @@ public class CGStructAssistant : ValueAssistant {
 
             var org_dx: Double?
             var org_dy: Double?
-            if (target is NSValue) {
-                let type = CGStructAssistant.determineType(forValue: target as! NSValue)
+            if let target = target as? NSValue {
+                let type = CGStructAssistant.determineType(forValue: target)
                 if (type == .vector) {
-                    let org_vec = (target as! NSValue).cgVectorValue
+                    let org_vec = target.cgVectorValue
                     org_dx = Double(org_vec.dx)
                     org_dy = Double(org_vec.dy)
                 }
             }
-            let end_vector = end_value.cgVectorValue
+            let end_vector = endValue.cgVectorValue
             
             // dx
             var start_state_dx: Double?
-            if (start_value != nil && start_type == .vector) {
-                start_state_dx = Double(start_value!.cgVectorValue.dx)
+            if let startValue, startType == .vector {
+                start_state_dx = Double(startValue.cgVectorValue.dx)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "dx", originalValue: org_dx, startValue: start_state_dx, endValue: Double(end_vector.dx)) {
@@ -286,8 +285,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // dy
             var start_state_dy: Double?
-            if (start_value != nil && start_type == .vector) {
-                start_state_dy = Double(start_value!.cgVectorValue.dy)
+            if let startValue, startType == .vector {
+                start_state_dy = Double(startValue.cgVectorValue.dy)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "dy", originalValue: org_dy, startValue: start_state_dy, endValue: Double(end_vector.dy)) {
@@ -318,13 +317,13 @@ public class CGStructAssistant : ValueAssistant {
 
             
             // find all transform properties
-            let end_transform = end_value.cgAffineTransformValue
+            let end_transform = endValue.cgAffineTransformValue
             let base_path = propertyStates.path + "."
             
             // a
             var start_state_a: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_a = Double(start_value!.cgAffineTransformValue.a)
+            if let startValue, startType == .affineTransform {
+                start_state_a = Double(startValue.cgAffineTransformValue.a)
             }
 
             if let prop = MotionSupport.buildPropertyData(path: base_path + "a", originalValue: oa, startValue: start_state_a, endValue: Double(end_transform.a)) {
@@ -334,8 +333,8 @@ public class CGStructAssistant : ValueAssistant {
     
             // b
             var start_state_b: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_b = Double(start_value!.cgAffineTransformValue.b)
+            if let startValue, startType == .affineTransform {
+                start_state_b = Double(startValue.cgAffineTransformValue.b)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "b", originalValue: ob, startValue: start_state_b, endValue: Double(end_transform.b)) {
@@ -345,8 +344,8 @@ public class CGStructAssistant : ValueAssistant {
 
             // c
             var start_state_c: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_c = Double(start_value!.cgAffineTransformValue.c)
+            if let startValue, startType == .affineTransform {
+                start_state_c = Double(startValue.cgAffineTransformValue.c)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "c", originalValue: oc, startValue: start_state_c, endValue: Double(end_transform.c)) {
@@ -356,8 +355,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // d
             var start_state_d: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_d = Double(start_value!.cgAffineTransformValue.d)
+            if let startValue, startType == .affineTransform {
+                start_state_d = Double(startValue.cgAffineTransformValue.d)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "d", originalValue: od, startValue: start_state_d, endValue: Double(end_transform.d)) {
@@ -367,8 +366,8 @@ public class CGStructAssistant : ValueAssistant {
 
             // tx
             var start_state_tx: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_tx = Double(start_value!.cgAffineTransformValue.tx)
+            if let startValue, startType == .affineTransform {
+                start_state_tx = Double(startValue.cgAffineTransformValue.tx)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "tx", originalValue: otx, startValue: start_state_tx, endValue: Double(end_transform.tx)) {
@@ -378,8 +377,8 @@ public class CGStructAssistant : ValueAssistant {
 
             // ty
             var start_state_ty: Double?
-            if (start_value != nil && start_type == .affineTransform) {
-                start_state_ty = Double(start_value!.cgAffineTransformValue.ty)
+            if let startValue, startType == .affineTransform {
+                start_state_ty = Double(startValue.cgAffineTransformValue.ty)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "ty", originalValue: oty, startValue: start_state_ty, endValue: Double(end_transform.ty)) {
@@ -416,12 +415,12 @@ public class CGStructAssistant : ValueAssistant {
             }
             
             let base_path = propertyStates.path + "."
-            let end_transform = end_value.caTransform3DValue
+            let end_transform = endValue.caTransform3DValue
             
             // m11
             var start_state_m11: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m11 = Double(start_value!.caTransform3DValue.m11)
+            if let startValue, startType == .transform3D {
+                start_state_m11 = Double(startValue.caTransform3DValue.m11)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m11", originalValue: o11, startValue: start_state_m11, endValue: Double(end_transform.m11)) {
@@ -431,8 +430,8 @@ public class CGStructAssistant : ValueAssistant {
     
             // m12
             var start_state_m12: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m12 = Double(start_value!.caTransform3DValue.m12)
+            if let startValue, startType == .transform3D {
+                start_state_m12 = Double(startValue.caTransform3DValue.m12)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m12", originalValue: o12, startValue: start_state_m12, endValue: Double(end_transform.m12)) {
@@ -442,8 +441,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m13
             var start_state_m13: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m13 = Double(start_value!.caTransform3DValue.m13)
+            if let startValue, startType == .transform3D {
+                start_state_m13 = Double(startValue.caTransform3DValue.m13)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m13", originalValue: o13, startValue: start_state_m13, endValue: Double(end_transform.m13)) {
@@ -453,8 +452,8 @@ public class CGStructAssistant : ValueAssistant {
 
             // m14
             var start_state_m14: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m14 = Double(start_value!.caTransform3DValue.m14)
+            if let startValue, startType == .transform3D {
+                start_state_m14 = Double(startValue.caTransform3DValue.m14)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m14", originalValue: o14, startValue: start_state_m14, endValue: Double(end_transform.m14)) {
@@ -464,8 +463,8 @@ public class CGStructAssistant : ValueAssistant {
 
             // m21
             var start_state_m21: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m21 = Double(start_value!.caTransform3DValue.m21)
+            if let startValue, startType == .transform3D {
+                start_state_m21 = Double(startValue.caTransform3DValue.m21)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m21", originalValue: o21, startValue: start_state_m21, endValue: Double(end_transform.m21)) {
@@ -475,8 +474,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m22
             var start_state_m22: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m22 = Double(start_value!.caTransform3DValue.m22)
+            if let startValue, startType == .transform3D {
+                start_state_m22 = Double(startValue.caTransform3DValue.m22)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m22", originalValue: o22, startValue: start_state_m22, endValue: Double(end_transform.m22)) {
@@ -486,8 +485,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m23
             var start_state_m23: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m23 = Double(start_value!.caTransform3DValue.m23)
+            if let startValue, startType == .transform3D {
+                start_state_m23 = Double(startValue.caTransform3DValue.m23)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m23", originalValue: o23, startValue: start_state_m23, endValue: Double(end_transform.m23)) {
@@ -497,8 +496,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m24
             var start_state_m24: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m24 = Double(start_value!.caTransform3DValue.m24)
+            if let startValue, startType == .transform3D {
+                start_state_m24 = Double(startValue.caTransform3DValue.m24)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m24", originalValue: o24, startValue: start_state_m24, endValue: Double(end_transform.m24)) {
@@ -507,8 +506,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m31
             var start_state_m31: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m31 = Double(start_value!.caTransform3DValue.m31)
+            if let startValue, startType == .transform3D {
+                start_state_m31 = Double(startValue.caTransform3DValue.m31)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m31", originalValue: o31, startValue: start_state_m31, endValue: Double(end_transform.m31)) {
@@ -517,8 +516,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m32
             var start_state_m32: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m32 = Double(start_value!.caTransform3DValue.m32)
+            if let startValue, startType == .transform3D {
+                start_state_m32 = Double(startValue.caTransform3DValue.m32)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m32", originalValue: o32, startValue: start_state_m32, endValue: Double(end_transform.m32)) {
@@ -527,8 +526,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m33
             var start_state_m33: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m33 = Double(start_value!.caTransform3DValue.m33)
+            if let startValue, startType == .transform3D {
+                start_state_m33 = Double(startValue.caTransform3DValue.m33)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m33", originalValue: o33, startValue: start_state_m33, endValue: Double(end_transform.m33)) {
@@ -537,8 +536,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m34
             var start_state_m34: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m34 = Double(start_value!.caTransform3DValue.m34)
+            if let startValue, startType == .transform3D {
+                start_state_m34 = Double(startValue.caTransform3DValue.m34)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m34", originalValue: o34, startValue: start_state_m34, endValue: Double(end_transform.m34)) {
@@ -547,8 +546,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m41
             var start_state_m41: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m41 = Double(start_value!.caTransform3DValue.m41)
+            if let startValue, startType == .transform3D {
+                start_state_m41 = Double(startValue.caTransform3DValue.m41)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m41", originalValue: o41, startValue: start_state_m41, endValue: Double(end_transform.m41)) {
@@ -557,8 +556,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m42
             var start_state_m42: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m42 = Double(start_value!.caTransform3DValue.m42)
+            if let startValue, startType == .transform3D {
+                start_state_m42 = Double(startValue.caTransform3DValue.m42)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m42", originalValue: o42, startValue: start_state_m42, endValue: Double(end_transform.m42)) {
@@ -567,8 +566,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m43
             var start_state_m43: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m43 = Double(start_value!.caTransform3DValue.m43)
+            if let startValue, startType == .transform3D {
+                start_state_m43 = Double(startValue.caTransform3DValue.m43)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m43", originalValue: o43, startValue: start_state_m43, endValue: Double(end_transform.m43)) {
@@ -577,8 +576,8 @@ public class CGStructAssistant : ValueAssistant {
             
             // m44
             var start_state_m44: Double?
-            if (start_value != nil && start_type == .transform3D) {
-                start_state_m44 = Double(start_value!.caTransform3DValue.m44)
+            if let startValue, startType == .transform3D {
+                start_state_m44 = Double(startValue.caTransform3DValue.m44)
             }
             
             if let prop = MotionSupport.buildPropertyData(path: base_path + "m44", originalValue: o44, startValue: start_state_m44, endValue: Double(end_transform.m44)) {
@@ -715,28 +714,26 @@ public class CGStructAssistant : ValueAssistant {
     
     public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
         
-        guard newValues.count > 0 else { return nil }
+        guard newValues.count > 0, var newValue = newValues.values.first else { return nil }
         
         var new_parent_value:NSObject?
-        
-        var new_value = newValues.values.first!
-        
+                
         if let unwrapped_double = object as? Double {
             if (additive) {
-                new_value = unwrapped_double + new_value
+                newValue = unwrapped_double + newValue
             }
             
-            new_parent_value = NSNumber.init(value: (new_value as Double))
+            new_parent_value = NSNumber.init(value: (newValue as Double))
             
         } else if let unwrapped_value = object as? NSValue {
             var value = unwrapped_value
             
             if let unwrapped_number = value as? NSNumber {
                 if (additive) {
-                    new_value = unwrapped_number.doubleValue + new_value
+                    newValue = unwrapped_number.doubleValue + newValue
                 }
                 
-                new_parent_value = NSNumber.init(value: new_value)
+                new_parent_value = NSNumber.init(value: newValue)
                 
             } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType())) {
                 
@@ -857,18 +854,18 @@ public class CGStructAssistant : ValueAssistant {
             if let doub = double_value {
                 value = NSNumber.init(value: doub)
             }
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: pt))) {
-            value = NSValue.init(cgPoint: (cfStruct as! CGPoint))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: size))) {
-            value = NSValue.init(cgSize: (cfStruct as! CGSize))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: rect))) {
-            value = NSValue.init(cgRect: (cfStruct as! CGRect))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: vector))) {
-            value = NSValue.init(cgVector: (cfStruct as! CGVector))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform))) {
-            value = NSValue.init(cgAffineTransform: (cfStruct as! CGAffineTransform))
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform3D))) {
-            value = NSValue.init(caTransform3D: (cfStruct as! CATransform3D))
+        } else if let cfStruct = cfStruct as? CGPoint, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: pt))) {
+            value = NSValue.init(cgPoint: cfStruct)
+        } else if let cfStruct = cfStruct as? CGSize, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: size))) {
+            value = NSValue.init(cgSize: cfStruct)
+        } else if let cfStruct = cfStruct as? CGRect, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: rect))) {
+            value = NSValue.init(cgRect: cfStruct)
+        } else if let cfStruct = cfStruct as? CGVector, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: vector))) {
+            value = NSValue.init(cgVector: cfStruct)
+        } else if let cfStruct = cfStruct as? CGAffineTransform, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform))) {
+            value = NSValue.init(cgAffineTransform: cfStruct)
+        } else if let cfStruct = cfStruct as? CATransform3D, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform3D))) {
+            value = NSValue.init(caTransform3D: cfStruct)
         }
         
         return value
@@ -918,8 +915,8 @@ public class CGStructAssistant : ValueAssistant {
             if (parent_keys.count > 0) {
                 let parent_path = parent_keys.joined(separator: ".")
                 
-                if let parent = object.value(forKeyPath: parent_path) as AnyObject? {
-                    if (parent is NSValue && CGStructAssistant.determineType(forValue: parent as! NSValue) == .rect) {
+                if let parent = object.value(forKeyPath: parent_path) as? NSValue {
+                    if (CGStructAssistant.determineType(forValue: parent) == .rect) {
                         nested = true
                         break
                     }
@@ -943,12 +940,12 @@ public class CGStructAssistant : ValueAssistant {
         
         switch type {
         case .number:
-            if let unwrapped_number = structValue as? NSNumber {
+            if let unwrapped_number = structValue as? NSNumber, let firstValue = newValues.values.first {
                 var val = unwrapped_number.doubleValue
                 if (additive) {
-                    val += newValues.values.first!
+                    val += firstValue
                 } else {
-                    val = newValues.values.first!
+                    val = firstValue
                 }
                 structValue = NSNumber.init(value: val)
             }
@@ -990,9 +987,9 @@ public class CGStructAssistant : ValueAssistant {
             var rect = structValue.cgRectValue
             let keys = Array(newValues.keys)
             
-            let last_components: [String] = keys.map { (str) -> String in
+            let last_components: [String] = keys.compactMap { (str) -> String? in
                 let components = str.components(separatedBy: ".")
-                return components.last!
+                return components.last
             }
             
             if (last_components.containsAny(["x", "y"])) {

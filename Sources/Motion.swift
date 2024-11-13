@@ -606,17 +606,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
     }
     
-    
-    deinit {
-        tempo?.delegate = nil
-        
-        for index in 0 ..< properties.count {
-            properties[index].delegate = nil
-        }
-    }
-    
-    
-    
+
     // MARK: - Public methods
     
     /**
@@ -753,6 +743,15 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     }
     
     
+    public func cleanupResources() {
+        tempo?.delegate = nil
+        tempo?.cleanupResources()
+        
+        for index in 0 ..< properties.count {
+            properties[index].delegate = nil
+        }
+    }
+    
     
     // MARK: - Private methods
     
@@ -788,7 +787,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             // there's more than one element in the path, meaning we have a parent, so let's find the prop type
             
             // descend keypath tree until we find a key in the path that isn't a struct or integer
-            var parent_value: AnyObject?
+            var parentValue: AnyObject?
             
             for (index, key) in keys.enumerated() {
                 let parent_keys = keys[0 ... index]
@@ -796,12 +795,12 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                 if (parent_keys.count > 0) {
                     let parent_path = parent_keys.joined(separator: ".")
 
-                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as AnyObject? {
-                        parent_value = parent
+                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as? NSObject {
+                        parentValue = parent
                         
                         var is_value_supported = false
 
-                        if ((parent is NSObject) && (valueAssistant.updateValue(inObject: (parent as! NSObject), newValues: [property.path : 1]) != nil)) {
+                        if (valueAssistant.updateValue(inObject: parent, newValues: [property.path : 1]) != nil) {
                             is_value_supported = true
                         }
                         
@@ -824,14 +823,13 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             }
             
             if (property.replaceParentProperty) {
-                if let value = parent_value {
+                if let value = parentValue {
                     property.target = value
                 }
                 
-            } else {
-                let last_prop = keys.last!
-                property.getter = MotionSupport.propertyGetter(forName: last_prop)
-                property.setter = MotionSupport.propertySetter(forName: last_prop)
+            } else if let lastProp = keys.last {
+                property.getter = MotionSupport.propertyGetter(forName: lastProp)
+                property.setter = MotionSupport.propertySetter(forName: lastProp)
             }
             
             // modify start value if we should use the existing value instead
@@ -840,11 +838,11 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         } else if (key_count == 1) {
             // this is a top-level property, so let's see if this property is updatable
             var is_value_supported = false
-            var prop_value: Any?
+            var propValue: Any?
             let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
             if (keypath_accepted) {
                 do {
-                    prop_value = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
+                    propValue = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
                     
                 } catch ValueAssistantError.typeRequirement(let valueType) {
                     ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
@@ -853,18 +851,18 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                     // any other errors
                 }
                 
-                if (prop_value == nil) {
+                if (propValue == nil) {
                     if let retrieved = try? valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
-                        prop_value = retrieved
+                        propValue = retrieved
                     }
                 }
                 
-                if (prop_value is NSObject && valueAssistant.supports((prop_value as! NSObject))) {
+                if let propValue = propValue as? NSObject, valueAssistant.supports(propValue) {
                     is_value_supported = true
                 }
             }
             if (is_value_supported) {
-                if let value = prop_value {
+                if let value = propValue {
                     property.target = value as AnyObject
                 }
             
@@ -931,8 +929,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         }
         
         // call start closure
-        weak var weak_self = self
-        _started?(weak_self!)
+        _started?(self)
         
         // send start status update
         sendStatusUpdate(.started)
@@ -949,8 +946,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      */
     private func sendStatusUpdate(_ status: MoveableStatus) {
         
-        weak var weak_self = self
-        updateDelegate?.motionStatusUpdated(forMotion: weak_self!, updateType: status)
+        updateDelegate?.motionStatusUpdated(forMotion: self, updateType: status)
     }
     
     
@@ -976,15 +972,15 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             return
         }
         
-        if (property.targetObject != nil) {
+        if let targetObject = property.targetObject {
             
             if let new_prop = valueAssistant.calculateValue(forProperty: property, newValue: new_value) {
 
                 if (!property.replaceParentProperty) {
-                    property.targetObject!.setValue(new_prop, forKey: property.path)
+                    targetObject.setValue(new_prop, forKey: property.path)
                     
                 } else {
-                    property.targetObject!.setValue(new_prop, forKeyPath: property.parentKeyPath)
+                    targetObject.setValue(new_prop, forKeyPath: property.parentKeyPath)
                     
                 }
             }
@@ -1017,11 +1013,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         }
         
         // call update closure
-        weak var weak_self = self
-        _updated?(weak_self!)
+        _updated?(self)
         
         // call complete closure
-        _completed?(weak_self!)
+        _completed?(self)
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -1061,8 +1056,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             }
             
             // call cycle closure
-            weak var weak_self = self
-            _cycleRepeated?(weak_self!)
+            _cycleRepeated?(self)
             
             // send repeated status update
             sendStatusUpdate(.repeated)
@@ -1090,8 +1084,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         _motionProgress = 0.0
         
         // call reverse closure
-        weak var weak_self = self
-        _reversed?(weak_self!)
+        _reversed?(self)
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
@@ -1176,8 +1169,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
                     updatePropertyValue(forProperty: &properties[index])
                 }
                 // call update closure
-                weak var weak_self = self
-                _updated?(weak_self!)
+                _updated?(self)
                 
             } else {
                 
@@ -1258,12 +1250,14 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             }
             
             // call stop closure
-            weak var weak_self = self
-            _stopped?(weak_self!)
+            _stopped?(self)
             
             // send stopped status update
             sendStatusUpdate(.stopped)
+            
         }
+        
+        cleanupResources()
     }
     
     public func pause() {
@@ -1275,8 +1269,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             pauseTimestamp = currentTime
             
             // call pause closure
-            weak var weak_self = self
-            _paused?(weak_self!)
+            _paused?(self)
             
             // send paused status update
             sendStatusUpdate(.paused)
@@ -1289,8 +1282,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
             motionState = .moving
 
             // call resume closure
-            weak var weak_self = self
-            _resumed?(weak_self!)
+            _resumed?(self)
             
             // send resumed status update
             sendStatusUpdate(.resumed)
@@ -1330,6 +1322,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     public func stopTempoUpdates() {
         
         tempo?.delegate = nil
+        tempo?.cleanupResources()
         tempo = nil
         
     }

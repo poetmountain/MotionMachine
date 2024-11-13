@@ -57,13 +57,12 @@ public class UIKitStructAssistant : ValueAssistant {
         var properties: [PropertyData] = []
         
         guard let end_value = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-        var start_value: NSValue?
-        var start_type: ValueStructTypes = .unsupported
-        if let unwrapped_start = propertyStates.start {
-            if (propertyStates.start is NSValue) {
-                start_value = unwrapped_start as? NSValue
-                start_type = UIKitStructAssistant.determineType(forValue: start_value!)
-            }
+        var startValue: NSValue?
+        var startType: ValueStructTypes = .unsupported
+        let unwrappedStart = propertyStates.start
+        startValue = unwrappedStart as? NSValue
+        if let startValue {
+            startType = UIKitStructAssistant.determineType(forValue: startValue)
         }
         
         let end_type = UIKitStructAssistant.determineType(forValue: end_value)
@@ -92,8 +91,8 @@ public class UIKitStructAssistant : ValueAssistant {
             
             if let unwrapped_top = org_top {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiEdgeInsets) {
-                    start_state = Double(start_value!.uiEdgeInsetsValue.top)
+                if let startValue, startType == .uiEdgeInsets {
+                    start_state = Double(startValue.uiEdgeInsetsValue.top)
                 } else {
                     start_state = unwrapped_top
                 }
@@ -105,8 +104,8 @@ public class UIKitStructAssistant : ValueAssistant {
             }
             if let unwrapped_left = org_left {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiEdgeInsets) {
-                    start_state = Double(start_value!.uiEdgeInsetsValue.left)
+                if let startValue, startType == .uiEdgeInsets {
+                    start_state = Double(startValue.uiEdgeInsetsValue.left)
                 } else {
                     start_state = unwrapped_left
                 }
@@ -118,8 +117,8 @@ public class UIKitStructAssistant : ValueAssistant {
             }
             if let unwrapped_bottom = org_bottom {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiEdgeInsets) {
-                    start_state = Double(start_value!.uiEdgeInsetsValue.bottom)
+                if let startValue, startType == .uiEdgeInsets {
+                    start_state = Double(startValue.uiEdgeInsetsValue.bottom)
                 } else {
                     start_state = unwrapped_bottom
                 }
@@ -131,8 +130,8 @@ public class UIKitStructAssistant : ValueAssistant {
             }
             if let unwrapped_right = org_right {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiEdgeInsets) {
-                    start_state = Double(start_value!.uiEdgeInsetsValue.right)
+                if let startValue, startType == .uiEdgeInsets {
+                    start_state = Double(startValue.uiEdgeInsetsValue.right)
                 } else {
                     start_state = unwrapped_right
                 }
@@ -162,8 +161,8 @@ public class UIKitStructAssistant : ValueAssistant {
             
             if let unwrapped_h = org_h {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiOffset) {
-                    start_state = Double(start_value!.uiOffsetValue.horizontal)
+                if let startValue, startType == .uiOffset {
+                    start_state = Double(startValue.uiOffsetValue.horizontal)
                 } else {
                     start_state = unwrapped_h
                 }
@@ -175,8 +174,8 @@ public class UIKitStructAssistant : ValueAssistant {
             }
             if let unwrapped_v = org_v {
                 var start_state: Double
-                if (start_value != nil && start_type == .uiOffset) {
-                    start_state = Double(start_value!.uiOffsetValue.vertical)
+                if let startValue, startType == .uiOffset {
+                    start_state = Double(startValue.uiOffsetValue.vertical)
                 } else {
                     start_state = unwrapped_v
                 }
@@ -361,11 +360,11 @@ public class UIKitStructAssistant : ValueAssistant {
         let insets = UIEdgeInsets.zero
         let offset = UIOffset.zero
         
-        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: insets))) {
-            value = NSValue.init(uiEdgeInsets: (cfStruct as! UIEdgeInsets))
+        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: insets))), let cfStruct = cfStruct as? UIEdgeInsets {
+            value = NSValue.init(uiEdgeInsets: cfStruct)
             
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: offset))) {
-            value = NSValue.init(uiOffset: (cfStruct as! UIOffset))
+        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: offset))), let cfStruct = cfStruct as? UIOffset {
+            value = NSValue.init(uiOffset: cfStruct)
         }
         
         return value

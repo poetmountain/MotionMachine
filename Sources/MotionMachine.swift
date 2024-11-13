@@ -33,7 +33,7 @@ import QuartzCore
 /**
  *  This protocol declares methods and properties that must be adopted by custom motion classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine motion classes conform to this protocol.
  */
-public protocol Moveable: AnyObject {
+@MainActor public protocol Moveable: AnyObject {
     
     // Controlling a motion
     
@@ -111,6 +111,13 @@ public protocol Moveable: AnyObject {
      */
     func update(withTimeInterval currentTime: TimeInterval)
     
+    
+    func cleanupResources()
+}
+
+
+public extension Moveable {
+    func cleanupResources() {}
 }
 
 
@@ -119,7 +126,7 @@ public protocol Moveable: AnyObject {
 /**
  *  This protocol declares methods and properties that must be adopted by custom classes which control other `Moveable` classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine collection classes (MotionSequence, MotionGroup) conform to this protocol.
  */
-public protocol MoveableCollection {
+@MainActor public protocol MoveableCollection {
     
     /**
      *  A `CollectionReversingMode` enum which defines the behavior of a `Moveable` class when its `reversing` property is set to `true`. In the standard MotionMachine classes only `MotionSequence` currently uses this property to alter its behavior, but they all propagate changes to this property down to their collection children.
@@ -133,7 +140,7 @@ public protocol MoveableCollection {
 
 // MARK: PropertyCollection protocol
 
-public protocol PropertyCollection: AnyObject {
+@MainActor public protocol PropertyCollection: AnyObject {
     
     /**
      *  A collection of `PropertyData` instances.
@@ -148,7 +155,7 @@ public protocol PropertyCollection: AnyObject {
 /**
  *  This protocol declares methods and properties that must be adopted by custom `Moveable` classes who participate in additive animations with other MotionMachine classes.
  */
-public protocol Additive: PropertyCollection {
+@MainActor public protocol Additive: PropertyCollection {
     
     /**
      *  A Boolean which determines whether this Motion should change its object values additively. Additive animation allows multiple motions to produce a compound effect, creating smooth transitions and blends between different ending value targets. Additive animation is the default behavior for UIKit animations as of iOS 8 and is great for making user interface animations fluid and responsive. MotionMachine uses its own implementation of additive movement, so you can use additive motions on any supported object properties.
@@ -181,7 +188,7 @@ public protocol Additive: PropertyCollection {
 /**
  *  This protocol defines methods that are called on delegate objects which listen for update beats from a `Tempo` object.
  */
-public protocol TempoDelegate: AnyObject {
+@MainActor public protocol TempoDelegate: AnyObject {
     
     /**
      *  Sends an update beat that should prompt motion classes to recalculate movement values.
@@ -199,7 +206,7 @@ public protocol TempoDelegate: AnyObject {
  *
  *  - important: While you aren't required to implement this protocol in order to update your own custom `Moveable` classes, it is the preferred way to interact with the MotionMachine ecosystem unless your requirements prevent using `Tempo` objects for updating your value interpolations.
  */
-public protocol TempoDriven: TempoDelegate {
+@MainActor public protocol TempoDriven: TempoDelegate {
     /**
      *  A concrete `Tempo` subclass that provides an update "beat" to drive a motion.
      *
@@ -219,7 +226,7 @@ public protocol TempoDriven: TempoDelegate {
 // MARK: MotionUpdateDelegate protocol
 
 /// This delegate protocol defines a status update method in order for `Moveable` objects to communicate with one another. MotionMachine collection classes use this protocol method to keep track of child motion status changes. Any custom `Moveable` classes must send `MoveableStatus` status updates using this protocol.
-public protocol MotionUpdateDelegate: AnyObject {
+@MainActor public protocol MotionUpdateDelegate: AnyObject {
     
     /**
      *  This delegate method is called when a `Moveable` object has updated its status.
@@ -236,7 +243,7 @@ public protocol MotionUpdateDelegate: AnyObject {
 // MARK: ValueAssistant protocol
 
 /// This protocol defines methods and properties that must be adopted for any value assistant.
-public protocol ValueAssistant {
+@MainActor public protocol ValueAssistant {
     
     init()
     
@@ -373,9 +380,8 @@ public extension ValueAssistant {
         }
     }
     
-    func lastComponent(forPath path: String) -> String {
-        let components = path.components(separatedBy: ".")
-        return components.last!
+    func lastComponent(forPath path: String) -> String? {
+        return path.components(separatedBy: ".").last
     }
     
 }
@@ -385,7 +391,7 @@ public enum ValueAssistantError : Error {
     
     case typeRequirement(String)
     
-    public func printError(fromFunction function: String) {
+    @MainActor public func printError(fromFunction function: String) {
         if (MMConfiguration.sharedInstance.printsErrors) {
             print("ERROR: ValueAssistantError.\(self) -- Incorrect type supplied from function \(function).")
         }
@@ -396,7 +402,7 @@ public enum ValueAssistantError : Error {
 
 // Taken from: https://gist.github.com/stephanecopin/c746993d7431ceaaee718a9a491a5cfa
 /// Avoids retain cycles for Timers and CADisplayLinks
-class WeakTarget: NSObject {
+final class WeakTarget: NSObject {
     private(set) weak var target: AnyObject?
     let selector: Selector
 
@@ -430,7 +436,7 @@ extension CADisplayLink {
 
 
 
-public final class MMConfiguration {
+@MainActor public final class MMConfiguration {
     public static let sharedInstance = MMConfiguration()
     
     public var printsErrors: Bool = true
@@ -536,7 +542,7 @@ public enum CollectionReversingMode {
 
 
 /// An integer options set providing possible initialization options for a `Moveable` object.
-public struct MotionOptions : OptionSet {
+public struct MotionOptions : OptionSet, Sendable {
     public let rawValue: Int
     
     public init(rawValue: Int) { self.rawValue = rawValue }

@@ -47,10 +47,8 @@ public class CIColorAssistant : ValueAssistant {
         
         var properties: [PropertyData] = []
         
-        if (propertyStates.end is CIColor) {
+        if let new_color = propertyStates.end as? CIColor, (propertyStates.end is CIColor) {
 
-            
-            let new_color = propertyStates.end as! CIColor
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
             
             var add_alpha = false
@@ -58,8 +56,7 @@ public class CIColorAssistant : ValueAssistant {
             var add_green = false
             var add_blue = false
             
-            if (target is CIColor) {
-                let tcolor = target as! CIColor
+            if let tcolor = target as? CIColor {
                 red = tcolor.red
                 blue = tcolor.blue
                 green = tcolor.green
@@ -71,11 +68,12 @@ public class CIColorAssistant : ValueAssistant {
                 if (propertyStates.start is CIColor) {
                     start_color = unwrapped_start as? CIColor
                     // we need to save start color values so we can compare to new color below
-                    let scolor = unwrapped_start as! CIColor
-                    red = scolor.red
-                    blue = scolor.blue
-                    green = scolor.green
-                    alpha = scolor.alpha
+                    if let scolor = unwrapped_start as? CIColor {
+                        red = scolor.red
+                        blue = scolor.blue
+                        green = scolor.green
+                        alpha = scolor.alpha
+                    }
                 }
             }
             
@@ -142,7 +140,7 @@ public class CIColorAssistant : ValueAssistant {
         var path_value :Double?
         
         if let unwrapped_object = property.targetObject {
-            if let parent = unwrapped_object.value(forKeyPath: property.parentKeyPath)! as? NSObject {
+            if let parent = unwrapped_object.value(forKeyPath: property.parentKeyPath) as? NSObject {
                 path_value = retrieveValue(inObject: parent, keyPath: property.path)
             }
             
@@ -159,8 +157,7 @@ public class CIColorAssistant : ValueAssistant {
     public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
         var retrieved_value: Double?
         
-        if (object is CIColor) {
-            let color = object as! CIColor
+        if let color = object as? CIColor {
             let last_component = lastComponent(forPath: path)
             
             if (last_component == "alpha") {
@@ -189,8 +186,7 @@ public class CIColorAssistant : ValueAssistant {
         
         var new_parent_value:NSObject?
         
-        if (object is CIColor) {
-            let color = object as! CIColor
+        if let color = object as? CIColor {
             var new_color = color
             
             for (prop, newValue) in newValues {
@@ -245,9 +241,8 @@ public class CIColorAssistant : ValueAssistant {
                 
                 // replace the top-level struct of the property we're trying to alter
                 // e.g.: keyPath is @"frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
-                    
-                    new_prop = updateValue(inObject: (base_prop as! NSObject), newValues: [property.path : new_property_value])
+                if let baseProp = unwrapped_object.value(forKeyPath: property.parentKeyPath) as? NSObject {
+                    new_prop = updateValue(inObject: baseProp, newValues: [property.path : new_property_value])
                 }
             }
             
@@ -255,14 +250,14 @@ public class CIColorAssistant : ValueAssistant {
         }
         
         // we have no base object, so we must be changing the CIColor directly
-        if (unwrapped_target is CIColor) {
+        if let unwrappedTarget = unwrapped_target as? CIColor {
             
             var new_property_value = property.current
             if (additive) {
                 new_property_value = newValue
             }
             
-            new_prop = updateValue(inObject: (unwrapped_target as! NSObject), newValues: [property.path : new_property_value])
+            new_prop = updateValue(inObject: unwrappedTarget, newValues: [property.path : new_property_value])
             
         }
         

@@ -8,7 +8,7 @@
 
 import XCTest
 
-class MotionGroupTests: XCTestCase {
+@MainActor class MotionGroupTests: XCTestCase {
 
 
     // MARK: Setup tests
@@ -142,10 +142,13 @@ class MotionGroupTests: XCTestCase {
             XCTAssertEqual(final_value, 10.0)
             XCTAssertEqual(group.totalProgress, 1.0)
             let new_timestamp = CFAbsoluteTimeGetCurrent()
-            let motion = group.motions.first as! Motion
-            XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
-            
-            did_complete.fulfill()
+            if let motion = group.motions.first as? Motion {
+                XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
+                
+                did_complete.fulfill()
+            } else {
+                XCTFail("No Motion found in group \(group.motions)")
+            }
         }
         group.delay = 0.2
         

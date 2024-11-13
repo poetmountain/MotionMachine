@@ -29,7 +29,7 @@ import UIKit
 /**
  *  CATempo uses a `CADisplayLink` object to send out tempo updates that are synchronized with the refresh rate of the display on iOS.
  */
-public class CATempo : Tempo {
+@MainActor public class CATempo : Tempo {
     
     /**
      *  This `CADisplayLink` object is used to provide tempo updates.
@@ -51,10 +51,10 @@ public class CATempo : Tempo {
         displayLink?.add(to: RunLoop.main, forMode: .common)
     }
     
-    deinit {
+    public override func cleanupResources() {
         displayLink?.invalidate()
+
     }
-    
 
     @objc func update() -> Void {
         let time_stamp: CFTimeInterval = self.displayLink?.timestamp ?? 0.0

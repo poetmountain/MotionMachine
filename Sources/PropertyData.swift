@@ -27,14 +27,14 @@
 import Foundation
 
 /// Provides delegate updates when property values change.
-public protocol PropertyDataDelegate: AnyObject {
+@MainActor public protocol PropertyDataDelegate: AnyObject {
     
     /// Called when the `start` property of a PropertyData instance is updated.
     func didUpdate(_ startValue: Double)
 }
 
 /// This struct represents a single property or object and information about the state of its value interpolation, as well as metadata which allows a Motion instance to get and set these values.
-public struct PropertyData {
+@MainActor public struct PropertyData {
     
     /**
      *  The starting value of the motion operation.

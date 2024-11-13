@@ -33,7 +33,7 @@ import UIKit
 #endif
 
 /// This struct provides utility methods for Motion classes.
-public struct MotionSupport {
+@MainActor public struct MotionSupport {
 
     // MARK: Additive utility methods
     
@@ -106,15 +106,15 @@ public struct MotionSupport {
 
         // reverse through the array and find the most recent motion operation that's modifying this object property
         for motion in sorted_motions {
-            let additive = motion as! Additive
-            for property: PropertyData in additive.properties {
-                if ((property.target === object || property.targetObject === object) && property.path == path) {
-                    target_value =  property.start + ((property.end - property.start) * additive.additiveWeighting)
-                    
-                    break
+            if let additive = motion as? Additive {
+                for property: PropertyData in additive.properties {
+                    if ((property.target === object || property.targetObject === object) && property.path == path) {
+                        target_value =  property.start + ((property.end - property.start) * additive.additiveWeighting)
+                        
+                        break
+                    }
                 }
             }
-            
         }
         
         return target_value
@@ -126,18 +126,18 @@ public struct MotionSupport {
     public static func cast(_ number: AnyObject) -> Double? {
         var value: Double?
         
-        if (number is NSNumber) {
-            value = (number as! NSNumber).doubleValue
-        } else if (number is Double) {
-            value = number as? Double
-        } else if (number is CGFloat) {
-            value = Double(number as! CGFloat)
-        } else if (number is Int) {
-            value = Double(number as! Int)
-        } else if (number is UInt) {
-            value = Double(number as! UInt)
-        } else if (number is Float) {
-            value = Double(number as! Float)
+        if let number = number as? NSNumber {
+            value = number.doubleValue
+        } else if let number = number as? Double {
+            value = number
+        } else if let number = number as? CGFloat {
+            value = Double(number)
+        } else if let number = number as? Int {
+            value = Double(number)
+        } else if let number = number as? UInt {
+            value = Double(number)
+        } else if let number = number as? Float {
+            value = Double(number)
         }
         
         return value
@@ -219,7 +219,7 @@ public struct MotionSupport {
 // MARK: - Declarations
 
 /// An enum representing NSValue-encoded structs supported by MotionMachine.
-public enum ValueStructTypes {
+@MainActor public enum ValueStructTypes {
     case number
     case point
     case size

@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ValueAssistantGroupTests: XCTestCase {
+@MainActor class ValueAssistantGroupTests: XCTestCase {
 
     
     func test_add() {
@@ -45,17 +45,21 @@ class ValueAssistantGroupTests: XCTestCase {
         let path = "rect"
         if let struct_val = CGStructAssistant.valueForCGStruct(rect), let target = tester.value(forKeyPath: path) {
             let states = PropertyStates(path: path, end: struct_val)
-            let props = try! assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
-                        
-            XCTAssertEqual(props.count, 2)
-            
-            if (props.count == 2) {
-                let y_prop = props[0]
-                let width_prop = props[1]
-                XCTAssertEqual(y_prop.path, "rect.origin.y")
-                XCTAssertEqual(y_prop.end, 10.0)
-                XCTAssertEqual(width_prop.path, "rect.size.width")
-                XCTAssertEqual(width_prop.end, 50.0)
+            do {
+                let props = try assistant.generateProperties(targetObject: target as AnyObject, propertyStates: states)
+                
+                XCTAssertEqual(props.count, 2)
+                
+                if (props.count == 2) {
+                    let y_prop = props[0]
+                    let width_prop = props[1]
+                    XCTAssertEqual(y_prop.path, "rect.origin.y")
+                    XCTAssertEqual(y_prop.end, 10.0)
+                    XCTAssertEqual(width_prop.path, "rect.size.width")
+                    XCTAssertEqual(width_prop.end, 50.0)
+                }
+            } catch {
+                XCTFail("CGStruct value was not found")
             }
         }
         
@@ -65,26 +69,30 @@ class ValueAssistantGroupTests: XCTestCase {
     func test_updateValue_CGRect() {
         let assistant = ValueAssistantGroup(assistants: [CGStructAssistant()])
 
-        let old_value = NSValue.init(cgRect: CGRect.init(x: 0.0, y: 0.0, width: 10.0, height: 10.0))
-        var new_value: NSValue
+        let oldValue = NSValue.init(cgRect: CGRect.init(x: 0.0, y: 0.0, width: 10.0, height: 10.0))
         
-        new_value = assistant.updateValue(inObject: old_value, newValues: ["origin.x" : 10.0]) as! NSValue
-        XCTAssertEqual(new_value.cgRectValue.origin.x, 10.0)
-        XCTAssertEqual(new_value.cgRectValue.origin.y, old_value.cgRectValue.origin.y)
+        if let newValue = assistant.updateValue(inObject: oldValue, newValues: ["origin.x" : 10.0]) as? NSValue {
+            XCTAssertEqual(newValue.cgRectValue.origin.x, 10.0)
+            XCTAssertEqual(newValue.cgRectValue.origin.y, oldValue.cgRectValue.origin.y)
+        } else {
+            XCTFail("Could not update origin.x value")
+        }
     }
     
     func test_updateValue_UIColor() {
         let assistant = ValueAssistantGroup(assistants: [CGStructAssistant(), UIColorAssistant()])
 
         let old_value = UIColor.init(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0)
-        var new_value: UIColor
         
-        new_value = assistant.updateValue(inObject: old_value, newValues: ["red" : 1.0]) as! UIColor
-        var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
-        new_value.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
-        XCTAssertEqual(red, 1.0)
-        XCTAssertEqual(blue, 0.0)
+        if let newValue = assistant.updateValue(inObject: old_value, newValues: ["red" : 1.0]) as? UIColor {
+            var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
+            newValue.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            
+            XCTAssertEqual(red, 1.0)
+            XCTAssertEqual(blue, 0.0)
+        } else {
+            XCTFail("Could not update red value")
+        }
     }
     
     func test_retrieveValue() {

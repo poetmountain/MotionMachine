@@ -8,9 +8,10 @@
 
 import Foundation
 import UIKit
+import XCTest
 
 @objcMembers
-class Tester: NSObject {
+@MainActor class Tester: NSObject {
     
     var value: Double = 0.0
     var rect = CGRect.zero
@@ -24,6 +25,15 @@ class Tester: NSObject {
 }
 
 @objcMembers
-class SubTest: NSObject {
+@MainActor class SubTest: NSObject {
     var rect = CGRect.zero
+}
+
+extension XCTestCase {
+
+  func wait(timeout: TimeInterval) {
+    let expectation = XCTestExpectation(description: "Waiting for \(timeout) seconds")
+    XCTWaiter().wait(for: [expectation], timeout: timeout)
+  }
+
 }

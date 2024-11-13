@@ -8,7 +8,7 @@
 
 import XCTest
 
-class MotionSequenceTests: XCTestCase {
+@MainActor class MotionSequenceTests: XCTestCase {
 
     // MARK: Setup tests
     
@@ -116,19 +116,25 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, motion3, motion4])
         .started { (sequence) in
-            let motion = sequence.steps.first as! MotionGroup
-            XCTAssertTrue(sequence.currentStep() === motion, "should start with first motion")
-            
-            did_start.fulfill()
+            if let motion = sequence.steps.first as? MotionGroup {
+                XCTAssertTrue(sequence.currentStep() === motion, "should start with first motion")
+                
+                did_start.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         }
         .completed { (sequence) in
-            let motion = sequence.steps.last as! Motion
-            XCTAssertTrue(sequence.currentStep() === motion, "should end with last motion")
-            XCTAssertEqual(motion.properties[0].current, motion.properties[0].end)
-            XCTAssertEqual(motion.totalProgress, 1.0)
-            print("sequence completed")
-            
-            did_complete.fulfill()
+            if let motion = sequence.steps.last as? Motion {
+                XCTAssertTrue(sequence.currentStep() === motion, "should end with last motion")
+                XCTAssertEqual(motion.properties[0].current, motion.properties[0].end)
+                XCTAssertEqual(motion.totalProgress, 1.0)
+                print("sequence completed")
+                
+                did_complete.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         }
         
         sequence.start()
@@ -150,10 +156,12 @@ class MotionSequenceTests: XCTestCase {
             XCTAssertEqual(final_value, 60.0)
             XCTAssertEqual(sequence.totalProgress, 1.0)
             let new_timestamp = CFAbsoluteTimeGetCurrent()
-            let motion = sequence.steps.first as! Motion
-            XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
-            
-            did_complete.fulfill()
+            if let motion = sequence.steps.first as? Motion {
+                XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
+                did_complete.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         }
         sequence.delay = 0.2
         
@@ -175,26 +183,32 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.repeats])
         .cycleRepeated { (sequence) in
-            let motion = sequence.steps.first as! MotionGroup
-            XCTAssertTrue(sequence.currentStep() === motion)
-            XCTAssertEqual(sequence.totalProgress, 0.5)
-            XCTAssertEqual(sequence.cycleProgress, 0.0)
-            XCTAssertEqual(sequence.cyclesCompletedCount, 1)
-            
-            did_repeat.fulfill()
+            if let motion = sequence.steps.first as? MotionGroup {
+                XCTAssertTrue(sequence.currentStep() === motion)
+                XCTAssertEqual(sequence.totalProgress, 0.5)
+                XCTAssertEqual(sequence.cycleProgress, 0.0)
+                XCTAssertEqual(sequence.cyclesCompletedCount, 1)
+                
+                did_repeat.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         }
         .completed { (sequence) in
-            let motion = sequence.steps.last as! Motion
-            XCTAssertTrue(sequence.currentStep() === motion, "should end with last motion")
-            XCTAssertEqual(motion.properties[0].current, motion.properties[0].end)
-            XCTAssertEqual(motion.totalProgress, 1.0)
-            let new_cycles = sequence.repeatCycles + 1
-            XCTAssertEqual(sequence.cyclesCompletedCount, new_cycles)
-            XCTAssertEqual(sequence.cycleProgress, 1.0)
-            XCTAssertEqual(sequence.totalProgress, 1.0)
-            XCTAssertEqual(sequence.motionState, MotionState.stopped)
-            
-            did_complete.fulfill()
+            if let motion = sequence.steps.last as? Motion {
+                XCTAssertTrue(sequence.currentStep() === motion, "should end with last motion")
+                XCTAssertEqual(motion.properties[0].current, motion.properties[0].end)
+                XCTAssertEqual(motion.totalProgress, 1.0)
+                let new_cycles = sequence.repeatCycles + 1
+                XCTAssertEqual(sequence.cyclesCompletedCount, new_cycles)
+                XCTAssertEqual(sequence.cycleProgress, 1.0)
+                XCTAssertEqual(sequence.totalProgress, 1.0)
+                XCTAssertEqual(sequence.motionState, MotionState.stopped)
+                
+                did_complete.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         }
         sequence.repeatCycles = 1
         
@@ -216,20 +230,23 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.reverses])
         .reversed({ (sequence) in
-            let motion = sequence.steps.last as! Motion
-
-            XCTAssertTrue(sequence.totalProgress <= 0.5)
-            XCTAssertTrue(sequence.cycleProgress <= 0.5)
-            XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
-            XCTAssertTrue(sequence.currentStep() === motion, "step after reversing should be same step")
-            XCTAssertEqual(motion.motionDirection, MotionDirection.reverse, "sequence when reversing should move in reverse")
-
-            did_reverse.fulfill()
+            if let motion = sequence.steps.last as? Motion {
+                XCTAssertTrue(sequence.totalProgress <= 0.5)
+                XCTAssertTrue(sequence.cycleProgress <= 0.5)
+                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
+                XCTAssertTrue(sequence.currentStep() === motion, "step after reversing should be same step")
+                XCTAssertEqual(motion.motionDirection, MotionDirection.reverse, "sequence when reversing should move in reverse")
+                
+                did_reverse.fulfill()
+            } else {
+                XCTFail("No Motion found in Sequence \(sequence.steps)")
+            }
         })
         .completed { (sequence) in
-            let group = sequence.steps.first as! MotionGroup
-            let motion = group.motions.first as! Motion
-            let last = sequence.steps.last as! Motion
+            guard let group = sequence.steps.first as? MotionGroup, let motion = group.motions.first as? Motion, let last = sequence.steps.last as? Motion else {
+                XCTFail("No Motion found in Sequence or Group")
+                return
+            }
             XCTAssertTrue(sequence.currentStep() === group, "should end with first motion")
             
             // contiguous mode will reverse steps, so they should end back at start value
@@ -281,8 +298,10 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.reverses])
             .reversed({ (sequence) in
-                let motion = sequence.steps.last as! Motion
-                let subsequence = sequence.steps[1] as! MotionSequence
+                guard let motion = sequence.steps.last as? Motion, let subsequence = sequence.steps[1] as? MotionSequence else {
+                    XCTFail("No Motion found in Sequence \(sequence.steps)")
+                    return
+                }
                 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
@@ -294,11 +313,10 @@ class MotionSequenceTests: XCTestCase {
                 did_reverse.fulfill()
             })
             .completed { (sequence) in
-                let group = sequence.steps.first as! MotionGroup
-                let motion = group.motions.first as! Motion
-                let last = sequence.steps.last as! Motion
-                let subsequence = sequence.steps[1] as! MotionSequence
-                let sequence_motion = subsequence.steps[0] as! Motion
+                guard let group = sequence.steps.first as? MotionGroup, let motion = group.motions.first as? Motion, let last = sequence.steps.last as? Motion, let subsequence = sequence.steps[1] as? MotionSequence, let sequence_motion = subsequence.steps[0] as? Motion else {
+                    XCTFail("No Motion found in Sequence or Group")
+                    return
+                }
                 XCTAssertTrue(sequence.currentStep() === group, "should end with first motion")
                 
                 // contiguous mode will reverse steps, so they should end back at start value
@@ -352,8 +370,10 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, sub_sequence], options: [.reverses])
             .reversed({ (sequence) in
-                let motion = sequence.steps.first as! MotionGroup
-                let subsequence = sequence.steps.last as! MotionSequence
+                guard let motion = sequence.steps.first as? MotionGroup, let subsequence = sequence.steps.last as? MotionSequence else {
+                    XCTFail("No Motion found in Sequence \(sequence.steps)")
+                    return
+                }
                 
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
@@ -365,10 +385,10 @@ class MotionSequenceTests: XCTestCase {
                 did_reverse.fulfill()
             })
             .completed { (sequence) in
-                let group = sequence.steps.first as! MotionGroup
-                let motion = group.motions.first as! Motion
-                let subsequence = sequence.steps[1] as! MotionSequence
-                let sequence_motion = subsequence.steps[0] as! Motion
+                guard let group = sequence.steps.first as? MotionGroup, let motion = group.motions.first as? Motion, let subsequence = sequence.steps[1] as? MotionSequence, let sequence_motion = subsequence.steps[0] as? Motion else {
+                    XCTFail("No Motion found in Sequence or Group")
+                    return
+                }
                 XCTAssertTrue(sequence.currentStep() === group, "should end with first motion")
                 
                 // contiguous mode will reverse steps, so they should end back at start value
@@ -421,9 +441,11 @@ class MotionSequenceTests: XCTestCase {
 
         let sequence = MotionSequence(steps: [group, sub_sequence, motion5], options: [.reverses])
             .reversed({ (sequence) in
-                let motion = sequence.steps.last as! Motion
-                let subsequence = sequence.steps[1] as! MotionSequence
-
+                guard let motion = sequence.steps.last as? Motion, let subsequence = sequence.steps[1] as? MotionSequence else {
+                    XCTFail("No Motion found in Sequence \(sequence.steps)")
+                    return
+                }
+  
                 XCTAssertTrue(sequence.totalProgress <= 0.5)
                 XCTAssertTrue(sequence.cycleProgress <= 0.5)
                 XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
@@ -434,11 +456,10 @@ class MotionSequenceTests: XCTestCase {
                 did_reverse.fulfill()
             })
             .completed { (sequence) in
-                let group = sequence.steps.first as! MotionGroup
-                let motion = group.motions.first as! Motion
-                let subsequence = sequence.steps[1] as! MotionSequence
-                let sequence_motion = subsequence.steps[0] as! Motion
-                let last = sequence.steps.last as! Motion
+                guard let group = sequence.steps.first as? MotionGroup, let motion = group.motions.first as? Motion, let subsequence = sequence.steps[1] as? MotionSequence, let sequence_motion = subsequence.steps[0] as? Motion, let last = sequence.steps.last as? Motion else {
+                    XCTFail("No Motion found in Sequence or Group")
+                    return
+                }
                 
                 XCTAssertTrue(sequence.currentStep() === group, "should end with first motion")
                 
@@ -488,20 +509,24 @@ class MotionSequenceTests: XCTestCase {
         
         let sequence = MotionSequence(steps: [group, motion3, motion4], options: [.reverses])
             .reversed({ (sequence) in
-                let motion = sequence.steps.last as! Motion
-
-                XCTAssertTrue(sequence.totalProgress <= 0.5)
-                XCTAssertTrue(sequence.cycleProgress <= 0.5)
-                XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
-                XCTAssertTrue(sequence.currentStep() === sequence.steps.last, "step after reversing should be same step")
-                XCTAssertEqual(motion.motionDirection, MotionDirection.forward, "sequence when reversing should move forwards")
-                
-                did_reverse.fulfill()
+                if let motion = sequence.steps.last as? Motion {
+                    
+                    XCTAssertTrue(sequence.totalProgress <= 0.5)
+                    XCTAssertTrue(sequence.cycleProgress <= 0.5)
+                    XCTAssertEqual(sequence.motionDirection, MotionDirection.reverse)
+                    XCTAssertTrue(sequence.currentStep() === sequence.steps.last, "step after reversing should be same step")
+                    XCTAssertEqual(motion.motionDirection, MotionDirection.forward, "sequence when reversing should move forwards")
+                    
+                    did_reverse.fulfill()
+                } else {
+                    XCTFail("Motion not found in Sequence \(sequence.steps)")
+                }
             })
             .completed { (sequence) in
-                let group = sequence.steps.first as! MotionGroup
-                let motion = group.motions.first as! Motion
-                let last = sequence.steps.last as! Motion
+                guard let group = sequence.steps.first as? MotionGroup, let motion = group.motions.first as? Motion, let last = sequence.steps.last as? Motion else {
+                    XCTFail("Motion not found in Sequence or Group")
+                    return
+                }
                 
                 XCTAssertTrue(sequence.currentStep() === group, "should end with first motion")
                 

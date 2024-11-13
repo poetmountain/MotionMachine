@@ -1,3 +1,8 @@
+### 2.1.0
+- Support for Swift 6.0 and strict concurrency mode
+- Removed many legacy forced unwrappings of Optionals
+- Changed PhysicsMotion's DispatchSourceTimer to regular Timer to solve concurrency crash
+
 ### 2.0.1
 - Fixed some retain cycles that were holding on to target objects
 - Updated examples project

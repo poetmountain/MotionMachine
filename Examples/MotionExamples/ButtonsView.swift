@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ButtonsViewDelegate: class {
+@MainActor protocol ButtonsViewDelegate: AnyObject {
     func didStart()
     func didStop()
     func didPause()
@@ -17,10 +17,18 @@ protocol ButtonsViewDelegate: class {
 
 public class ButtonsView: UIView {
 
-    public var startButton: UIButton!
-    public var stopButton: UIButton!
-    public var pauseButton: UIButton!
-    public var resumeButton: UIButton!
+    public var startButton: UIButton = {
+        return UIButton.init(type: .system)
+    }()
+    public var stopButton: UIButton = {
+        return UIButton.init(type: .system)
+    }()
+    public var pauseButton: UIButton = {
+        return UIButton.init(type: .system)
+    }()
+    public var resumeButton: UIButton = {
+        return UIButton.init(type: .system)
+    }()
     
     var uiCreated: Bool = false
     
@@ -44,22 +52,18 @@ public class ButtonsView: UIView {
     
     private func setupUI() {
         
-        startButton = UIButton.init(type: .system)
         startButton.setTitle("Start", for: UIControl.State())
         startButton.addTarget(self, action: #selector(start), for: .touchUpInside)
         self.addSubview(startButton)
         
-        stopButton = UIButton.init(type: .system)
         stopButton.setTitle("Stop", for: UIControl.State())
         stopButton.addTarget(self, action: #selector(stop), for: .touchUpInside)
         self.addSubview(stopButton)
         
-        pauseButton = UIButton.init(type: .system)
         pauseButton.setTitle("Pause", for: UIControl.State())
         pauseButton.addTarget(self, action: #selector(pause), for: .touchUpInside)
         self.addSubview(pauseButton)
         
-        resumeButton = UIButton.init(type: .system)
         resumeButton.setTitle("Resume", for: UIControl.State())
         resumeButton.addTarget(self, action: #selector(resume), for: .touchUpInside)
         self.addSubview(resumeButton)

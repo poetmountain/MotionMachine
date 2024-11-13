@@ -8,24 +8,29 @@
 
 import XCTest
 
-class CIColorAssistantTests: XCTestCase {
+@MainActor class CIColorAssistantTests: XCTestCase {
     
     func test_generateProperties() {
         let assistant = CIColorAssistant()
         let color = CIColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         let new_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.5, alpha: 1.0)
         let states = PropertyStates(path: "", end: new_color)
-        let props = try! assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
         
-        // should only have 1 prop because only blue value is changed from original color
-        XCTAssertEqual(props.count, 1)
-        
-        if (props.count == 1) {
-            let color_prop = props[0]
-            // should test that ending property state was captured and start state is set to original color value
-            XCTAssertEqual(color_prop.path, "blue")
-            XCTAssertEqual(color_prop.start, 0.0)
-            XCTAssertEqual(color_prop.end, 0.5)
+        do {
+            let props = try assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
+            
+            // should only have 1 prop because only blue value is changed from original color
+            XCTAssertEqual(props.count, 1)
+            
+            if (props.count == 1) {
+                let color_prop = props[0]
+                // should test that ending property state was captured and start state is set to original color value
+                XCTAssertEqual(color_prop.path, "blue")
+                XCTAssertEqual(color_prop.start, 0.0)
+                XCTAssertEqual(color_prop.end, 0.5)
+            }
+        } catch {
+            XCTFail("Could not generate properties for \(states)")
         }
         
     }
@@ -36,17 +41,23 @@ class CIColorAssistantTests: XCTestCase {
         let start_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.2, alpha: 1.0)
         let new_color = CIColor.init(red: 0.0, green: 0.0, blue: 0.5, alpha: 1.0)
         let states = PropertyStates(path: "", start: start_color, end: new_color)
-        let props = try! assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
         
-        // should only have 1 prop because only blue value is changed from original color
-        XCTAssertEqual(props.count, 1)
-        
-        if (props.count == 1) {
-            let color_prop = props[0]
-            // should test that both the starting and ending property states were captured
-            XCTAssertEqual(color_prop.path, "blue")
-            XCTAssertEqual(color_prop.start, 0.2)
-            XCTAssertEqual(color_prop.end, 0.5)
+        do {
+            let props = try assistant.generateProperties(targetObject: color as AnyObject, propertyStates: states)
+            
+            // should only have 1 prop because only blue value is changed from original color
+            XCTAssertEqual(props.count, 1)
+            
+            if (props.count == 1) {
+                let color_prop = props[0]
+                // should test that both the starting and ending property states were captured
+                XCTAssertEqual(color_prop.path, "blue")
+                XCTAssertEqual(color_prop.start, 0.2)
+                XCTAssertEqual(color_prop.end, 0.5)
+            }
+        } catch {
+            XCTFail("Could not generate properties for \(states)")
+
         }
     }
     
@@ -54,20 +65,23 @@ class CIColorAssistantTests: XCTestCase {
         let assistant = CIColorAssistant()
         
         var old_value = CIColor.init(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0)
-        var new_value: CIColor
         
-        new_value = assistant.updateValue(inObject: old_value, newValues: ["red" : 1.0]) as! CIColor
-        XCTAssertEqual(new_value.red, 1.0)
-        XCTAssertEqual(new_value.blue, 0.0)
-        
+        if let newValue = assistant.updateValue(inObject: old_value, newValues: ["red" : 1.0]) as? CIColor {
+            XCTAssertEqual(newValue.red, 1.0)
+            XCTAssertEqual(newValue.blue, 0.0)
+        } else {
+            XCTFail("Could not update red value")
+        }
         
         // additive
         assistant.additive = true
         old_value = CIColor.init(red: 0.2, green: 0.5, blue: 0.0, alpha: 1.0)
-        new_value = assistant.updateValue(inObject: old_value, newValues: ["red" : 0.3]) as! CIColor
-        XCTAssertEqual(new_value.red, 0.5)
-        XCTAssertEqual(new_value.green, 0.5)
-        
+        if let newValue = assistant.updateValue(inObject: old_value, newValues: ["red" : 0.3]) as? CIColor {
+            XCTAssertEqual(newValue.red, 0.5)
+            XCTAssertEqual(newValue.green, 0.5)
+        } else {
+            XCTFail("Could not update additive red value")
+        }
         
     }
     

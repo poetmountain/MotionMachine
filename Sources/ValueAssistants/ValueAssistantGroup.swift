@@ -106,37 +106,35 @@ public class ValueAssistantGroup : ValueAssistant {
     
     
     public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
-        var retrieved_value: Double?
+        var retrievedValue: Double?
         
         for assistant in assistants {
             if (assistant.supports(object as AnyObject)) {
                 if let retrieved = try? assistant.retrieveValue(inObject: object, keyPath: path) {
-                    retrieved_value = retrieved
+                    retrievedValue = retrieved
                     break
                 }
             }
         }
         
-        if (retrieved_value == nil) {
-            let path_value = (object as AnyObject).value(forKeyPath: path)!
+        if (retrievedValue == nil), let pathValue = (object as AnyObject).value(forKeyPath: path) {
             
             // cast numeric value to a double
-            retrieved_value = MotionSupport.cast(path_value as AnyObject)
+            retrievedValue = MotionSupport.cast(pathValue as AnyObject)
             
             let components = path.components(separatedBy: ".")
             
-            
-            let first_component = components.first!
-            let child_object = (object as AnyObject).value(forKey: first_component)
-            if let unwrapped_child = child_object as AnyObject? {
-                if (acceptsKeypath(unwrapped_child)) {
-                    
+            if let first_component = components.first {
+                let child_object = (object as AnyObject).value(forKey: first_component)
+                if let unwrapped_child = child_object as AnyObject? {
+                    if (acceptsKeypath(unwrapped_child)) {
+                        
+                    }
                 }
             }
-        
         }
         
-        return retrieved_value
+        return retrievedValue
     }
     
     

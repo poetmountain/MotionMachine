@@ -9,7 +9,7 @@
 import XCTest
 import UIKit
 
-class MotionTests: XCTestCase {
+@MainActor class MotionTests: XCTestCase {
 
     // MARK: Setup tests
     
