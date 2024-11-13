@@ -1,7 +1,7 @@
 ![MotionMachine logo](Guides/mmlogo.png)
 
 ![swift](https://img.shields.io/badge/Swift-5.0%20%7C%206.0-005AA5.svg)
-![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20tvOS-005AA5.svg "![license](https://img.shields.io/badge/license-MIT-005AA5.svg "license")-005AA5.svg)
+![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
 MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
 
@@ -171,7 +171,7 @@ Or add the Sources directory to your project.
 ## Compatibility
 
 MotionMachine currently requires:
-* Swift 5.0
+* Swift 5.0 or later
 * Xcode 10.0 or later
 * iOS 8.0 or later, tvOS 9.0 or later
 
