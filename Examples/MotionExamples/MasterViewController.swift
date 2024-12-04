@@ -2,9 +2,10 @@
 //  MasterViewController.swift
 //  MotionExamples
 //
-//  Created by Brett Walker on 6/1/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
 
@@ -17,6 +18,9 @@ enum ExampleTypes: Int {
     case physics                = 4
     case additive               = 5
     case dynamic                = 6
+    case path                   = 7
+    case pathContiguous         = 8
+    case pathPhysics            = 9
     
 }
 
@@ -37,7 +41,10 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
                     "Sequence (Contiguous)",
                     "Physics",
                     "Additive",
-                    "Additive (Multiple)"
+                    "Additive (Multiple)",
+                    "Path",
+                    "Path (Contiguous Edges)",
+                    "Physics Path"
                     ]
     }
     
@@ -148,6 +155,15 @@ class MasterViewController: UIViewController, UITableViewDataSource, UITableView
                 
             case .dynamic:
                 vc = DynamicViewController()
+                    
+            case .path:
+                vc = PathMotionViewController()
+                    
+            case .pathContiguous:
+                vc = PathMotionContiguousViewController()
+                    
+            case .pathPhysics:
+                vc = PathPhysicsMotionViewController()
             }
             
             tableView.deselectRow(at: indexPath, animated: true)

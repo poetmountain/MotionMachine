@@ -2,27 +2,10 @@
 //  MotionSupport.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 4/20/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 import CoreGraphics
@@ -123,6 +106,9 @@ import UIKit
     
     // MARK: Utility methods
     
+    /// Attempts to cast a generic object to a Double value.
+    /// - Parameter number: The object to case.
+    /// - Returns: A Double value, if the cast succeeded.
     public static func cast(_ number: AnyObject) -> Double? {
         var value: Double?
         
@@ -220,17 +206,36 @@ import UIKit
 
 /// An enum representing NSValue-encoded structs supported by MotionMachine.
 @MainActor public enum ValueStructTypes {
+    /// Represents a `NSNumber` type.
     case number
+    
+    /// Represents a `CGPoint` type.
     case point
+    
+    /// Represents a `CGSize` type.
     case size
+    
+    /// Represents a `CGRect` type.
     case rect
+    
+    /// Represents a `CGVector` type.
     case vector
+    
+    /// Represents a `CGAffineTransform` type.
     case affineTransform
+    
+    /// Represents a `CATransform3D` type.
     case transform3D
+    
     #if os(iOS) || os(tvOS)
+    /// Represents a `UIEdgeInsets` type.
     case uiEdgeInsets
+    
+    /// Represents a `UIOffset` type.
     case uiOffset
     #endif
+    
+    /// Represents an unsupported type.
     case unsupported
     
     static var valueTypes: [ValueStructTypes: NSValue] = [ValueStructTypes.number : NSNumber.init(value: 0),

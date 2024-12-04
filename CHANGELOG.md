@@ -1,3 +1,9 @@
+### 2.2.0
+- Added `PathMotion` class to allow a `CGPoint` to be animated along the length of a `CGPath`! `PathMotion` conforms to the `Moveable` protocol and interacts with the MotionMachine ecosystem as you'd expect from the other motion classes, and you can use all of the normal easing equations. Using the `startPosition` and `endPosition` parameters you can even specify a portion of the path to animate along.
+- Added `PathPhysicsMotion` class to allow a `CGPoint` to be animated along the length of a `CGPath` using the same physics system that `PhysicsMotion` uses! Like `PathMotion`, it conforms to the `Moveable` protocol and interacts with the MotionMachine ecosystem as you'd expect from the other motion classes.
+- Added simple collision handling to `PhysicsSystem`, the physics engine that powers `PhysicsMotion` and `PathPhysicsMotion`. Collision points can be specified using the starting and ending points of a motion, and a `restitution` value to control how much velocity is lost during a collision can be set using the new `PhysicsConfiguration` object.
+- Added tests, documentation, and examples for `PathMotion` and `PathPhysicsMotion`.
+
 ### 2.1.0
 - Support for Swift 6.0 and strict concurrency mode
 - Removed many legacy forced unwrappings of Optionals

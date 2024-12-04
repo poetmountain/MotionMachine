@@ -2,30 +2,15 @@
 //  MotionSequence.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 5/11/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
+/// A closure used to provide status updates for a ``MotionSequence`` object.
+/// - Parameter sequence: The ``MotionSequence`` object which published this update closure.
 public typealias SequenceUpdateClosure = (_ sequence: MotionSequence) -> Void
 
 /**
@@ -278,7 +263,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 for step in steps {
                     step.reversing = true
                     if var collection = step as? MoveableCollection {
-                        // by default, setting a .Contiguous reversingMode will cascade down to sub-collections
+                        // by default, setting a contiguous reversingMode will cascade down to sub-collections
                         // since usually a user would expect a contiguous movement from each sub-motion when setting this value
                         collection.reversingMode = .contiguous
                     }
@@ -385,7 +370,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private var _cycleRepeated: SequenceRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `.Reversing`.
+     *  This closure is called when the `motionDirection` property changes to `reversing`.
      *
      *  - seealso: motionDirection, reversing
      */
@@ -597,7 +582,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  Specifies that a motion cycle should repeat and the number of times it should do so. When no value is provided, the motion will repeat infinitely.
      *
-     *  - remark: When this method is used there is no need to specify `.Repeat` in the `options` parameter of the init method.
+     *  - remark: When this method is used there is no need to specify `repeats` in the `options` parameter of the init method.
      *
      *  - parameter numberOfCycles: The number of motion cycles to repeat. The default value is `REPEAT_INFINITE`.
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.
@@ -616,7 +601,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  Specifies that the MotionSequence's child motions should reverse their movements back to their starting values after completing their forward movements.
      *
-     *  - remark: When this method is used there is no need to specify `.Reverse` in the `options` parameter of the init method.
+     *  - remark: When this method is used there is no need to specify `reverses` in the `options` parameter of the init method.
      *
      *  - parameter mode: Defines the `CollectionReversingMode` used when reversing.
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.

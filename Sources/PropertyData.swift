@@ -2,27 +2,10 @@
 //  PropertyData.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 4/26/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
@@ -124,7 +107,7 @@ import Foundation
      *      - start: An optional starting value for the motion. If none is provided, `useExistingStartValue` will be set to `true`.
      *      - end: The ending value of the motion.
      */
-    public init(path: String?, start: Double?=nil, end: Double) {
+    public init(path: String?, start: Double? = nil, end: Double? = nil) {
         if let unwrapped_path = path {
             self.path = unwrapped_path
         }
@@ -137,18 +120,34 @@ import Foundation
             useExistingStartValue = true
             self.start = 0.0
         }
-        self.end = end
+        
+        if let end {
+            self.end = end
+        } else {
+            self.end = self.start
+        }
+        
     }
 
     
+    /// A convenience initializer.
+    /// - Parameters:
+    ///   - _path: The keypath of the property to modify, relative to the `targetObject`.
+    ///   - _end: The ending value of the motion.
     public init(_  _path: String?, _ _end: Double) {
         self.init(path: _path, start: nil, end: _end)
     }
     
+    /// A convenience initializer.
+    /// - Parameters:
+    ///   - _path: The keypath of the property to modify, relative to the `targetObject`.
     public init(_ path: String?) {
-        self.init(path: path, start: nil, end: 0.0)
+        self.init(path: path, start: nil, end: nil)
     }
     
+    /// A convenience initializer.
+    /// - Parameters:
+    ///   - _end: The ending value of the motion.
     public init(end: Double) {
         self.init(path: nil, start: nil, end: end)
     }

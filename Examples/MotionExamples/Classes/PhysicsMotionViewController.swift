@@ -2,9 +2,10 @@
 //  PhysicsMotionViewController.swift
 //  MotionExamples
 //
-//  Created by Brett Walker on 6/2/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
 
@@ -107,7 +108,8 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
     
     
     private func createMotion() {
-        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData("constant")], velocity: 300.0, friction: 0.72)
+        let config = PhysicsConfiguration(velocity: 300, friction: 0.72)
+        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData(path: "constant")], configuration: config)
         .paused({ (motion) in
             print("paused!")
         })

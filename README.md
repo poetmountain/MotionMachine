@@ -1,14 +1,15 @@
 ![MotionMachine logo](Guides/mmlogo.png)
 
-![swift](https://img.shields.io/badge/Swift-5.0%20%7C%206.0-005AA5.svg)
+![swift](https://img.shields.io/badge/Swift-5.5%20%7C%206.0-005AA5.svg)
 ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
 MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
 
 * Animation engine built from the ground up (not tied to Core Animation).
-* Motions can be grouped, sequenced, and nested in any arrangement and have reversing and repeating actions applied at any level.
-* Animate properties of UIKit or any generic classes.
-* Includes both static and physics-based motion classes, and both support additive animation.
+* Animate system properties, UIViews, or any generic classes using many easing equations.
+* Provides static and physics-based motion classes to modifying multiple property values, and both support additive animation.
+* Provides static and physics-based motion classes that can animate a `CGPoint` along a `CGPath`, even part of a path.
+* All motion classes can be grouped, sequenced, and nested in any arrangement and have reversing and repeating actions applied at any level.
 * Powerfully modular – most aspects can be customized or outright replaced to fit your specific needs.
 * Provides status callback closures for many types of motion events.
 * Fully tested
@@ -157,23 +158,17 @@ sequence.start()
 
 ## Installation
 
-MotionMachine supports Swift Packages in Xcode 11 and above.
-
-If you use CocoaPods, add this pod to your Podfile:
-
-##### Podfile
-```ruby
-pod 'MotionMachine', '~> 2.0'
+You can add MotionMachine to an Xcode project by adding it as a Swift package dependency.
+```swift
+.product(name: "MotionMachine", package: "MotionMachine")
 ```
-
-Or add the Sources directory to your project.
 
 ## Compatibility
 
 MotionMachine currently requires:
-* Swift 5.0 or later
-* Xcode 10.0 or later
-* iOS 8.0 or later, tvOS 9.0 or later
+* Swift 5.5 or above
+* Xcode 16+
+* iOS 13.0 or later, tvOS 13.0 or later
 
 #### Caveats
 

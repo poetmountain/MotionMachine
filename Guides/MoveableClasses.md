@@ -58,13 +58,13 @@ let motion = Motion(target: view,
                 properties: [PropertyData("frame.origin.x", 200.0)],
                   duration: 1.0,
                     easing: EasingQuadratic.easeInOut(),
-                   options: [.Reverse, .Repeat])
+                   options: [.reverses, .repeats])
 motion.repeatCycles = 1
 motion.start()
 ```
 
 
-An alternate and more succinct way to set up a repeating `Motion` is to use the chained method `repeats(numberOfCycles:)`. We'll also add the chained method `.reverses(withEasing:)` to tell the `Motion` to reverse and give it a separate easing equation when reversing. Note that you don't need to pass in the `.Repeat` and `.Reverse` init options when using these methods, so we omitted that parameter.
+An alternate and more succinct way to set up a repeating `Motion` is to use the chained method `repeats(numberOfCycles:)`. We'll also add the chained method `.reverses(withEasing:)` to tell the `Motion` to reverse and give it a separate easing equation when reversing. Note that you don't need to pass in the `repeats` and `reverses` init options when using these methods, so we omitted that parameter.
 ```swift
 let motion = Motion(target: view,
                 properties: [PropertyData("frame.origin.x", 200.0)],
@@ -107,23 +107,141 @@ let motion = PhysicsMotion(target: view,
                           ).start()
 ```
 
+`PhysicsMotion` also supports simple collision handling. In this example we're going to turn on collision detection and add a `restitution` value. This value enables the object to collide and "bounce" off a `PropertyData`'s `start` and `end` values. The `restitution` value determines the elasticity of a colliding object, which in effect determines how much velocity the property values retain after colliding with an edge. A `restitution` value of 0.0 results in no bouncing at all, while a value of 1.0 results in no energy being lost in the collision.
+```swift
+let config = PhysicsConfiguration(velocity: 300, friction: 0.72, restitution: 0.5, useCollisionDetection: true)
+motion = PhysicsMotion(target: view,
+                   properties: [PropertyData("frame.origin.x", end: 300)],
+                configuration: config)
+.start()
+```
 
-Although `PhysicsMotion` uses a physics simulation instead of specifying discrete ending values, we can still apply `.Repeat` and `.Reverse` options, and `PhysicsMotion` has the same chainable `repeats()` method. Repeating and reversing act in the same way as `Motion` and interacts with `MoveableCollection` classes as you would expect.
+Although `PhysicsMotion` uses a physics simulation instead of specifying discrete ending values, we can still apply `repeats` and `reverses` options, and `PhysicsMotion` has the same chainable `repeats()` method. Repeating and reversing act in the same way as `Motion` and interacts with `MoveableCollection` classes as you would expect.
 ```swift
 let motion = PhysicsMotion(target: view,
                        properties: [PropertyData("frame.origin.x")],
                          velocity: 150.0,
                          friction: 0.75,
-                          options: [.Reverse])
+                          options: [.reverses])
 .repeats(1).start()
 ```
 
+## PathMotion
+
+`PathMotion` transforms a `CGPoint` along a `CGPath` object over a period of time via an easing equation. Unlike a normal `Motion` class it does not accept `PropertyData` objects; due to the complex nature of paths, `PathMotion` only accepts a `PathState` object, an easing equation, and optional starting and end points to determine what area of the path to animate along. The resulting transformed `CGPoint` value is provided via its status closure methods. Thus a typical use would be to listen to the `updated({ (motion, currentPoint)` closure and use the provided `currentPoint` parameter to update your UIView's `center` property. Though it is more limited in what values it transforms and it does not support `additive` motion at this time, in all other respects `PathMotion` integrates with the `Moveable` ecosystem just like the other motion types, greatly expanding the types of complex animations MotionMachine can create. 
+
+![PathMotion spiral animation](path_spiral.gif)
+
+Here's a basic example. We've supplied the `PathMotion` with a basic CGPath via a `PathState` object, an easing equation, and we've told it to reverse back to the beginning once it travels to the end. Notice though how we've defined a `startPosition` and `endPosition`. This tells the `PathMotion` it should start the animation at a point 10% from the beginning of the path and end the animation at a point 80% along the path's length. If you leave these parameters out it will travel the full distance.
+```swift
+let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
+let pathState = PathState(path: path.cgPath)
+motion = PathMotion(path: pathState,
+                duration: 1.0,
+           startPosition: 0.1,
+             endPosition: 0.8,
+                  easing: EasingQuadratic.easeInOut(),
+                 options: [.reverses])
+motion.start()
+```
+
+In this example note that we've added an `edgeBehavior` parameter to the `PathMotion` initializer. There are two types of edge behaviors – `stopAtEdges` (the default), which simply stops motion once the animated point gets to either specified edge point, and `contiguousEdges`, which tells the `PathMotion` that the path's starting and ending edges should be treated as connected, contiguous points. If the animated point travels beyond the path's edge, as can happen with some easing equation classes like `EasingElastic` and `EasingBack`, the motion will continue in the current direction at the beginning of the other edge. This behavior type is useful with closed paths like polygonal shapes to create a seamless animation.
+```swift
+let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
+let pathState = PathState(path: path.cgPath)
+motion = PathMotion(path: pathState,
+                duration: 1.0,
+                  easing: EasingElastic.easeInOut(),
+            edgeBehavior: .contiguousEdges)
+.repeats()  
+.start()
+```
+
+The `startPosition` and `endPosition` values can also be flipped. Doing so will make the point travel along the path from the end of the path towards the beginning in its forward motion. In this example, the motion point will start at 80% along the path and travel "backwards" to 20%. If you added a `reverses` option, then at the end of the motion it would reverse along the path back to 80%.
+```swift
+let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
+let pathState = PathState(path: path.cgPath)
+motion = PathMotion(path: pathState,
+                duration: 1.0,
+           startPosition: 0.8,
+             endPosition: 0.2,
+                  easing: EasingQuadratic.easeInOut())
+motion.start()
+```
+
+> [!IMPORTANT]
+> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathMotion` to animate along. Fortunately, `PathMotion` comes with a performance mode. When this mode is activated, `PathState` generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` on the `PathState` instance before starting the `PathMotion`. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
+```swift
+Task {
+    await pathState?.setupPerformanceMode()
+    motion?.start()
+}
+```
+
+## PathPhysicsMotion
+
+`PathPhysicsMotion` transforms a `CGPoint` along a `CGPath` object using a physics system to update the point's position with decaying velocity. Like `PathMotion` it does not accept `PropertyData` objects; due to the complex nature of paths, `PathPhysicsMotion` only accepts a `PathState` object and optional starting and end points to determine what area of the path to animate along. The resulting transformed `CGPoint` value is provided via its status closure methods. Thus a typical use would be to listen to the `updated({ (motion, currentPoint)` closure and use the provided `currentPoint` parameter to update your UIView's `center` property. Though it is more limited in what values it transforms and it does not support `additive` motion at this time, in all other respects `PathPhysicsMotion` integrates with the `Moveable` ecosystem just like the other motion types, greatly expanding the types of complex animations MotionMachine can create. 
+
+Here's a basic example. We've supplied the `PathPhysicsMotion` with a basic CGPath via a `PathState` object, an easing equation, and we've told it to reverse back to the beginning once it travels to the end. Notice though how we've defined a `startPosition` and `endPosition`. This tells the `PathPhysicsMotion` it should start the animation at a point 10% from the beginning of the path and end the animation at a point 80% along the path's length. If you leave these parameters out it will have the full length of the path to travel along.
+```swift
+let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
+let pathState = PathState(path: path.cgPath)
+let config = PhysicsConfiguration(velocity: 500, friction: 0.4)
+motion = PathPhysicsMotion(path: pathState, 
+                  configuration: config,
+                  startPosition: 0.1, 
+                    endPosition: 0.8)
+motion.start()
+```
+
+In this second example we're going to turn on collision detection and add a `restitution` value. Technically, collisions are turned on any time the `stopAtEdges` edge behavior is chosen, but adding a `restitution` value will cause a change in the motion. This value enables the object to collide and "bounce" off the starting and ending points when a point reaches them. The `restitution` value determines the elasticity of the object, which in effect determines how much velocity the object retains after colliding with an edge. A `restitution` value of 0.0 (the default if no value is provided) results in no bouncing at all, while a value of 1.0 results in no energy being lost in the collision. By default the collision points are at the start and end of the path, but if you specify your own start and end points those will be used instead.
+```swift
+let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
+let pathState = PathState(path: path.cgPath)
+let config = PhysicsConfiguration(velocity: 600, friction: 0.4, restitution: 0.8)
+motion = PathPhysicsMotion(path: pathState, 
+                  configuration: config)
+motion.start()
+```
+
+Although `PathPhysicsMotion` uses a physics simulation instead of specifying discrete ending values, we can still apply `repeats` and `reverses` options. Repeating and reversing act in the same way as `Motion` and interacts with `MoveableCollection` classes as you would expect.
+```swift
+let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
+let pathState = PathState(path: path.cgPath)
+let config = PhysicsConfiguration(velocity: 500, friction: 0.4)
+motion = PathPhysicsMotion(path: pathState, 
+                  configuration: config)
+.reverses()
+.repeats(1)
+.start()
+```
+
+The `startPosition` and `endPosition` values can also be flipped. Doing so will make the point travel along the path from the end of the path towards the beginning in its forward motion. Be aware that if you do this, the velocity should also be a negative value in order for the point to travel in the correct direction. In this example, the motion point will start at 80% along the path and travel "backwards" to 20%.
+```swift
+let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
+let pathState = PathState(path: path.cgPath)
+let config = PhysicsConfiguration(velocity: -600, friction: 0.4, restitution: 0.8)
+motion = PathPhysicsMotion(path: pathState, 
+                  configuration: config,
+                  startPosition: 0.8, 
+                    endPosition: 0.2)
+motion.start()
+```
+
+> [!IMPORTANT]
+> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathPhysicsMotion` to animate along. Fortunately, `PathPhysicsMotion` comes with a performance mode. When this mode is activated, the `PathState` object generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` on the `PathState` instance before starting the `PathPhysicsMotion`. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
+```swift
+Task {
+    await pathState?.setupPerformanceMode()
+    motion?.start()
+}
+```
 
 ## MotionGroup
 
-`MotionGroup` is a `MoveableCollection` class that manages a group of `Moveable` objects, controlling their movements in parallel.. It's handy for controlling and synchronizing multiple `Moveable` objects. `MotionGroup` can hold `Motion` objects and even other `MoveableCollection` objects. As with all `Moveable` classes, you can `pause()` and `resume()` a `MotionGroup`, which pauses and resumes all of its child motions.
+`MotionGroup` is a `MoveableCollection` class that manages a group of `Moveable` objects, controlling their movements in parallel. It's handy for controlling and synchronizing multiple `Moveable` objects. `MotionGroup` can hold `Motion` objects and even other `MoveableCollection` objects. As with all `Moveable` classes, you can `pause()` and `resume()` a `MotionGroup`, which pauses and resumes all of its child motions simultaneously.
 
-A simple example that adds two `Motion` objects. The `start()` method chained to the `MotionGroup` constructor will start the `Motion` objects simultaneously.
+This example adds two `Motion` objects and starts them.
 ```swift
 let motion1 = Motion(view1, property: PropertyData("frame.origin.y", 200.0), duration: 1.0, easing: EasingQuadratic.easeInOut())
 let motion2 = Motion(view2, property: PropertyData("frame.origin.y", 200.0), duration: 1.0, easing: EasingQuadratic.easeInOut())
@@ -163,7 +281,7 @@ let subgroup = MotionGroup()
           duration: 1.2,
             easing: EasingQuadratic.easeInOut()))
 
-let group2 = MotionGroup(options: [.Reverse])
+let group2 = MotionGroup(options: [.reverses])
 .add(subgroup)
 .add(Motion(target: square2,
         properties: [PropertyData("frame.size.width", 150.0)],
@@ -188,7 +306,7 @@ let sequence = MotionSequence(steps: [motion1, motion2]).start()
 
 As with `MotionGroup`, if you don't need to do anything individually the child objects of a `MotionSequence`, you can instantiate them directly; the `MotionSequence` will keep a reference to all objects it manages. In this example we're creating `Motion` objects with the `add(motion:)` method, which is chainable with the constructor. These motions will be triggered in the order they are added.
 ```swift
-let sequence = MotionSequence(options: [.Reverse])
+let sequence = MotionSequence(options: [.reverses])
 .add(Motion(target: square,
         properties: [PropertyData("frame.origin.x", 200.0)],
           duration: 1.0,

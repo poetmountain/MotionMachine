@@ -2,30 +2,15 @@
 //  PhysicsMotion.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 5/16/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
+/// A closure used to provide status updates for a ``PhysicsMotion`` object.
+/// - Parameter motion: The ``PhysicsMotion`` object which published this update closure.
 public typealias PhysicsMotionUpdateClosure = (_ motion: PhysicsMotion) -> Void
 
 /**
@@ -90,7 +75,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
 @MainActor public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
 
     // Default limit for a velocity's decay.
-    static let DEFAULT_DECAY_LIMIT: Double = 0.96
+    static let DEFAULT_DECAY_LIMIT: Double = 0.95
     
     
     // MARK: - Public Properties
@@ -449,7 +434,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _cycleRepeated: PhysicsMotionRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `.Reversing`.
+     *  This closure is called when the `motionDirection` property changes to `reversing`.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -503,6 +488,16 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _completed: PhysicsMotionCompleted?
     
     
+    /// This Boolean represents whether collision detections are active in the physics simulation. If `true`, collisions will be checked using the `start` and `end` properties of each ``PropertyData`` object passed in to the ``solve(forPositions:timestamp:)`` method. The default value is `false`.
+    public var useCollisionDetection: Bool {
+        get {
+            return physicsSystem.useCollisionDetection
+        }
+        set {
+            physicsSystem.useCollisionDetection = newValue
+        }
+    }
+    
     
     // MARK: - Private Properties
     
@@ -521,7 +516,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  Tracks the number of completed motions. Not incremented when repeating.
      *
-     *  - note: Currently this property only exists in order to avoid PhysicsMotions not moving when a `MotionSequence` they're being controlled by, whose `reversingMode` is set to `.Sequential`, reverses direction. Without checking this property in the `assignStartingPropertyValue` method, `PropertyData` objects with `useExistingStartValue` set to `true` (which occurs whenever a `PropertyData` is created without an explicit `start` value) would end up with their `start` and `end` values being equal, and thus no movement would occur. (whew)
+     *  - note: Currently this property only exists in order to avoid PhysicsMotions not moving when a `MotionSequence` they're being controlled by, whose `reversingMode` is set to `sequential`, reverses direction. Without checking this property in the `assignStartingPropertyValue` method, `PropertyData` objects with `useExistingStartValue` set to `true` (which occurs whenever a `PropertyData` is created without an explicit `start` value) would end up with their `start` and `end` values being equal, and thus no movement would occur. (whew)
      */
     private var completedCount: UInt = 0
     
@@ -567,8 +562,18 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         self.init(targetObject: targetObject, properties: [], velocity: velocity, friction: friction, options: options)
     }
     
+    /// A convenience initializer.
+    /// - Parameters:
+    ///   - target: The target object whose properties should be modified.
+    ///   - properties: An array of `PropertyData` objects that provide instructions for which properties to modify and how.
+    ///   - configuration: A configuration model containing data to set up this object's ``PhysicsSystem`` for physics calculations.
+    ///   - options: An optional options model.
+    public convenience init(target targetObject: NSObject, properties: [PropertyData], configuration: PhysicsConfiguration, options: MotionOptions? = MotionOptions.none) {
+        
+        self.init(targetObject: targetObject, properties: properties, velocity: configuration.velocity, friction: configuration.friction, restitution: configuration.restitution, useCollisionDetection: configuration.useCollisionDetection,  options: options)
+    }
     
-    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
+    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil, options: MotionOptions? = MotionOptions.none) {
         
         let properties = props ?? []
         
@@ -592,7 +597,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         motionState = .stopped
         motionDirection = .forward
         
-        physicsSystem = PhysicsSystem(velocity: velocity, friction: friction)
+        physicsSystem = PhysicsSystem(velocity: velocity, friction: friction, restitution: restitution, useCollisionDetection: useCollisionDetection)
         
         _tempo?.delegate = self
         
@@ -655,7 +660,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  Specifies that a motion cycle should repeat and the number of times it should do so. When no value is provided, the motion will repeat infinitely.
      *
-     *  - remark: When this method is used there is no need to specify `.Repeat` in the `options` parameter of the init method.
+     *  - remark: When this method is used there is no need to specify `repeats` in the `options` parameter of the init method.
      *
      *  - parameter numberOfCycles: The number of motion cycles to repeat. The default value is `REPEAT_INFINITE`.
      *  - returns: A reference to this PhysicsMotion instance, for the purpose of chaining multiple calls to this method.
@@ -665,6 +670,22 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         
         repeatCycles = numberOfCycles
         repeating = true
+        
+        return self
+    }
+    
+    
+    /**
+     *  Specifies that a motion, when it has moved to the ending value, should move from the ending value back to the starting value.
+     *
+     *  - remark: When this method is used there is no need to specify `reverse` in the `options` parameter of the init method.
+     *
+     *  - returns: A reference to this PhysicsMotion instance, for the purpose of chaining multiple calls to this method.
+     *  - seealso: reversing, reverseEasing
+     */
+    @discardableResult public func reverses() -> PhysicsMotion {
+        
+        reversing = true
         
         return self
     }
@@ -818,7 +839,13 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private func assignStartingPropertyValue(_ property: inout PropertyData) {
         if (property.useExistingStartValue && completedCount == 0) {
             if let current_value = valueAssistant.retrieveCurrentObjectValue(forProperty: property) {
+                let shouldChangeEndValue = (property.start == property.end && physicsSystem.useCollisionDetection)
                 property.start = current_value
+                // We need to keep start and end values equal if physics collisions are active. By default a PropertyData end value is 0.0, so if the start value changes and an end value wasn't provided, turning on collisions would create a collision value at 0.0 that the user might not expect.
+                // The physics system ignores collisions if start and end collision points are equal, so this circumvents unwanted behavior.
+                if shouldChangeEndValue {
+                    property.end = current_value
+                }
             }
         }
     }
@@ -917,10 +944,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     
     private func updatePhysicsSystem() {
         if (properties.count > 0) {
-            let current_positions = properties.map({ (property) -> Double in
-                return property.current
-            })
-            let new_positions = physicsSystem.solve(forPositions: current_positions, timestamp: CFAbsoluteTimeGetCurrent())
+            let new_positions = physicsSystem.solve(forPositions: properties, timestamp: CFAbsoluteTimeGetCurrent())
 
             for index in 0 ..< new_positions.count {
                 properties[index].delta = new_positions[index] - properties[index].current
@@ -928,7 +952,9 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             }
             
         } else if let targetObject = targetObject as? Double {
-            if let new_value = physicsSystem.solve(forPositions: [targetObject], timestamp: CFAbsoluteTimeGetCurrent()).first {
+            var property = PropertyData(path: "unused", end: 1.0)
+            property.current = targetObject
+            if let new_value = physicsSystem.solve(forPositions: [property], timestamp: CFAbsoluteTimeGetCurrent()).first {
                 self.targetObject = NSNumber.init(value: new_value)
             }
 
@@ -1009,7 +1035,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         cyclesCompletedCount += 1
         completedCount = 0
         
-        if (cyclesCompletedCount - 1 < repeatCycles) {
+        if (repeatCycles == 0 || cyclesCompletedCount - 1 < repeatCycles) {
             
             // reset for next cycle
             for index in 0 ..< properties.count {
@@ -1119,7 +1145,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
                 valueAssistant.additive = _additive
             }
             
-            if (fabs(physicsSystem.velocity) > velocityDecayLimit) {
+            if (abs(physicsSystem.velocity) > velocityDecayLimit) {
                 
                 for index in 0 ..< properties.count {
                     updatePropertyValue(forProperty: &properties[index])

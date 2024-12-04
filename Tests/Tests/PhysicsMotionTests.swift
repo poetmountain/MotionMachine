@@ -2,9 +2,10 @@
 //  PhysicsMotionTests.swift
 //  MotionMachineTests
 //
-//  Created by Brett Walker on 5/23/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import XCTest
 
@@ -305,27 +306,27 @@ import XCTest
         waitForExpectations(timeout: 1.0, handler: nil)
     }
     
-//    func test_pause() {
-//
-//        let tester = Tester()
-//        let did_pause = expectation(description: "motion called paused notify closure")
-//        let data = PropertyData(path: "value", start: 0.0, end: 100.0)
-//        let motion = PhysicsMotion(target: tester, properties: [data], velocity: 2.0, friction: 0.98)
-//        .paused { (motion) in
-//            print("physics paused with state \(motion.motionState)")
-//            XCTAssertEqual(motion.motionState, MotionState.paused)
-//
-//            did_pause.fulfill()
-//        }
-//        motion.start()
-//        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
-//        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
-//            motion.pause()
-//        })
-//
-//        waitForExpectations(timeout: 1.0, handler: nil)
-//
-//    }
+    func test_pause() {
+
+        let tester = Tester()
+        let did_pause = expectation(description: "motion called paused notify closure")
+        let data = PropertyData(path: "value", start: 0.0, end: 100.0)
+        let motion = PhysicsMotion(target: tester, properties: [data], velocity: 2.0, friction: 0.98)
+        .paused { (motion) in
+            print("physics paused with state \(motion.motionState)")
+            XCTAssertEqual(motion.motionState, MotionState.paused)
+
+            did_pause.fulfill()
+        }
+        motion.start()
+        let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
+        DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
+            motion.pause()
+        })
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+
+    }
     
     func test_pause_while_stopped() {
         

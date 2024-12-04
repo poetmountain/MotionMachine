@@ -2,27 +2,10 @@
 //  MotionMachine.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 4/19/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 import CoreGraphics
@@ -30,116 +13,14 @@ import QuartzCore
 
 // MARK: Moveable protocol
 
-/**
- *  This protocol declares methods and properties that must be adopted by custom motion classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine motion classes conform to this protocol.
- */
-@MainActor public protocol Moveable: AnyObject {
-    
-    // Controlling a motion
-    
-    /**
-     *  Stops a motion that is currently moving. (required)
-     *
-     *  - remark: When this method is called, a motion should only enter a stopped state if it currently moving.
-     */
-    func stop()
-    
-    /**
-     *  Starts a motion that is currently stopped. (required)
-     *
-     *  - remark: This method can be chained when initializing the object.
-     *  - note: When this method is called, a motion should only start moving if it is stopped.
-     *  - returns: A reference to the Moveable instance; used to method chain initialization methods when the Moveable instance is created.
-     */
-    @discardableResult func start() -> Self
-    
-    /**
-     *  Pauses a motion that is currently moving. (required)
-     *
-     *  - remark: When this method is called, a motion should only enter a paused state if it is currently moving.
-     */
-    func pause()
-    
-    /**
-     *  Resumes a motion that is currently paused. (required)
-     *
-     *  - remark: When this method is called, a motion should only resume moving if it is currently paused.
-     */
-    func resume()
-    
-    /**
-     *  Resets a motion to its initial state. Custom classes implementing this method must reset all relevant properties, including `totalProgress`.  (required)
-     *
-     *  - remark: This method is used by `Moveable` collection classes to properly reset child motions for new movement cycles and when starting a motion again using the `start` method.
-     */
-    func reset()
-    
-    /**
-     *  A `MotionState` enum which represents the current state of the motion operation. This state should be updated by the class implementing this protocol.
-     */
-    var motionState: MotionState { get }
-    
-    
-    /**
-     *  A Boolean which determines whether a motion operation, when it has moved to the ending value, should move from the ending value back to the starting value.
-     *
-     *  - remark: When set to `true`, the motion plays in reverse after completing a forward motion. In this state, a motion cycle represents the combination of the forward and reverse motions. The default value should be `false`.
-     */
-    var reversing: Bool { get set }
-    
-    
-    /**
-     *  A value between 0.0 and 1.0, which represents the current overall progress of a motion. This value should include all reversing and repeat motion cycles. (read-only)
-     *
-     */
-    var totalProgress: Double { get }
-
-    /**
-     *  Provides a delegate for sending `MoveableStatus` updates from a `Moveable` object. This property is used by `Moveable` collection classes. Any custom `Moveable` classes must send status updates using this delegate.
-     *
-     *  - warning: This delegate is only used by `Moveable` objects to communicate with other `Moveable` objects. End-users should not assign their own delegate to this property. If you need status updates for a `Moveable` object, please use the provided callback closures.
-     */
-    var updateDelegate: MotionUpdateDelegate? { get set }
-    
-
-    // Updating a motion
-    
-    /**
-     *  This method is called to prompt a motion class to update its current movement values.
-     *
-     *  - parameter currentTime: A timestamp that can be used in easing calculations.
-     */
-    func update(withTimeInterval currentTime: TimeInterval)
-    
-    
-    func cleanupResources()
-}
-
-
 public extension Moveable {
     func cleanupResources() {}
 }
 
 
-// MARK: MoveableCollection protocol
-
-/**
- *  This protocol declares methods and properties that must be adopted by custom classes which control other `Moveable` classes in order to participate in the MotionMachine ecosystem. All standard MotionMachine collection classes (MotionSequence, MotionGroup) conform to this protocol.
- */
-@MainActor public protocol MoveableCollection {
-    
-    /**
-     *  A `CollectionReversingMode` enum which defines the behavior of a `Moveable` class when its `reversing` property is set to `true`. In the standard MotionMachine classes only `MotionSequence` currently uses this property to alter its behavior, but they all propagate changes to this property down to their collection children.
-     *
-     *  - note: Though classes implementing this property don't need to alter their own behavior based on the value that is set, they do need to pass the value to all of its children which conform to this protocol.
-     */
-    var reversingMode: CollectionReversingMode { get set }
-    
-}
-
-
 // MARK: PropertyCollection protocol
 
+/// This protocol represents an object that holds a collection of `PropertyData` objects, such as a ``Motion`` class.
 @MainActor public protocol PropertyCollection: AnyObject {
     
     /**
@@ -149,197 +30,7 @@ public extension Moveable {
     var properties: [PropertyData] { get }
 }
 
-
-// MARK: Additive protocol
-
-/**
- *  This protocol declares methods and properties that must be adopted by custom `Moveable` classes who participate in additive animations with other MotionMachine classes.
- */
-@MainActor public protocol Additive: PropertyCollection {
-    
-    /**
-     *  A Boolean which determines whether this Motion should change its object values additively. Additive animation allows multiple motions to produce a compound effect, creating smooth transitions and blends between different ending value targets. Additive animation is the default behavior for UIKit animations as of iOS 8 and is great for making user interface animations fluid and responsive. MotionMachine uses its own implementation of additive movement, so you can use additive motions on any supported object properties.
-     *
-     *   By default, each Additive object should apply a strong influence on the movement of a property towards its ending value. This means that two Additive objects with the same duration and moving the same object property to different ending values will fight, and the "winning" value will be the last Additive object to start its movement. If the durations or starting times are different, a transition between the values will occur. If you wish to create additive motions that apply weighted value updates, you can adjust the `additiveWeighting` property. Setting values to that property that are less than 1.0 will create compound additive motions that are blends of each Motion object's ending values.
-     *
-     *
-     */
-    var additive: Bool { get set }
-    
-    /**
-     *  A weighting between 0.0 and 1.0 which is applied to this Motion's object value updates when it is using an additive movement. The higher the weighting amount, the more its additive updates apply to the properties being moved. A value of 1.0 will mean the motion will reach the specific `end` value of each `PropertyData` being moved, while a value of 0.0 will not move towards the `end` value at all. When multiple Motions in `additive` mode are moving the same object properties, adjusting this weighting on each Motion can create complex composite motions.
-     *
-     *  - note: This value only has an effect when `additive` is set to `true`.
-     */
-    var additiveWeighting: Double { get set }
-    
-    /**
-     *  An operation ID is assigned to an Additive instance when it is moving an object's property and its motion operation is currently in progress. (read-only)
-     *
-     */
-    var operationID: UInt { get }
-    
-}
-
-
-
-// MARK: TempoDelegate protocol
-
-/**
- *  This protocol defines methods that are called on delegate objects which listen for update beats from a `Tempo` object.
- */
-@MainActor public protocol TempoDelegate: AnyObject {
-    
-    /**
-     *  Sends an update beat that should prompt motion classes to recalculate movement values.
-     *
-     *  - parameter timestamp: A timestamp by which motion classes can calculate new delta values.
-     */
-    func tempoBeatUpdate(_ timestamp: TimeInterval)
-}
-
-
-// MARK: TempoDriven protocol
-
-/**
- *  This protocol represents objects that subscribe to a `Tempo` object's beats. Every movement of a value occurs because time has changed. These beats drive the motion, sending timestamps by which delta values can be calculated. All standard MotionMachine motion classes conform to this protocol.
- *
- *  - important: While you aren't required to implement this protocol in order to update your own custom `Moveable` classes, it is the preferred way to interact with the MotionMachine ecosystem unless your requirements prevent using `Tempo` objects for updating your value interpolations.
- */
-@MainActor public protocol TempoDriven: TempoDelegate {
-    /**
-     *  A concrete `Tempo` subclass that provides an update "beat" to drive a motion.
-     *
-     *  - note: It is expected that classes implementing this protocol also subscribe to the Tempo object's `TempoDelegate` delegate methods.
-     */
-    var tempo: Tempo? { get set }
-
-    /**
-     *  Tells a `TempoDriven` object to cease listening to updates from its `Tempo` object.
-     *
-     *  - seealso: tempo
-     */
-    func stopTempoUpdates()
-}
-
-
-// MARK: MotionUpdateDelegate protocol
-
-/// This delegate protocol defines a status update method in order for `Moveable` objects to communicate with one another. MotionMachine collection classes use this protocol method to keep track of child motion status changes. Any custom `Moveable` classes must send `MoveableStatus` status updates using this protocol.
-@MainActor public protocol MotionUpdateDelegate: AnyObject {
-    
-    /**
-     *  This delegate method is called when a `Moveable` object has updated its status.
-     *
-     *  - parameters:
-     *      - mover: A `Moveable` object that calls this delegate method.
-     *      - type: The type of status update being sent.
-     */
-    func motionStatusUpdated(forMotion motion: Moveable, updateType status: MoveableStatus)
-    
-}
-
-
 // MARK: ValueAssistant protocol
-
-/// This protocol defines methods and properties that must be adopted for any value assistant.
-@MainActor public protocol ValueAssistant {
-    
-    init()
-    
-    /**
-     *  This method returns an array of PropertyData instances based on the values of the provided object.
-     *
-     *  - parameters:
-     *      - object:   A supported object to generate PropertyData instances from.
-     *      - path:     The base keyPath which points to the target object.
-     *      - target:   The object whose properties should be modified.
-     *
-     *  - returns: An array of PropertyData instances representing the values of the provided object.
-     */
-    func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData]
-    
-    /**
-     *  This method replaces an element of an AnyObject subclass by assigning new values.
-     *
-     *  - parameters:
-     *      - object:   The object that should be updated.
-     *      - newValues:    A dictionary of keyPaths and associated values of the object to be updated.
-     *
-     *  - returns: An updated version of the object, if the object property was found and is supported.
-     */
-    func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject?
-    
-    /**
-     *  This method retrieves the current value of the target object being moved (as opposed to the saved value within a `PropertyData` instance).
-     *
-     *  - parameters:
-     *      - property: The `PropertyData` instance whose target object's value should be queried.
-     *
-     *  - returns: The retrieved value of the target object.
-     */
-    func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double?
-    
-    /**
-     *  This method retrieves the value of a supported AnyObject type.
-     *
-     *  - parameters:
-     *      - object:   The object whose property value should be retrieved.
-     *      - path:    The key path of the object property to be updated. If `object` is an NSValue instance, the path should correspond to an internal struct value path. E.g. a NSValue instance containing a NSRect might have a path property of "origin.x".
-     *
-     *  - returns: The retrieved value, if the object property was found and is supported.
-     */
-    func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double?
-    
-    /**
-     *  This method calculates a new value an object property.
-     *
-     *  - parameters:
-     *      - property:   The PropertyData instance whose property should be calculated.
-     *      - newValue: The new value to be applied to the object property.
-     *
-     *  - returns: An updated version of the object, if the object property was found and is supported.
-     */
-    func calculateValue(forProperty property: PropertyData, newValue: Double) -> NSObject?
-
-    
-    /**
-     *  Verifies whether this class can update the specified object type.
-     *
-     *  - parameters:
-     *      - object: An object to verify support for.
-     *
-     *  - returns: A Boolean value representing whether the object is supported by this class.
-     */
-    func supports(_ object: AnyObject) -> Bool
-    
-    /**
-     *  Verifies whether this object can accept a keyPath.
-     *
-     *  - parameters:
-     *      - object: An object to verify support for.
-     *
-     *  - returns: A Boolean value representing whether the object is supported by this class.
-     */
-    func acceptsKeypath(_ object: AnyObject) -> Bool
-    
-    
-    /**
-     *  A Boolean which determines whether to update a value using additive updates. When the value is `true`, values passed in to `updateValue` are added to the existing value instead of replacing it. The default is `false`.
-     *
-     *  - seealso: additiveWeighting
-     */
-    var additive: Bool { get set }
-    
-    /**
-     *  A weighting between 0.0 and 1.0 which is applied to a value updates when the ValueAssistant is updating additively. The higher the weighting amount, the more that a new value will be applied in the `updateValue` method. A value of 1.0 will apply the full value to the existing value, and a value of 0.0 will apply nothing to it.
-     *
-     *  - note: This value only has an effect when `additive` is set to `true`. The default value is 1.0.
-     *  - seealso: additive
-     */
-    var additiveWeighting: Double { get set }
-    
-}
 
 public extension ValueAssistant {
     
@@ -363,6 +54,11 @@ public extension ValueAssistant {
 // utility methods for ValueAssistant
 public extension ValueAssistant {
     
+    
+    /// Applies a new Double value to an existing one, either adding to it if ``additive`` mode is active, or simply replacing it.
+    /// - Parameters:
+    ///   - value: The Double value to modify.
+    ///   - newValue: The Double value used to modify the existing value.
     func applyTo(value: inout Double, newValue: Double) {
         if (additive) {
             value += (newValue * additiveWeighting)
@@ -372,6 +68,10 @@ public extension ValueAssistant {
         
     }
     
+    /// Applies a new CGFloat value to an existing value, either adding to it if ``additive`` mode is active, or simply replacing it.
+    /// - Parameters:
+    ///   - value: The CGFloat value to modify.
+    ///   - newValue: The CGFloat value used to modify the existing value.
     func applyTo(value: inout CGFloat, newValue: CGFloat) {
         if (additive) {
             value += (newValue * CGFloat(additiveWeighting))
@@ -380,8 +80,25 @@ public extension ValueAssistant {
         }
     }
     
+    /// Returns the last component in a period-delimited String path.
+    /// - Parameter path: The String path to search.
+    /// - Returns: The path component, if one was found.
     func lastComponent(forPath path: String) -> String? {
         return path.components(separatedBy: ".").last
+    }
+    
+    /// Returns the last two components in a period-delimited String path.
+    /// - Parameter path: The String path to search.
+    /// - Returns: An array of path components, if any were found.
+    func lastTwoComponents(forPath path: String) -> [String]? {
+        let components = path.components(separatedBy: ".")
+        var val: [String]?
+        if (components.count > 1) {
+            let strings = components[components.count-2...components.count-1]
+            val = Array(strings)
+        }
+        
+        return val
     }
     
 }
@@ -389,8 +106,11 @@ public extension ValueAssistant {
 /// This error is thrown when a `ValueAssistant` receives the wrong type.
 public enum ValueAssistantError : Error {
     
+    /// Represents an error that an incorrect type was supplied.
     case typeRequirement(String)
     
+    /// Prints an error statement.
+    /// - Parameter function: The function where the error occurred.
     @MainActor public func printError(fromFunction function: String) {
         if (MMConfiguration.sharedInstance.printsErrors) {
             print("ERROR: ValueAssistantError.\(self) -- Incorrect type supplied from function \(function).")
@@ -405,7 +125,8 @@ public enum ValueAssistantError : Error {
 final class WeakTarget: NSObject {
     private(set) weak var target: AnyObject?
     let selector: Selector
-
+    
+    /// The selector to call when the timer updates.
     static let triggerSelector = #selector(WeakTarget.timerDidTrigger(parameter:))
 
     init(_ target: AnyObject, selector: Selector) {
@@ -435,10 +156,11 @@ extension CADisplayLink {
 }
 
 
-
+/// A singleton configuration class for MotionMachine.
 @MainActor public final class MMConfiguration {
     public static let sharedInstance = MMConfiguration()
     
+    /// A Boolean representing whether MotionMachine errors should be logged.
     public var printsErrors: Bool = true
     
     private init() {
@@ -449,120 +171,6 @@ extension CADisplayLink {
 
 /// Any easing types used by a Motion object should implement this closure.
 public typealias EasingUpdateClosure = (_ elapsedTime: TimeInterval, _ startValue: Double, _ valueRange: Double, _ duration: TimeInterval) -> Double
-
-
-/// Enum representing the state of a motion operation.
-public enum MotionState {
-    /// The state of a motion operation when it is moving.
-    case moving
-    
-    /// The state of a motion operation when it is stopped.
-    case stopped
-    
-    /// The state of a motion operation when it is paused.
-    case paused
-    
-    /// The state of a motion operation when it is delayed.
-    case delayed
-}
-
-
-/// Enum representing the direction a motion is moving in.
-public enum MotionDirection {
-    /// The motion is moving in a forward direction, from the starting value to the ending value.
-    case forward
-    /// The motion is moving in a reverse direction, from the ending value to the starting value.
-    case reverse
-}
-
-
-
-/// Enum representing possible status types being sent by a `Moveable` object to its `MotionUpdateDelegate` delegate.
-public enum MoveableStatus {
-    
-    /// A `Moveable` object's motion operation has started.
-    case started
-    
-    /// A `Moveable` object's motion operation has been stopped manually (when the stop() method is called) prior to completion.
-    case stopped
-    
-    /**
-     *  A `Moveable` object's motion operation has completed 50% of its total movement.
-     *
-     *  - remark: This status should only be sent when half of the activity related to the motion has ceased. For instance, if a `Moveable` class is set to repeat two times and its `reversing` property is set to `true`, it should send this status after the second reversal of direction.
-     */
-    case halfCompleted
-    
-    /**
-     *  A `Moveable` object's motion operation has fully completed.
-     *
-     *  - remark: This status should only be posted when all activity related to the motion has ceased. For instance, if a `Moveable` class allows a movement to be repeated multiple times, this status should only be sent when all repetitions have finished.
-     */
-    case completed
-    
-    /// A `Moveable` object's motion operation has updated the properties it is moving.
-    case updated
-    
-    /// A `Moveable` object's motion operation has reversed its movement direction.
-    case reversed
-    
-    /// A `Moveable` object's motion operation has started a new repeat cycle.
-    case repeated
-    
-    /// A `Moveable` object's motion operation has paused.
-    case paused
-    
-    /// A `Moveable` object's motion operation has resumed.
-    case resumed
-    
-    /// A `Moveable` object sequence collection (such as `MotionSequence`) when its movement has advanced to the next sequence step.
-    case stepped
-}
-
-/**
- *  The mode used to define the movement behavior of sequence steps when the `reversing` property of a `MoveableCollection` is set to `true`.
- */
-public enum CollectionReversingMode {
-    
-    /**
-     *  Specifies that when the sequence's `motionDirection` property is `Reverse`, each sequence step will still move normally, but just in reverse order.
-     *
-     *  - remark: This mode is useful if you want sequence steps to move consistently, regardless of the state of the `motionDirection` property. For example, this mode would be chosen if you have a series of lights that should blink on and off in sequential order, and the only thing that should change is the order in which they blink.
-     */
-    case sequential
-    
-    /**
-     *  Specifies that when the sequence's `motionDirection` property is `.Reverse`, all `Moveable` sequence steps will move in a reverse direction to their normal motion. That is, the values of each sequence step will move in reverse, and in reverse order, thus giving the effect that the whole sequence is fluidly moving in reverse. Additionally, when the sequence's `motionDirection` is `.Forward`, each sequence step will pause after completing their forward movement.
-     *
-     *  - remark: This mode is useful if you want to create a sequence whose sequence steps reverse in a mirror image of their forward motion. This is a really powerful way of making many separate animations appear to be a single, fluid animation when reversing.
-     */
-    case contiguous
-    
-}
-
-
-/// An integer options set providing possible initialization options for a `Moveable` object.
-public struct MotionOptions : OptionSet, Sendable {
-    public let rawValue: Int
-    
-    public init(rawValue: Int) { self.rawValue = rawValue }
-    
-    /// No options are specified.
-    public static let none                     = MotionOptions([])
-    
-    /// Specifies that a motion should repeat.
-    public static let repeats                   = MotionOptions(rawValue: 1 << 0)
-    
-    /// Specifies that a motion should reverse directions after moving in the forward direction.
-    public static let reverses                  = MotionOptions(rawValue: 1 << 1)
-    
-    /**
-     *  Specifies that a motion's property (or parent, if property is not KVC-compliant) should be reset to its starting value on repeats or restarts.
-     *
-     *  - remark: `Motion` and `PhysicsMotion` are the only MotionMachine classes that currently accept this option.
-     */
-    public static let resetsStateOnRepeat       = MotionOptions(rawValue: 1 << 2)
-}
 
 
 /// Represents an infinite number of repeat motion cycles.
@@ -653,4 +261,91 @@ func == (a: Moveable, b: Moveable) -> Bool {
     }
     
     return false
+}
+
+
+extension CGPath {
+    
+    /// Introspects the path and returns all path elements as models.
+    /// - Returns: An array of models representing this path's elements.
+    public func pm_retrieveElements() -> [PathElement] {
+        var points_on_path = [PathElement]()
+        let bezierPoints = NSMutableArray()
+        
+        var firstPoint: CGPoint?
+        var counter: Int = 0
+        
+        self.applyWithBlock { element in
+
+            let points = element.pointee.points
+            let type = element.pointee.type
+            
+            // we need to save the first point here so we can use it as the point of a closeSubpath type
+            // (this was crashing on paths created from a CGRect)
+            if counter == 0 {
+                firstPoint = points.pointee
+                counter += 1
+            }
+            
+            let numberOfPoints: Int = {
+                switch type {
+                case .moveToPoint, .addLineToPoint: // contains 1 point
+                    return 1
+                case .addQuadCurveToPoint: // contains 2 points
+                    return 2
+                case .addCurveToPoint: // contains 3 points
+                    return 3
+                case .closeSubpath:
+                    return 1
+                @unknown default:
+                    return 0
+                }
+            }()
+            
+            switch type {
+            case .moveToPoint:
+                bezierPoints.add([NSNumber(value: Float(points[0].x)), NSNumber(value: Float(points[0].y))])
+
+            case .addLineToPoint:
+                bezierPoints.add([NSNumber(value: Float(points[0].x)), NSNumber(value: Float(points[0].y))])
+
+            case .addQuadCurveToPoint:
+                bezierPoints.add([NSNumber(value: Float(points[0].x)), NSNumber(value: Float(points[0].y))])
+                bezierPoints.add([NSNumber(value: Float(points[1].x)), NSNumber(value: Float(points[1].y))])
+
+            case .addCurveToPoint:
+                bezierPoints.add([NSNumber(value: Float(points[0].x)), NSNumber(value: Float(points[0].y))])
+                bezierPoints.add([NSNumber(value: Float(points[1].x)), NSNumber(value: Float(points[1].y))])
+                bezierPoints.add([NSNumber(value: Float(points[2].x)), NSNumber(value: Float(points[2].y))])
+
+            case .closeSubpath:
+                if let firstPoint {
+                    bezierPoints.add([NSNumber(value: Float(firstPoint.x)), NSNumber(value: Float(firstPoint.y))])
+                }
+            @unknown default:
+                break
+            }
+            
+            var cgPoints = [CGPoint]()
+            for index in 0..<(numberOfPoints) {
+                if type != .closeSubpath {
+                    let point = element.pointee.points[index]
+                    cgPoints.append(point)
+                } else if let firstPoint {
+                    cgPoints.append(firstPoint)
+                }
+            }
+
+            if (cgPoints.count > 0) {
+                let elementType = PathElementType(element: element.pointee)
+                let index = (numberOfPoints > 0) ? (numberOfPoints - 1) : numberOfPoints
+                let pathElement = PathElement(type: elementType, point: cgPoints[index], controlPoints: cgPoints)
+                points_on_path.append(pathElement)
+            }
+        }
+        
+
+        return points_on_path
+    }
+    
 }

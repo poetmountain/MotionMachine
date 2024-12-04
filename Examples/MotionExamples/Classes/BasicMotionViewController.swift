@@ -2,9 +2,10 @@
 //  BasicMotionViewController.swift
 //  MotionExamples
 //
-//  Created by Brett Walker on 6/1/16.
-//  Copyright © 2016 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
 

@@ -2,37 +2,22 @@
 //  ValueAssistantGroup.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 5/18/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
 /// The `ValueAssistantGroup` class enables multiple `ValueAssistant` objects to be attached to a single motion class.
-public class ValueAssistantGroup : ValueAssistant {
+public final class ValueAssistantGroup : ValueAssistant {
     
     public var additive: Bool = false {
         didSet {
             for index in 0 ..< assistants.count {
-                assistants[index].additive = additive
+                var assistant = assistants[index]
+                assistant.additive = additive
+                assistants[index] = assistant
             }
         }
     }
@@ -47,6 +32,17 @@ public class ValueAssistantGroup : ValueAssistant {
         }
     }
     
+    
+    /// Updates the `additive` state of all child ``ValueAssistant`` objects in this group.
+    /// - Parameter isAdditive: The new `additive` state to assign.
+    public func updateAdditive(isAdditive: Bool) {
+        self.additive = isAdditive
+        for index in 0 ..< assistants.count {
+            assistants[index].additive = additive
+        }
+    }
+    
+    /// An array of ``ValueAssistant`` objects that this group manages.
     private(set) public var assistants: [ValueAssistant] = []
     
     /**
@@ -55,18 +51,14 @@ public class ValueAssistantGroup : ValueAssistant {
      *  - parameters:
      *      - assistants: An optional array of `ValueAssistant` objects to which the ValueAssistantGroup should delegate `ValueAssistant` method calls.
      */
-    public convenience init(assistants: [ValueAssistant]? = []) {
-        self.init()
+    public init(assistants: [ValueAssistant]? = []) {
         if let unwrapped_assists = assistants {
             self.assistants = unwrapped_assists
         }
         
     }
     
-    public required init() {}
 
-    
-    
     // MARK: Public Methods
     
     /**

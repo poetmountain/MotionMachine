@@ -1,4 +1,4 @@
-Copyright (c) 2016 Poet & Mountain, LLC (http://poetmountain.com/)
+Copyright (c) 2024 Poet & Mountain, LLC (http://poetmountain.com/)
 
 The MIT License (MIT)
 

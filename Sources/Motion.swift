@@ -2,30 +2,15 @@
 //  Motion.swift
 //  MotionMachine
 //
-//  Created by Brett Walker on 4/19/16.
-//  Copyright © 2016-2018 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  https://github.com/poetmountain
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
+//  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
+/// A closure used to provide status updates for a ``Motion`` object.
+/// - Parameter motion: The ``Motion`` object which published this update closure.
 public typealias MotionUpdateClosure = (_ motion: Motion) -> Void
 
 /**
@@ -219,7 +204,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
      *  - note: By default, Motion will use `EasingLinear.easeNone()` for its easing equation if no easing closure is assigned.
      *  - seealso: reverseEasingBlock
      */
-    public var easing: EasingUpdateClosure
+    public var easing: EasingUpdateClosure = EasingLinear.easeNone()
     
     
     /**
@@ -339,7 +324,6 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     public weak var updateDelegate: MotionUpdateDelegate?
     
     
-    
     // MARK: TempoDriven protocol properties
     
     /**
@@ -429,7 +413,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     private var _cycleRepeated: MotionRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `.Reversing`.
+     *  This closure is called when the `motionDirection` property changes to `reversing`.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -501,7 +485,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     /**
      *  Tracks the number of completed motions. Not incremented when repeating.
      *
-     *  - note: Currently this property only exists in order to avoid Motions not moving when a `MotionSequence` they're being controlled by, whose `reversingMode` is set to `.Sequential`, reverses direction. Without checking this property in the `assignStartingPropertyValue` method, `PropertyData` objects with `useExistingStartValue` set to `true` (which occurs whenever a `PropertyData` is created without an explicit `start` value) would end up with their `start` and `end` values being equal, and thus no movement would occur. (whew)
+     *  - note: Currently this property only exists in order to avoid Motions not moving when a `MotionSequence` they're being controlled by, whose `reversingMode` is set to `sequential`, reverses direction. Without checking this property in the `assignStartingPropertyValue` method, `PropertyData` objects with `useExistingStartValue` set to `true` (which occurs whenever a `PropertyData` is created without an explicit `start` value) would end up with their `start` and `end` values being equal, and thus no movement would occur. (whew)
      */
     private var completedCount: UInt = 0
     
@@ -558,7 +542,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     }
     
     
-    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure?, options: MotionOptions? = MotionOptions.none) {
+    private init(target targetObject: NSObject, properties props: [PropertyData]?, statesForProperties: [PropertyStates]?, duration: TimeInterval, easing: EasingUpdateClosure? = nil, options: MotionOptions? = MotionOptions.none) {
         
         var properties = props ?? []
         
@@ -566,7 +550,10 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
         
         self.duration = (duration > 0.0) ? duration : 0.0 // if value passed is negative, clamp it to 0
         
-        self.easing = easing!
+        if let easing {
+            self.easing = easing
+        }
+        
         reverseEasing = self.easing
         
         #if os(iOS) || os(tvOS)
@@ -647,7 +634,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     /**
      *  Specifies that a motion cycle should repeat and the number of times it should do so. When no value is provided, the motion will repeat infinitely.
      *
-     *  - remark: When this method is used there is no need to specify `.Repeat` in the `options` parameter of the init method.
+     *  - remark: When this method is used there is no need to specify `repeats` in the `options` parameter of the init method.
      *
      *  - parameter numberOfCycles: The number of motion cycles to repeat. The default value is `REPEAT_INFINITE`.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
@@ -665,7 +652,7 @@ public class Motion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
     /**
      *  Specifies that a motion, when it has moved to the ending value, should move from the ending value back to the starting value.
      *
-     *  - remark: When this method is used there is no need to specify `.Reverse` in the `options` parameter of the init method.
+     *  - remark: When this method is used there is no need to specify `reverses` in the `options` parameter of the init method.
      *
      *  - parameter withEasing: The easing equation to be used while reversing. When no equation is provided, the normal `easing` closure will be used in both movement directions.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
