@@ -8,7 +8,9 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
 /// UIColorAssistant provides support for the `UIColor` type.
 public final class UIColorAssistant : ValueAssistant {

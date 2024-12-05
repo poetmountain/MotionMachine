@@ -227,7 +227,7 @@ import UIKit
     /// Represents a `CATransform3D` type.
     case transform3D
     
-    #if os(iOS) || os(tvOS)
+    #if os(iOS) || os(tvOS) || os(visionOS)
     /// Represents a `UIEdgeInsets` type.
     case uiEdgeInsets
     

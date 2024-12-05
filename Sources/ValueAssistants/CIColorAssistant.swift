@@ -8,8 +8,11 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreImage)
 import CoreImage
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS)
 /// CIColorAssistant provides support for Core Image's `CIColor` type.
 public final class CIColorAssistant : ValueAssistant {
 
@@ -266,3 +269,4 @@ public final class CIColorAssistant : ValueAssistant {
 
 
 }
+#endif

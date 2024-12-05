@@ -13,7 +13,7 @@ import PackageDescription
 let package = Package(
     name: "MotionMachine",
     platforms: [
-        .iOS(.v13), .tvOS(.v13)
+        .iOS(.v13), .tvOS(.v13), .visionOS(.v1)
     ],
     products: [
         .library(name: "MotionMachine", targets: ["MotionMachine"])

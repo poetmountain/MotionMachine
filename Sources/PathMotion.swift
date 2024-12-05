@@ -484,14 +484,6 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         }
         reverseEasing = self.easing
         
-        #if os(iOS) || os(tvOS)
-            if let assistant_group = valueAssistant as? ValueAssistantGroup {
-                assistant_group.add(UIColorAssistant())
-                assistant_group.add(CIColorAssistant())
-                assistant_group.add(UIKitStructAssistant())
-            }
-        #endif
-        
         // unpack options values
         if let options {
             repeating = options.contains(.repeats)

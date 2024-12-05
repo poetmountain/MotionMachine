@@ -579,7 +579,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         
         self.targetObject = targetObject
         
-        #if os(iOS) || os(tvOS)
+        #if os(iOS) || os(tvOS) || os(visionOS)
         if let assistant_group = valueAssistant as? ValueAssistantGroup {
             assistant_group.add(UIColorAssistant())
             assistant_group.add(CIColorAssistant())

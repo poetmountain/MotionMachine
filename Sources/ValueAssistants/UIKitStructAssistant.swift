@@ -8,8 +8,11 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS)
 /// UIKitStructAssistant provides support for the UIKit structs `UIEdgeInsets` and `UIOffset`.
 public final class UIKitStructAssistant : ValueAssistant {
     
@@ -455,3 +458,4 @@ public final class UIKitStructAssistant : ValueAssistant {
     
 }
 
+#endif
