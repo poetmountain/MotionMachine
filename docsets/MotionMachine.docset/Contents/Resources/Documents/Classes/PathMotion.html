@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>PathMotion Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/PathMotion" class="dashAnchor"></a>
+
+    <a title="PathMotion Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          MotionMachine Docs
+        </a>
+         (99% documented)
+      </p>
+    
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/poetmountain/MotionMachine">
+            <img class="header-icon" src="../img/gh.png" alt="GitHub"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">MotionMachine</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      <a class="breadcrumb" href="../Classes.html">Classes</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      PathMotion Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CATempo.html">CATempo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CGStructAssistant.html">CGStructAssistant</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CIColorAssistant.html">CIColorAssistant</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MMConfiguration.html">MMConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Motion.html">Motion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MotionGroup.html">MotionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MotionSequence.html">MotionSequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PathMotion.html">PathMotion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PathPhysicsMotion.html">PathPhysicsMotion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PathState.html">PathState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PhysicsMotion.html">PhysicsMotion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PhysicsSystem.html">PhysicsSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tempo.html">Tempo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TimerTempo.html">TimerTempo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UIColorAssistant.html">UIColorAssistant</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UIKitStructAssistant.html">UIKitStructAssistant</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Global%20Variables.html#/s:13MotionMachine15REPEAT_INFINITESuvp">REPEAT_INFINITE</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CollectionReversingMode.html">CollectionReversingMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MotionDirection.html">MotionDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MotionState.html">MotionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MoveableStatus.html">MoveableStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PathEdgeBehavior.html">PathEdgeBehavior</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PathElementType.html">PathElementType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueAssistantError.html">ValueAssistantError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueStructTypes.html">ValueStructTypes</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/CGPath.html">CGPath</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/Additive.html">Additive</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/Moveable.html">Moveable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MoveableCollection.html">MoveableCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/PhysicsSolving.html">PhysicsSolving</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/PropertyCollection.html">PropertyCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/TempoDelegate.html">TempoDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/TempoDriven.html">TempoDriven</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ValueAssistant.html">ValueAssistant</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingBack.html">EasingBack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingBounce.html">EasingBounce</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingCircular.html">EasingCircular</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingCubic.html">EasingCubic</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingElastic.html">EasingElastic</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingExpo.html">EasingExpo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingLinear.html">EasingLinear</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingQuadratic.html">EasingQuadratic</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingQuartic.html">EasingQuartic</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingQuintic.html">EasingQuintic</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EasingSine.html">EasingSine</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MotionOptions.html">MotionOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MotionSupport.html">MotionSupport</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs.html#/s:13MotionMachine0A5UtilsV">MotionUtils</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PathElement.html">PathElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PhysicsConfiguration.html">PhysicsConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PropertyData.html">PropertyData</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PropertyStates.html">PropertyStates</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine14GroupCompleteda">GroupCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine11GroupPauseda">GroupPaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine13GroupRepeateda">GroupRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine12GroupResumeda">GroupResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine13GroupReverseda">GroupReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine12GroupStarteda">GroupStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine12GroupStoppeda">GroupStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine18GroupUpdateClosurea">GroupUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine12GroupUpdateda">GroupUpdated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A9Completeda">MotionCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A6Pauseda">MotionPaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A8Repeateda">MotionRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A7Resumeda">MotionResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A8Reverseda">MotionReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A7Starteda">MotionStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A7Stoppeda">MotionStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A13UpdateClosurea">MotionUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine0A7Updateda">MotionUpdated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA9Completeda">PathMotionCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA6Pauseda">PathMotionPaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA8Repeateda">PathMotionRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA7Resumeda">PathMotionResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA8Reverseda">PathMotionReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA7Starteda">PathMotionStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA7Stoppeda">PathMotionStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA13UpdateClosurea">PathMotionUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine04PathA7Updateda">PathMotionUpdated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA9Completeda">PathPhysicsMotionCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA6Pauseda">PathPhysicsMotionPaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA8Repeateda">PathPhysicsMotionRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA7Resumeda">PathPhysicsMotionResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA8Reverseda">PathPhysicsMotionReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA7Starteda">PathPhysicsMotionStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA7Stoppeda">PathPhysicsMotionStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA13UpdateClosurea">PathPhysicsMotionUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine011PathPhysicsA7Updateda">PathPhysicsMotionUpdated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA9Completeda">PhysicsMotionCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA6Pauseda">PhysicsMotionPaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA8Repeateda">PhysicsMotionRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA7Resumeda">PhysicsMotionResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA8Reverseda">PhysicsMotionReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA7Starteda">PhysicsMotionStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA7Stoppeda">PhysicsMotionStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA13UpdateClosurea">PhysicsMotionUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine07PhysicsA7Updateda">PhysicsMotionUpdated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine17SequenceCompleteda">SequenceCompleted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine14SequencePauseda">SequencePaused</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine16SequenceRepeateda">SequenceRepeated</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine15SequenceResumeda">SequenceResumed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine16SequenceReverseda">SequenceReversed</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine15SequenceStarteda">SequenceStarted</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine15SequenceSteppeda">SequenceStepped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine15SequenceStoppeda">SequenceStopped</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine21SequenceUpdateClosurea">SequenceUpdateClosure</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:13MotionMachine15SequenceUpdateda">SequenceUpdated</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>PathMotion</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">PathMotion</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>PathMotion handles a single motion operation of a coordinate point along a <code>CGPath</code>. It does not directly accept <code><a href="../Structs/PropertyData.html">PropertyData</a></code> objects, but instead transforms a value between 0.0 and 1.0, representing the length of the associated path. Using this value, it updates the current point on the path.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Properties"></a>
+                  <h3 class="section-name"><span>Public Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C5delaySdvp"></a>
+                    <a name="//apple_ref/swift/Property/delay" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C5delaySdvp">delay</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The delay, in seconds, before a motion operation begins.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    Setting this parameter after a motion operation has begun has no effect.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C8durationSdvp"></a>
+                    <a name="//apple_ref/swift/Property/duration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C8durationSdvp">duration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The duration of a motion operation, in seconds, as it moves from its starting property values to its ending values. (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>If the <code><a href="../Classes/Motion.html">Motion</a></code> is <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code> or <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code>, the total duration will be increased by multiples of this duration. If <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code> is set to <code>true</code>, the duration of a total motion cycle will be twice this amount as there will be two separate movements (forwards and back).</p>
+
+</div><div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <p>Do not set this parameter while a motion operation is in progress.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C9repeatingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/repeating" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A Boolean which determines whether a motion operation should repeat. When set to <code>true</code>, the motion operation repeats for the number of times specified by the <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C12repeatCyclesSuvp">repeatCycles</a></code> property. The default value is <code>false</code>.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    By design, setting this value to <code>true</code> without changing the <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C12repeatCyclesSuvp">repeatCycles</a></code> property from its default value will cause the motion to repeat infinitely.
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    repeatCycles
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">repeating</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C12repeatCyclesSuvp"></a>
+                    <a name="//apple_ref/swift/Property/repeatCycles" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C12repeatCyclesSuvp">repeatCycles</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The number of motion cycle operations to repeat.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This property is only used when <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code> is set to <code>true</code>. Assigning <code><a href="../Global%20Variables.html#/s:13MotionMachine15REPEAT_INFINITESuvp">REPEAT_INFINITE</a></code> to this property signals an infinite amount of motion cycle repetitions. The default value is <code><a href="../Global%20Variables.html#/s:13MotionMachine15REPEAT_INFINITESuvp">REPEAT_INFINITE</a></code>.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>repeating</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">repeatCycles</span><span class="p">:</span> <span class="kt">UInt</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C14valueAssistantAA05ValueE0_pvp"></a>
+                    <a name="//apple_ref/swift/Property/valueAssistant" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C14valueAssistantAA05ValueE0_pvp">valueAssistant</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An object conforming to the <code><a href="../Protocols/ValueAssistant.html">ValueAssistant</a></code> protocol which acts as an interface for retrieving and updating value types.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    By default, Motion will assign an instance of the <code><a href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a></code> class with value assistants for CoreFoundation structs and some color classes (CIColor, and UIColor for platforms which support it). You may add your own custom type assistants to this group, or replace it with your own custom <code><a href="../Protocols/ValueAssistant.html">ValueAssistant</a></code> implementation.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">valueAssistant</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ValueAssistant.html">ValueAssistant</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C11operationIDSuvp"></a>
+                    <a name="//apple_ref/swift/Property/operationID" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C11operationIDSuvp">operationID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An operation ID is assigned to a Motion instance when it is moving an object&rsquo;s property and its motion operation is currently in progress. (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    This value returns 0 if no ID is currently assigned.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">operationID</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/PropertyCollection%20methods"></a>
+                <a name="//apple_ref/swift/Section/PropertyCollection methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/PropertyCollection%20methods"></a>
+                  <h3 class="section-name"><span>PropertyCollection methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C10propertiesSayAA12PropertyDataVGvp"></a>
+                    <a name="//apple_ref/swift/Property/properties" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C10propertiesSayAA12PropertyDataVGvp">properties</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The collection of <code><a href="../Structs/PropertyData.html">PropertyData</a></code> instances, representing the object&rsquo;s properties being moved. In a <code>PathMotion</code> the only <code><a href="../Structs/PropertyData.html">PropertyData</a></code> instance stored represents the internal progress along the path. To obtain the motion&rsquo;s current point along the path, subscribe to one of its update methods.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    The <code>path</code> property of each <code><a href="../Structs/PropertyData.html">PropertyData</a></code> must be a valid KVC-compliant keyPath of <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C12targetObjectSo8NSObjectCSgvp">targetObject</a></code>.
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    targetObject
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">properties</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/PropertyData.html">PropertyData</a></span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Easing%20update%20closures"></a>
+                <a name="//apple_ref/swift/Section/Easing update closures" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Easing%20update%20closures"></a>
+                  <h3 class="section-name"><span>Easing update closures</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C6easingyS2d_S3dtcvp"></a>
+                    <a name="//apple_ref/swift/Property/easing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C6easingyS2d_S3dtcvp">easing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A <code><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></code> closure which performs easing calculations for the motion operation.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    By default, Motion will use <code><a href="../Structs/EasingLinear.html#/s:13MotionMachine12EasingLinearV8easeNoneS2d_S3dtcyFZ">EasingLinear.easeNone()</a></code> for its easing equation if no easing closure is assigned.
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    reverseEasingBlock
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">easing</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C13reverseEasingS2d_S3dtcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/reverseEasing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C13reverseEasingS2d_S3dtcSgvp">reverseEasing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An optional <code><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></code> closure which performs easing calculations for a motion operation that is reversing.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>If not set, the easing closure defined by the <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C6easingyS2d_S3dtcvp">easing</a></code> property is used while reversing.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>easingBlock</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">reverseEasing</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Motion%20state%20properties"></a>
+                <a name="//apple_ref/swift/Section/Motion state properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Motion%20state%20properties"></a>
+                  <h3 class="section-name"><span>Motion state properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C12targetObjectSo8NSObjectCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/targetObject" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C12targetObjectSo8NSObjectCSgvp">targetObject</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The target object whose property should be moved.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">targetObject</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C11motionStateAA0aE0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/motionState" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C11motionStateAA0aE0Ovp">motionState</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A <code><a href="../Enums/MotionState.html">MotionState</a></code> enum which represents the current state of the motion operation. (read-only)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">motionState</span><span class="p">:</span> <span class="kt"><a href="../Enums/MotionState.html">MotionState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C15motionDirectionAA0aE0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/motionDirection" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C15motionDirectionAA0aE0Ovp">motionDirection</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A <code><a href="../Enums/MotionDirection.html">MotionDirection</a></code> enum which represents the current direction of the motion operation. (read-only)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">motionDirection</span><span class="p">:</span> <span class="kt"><a href="../Enums/MotionDirection.html">MotionDirection</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C14motionProgressSdvp"></a>
+                    <a name="//apple_ref/swift/Property/motionProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C14motionProgressSdvp">motionProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A value between 0.0 and 1.0, which represents the current progress of a movement between two value destinations. (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    Be aware that if this motion is <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code> or <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code>, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a Motion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">motionProgress</span><span class="p">:</span> <span class="kt">Double</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C13cycleProgressSdvp"></a>
+                    <a name="//apple_ref/swift/Property/cycleProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C13cycleProgressSdvp">cycleProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A value between 0.0 and 1.0, which represents the current progress of a motion cycle. (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    A cycle represents the total length of a one motion operation. If <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code> is set to <code>true</code>, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code>, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">cycleProgress</span><span class="p">:</span> <span class="kt">Double</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C20cyclesCompletedCountSuvp"></a>
+                    <a name="//apple_ref/swift/Property/cyclesCompletedCount" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C20cyclesCompletedCountSuvp">cyclesCompletedCount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The amount of completed motion cycles.  (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    A cycle represents the total length of a one motion operation. If <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code> is set to <code>true</code>, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code>, each repetition will be a new cycle.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">cyclesCompletedCount</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C13totalProgressSdvp"></a>
+                    <a name="//apple_ref/swift/Property/totalProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C13totalProgressSdvp">totalProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A value between 0.0 and 1.0, which represents the current overall progress of the Motion. This value should include all reversing and repeat motion cycles. (read-only)</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    If a Motion is not repeating, this value will be equivalent to the value of <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C13cycleProgressSdvp">cycleProgress</a></code>.
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    cycleProgress
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">totalProgress</span><span class="p">:</span> <span class="kt">Double</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C9pathStateAA0cE0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/pathState" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C9pathStateAA0cE0Cvp">pathState</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The object maintaining state on the path.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">pathState</span><span class="p">:</span> <span class="kt"><a href="../Classes/PathState.html">PathState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C12edgeBehaviorAA0c4EdgeE0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/edgeBehavior" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C12edgeBehaviorAA0c4EdgeE0Ovp">edgeBehavior</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Determines how path edges are handled during a motion when the motion attempts to travel past the path&rsquo;s edges. This is rare, but can occur in some cases such as the <code><a href="../Structs/EasingBack.html">EasingBack</a></code> and <code><a href="../Structs/EasingElastic.html">EasingElastic</a></code> easing equations. The default value is <code>stopAtEdges</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">edgeBehavior</span><span class="p">:</span> <span class="kt"><a href="../Enums/PathEdgeBehavior.html">PathEdgeBehavior</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Moveable%20protocol%20properties"></a>
+                <a name="//apple_ref/swift/Section/Moveable protocol properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Moveable%20protocol%20properties"></a>
+                  <h3 class="section-name"><span>Moveable protocol properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C9reversingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/reversing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A Boolean which determines whether a motion operation, when it has moved to the ending value, should move from the ending value back to the starting value.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">reversing</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C14updateDelegateAA0a6UpdateE0_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/updateDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C14updateDelegateAA0a6UpdateE0_pSgvp">updateDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides a delegate for updates to a Moveable object&rsquo;s status, used by <code><a href="../Protocols/Moveable.html">Moveable</a></code> collections.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">updateDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TempoDriven%20protocol%20properties"></a>
+                <a name="//apple_ref/swift/Section/TempoDriven protocol properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TempoDriven%20protocol%20properties"></a>
+                  <h3 class="section-name"><span>TempoDriven protocol properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C5tempoAA5TempoCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/tempo" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C5tempoAA5TempoCSgvp">tempo</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A concrete <code><a href="../Classes/Tempo.html">Tempo</a></code> subclass that provides an update &ldquo;beat&rdquo; while a motion operation occurs.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    By default, Motion will assign an instance of <code><a href="../Classes/CATempo.html">CATempo</a></code> to this property, which uses <code>CADisplayLink</code> for interval updates.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">tempo</span><span class="p">:</span> <span class="kt"><a href="../Classes/Tempo.html">Tempo</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Notification%20closures"></a>
+                <a name="//apple_ref/swift/Section/Notification closures" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Notification%20closures"></a>
+                  <h3 class="section-name"><span>Notification closures</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C7startedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/started(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C7startedyACXDyAC_So7CGPointVtcF">started(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when a motion operation starts.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>start</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">started</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA7Starteda">PathMotionStarted</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C7stoppedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/stopped(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C7stoppedyACXDyAC_So7CGPointVtcF">stopped(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when a motion operation is stopped by calling the <code>stop</code> method.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>stop</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">stopped</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA7Stoppeda">PathMotionStopped</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C7updatedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/updated(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C7updatedyACXDyAC_So7CGPointVtcF">updated(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when a motion operation update occurs and this instance&rsquo;s <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C11motionStateAA0aE0Ovp">motionState</a></code> is <code>.Moving</code>.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>update(withTimeInterval:)</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">updated</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA7Updateda">PathMotionUpdated</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C13cycleRepeatedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/cycleRepeated(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C13cycleRepeatedyACXDyAC_So7CGPointVtcF">cycleRepeated(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when a motion cycle has repeated.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>repeating, cyclesCompletedCount</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">cycleRepeated</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA8Repeateda">PathMotionRepeated</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C8reversedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/reversed(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C8reversedyACXDyAC_So7CGPointVtcF">reversed(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when the <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C15motionDirectionAA0aE0Ovp">motionDirection</a></code> property changes to <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9reversingSbvp">reversing</a></code>.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>motionDirection, reversing</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">reversed</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA8Reverseda">PathMotionReversed</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C6pausedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/paused(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C6pausedyACXDyAC_So7CGPointVtcF">paused(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when calling the <code>pause</code> method on this instance causes a motion operation to pause.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>pause</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">paused</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA6Pauseda">PathMotionPaused</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C7resumedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/resumed(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C7resumedyACXDyAC_So7CGPointVtcF">resumed(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when calling the <code>resume</code> method on this instance causes a motion operation to resume.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>This method can be chained when initializing the object.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>resume</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">resumed</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA7Resumeda">PathMotionResumed</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C9completedyACXDyAC_So7CGPointVtcF"></a>
+                    <a name="//apple_ref/swift/Method/completed(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C9completedyACXDyAC_So7CGPointVtcF">completed(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This closure is called when a motion operation has completed (or when all motion cycles have completed, if <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C9repeatingSbvp">repeating</a></code> is set to <code>true</code>).</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    This method can be chained when initializing the object.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">completed</span><span class="p">(</span><span class="n">_</span> <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine04PathA9Completeda">PathMotionCompleted</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Initialization"></a>
+                <a name="//apple_ref/swift/Section/Initialization" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Initialization"></a>
+                  <h3 class="section-name"><span>Initialization</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C4path8duration13startPosition03endG06easing12edgeBehavior7optionsACSo9CGPathRefa_S2dSgAMS2d_S3dtcSgAA0c4EdgeK0OSgAA0A7OptionsVSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(path:duration:startPosition:endPosition:easing:edgeBehavior:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C4path8duration13startPosition03endG06easing12edgeBehavior7optionsACSo9CGPathRefa_S2dSgAMS2d_S3dtcSgAA0c4EdgeK0OSgAA0A7OptionsVSgtcfc">init(path:<wbr>duration:<wbr>startPosition:<wbr>endPosition:<wbr>easing:<wbr>edgeBehavior:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience initializer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">CGPath</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">startPosition</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">endPosition</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">easing</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span><span class="p">?</span> <span class="o">=</span> <span class="kt"><a href="../Structs/EasingLinear.html">EasingLinear</a></span><span class="o">.</span><span class="nf">easeNone</span><span class="p">(),</span> <span class="nv">edgeBehavior</span><span class="p">:</span> <span class="kt"><a href="../Enums/PathEdgeBehavior.html">PathEdgeBehavior</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Structs/MotionOptions.html">MotionOptions</a></span><span class="p">?</span> <span class="o">=</span> <span class="kt"><a href="../Structs/MotionOptions.html">MotionOptions</a></span><span class="o">.</span><span class="k">none</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A <code>CGPath</code> object to use as a motion guide.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>duration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The duration of the motion.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>startPosition</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional starting value, corresponding to a percentage along the path&rsquo;s length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>endPosition</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional ending value, corresponding to a percentage along the path&rsquo;s length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>easing</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional easing equation.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edgeBehavior</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Determines how path edges are handled during a motion when the motion attempts to travel past the path&rsquo;s edges. This is rare, but can occur in some cases such as the <code><a href="../Structs/EasingBack.html">EasingBack</a></code> and <code><a href="../Structs/EasingElastic.html">EasingElastic</a></code> easing equations. The default value is <code>stopAtEdges</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>options</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional options model.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C9pathState8duration13startPosition03endH06easing12edgeBehavior7optionsAcA0cE0C_S2dSgAMS2d_S3dtcSgAA0c4EdgeL0OSgAA0A7OptionsVSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(pathState:duration:startPosition:endPosition:easing:edgeBehavior:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C9pathState8duration13startPosition03endH06easing12edgeBehavior7optionsAcA0cE0C_S2dSgAMS2d_S3dtcSgAA0c4EdgeL0OSgAA0A7OptionsVSgtcfc">init(pathState:<wbr>duration:<wbr>startPosition:<wbr>endPosition:<wbr>easing:<wbr>edgeBehavior:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The initializer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">pathState</span><span class="p">:</span> <span class="kt"><a href="../Classes/PathState.html">PathState</a></span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">startPosition</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">endPosition</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">easing</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span><span class="p">?</span> <span class="o">=</span> <span class="kt"><a href="../Structs/EasingLinear.html">EasingLinear</a></span><span class="o">.</span><span class="nf">easeNone</span><span class="p">(),</span> <span class="nv">edgeBehavior</span><span class="p">:</span> <span class="kt"><a href="../Enums/PathEdgeBehavior.html">PathEdgeBehavior</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Structs/MotionOptions.html">MotionOptions</a></span><span class="p">?</span> <span class="o">=</span> <span class="kt"><a href="../Structs/MotionOptions.html">MotionOptions</a></span><span class="o">.</span><span class="k">none</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pathState</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A state object containing information about the path to use as a motion guide.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>duration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The duration of the motion.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>startPosition</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional starting value, corresponding to a percentage along the path&rsquo;s length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>endPosition</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional ending value, corresponding to a percentage along the path&rsquo;s length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>easing</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional easing equation.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>edgeBehavior</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Determines how path edges are handled during a motion when the motion attempts to travel past the path&rsquo;s edges. This is rare, but can occur in some cases such as the <code><a href="../Structs/EasingBack.html">EasingBack</a></code> and <code><a href="../Structs/EasingElastic.html">EasingElastic</a></code> easing equations. The default value is <code>stopAtEdges</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>options</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional options model.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20methods"></a>
+                <a name="//apple_ref/swift/Section/Public methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20methods"></a>
+                  <h3 class="section-name"><span>Public methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C10afterDelayyACSdF"></a>
+                    <a name="//apple_ref/swift/Method/afterDelay(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C10afterDelayyACSdF">afterDelay(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Adds a delay before the motion operation will begin.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">afterDelay</span><span class="p">(</span><span class="n">_</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PathMotion</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The number of seconds to wait.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A reference to this Motion instance, for the purpose of chaining multiple calls to this method.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C7repeatsyACSuF"></a>
+                    <a name="//apple_ref/swift/Method/repeats(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C7repeatsyACSuF">repeats(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Specifies that a motion cycle should repeat and the number of times it should do so. When no value is provided, the motion will repeat infinitely.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>When this method is used there is no need to specify <code>repeats</code> in the <code>options</code> parameter of the init method.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>repeatCycles, repeating</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">repeats</span><span class="p">(</span><span class="n">_</span> <span class="nv">numberOfCycles</span><span class="p">:</span> <span class="kt">UInt</span> <span class="o">=</span> <span class="kt"><a href="../Global%20Variables.html#/s:13MotionMachine15REPEAT_INFINITESuvp">REPEAT_INFINITE</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PathMotion</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>numberOfCycles</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The number of motion cycles to repeat. The default value is <code><a href="../Global%20Variables.html#/s:13MotionMachine15REPEAT_INFINITESuvp">REPEAT_INFINITE</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A reference to this Motion instance, for the purpose of chaining multiple calls to this method.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C8reverses10withEasingACS2d_S3dtcSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/reverses(withEasing:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C8reverses10withEasingACS2d_S3dtcSg_tF">reverses(withEasing:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Specifies that a motion, when it has moved to the ending value, should move from the ending value back to the starting value.</p>
+<div class="aside aside-remark">
+    <p class="aside-title">Remark</p>
+    <p>When this method is used there is no need to specify <code>reverses</code> in the <code>options</code> parameter of the init method.</p>
+
+</div><div class="aside aside-seealso">
+    <p class="aside-title">Seealso</p>
+    <p>reversing, reverseEasing</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">reverses</span><span class="p">(</span><span class="n">withEasing</span> <span class="nv">easing</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PathMotion</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withEasing</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The easing equation to be used while reversing. When no equation is provided, the normal <code><a href="../Classes/PathMotion.html#/s:13MotionMachine04PathA0C6easingyS2d_S3dtcvp">easing</a></code> closure will be used in both movement directions.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A reference to this Motion instance, for the purpose of chaining multiple calls to this method.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C20setupPerformanceModeyyYaF"></a>
+                    <a name="//apple_ref/swift/Method/setupPerformanceMode()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C20setupPerformanceModeyyYaF">setupPerformanceMode()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sets up performance mode, generating an internal lookup table for faster position calculations. To use the performance mode, this method must be used before calling <code><a href="../Classes/PathMotion.html#/s:13MotionMachine8MoveableP5startxyF">start()</a></code>.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your <code>PathMotion</code> needs to begin.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setupPerformanceMode</span><span class="p">()</span> <span class="k">async</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lookupCapacity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional capacity that caps the maximum lookup table amount.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP16cleanupResourcesyyF"></a>
+                    <a name="//apple_ref/swift/Method/cleanupResources()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP16cleanupResourcesyyF">cleanupResources()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">cleanupResources</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Moveable%20protocol%20methods"></a>
+                <a name="//apple_ref/swift/Section/Moveable protocol methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Moveable%20protocol%20methods"></a>
+                  <h3 class="section-name"><span>Moveable protocol methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP6update16withTimeIntervalySd_tF"></a>
+                    <a name="//apple_ref/swift/Method/update(withTimeInterval:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP6update16withTimeIntervalySd_tF">update(withTimeInterval:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">update</span><span class="p">(</span><span class="n">withTimeInterval</span> <span class="nv">currentTime</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP5startxyF"></a>
+                    <a name="//apple_ref/swift/Method/start()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP5startxyF">start()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP4stopyyF"></a>
+                    <a name="//apple_ref/swift/Method/stop()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP4stopyyF">stop()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP5pauseyyF"></a>
+                    <a name="//apple_ref/swift/Method/pause()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP5pauseyyF">pause()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pause</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine8MoveableP6resumeyyF"></a>
+                    <a name="//apple_ref/swift/Method/resume()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine8MoveableP6resumeyyF">resume()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">resume</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine04PathA0C5resetyyF"></a>
+                    <a name="//apple_ref/swift/Method/reset()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine04PathA0C5resetyyF">reset()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resets the motion to its initial state.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">reset</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TempoDriven%20methods"></a>
+                <a name="//apple_ref/swift/Section/TempoDriven methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TempoDriven%20methods"></a>
+                  <h3 class="section-name"><span>TempoDriven methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine11TempoDrivenP04stopC7UpdatesyyF"></a>
+                    <a name="//apple_ref/swift/Method/stopTempoUpdates()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine11TempoDrivenP04stopC7UpdatesyyF">stopTempoUpdates()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">stopTempoUpdates</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TempoDelegate%20methods"></a>
+                <a name="//apple_ref/swift/Section/TempoDelegate methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TempoDelegate%20methods"></a>
+                  <h3 class="section-name"><span>TempoDelegate methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine13TempoDelegateP15tempoBeatUpdateyySdF"></a>
+                    <a name="//apple_ref/swift/Method/tempoBeatUpdate(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine13TempoDelegateP15tempoBeatUpdateyySdF">tempoBeatUpdate(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">tempoBeatUpdate</span><span class="p">(</span><span class="n">_</span> <span class="nv">timestamp</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/PropertyDataDelegate%20methods"></a>
+                <a name="//apple_ref/swift/Section/PropertyDataDelegate methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/PropertyDataDelegate%20methods"></a>
+                  <h3 class="section-name"><span>PropertyDataDelegate methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine20PropertyDataDelegateP9didUpdateyySdF"></a>
+                    <a name="//apple_ref/swift/Method/didUpdate(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine20PropertyDataDelegateP9didUpdateyySdF">didUpdate(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">didUpdate</span><span class="p">(</span><span class="n">_</span> <span class="nv">startValue</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2024 Poet &amp; Mountain, LLC. All rights reserved. Licensed under the MIT License.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+    </section>
+  </body>
+</html>
