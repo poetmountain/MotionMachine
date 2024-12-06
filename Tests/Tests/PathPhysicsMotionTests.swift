@@ -16,7 +16,7 @@ import UIKit
 
         let path = UIBezierPath(rect: .zero)
         let pathState = PathState(path: path.cgPath)
-        let motion = PathPhysicsMotion(path: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8)
 
         XCTAssertEqual(motion.properties[0].start, 0.2)
         XCTAssertEqual(motion.properties[0].end, 0.8)
@@ -28,7 +28,7 @@ import UIKit
         let pathState = PathState(path: path.cgPath)
         
         // afterDelay should add a delay
-        let motion = PathPhysicsMotion(path: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).afterDelay(1.0)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).afterDelay(1.0)
         XCTAssertEqual(motion.delay, 1.0)
     }
     
@@ -37,12 +37,13 @@ import UIKit
         let pathState = PathState(path: path.cgPath)
         
         // repeats should set repeating and amount
-        let motion = PathMotion(path: pathState, duration: 0.2).repeats(1)
+        let config = PhysicsConfiguration(velocity: 200, friction: 0.3)
+        let motion = PathPhysicsMotion(path: path.cgPath, configuration: config).repeats(1)
         XCTAssertTrue(motion.repeating)
         XCTAssertEqual(motion.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
-        let motion2 = PathPhysicsMotion(path: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).repeats()
+        let motion2 = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).repeats()
         XCTAssertTrue(motion2.repeating)
         XCTAssertEqual(motion2.repeatCycles, REPEAT_INFINITE)
         
@@ -53,7 +54,7 @@ import UIKit
         let pathState = PathState(path: path.cgPath)
         
         // reverses should set reversing properties
-        let motion = PathPhysicsMotion(path: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).reverses()
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).reverses()
         XCTAssertTrue(motion.reversing)
     }
     
@@ -66,7 +67,7 @@ import UIKit
         let friction = 0.998
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         .completed { (motion, currentPoint)  in
             XCTAssertTrue(motion.velocity < 1.0)
             
@@ -90,7 +91,7 @@ import UIKit
         let friction = 0.998
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, startPosition: 1.0, endPosition: 0.0)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, startPosition: 1.0, endPosition: 0.0)
         .completed { (motion, currentPoint)  in
             XCTAssertTrue(abs(motion.velocity) < 1.0)
             
@@ -115,7 +116,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, edgeBehavior: .stopAtEdges)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, edgeBehavior: .stopAtEdges)
         motion.completed { (motion, currentPoint) in
             guard let finalEdgePoint = pathState.point(at: 1.0) else { return }
             // point should stop at end of path
@@ -141,7 +142,7 @@ import UIKit
         let didComplete = expectation(description: "motion called completed notify closure")
         
         let config = PhysicsConfiguration(velocity: velocity, friction: friction, restitution: 0.1, useCollisionDetection: true)
-        let motion = PathPhysicsMotion(path: pathState, configuration: config, edgeBehavior: .stopAtEdges)
+        let motion = PathPhysicsMotion(pathState: pathState, configuration: config, edgeBehavior: .stopAtEdges)
         motion.updated { motion, currentPoint in
             if (motion.physicsSystem.velocity < 0.0) {
                 motion.stop()
@@ -163,7 +164,7 @@ import UIKit
         let didComplete = expectation(description: "motion called completed notify closure")
         
         let config = PhysicsConfiguration(velocity: velocity, friction: friction, restitution: 0.0, useCollisionDetection: true)
-        let motion = PathPhysicsMotion(path: pathState, configuration: config, edgeBehavior: .stopAtEdges)
+        let motion = PathPhysicsMotion(pathState: pathState, configuration: config, edgeBehavior: .stopAtEdges)
         motion.completed { (motion, currentPoint) in
             guard let finalEdgePoint = pathState.point(at: 1.0) else { return }
             // point should stop at end of path
@@ -188,7 +189,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, endPosition: 0.8, edgeBehavior: .stopAtEdges)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, endPosition: 0.8, edgeBehavior: .stopAtEdges)
         motion.completed { (motion, currentPoint) in
             guard let finalEdgePoint = pathState.point(at: 0.8) else { return }
             // point should stop at end of path
@@ -218,7 +219,7 @@ import UIKit
         let didComplete = expectation(description: "motion called completed notify closure")
         
         let config = PhysicsConfiguration(velocity: velocity, friction: friction)
-        let motion = PathPhysicsMotion(path: pathState, configuration: config, edgeBehavior: .contiguousEdges)
+        let motion = PathPhysicsMotion(pathState: pathState, configuration: config, edgeBehavior: .contiguousEdges)
         motion.completed { (motion, currentPoint) in
             // point should wrap around to beginning of path
             XCTAssertLessThan(pathState.percentageComplete, 0.3)
@@ -239,7 +240,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, endPosition: 0.8)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, endPosition: 0.8)
             .started({ motion, currentPoint in
                 let newTimestamp = CFAbsoluteTimeGetCurrent()
                 XCTAssertEqual(newTimestamp, timestamp + 0.2, accuracy: 0.05)
@@ -277,7 +278,7 @@ import UIKit
         let didRepeat = expectation(description: "motion called cycleRepeated notify closure")
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, endPosition: 0.8).repeats()
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, endPosition: 0.8).repeats()
             .cycleRepeated({ (motion, currentPoint)  in
                 XCTAssertEqual(motion.totalProgress, 0.5)
                 XCTAssertEqual(motion.cycleProgress, 0.0)
@@ -327,7 +328,7 @@ import UIKit
         let did_reverse = expectation(description: "motion called reversed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, endPosition: endPosition).reverses()
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, endPosition: endPosition).reverses()
             .reversed({ (motion, currentPoint)  in
                 XCTAssertTrue(motion.totalProgress <= 0.5)
                 XCTAssertTrue(motion.cycleProgress <= 0.5)
@@ -378,7 +379,7 @@ import UIKit
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction, endPosition: endPosition, options: [.reverses, .repeats])
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction, endPosition: endPosition, options: [.reverses, .repeats])
             .reversed({ (motion, currentPoint)  in
                 if (motion.cyclesCompletedCount == 0) {
                     XCTAssertTrue(motion.totalProgress <= 0.25)
@@ -434,7 +435,7 @@ import UIKit
         
         let did_start = expectation(description: "motion called started notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .started { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.moving)
                 
@@ -453,7 +454,7 @@ import UIKit
         let velocity = 50.0
         let friction = 0.998
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         motion.start()
         motion.pause()
         motion.start()
@@ -470,7 +471,7 @@ import UIKit
         let friction = 0.998
         let did_stop = expectation(description: "motion called stopped notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .stopped { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.stopped)
                 
@@ -496,7 +497,7 @@ import UIKit
         let did_pause = expectation(description: "motion called paused notify closure")
         let pauseDelay = 0.2
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         .paused { (motion, currentPoint)  in
             XCTAssertEqual(motion.motionState, MotionState.paused)
             
@@ -520,7 +521,7 @@ import UIKit
         let velocity = 50.0
         let friction = 0.998
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         motion.start()
         motion.stop()
         motion.pause()
@@ -539,7 +540,7 @@ import UIKit
         let did_resume = expectation(description: "motion called resumed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
 
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         .resumed { (motion, currentPoint)  in
             XCTAssertEqual(motion.motionState, MotionState.moving)
             
@@ -578,7 +579,7 @@ import UIKit
         let velocity = 300.0
         let friction = 0.5
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         motion.start()
         motion.stop()
         motion.resume()
@@ -596,7 +597,7 @@ import UIKit
         
         let did_update = expectation(description: "motion called updated notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .updated { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.moving)
                 
@@ -617,7 +618,7 @@ import UIKit
         
         let did_reset = expectation(description: "motion called updated notify closure")
         
-        let motion = PathPhysicsMotion(path: pathState, velocity: velocity, friction: friction)
+        let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         
         motion.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);

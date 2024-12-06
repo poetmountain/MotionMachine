@@ -61,11 +61,9 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
        let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 200, startAngle: 0.087, endAngle: 1.66, clockwise: true)
         path.addQuadCurve(to: CGPoint(x: 20, y: 50), controlPoint: CGPoint(x: 100, y: 45))
 
-        let pathState = PathState(path: path.cgPath)
-        self.pathState = pathState
         pathView.path = path
 
-        motion = PathMotion(path: pathState,
+        motion = PathMotion(path: path.cgPath,
                         duration: 2.0,
                           easing: EasingQuadratic.easeInOut())
         .reverses(withEasing: EasingQuartic.easeInOut())

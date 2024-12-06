@@ -16,7 +16,7 @@ import UIKit
 
         let path = UIBezierPath(rect: .zero)
         let pathState = PathState(path: path.cgPath)
-        let motion = PathMotion(path: pathState, duration: 0.2, startPosition: 0.2, endPosition: 0.8)
+        let motion = PathMotion(pathState: pathState, duration: 0.2, startPosition: 0.2, endPosition: 0.8)
 
         XCTAssertEqual(motion.properties[0].start, 0.2)
         XCTAssertEqual(motion.properties[0].end, 0.8)
@@ -28,7 +28,7 @@ import UIKit
         let pathState = PathState(path: path.cgPath)
         
         // afterDelay should add a delay
-        let motion = PathMotion(path: pathState, duration: 0.2).afterDelay(1.0)
+        let motion = PathMotion(pathState: pathState, duration: 0.2).afterDelay(1.0)
         XCTAssertEqual(motion.delay, 1.0)
     }
 
@@ -37,12 +37,12 @@ import UIKit
         let pathState = PathState(path: path.cgPath)
         
         // repeats should set repeating and amount
-        let motion = PathMotion(path: pathState, duration: 0.2).repeats(1)
+        let motion = PathMotion(pathState: pathState, duration: 0.2).repeats(1)
         XCTAssertTrue(motion.repeating)
         XCTAssertEqual(motion.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
-        let motion2 = PathMotion(path: pathState, duration: 0.2).repeats()
+        let motion2 = PathMotion(pathState: pathState, duration: 0.2).repeats()
         XCTAssertTrue(motion2.repeating)
         XCTAssertEqual(motion2.repeatCycles, REPEAT_INFINITE)
         
@@ -54,7 +54,7 @@ import UIKit
         
         // reverses should set reversing and reverseEasing properties
         let easing: EasingUpdateClosure = EasingQuadratic.easeIn()
-        let motion = PathMotion(path: pathState, duration: 0.2).reverses(withEasing: easing)
+        let motion = PathMotion(pathState: pathState, duration: 0.2).reverses(withEasing: easing)
         XCTAssertTrue(motion.reversing)
         XCTAssertTrue(motion.reverseEasing != nil)
         
@@ -70,7 +70,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2, endPosition: 0.8)
+        let motion = PathMotion(pathState: pathState, duration: 0.2, endPosition: 0.8)
         .completed { (motion, currentPoint)  in
 
             let finalValue = motion.properties[0].current
@@ -97,7 +97,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2, startPosition: 0.8, endPosition: 0.0)
+        let motion = PathMotion(pathState: pathState, duration: 0.2, startPosition: 0.8, endPosition: 0.0)
         .completed { (motion, currentPoint)  in
 
             let finalValue = motion.properties[0].current
@@ -124,7 +124,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.5, endPosition: 0.8)
+        let motion = PathMotion(pathState: pathState, duration: 0.5, endPosition: 0.8)
         .completed { (motion, currentPoint)  in
 
             let finalValue = motion.properties[0].current
@@ -150,7 +150,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.4, easing: EasingBack.easeOut(), edgeBehavior: .stopAtEdges)
+        let motion = PathMotion(pathState: pathState, duration: 0.4, easing: EasingBack.easeOut(), edgeBehavior: .stopAtEdges)
         motion.updated { (motion, currentPoint) in
             guard let backEasingPoint else { return }
             // point should stop at end of path instead of wrapping around when the Back easing takes effect
@@ -174,7 +174,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.4, easing: EasingBack.easeOut(), edgeBehavior: .contiguousEdges)
+        let motion = PathMotion(pathState: pathState, duration: 0.4, easing: EasingBack.easeOut(), edgeBehavior: .contiguousEdges)
         motion.updated { (motion, currentPoint) in
             guard let backEasingPoint = backEasingPoint else { return }
             // point should wrap around to beginning of path as the Back easing takes effect
@@ -197,7 +197,7 @@ import UIKit
         
         let didComplete = expectation(description: "motion called completed notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
-        let motion = PathMotion(path: pathState, duration: 0.2, endPosition: 0.8)
+        let motion = PathMotion(pathState: pathState, duration: 0.2, endPosition: 0.8)
             .started({ motion, currentPoint in
                 let newTimestamp = CFAbsoluteTimeGetCurrent()
                 XCTAssertEqual(newTimestamp, timestamp + 0.2, accuracy: 0.05)
@@ -234,7 +234,7 @@ import UIKit
         let didRepeat = expectation(description: "motion called cycleRepeated notify closure")
         let didComplete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.4, endPosition: 0.8).repeats()
+        let motion = PathMotion(pathState: pathState, duration: 0.4, endPosition: 0.8).repeats()
             .cycleRepeated({ (motion, currentPoint)  in
                 XCTAssertEqual(motion.totalProgress, 0.5)
                 XCTAssertEqual(motion.cycleProgress, 0.0)
@@ -280,7 +280,7 @@ import UIKit
         let did_reverse = expectation(description: "motion called reversed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.4, endPosition: endPosition).reverses()
+        let motion = PathMotion(pathState: pathState, duration: 0.4, endPosition: endPosition).reverses()
             .reversed({ (motion, currentPoint)  in
                 XCTAssertTrue(motion.totalProgress <= 0.5)
                 XCTAssertTrue(motion.cycleProgress <= 0.5)
@@ -327,7 +327,7 @@ import UIKit
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.4, endPosition: endPosition, options: [.reverses, .repeats])
+        let motion = PathMotion(pathState: pathState, duration: 0.4, endPosition: endPosition, options: [.reverses, .repeats])
             .reversed({ (motion, currentPoint)  in
                 if (motion.cyclesCompletedCount == 0) {
                     XCTAssertTrue(motion.totalProgress <= 0.25)
@@ -388,7 +388,7 @@ import UIKit
         
         let did_start = expectation(description: "motion called started notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
             .started { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.moving)
                 
@@ -405,7 +405,7 @@ import UIKit
         let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 50, height: 50))
         let pathState = PathState(path: path.cgPath)
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
         motion.start()
         motion.pause()
         motion.start()
@@ -421,7 +421,7 @@ import UIKit
         
         let did_stop = expectation(description: "motion called stopped notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
             .stopped { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.stopped)
                 
@@ -446,7 +446,7 @@ import UIKit
         let did_pause = expectation(description: "motion called paused notify closure")
         let pauseDelay = 0.2
         
-        let motion = PathMotion(path: pathState, duration: duration)
+        let motion = PathMotion(pathState: pathState, duration: duration)
         .paused { (motion, currentPoint)  in
             XCTAssertEqual(motion.motionState, MotionState.paused)
             
@@ -468,7 +468,7 @@ import UIKit
         let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 50, height: 50))
         let pathState = PathState(path: path.cgPath)
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
         motion.start()
         motion.stop()
         motion.pause()
@@ -485,7 +485,7 @@ import UIKit
         let did_resume = expectation(description: "motion called resumed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
 
-        let motion = PathMotion(path: pathState, duration: 0.4)
+        let motion = PathMotion(pathState: pathState, duration: 0.4)
         .resumed { (motion, currentPoint)  in
             XCTAssertEqual(motion.motionState, MotionState.moving)
             
@@ -517,7 +517,7 @@ import UIKit
         let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 50, height: 50))
         let pathState = PathState(path: path.cgPath)
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
         motion.start()
         motion.stop()
         motion.resume()
@@ -533,7 +533,7 @@ import UIKit
         
         let did_update = expectation(description: "motion called updated notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
             .updated { (motion, currentPoint)  in
                 XCTAssertEqual(motion.motionState, MotionState.moving)
                 
@@ -552,7 +552,7 @@ import UIKit
         
         let did_reset = expectation(description: "motion called updated notify closure")
         
-        let motion = PathMotion(path: pathState, duration: 0.2)
+        let motion = PathMotion(pathState: pathState, duration: 0.2)
         
         motion.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);

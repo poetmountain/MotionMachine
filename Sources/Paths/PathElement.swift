@@ -21,4 +21,15 @@ public struct PathElement {
     
     /// The control points associated with this path element.
     var controlPoints: [CGPoint]
+    
+    /// Initializer.
+    /// - Parameters:
+    ///   - type: The type of path element.
+    ///   - point: A point along the path representing this element.
+    ///   - controlPoints: The control points associated with this path element.
+    public init(type: PathElementType, point: CGPoint, controlPoints: [CGPoint]) {
+        self.type = type
+        self.point = point
+        self.controlPoints = controlPoints
+    }
 }

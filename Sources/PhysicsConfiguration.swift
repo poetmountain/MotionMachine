@@ -22,7 +22,22 @@ public struct PhysicsConfiguration {
     public var restitution: Double?
     
     
-    /// This Boolean denotes whether a ``PhysicsSystem`` object should handle collisions between an object and the specified collision points. The default is `false`.
+    /// This Boolean denotes whether a ``PhysicsSystem`` object should handle collisions between an object and the specified collision points.
     public var useCollisionDetection: Bool?
     
+    
+    /// Initializer.
+    /// - Parameters:
+    ///   - velocity: The velocity value to use in physics calculations.
+    ///   - friction: The friction value to be applied in physics calculations. Valid values are between 0.0 and 1.0, with 0.0 denoting almost no friction, and 1.0 causing no movement to occur.
+    ///   - restitution: An optional restitution value from 0.0 to 1.0 which represents the elasticity of an object during collisions.
+    ///   - useCollisionDetection: This Boolean denotes whether a ``PhysicsSystem`` object should handle collisions between an object and the specified collision points.
+    public init(velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil) {
+        self.velocity = velocity
+        self.friction = friction
+        self.restitution = restitution
+        if let useCollisionDetection {
+            self.useCollisionDetection = useCollisionDetection
+        }
+    }
 }

@@ -8,7 +8,7 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
-
+import CoreGraphics
 
 /// A closure used to provide status updates for a ``PathPhysicsMotion`` object.
 /// - Parameter motion: The ``PathPhysicsMotion`` object which published this update closure.
@@ -489,15 +489,29 @@ public typealias PathPhysicsMotionCompleted = PathPhysicsMotionUpdateClosure
     
     /// A convenience initializer.
     /// - Parameters:
+    ///   - path: A `CGPath` object to use as a motion guide.
+    ///   - configuration: A configuration model containing data to set up this object's ``PhysicsSystem`` for physics calculations.
+    ///   - startPosition: An optional starting value, corresponding to a percentage along the path's length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.
+    ///   - endPosition: An optional ending value, corresponding to a percentage along the path's length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.
+    ///   - edgeBehavior: Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
+    ///   - options: An optional options model.
+    public convenience init(path: CGPath, configuration: PhysicsConfiguration, startPosition: Double? = nil, endPosition: Double? = nil, edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
+        
+        let state = PathState(path: path)
+        self.init(pathState: state, velocity: configuration.velocity, friction: configuration.friction, restitution: configuration.restitution, useCollisionDetection: configuration.useCollisionDetection, startPosition: startPosition, endPosition: endPosition, edgeBehavior: edgeBehavior, options: options)
+    }
+    
+    /// A convenience initializer.
+    /// - Parameters:
     ///   - path: A state object containing information about the path to use as a motion guide.
     ///   - configuration: A configuration model containing data to set up this object's ``PhysicsSystem`` for physics calculations.
     ///   - startPosition: An optional starting value, corresponding to a percentage along the path's length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.
     ///   - endPosition: An optional ending value, corresponding to a percentage along the path's length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.
     ///   - edgeBehavior: Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
     ///   - options: An optional options model.
-    public convenience init(path: PathState, configuration: PhysicsConfiguration, startPosition: Double? = nil, endPosition: Double? = nil, edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
+    public convenience init(pathState: PathState, configuration: PhysicsConfiguration, startPosition: Double? = nil, endPosition: Double? = nil, edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
         
-        self.init(path: path, velocity: configuration.velocity, friction: configuration.friction, restitution: configuration.restitution, useCollisionDetection: configuration.useCollisionDetection, startPosition: startPosition, endPosition: endPosition, edgeBehavior: edgeBehavior, options: options)
+        self.init(pathState: pathState, velocity: configuration.velocity, friction: configuration.friction, restitution: configuration.restitution, useCollisionDetection: configuration.useCollisionDetection, startPosition: startPosition, endPosition: endPosition, edgeBehavior: edgeBehavior, options: options)
     }
     
     /// The initializer.
@@ -509,7 +523,7 @@ public typealias PathPhysicsMotionCompleted = PathPhysicsMotionUpdateClosure
     ///   - endPosition: An optional ending value, corresponding to a percentage along the path's length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.
     ///   - edgeBehavior: Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
     ///   - options: An optional options model.
-    public init(path: PathState, velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil, startPosition: Double? = nil, endPosition: Double? = nil, edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
+    public init(pathState: PathState, velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil, startPosition: Double? = nil, endPosition: Double? = nil, edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
         
         // clamp start and end values to a 0.0...1.0 range
         let start = max(min(startPosition ?? 0.0, 1.0), 0.0)
@@ -518,8 +532,8 @@ public typealias PathPhysicsMotionCompleted = PathPhysicsMotionUpdateClosure
         let state = PropertyData(path: "percentageComplete", start: start, end: end)
         
         let properties: [PropertyData] = [state]
-        self.targetObject = path
-        self.pathState = path
+        self.targetObject = pathState
+        self.pathState = pathState
         
         if let edgeBehavior {
             self.pathState.edgeBehavior = edgeBehavior
@@ -608,6 +622,14 @@ public typealias PathPhysicsMotionCompleted = PathPhysicsMotionUpdateClosure
         reversing = true
         
         return self
+    }
+    
+    /// Sets up performance mode, generating an internal lookup table for faster position calculations. To use the performance mode, this method must be used before calling `start()`.
+    ///
+    /// > Note: With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your ``PathMotion`` needs to begin.
+    /// - Parameter lookupCapacity: An optional capacity that caps the maximum lookup table amount.
+    public func setupPerformanceMode() async {
+        await pathState.setupPerformanceMode()
     }
     
     

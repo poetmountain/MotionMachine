@@ -135,8 +135,7 @@ let motion = PhysicsMotion(target: view,
 Here's a basic example. We've supplied the `PathMotion` with a basic CGPath via a `PathState` object, an easing equation, and we've told it to reverse back to the beginning once it travels to the end. Notice though how we've defined a `startPosition` and `endPosition`. This tells the `PathMotion` it should start the animation at a point 10% from the beginning of the path and end the animation at a point 80% along the path's length. If you leave these parameters out it will travel the full distance.
 ```swift
 let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
-let pathState = PathState(path: path.cgPath)
-motion = PathMotion(path: pathState,
+motion = PathMotion(path: path.cgPath,
                 duration: 1.0,
            startPosition: 0.1,
              endPosition: 0.8,
@@ -148,8 +147,7 @@ motion.start()
 In this example note that we've added an `edgeBehavior` parameter to the `PathMotion` initializer. There are two types of edge behaviors – `stopAtEdges` (the default), which simply stops motion once the animated point gets to either specified edge point, and `contiguousEdges`, which tells the `PathMotion` that the path's starting and ending edges should be treated as connected, contiguous points. If the animated point travels beyond the path's edge, as can happen with some easing equation classes like `EasingElastic` and `EasingBack`, the motion will continue in the current direction at the beginning of the other edge. This behavior type is useful with closed paths like polygonal shapes to create a seamless animation.
 ```swift
 let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
-let pathState = PathState(path: path.cgPath)
-motion = PathMotion(path: pathState,
+motion = PathMotion(path: path.cgPath,
                 duration: 1.0,
                   easing: EasingElastic.easeInOut(),
             edgeBehavior: .contiguousEdges)
@@ -160,8 +158,7 @@ motion = PathMotion(path: pathState,
 The `startPosition` and `endPosition` values can also be flipped. Doing so will make the point travel along the path from the end of the path towards the beginning in its forward motion. In this example, the motion point will start at 80% along the path and travel "backwards" to 20%. If you added a `reverses` option, then at the end of the motion it would reverse along the path back to 80%.
 ```swift
 let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 100, height: 100))
-let pathState = PathState(path: path.cgPath)
-motion = PathMotion(path: pathState,
+motion = PathMotion(path: path.cgPath,
                 duration: 1.0,
            startPosition: 0.8,
              endPosition: 0.2,
@@ -170,10 +167,10 @@ motion.start()
 ```
 
 > [!IMPORTANT]
-> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathMotion` to animate along. Fortunately, `PathMotion` comes with a performance mode. When this mode is activated, `PathState` generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` on the `PathState` instance before starting the `PathMotion`. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
+> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathMotion` to animate along. Fortunately, `PathMotion` comes with a performance mode. When this mode is activated, `PathState` generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` before starting the `PathMotion`, as shown in the below example. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
 ```swift
 Task {
-    await pathState?.setupPerformanceMode()
+    await motion?.setupPerformanceMode()
     motion?.start()
 }
 ```
@@ -185,9 +182,8 @@ Task {
 Here's a basic example. We've supplied the `PathPhysicsMotion` with a basic CGPath via a `PathState` object, an easing equation, and we've told it to reverse back to the beginning once it travels to the end. Notice though how we've defined a `startPosition` and `endPosition`. This tells the `PathPhysicsMotion` it should start the animation at a point 10% from the beginning of the path and end the animation at a point 80% along the path's length. If you leave these parameters out it will have the full length of the path to travel along.
 ```swift
 let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
-let pathState = PathState(path: path.cgPath)
 let config = PhysicsConfiguration(velocity: 500, friction: 0.4)
-motion = PathPhysicsMotion(path: pathState, 
+motion = PathPhysicsMotion(path: path.cgPath, 
                   configuration: config,
                   startPosition: 0.1, 
                     endPosition: 0.8)
@@ -197,9 +193,8 @@ motion.start()
 In this second example we're going to turn on collision detection and add a `restitution` value. Technically, collisions are turned on any time the `stopAtEdges` edge behavior is chosen, but adding a `restitution` value will cause a change in the motion. This value enables the object to collide and "bounce" off the starting and ending points when a point reaches them. The `restitution` value determines the elasticity of the object, which in effect determines how much velocity the object retains after colliding with an edge. A `restitution` value of 0.0 (the default if no value is provided) results in no bouncing at all, while a value of 1.0 results in no energy being lost in the collision. By default the collision points are at the start and end of the path, but if you specify your own start and end points those will be used instead.
 ```swift
 let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
-let pathState = PathState(path: path.cgPath)
 let config = PhysicsConfiguration(velocity: 600, friction: 0.4, restitution: 0.8)
-motion = PathPhysicsMotion(path: pathState, 
+motion = PathPhysicsMotion(path: path.cgPath, 
                   configuration: config)
 motion.start()
 ```
@@ -207,9 +202,8 @@ motion.start()
 Although `PathPhysicsMotion` uses a physics simulation instead of specifying discrete ending values, we can still apply `repeats` and `reverses` options. Repeating and reversing act in the same way as `Motion` and interacts with `MoveableCollection` classes as you would expect.
 ```swift
 let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
-let pathState = PathState(path: path.cgPath)
 let config = PhysicsConfiguration(velocity: 500, friction: 0.4)
-motion = PathPhysicsMotion(path: pathState, 
+motion = PathPhysicsMotion(path: path.cgPath, 
                   configuration: config)
 .reverses()
 .repeats(1)
@@ -219,9 +213,8 @@ motion = PathPhysicsMotion(path: pathState,
 The `startPosition` and `endPosition` values can also be flipped. Doing so will make the point travel along the path from the end of the path towards the beginning in its forward motion. Be aware that if you do this, the velocity should also be a negative value in order for the point to travel in the correct direction. In this example, the motion point will start at 80% along the path and travel "backwards" to 20%.
 ```swift
 let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 100, startAngle: 0.087, endAngle: 1.66, clockwise: true)
-let pathState = PathState(path: path.cgPath)
 let config = PhysicsConfiguration(velocity: -600, friction: 0.4, restitution: 0.8)
-motion = PathPhysicsMotion(path: pathState, 
+motion = PathPhysicsMotion(path: path.cgPath, 
                   configuration: config,
                   startPosition: 0.8, 
                     endPosition: 0.2)
@@ -229,10 +222,10 @@ motion.start()
 ```
 
 > [!IMPORTANT]
-> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathPhysicsMotion` to animate along. Fortunately, `PathPhysicsMotion` comes with a performance mode. When this mode is activated, the `PathState` object generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` on the `PathState` instance before starting the `PathPhysicsMotion`. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
+> Note that because it is mathematically complex to find all points on a CGPath, large, complex paths can present performance challenges for `PathPhysicsMotion` to animate along. Fortunately, `PathPhysicsMotion` comes with a performance mode. When this mode is activated, the `PathState` object generates a lookup table which it uses to find points on the path in O(n) time. While this increases setup time, it significantly improves performance while the motion is running, for instance from 10% down to 1% CPU usage. To use performance mode, call the async method `setupPerformanceMode()` before starting the `PathPhysicsMotion`, as shown in the below example. This method will run the lookup table generation code on a background queue and return when complete. For most reasonably large paths this should take under a second.
 ```swift
 Task {
-    await pathState?.setupPerformanceMode()
+    await motion?.setupPerformanceMode()
     motion?.start()
 }
 ```
