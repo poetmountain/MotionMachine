@@ -60,12 +60,10 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
         let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 200, startAngle: 0.087, endAngle: 1.66, clockwise: true)
         path.addQuadCurve(to: CGPoint(x: 20, y: 50), controlPoint: CGPoint(x: 100, y: 45))
 
-        let pathState = PathState(path: path.cgPath)
-        self.pathState = pathState
         pathView.path = path
 
         let config = PhysicsConfiguration(velocity: 800, friction: 0.4, restitution: 0.7)
-        motion = PathPhysicsMotion(path: pathState, configuration: config)
+        motion = PathPhysicsMotion(path: path.cgPath, configuration: config)
         motion?.updated({ [weak pathView, weak view, weak motionView] (motion, currentPoint) in
             if let view, let adjustedPoint = pathView?.convert(currentPoint, to: view) {
                 motionView?.center = adjustedPoint

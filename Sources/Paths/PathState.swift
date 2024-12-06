@@ -56,7 +56,7 @@ public final class PathState: NSObject, @unchecked Sendable {
     /// - Parameters:
     ///   - path: The path to animate along.
     ///   - curveLengthGenerationSteps: Determines the number of steps used in determining the lengths of curves. The default value of `50` is fine in most cases; higher values can marginally increase accuracy, at the cost of performance.
-    init(path: CGPath, curveLengthGenerationSteps: Int? = nil) {
+    public init(path: CGPath, curveLengthGenerationSteps: Int? = nil) {
         self.path = path
         super.init()
 
@@ -120,9 +120,9 @@ public final class PathState: NSObject, @unchecked Sendable {
     }
     
 
-    /// Sets up performance mode, generating an internal lookup table for faster position calculations. To use the performance mode, this method must be used before calling `start()` on a ``PathMotion``.
+    /// Sets up performance mode, generating an internal lookup table for faster position calculations. To use the performance mode, this method must be used before calling `start()` on the associated motion class.
     ///
-    /// > Note: With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your ``PathMotion`` needs to begin.
+    /// > Note: With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your motion needs to begin.
     /// - Parameter lookupCapacity: An optional capacity that caps the maximum lookup table amount.
     public func setupPerformanceMode(lookupCapacity: Int? = nil) async {
         if let lookupCapacity {

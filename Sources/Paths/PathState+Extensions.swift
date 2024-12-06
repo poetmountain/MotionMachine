@@ -180,7 +180,7 @@ public extension PathState {
     /// Calculates the length of the path based on the provided path elements.
     /// - Parameter elements: Path elements used to calculate the total path length.
     /// - Returns: The length of the path.
-    internal func calculateLength(with elements: [PathElement]) -> CGFloat {
+    func calculateLength(with elements: [PathElement]) -> CGFloat {
 
         var firstPointInSubpath: CGPoint?
 

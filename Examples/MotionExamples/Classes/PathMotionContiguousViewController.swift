@@ -26,6 +26,14 @@ class PathMotionContiguousViewController: UIViewController, ButtonsViewDelegate 
         return view
     }()
     
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12.0)
+        label.isUserInteractionEnabled = false
+        label.text = "contiguousEdges edge behavior allows motions to seamlessly travel beyond one edge of the path to the other."
+        label.numberOfLines = 4
+        return label
+    }()
 
     lazy var pathView: PathView = {
         return PathView()
@@ -64,11 +72,9 @@ class PathMotionContiguousViewController: UIViewController, ButtonsViewDelegate 
         let rect: CGRect = CGRect(x: 0, y: 0, width: 320, height: 320).insetBy(dx: lineWidth, dy: lineWidth)
         let radius: CGFloat = rect.width * 0.25
         let rectPath = UIBezierPath(roundedRect: rect, cornerRadius: radius)
-        let pathState = PathState(path: rectPath.cgPath)
-        self.pathState = pathState
         pathView.path = rectPath
         
-        motion = PathMotion(path: pathState, duration: 2.5, endPosition: 1.0, easing: EasingElastic.easeInOut(), edgeBehavior: .contiguousEdges)
+        motion = PathMotion(path: rectPath.cgPath, duration: 2, endPosition: 1.0, easing: EasingElastic.easeInOut(), edgeBehavior: .contiguousEdges)
         .repeats()
         .reverses(withEasing: EasingBack.easeInOut())
         
@@ -97,7 +103,13 @@ class PathMotionContiguousViewController: UIViewController, ButtonsViewDelegate 
         } else {
           top_anchor = margins.bottomAnchor
         }
-
+        
+        self.view.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: top_anchor, constant: 30.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 30).isActive = true
+        label.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -30).isActive = true
+        
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +118,7 @@ class PathMotionContiguousViewController: UIViewController, ButtonsViewDelegate 
 
         self.view.addSubview(pathView)
         pathView.translatesAutoresizingMaskIntoConstraints = false
-        pathView.topAnchor.constraint(equalTo: top_anchor, constant: 50.0).isActive = true
+        pathView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 30.0).isActive = true
         pathView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0.0).isActive = true
         pathView.widthAnchor.constraint(equalToConstant: 320.0).isActive = true
         pathView.heightAnchor.constraint(equalToConstant: 320.0).isActive = true

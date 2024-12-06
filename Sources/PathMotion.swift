@@ -262,6 +262,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
 
     }
 
+    /// The object maintaining state on the path.
+    public private(set) var pathState: PathState
+    
     /// Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
     public var edgeBehavior: PathEdgeBehavior {
         get {
@@ -447,21 +450,34 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     /// Timestamp set the `pause` method is called; used to track the amount of time paused.
     private var pauseTimestamp: TimeInterval = 0.0
     
-    /// The object maintaining state on the path.
-    private var pathState: PathState
         
     // MARK: - Initialization
     
-    /// The initializer.
+    /// A convenience initializer.
     /// - Parameters:
-    ///   - path: A state object containing information about the path to use as a motion guide.
+    ///   - path: A `CGPath` object to use as a motion guide.
     ///   - duration: The duration of the motion.
     ///   - startPosition: An optional starting value, corresponding to a percentage along the path's length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.
     ///   - endPosition: An optional ending value, corresponding to a percentage along the path's length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.
     ///   - easing: An optional easing equation.
     ///   - edgeBehavior: Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
     ///   - options: An optional options model.
-    public init(path: PathState, duration: TimeInterval, startPosition: Double? = nil, endPosition: Double? = nil, easing: EasingUpdateClosure?=EasingLinear.easeNone(), edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
+    public convenience init(path: CGPath, duration: TimeInterval, startPosition: Double? = nil, endPosition: Double? = nil, easing: EasingUpdateClosure?=EasingLinear.easeNone(), edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
+        
+        let state = PathState(path: path)
+        self.init(pathState: state, duration: duration, startPosition: startPosition, endPosition: endPosition, easing: easing, edgeBehavior: edgeBehavior, options: options)
+    }
+    
+    /// The initializer.
+    /// - Parameters:
+    ///   - pathState: A state object containing information about the path to use as a motion guide.
+    ///   - duration: The duration of the motion.
+    ///   - startPosition: An optional starting value, corresponding to a percentage along the path's length where the motion should begin. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 0.0.
+    ///   - endPosition: An optional ending value, corresponding to a percentage along the path's length where the motion should end. The range must be between 0.0 and 1.0; values outside that range will be clamped to the minimum or maximum value. The default value is 1.0.
+    ///   - easing: An optional easing equation.
+    ///   - edgeBehavior: Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
+    ///   - options: An optional options model.
+    public init(pathState: PathState, duration: TimeInterval, startPosition: Double? = nil, endPosition: Double? = nil, easing: EasingUpdateClosure?=EasingLinear.easeNone(), edgeBehavior: PathEdgeBehavior? = nil, options: MotionOptions? = MotionOptions.none) {
         
         // clamp start and end values to a 0.0...1.0 range
         let start = max(min(startPosition ?? 0.0, 1.0), 0.0)
@@ -470,8 +486,8 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         let state = PropertyData(path: "percentageComplete", start: start, end: end)
         
         let properties: [PropertyData] = [state]
-        self.targetObject = path
-        self.pathState = path
+        self.targetObject = pathState
+        self.pathState = pathState
         
         if let edgeBehavior {
             self.pathState.edgeBehavior = edgeBehavior
@@ -557,6 +573,13 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         return self
     }
     
+    /// Sets up performance mode, generating an internal lookup table for faster position calculations. To use the performance mode, this method must be used before calling `start()`.
+    ///
+    /// > Note: With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your ``PathMotion`` needs to begin.
+    /// - Parameter lookupCapacity: An optional capacity that caps the maximum lookup table amount.
+    public func setupPerformanceMode() async {
+        await pathState.setupPerformanceMode()
+    }
     
     
     public func cleanupResources() {

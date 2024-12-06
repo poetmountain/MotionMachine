@@ -30,8 +30,10 @@ public enum PathElementType {
     
     /// An unknown type (should only happen if Apple adds a new element type some day).
     case unknown
-
-    init(element: CGPathElement) {
+    
+    /// Initializer.
+    /// - Parameter element: The path element to represent.
+    public init(element: CGPathElement) {
         switch element.type {
         case .moveToPoint:
             self = .move(to: element.points[0])
