@@ -1,3 +1,9 @@
+### 2.2.1
+- Added support for visionOS
+- Fixed some access permission issues
+- Added convenience inits for `PathMotion` and `PathPhysicsMotion` to remove the need to pass in a `PathState` manually
+- Added `setupPerformanceMode` convenience method to `PathMotion` and `PathPhysicsMotion` classes (which call `PathState`'s method internally)
+
 ### 2.2.0
 - Added `PathMotion` class to allow a `CGPoint` to be animated along the length of a `CGPath`! `PathMotion` conforms to the `Moveable` protocol and interacts with the MotionMachine ecosystem as you'd expect from the other motion classes, and you can use all of the normal easing equations. Using the `startPosition` and `endPosition` parameters you can even specify a portion of the path to animate along.
 - Added `PathPhysicsMotion` class to allow a `CGPoint` to be animated along the length of a `CGPath` using the same physics system that `PhysicsMotion` uses! Like `PathMotion`, it conforms to the `Moveable` protocol and interacts with the MotionMachine ecosystem as you'd expect from the other motion classes.
