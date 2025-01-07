@@ -2,7 +2,7 @@
 //  PhysicsMotionTests.swift
 //  MotionMachineTests
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -18,7 +18,7 @@ import XCTest
         tester.value = 50.0
         // when a Motion is not passed start values during init, it should assign the object's current object values
         // for the specified props to each PropertyData start value
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 10.0, friction: 0.998)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 10.0, friction: 0.998)
         
         XCTAssertEqual(motion.properties[0].start, tester.value)
         
@@ -29,7 +29,7 @@ import XCTest
         let motion = PhysicsMotion(target: tester, velocity: 10.0, friction: 0.998)
         
         // add should add a PropertyData to the properties array
-        motion.add(PropertyData("value"))
+        motion.add(PropertyData(keyPath: \Tester.value))
         XCTAssertEqual(motion.properties.count, 1)
         
     }
@@ -47,13 +47,13 @@ import XCTest
         
         // repeats should set repeating and amount
         let motion = PhysicsMotion(target: tester, velocity: 10.0, friction: 0.998).repeats(1)
-        XCTAssertTrue(motion.repeating)
+        XCTAssertTrue(motion.isRepeating)
         XCTAssertEqual(motion.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
         let motion2 = PhysicsMotion(target: tester, velocity: 10.0, friction: 0.998).repeats()
-        XCTAssertTrue(motion2.repeating)
-        XCTAssertEqual(motion2.repeatCycles, REPEAT_INFINITE)
+        XCTAssertTrue(motion2.isRepeating)
+        XCTAssertEqual(motion2.repeatCycles, PhysicsMotion<Tester>.REPEAT_INFINITE)
     }
     
     
@@ -61,8 +61,10 @@ import XCTest
     
     func test_top_level_prop_should_end_at_specified_value() {
         let did_complete = expectation(description: "motion called completed notify closure")
-        
-        let motion = PhysicsMotion(target: NSNumber.init(value: 0.0), velocity: 1.5, friction: 0.999)
+        let tester = Tester()
+        let prop = PropertyData(keyPath: \Tester.value)
+        let config = PhysicsConfiguration(velocity: 1.5, friction: 0.999)
+        let motion = PhysicsMotion(target: tester, properties: [prop], configuration: config)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
             XCTAssertEqual(motion.totalProgress, 1.0)
@@ -80,7 +82,7 @@ import XCTest
         let did_complete = expectation(description: "motion called completed notify closure")
         let tester = Tester()
 
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.998)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.998)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
             XCTAssertEqual(motion.totalProgress, 1.0)
@@ -99,7 +101,7 @@ import XCTest
         let tester = Tester()
         let did_start = expectation(description: "motion called started notify closure")
         let timestamp = CFAbsoluteTimeGetCurrent()
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 1.5, friction: 0.999)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 1.5, friction: 0.999)
         .started({ (motion) in
             let new_timestamp = CFAbsoluteTimeGetCurrent()
             XCTAssertEqual(new_timestamp, timestamp + motion.delay, accuracy: 0.9)
@@ -118,7 +120,7 @@ import XCTest
         let tester = Tester()
         
         let did_complete = expectation(description: "motion called completed notify closure")
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("rect.origin.x")], velocity: 2.0, friction: 0.998)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.rect.origin.x)], velocity: 2.0, friction: 0.998)
         .completed { (motion) in
             XCTAssertTrue(motion.velocity < 1.0)
             XCTAssertEqual(Double(tester.rect.origin.x), motion.properties[0].current, accuracy: 0.9)
@@ -138,18 +140,16 @@ import XCTest
         
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 10.0, friction: 0.99)
-        motion.additive = true
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 10.0, friction: 0.99, options: [.additive])
         motion.additiveWeighting = 0.5
         
-        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: -10.0, friction: 0.99)
+        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: -10.0, friction: 0.99, options: [.additive])
         .completed { (m) in
             // velocity should basically be 0 as the two velocities cancel each other out
             XCTAssertEqual(tester.value, 0.0, accuracy: 0.12)
             
             did_complete.fulfill()
         }
-        motion2.additive = true
         motion2.additiveWeighting = 0.5
         
         motion.start()
@@ -164,7 +164,7 @@ import XCTest
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.repeats])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98, options: [.repeats])
             .cycleRepeated({ (motion) in
                 XCTAssertEqual(motion.totalProgress, 0.5)
                 XCTAssertEqual(motion.cycleProgress, 0.0)
@@ -176,7 +176,7 @@ import XCTest
                 XCTAssertEqual(motion.cyclesCompletedCount, new_cycles)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -193,7 +193,7 @@ import XCTest
         let did_reverse = expectation(description: "motion called reversed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.reverses])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98, options: [.reverses])
             .reversed({ (motion) in
                 XCTAssertTrue(motion.totalProgress <= 0.5)
                 XCTAssertTrue(motion.cycleProgress <= 0.5)
@@ -205,7 +205,7 @@ import XCTest
                 XCTAssertEqual(motion.cyclesCompletedCount, 1)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -221,7 +221,7 @@ import XCTest
         let did_repeat = expectation(description: "motion called cycleRepeated notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98, options: [.reverses, .repeats])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98, options: [.reverses, .repeats])
             .reversed({ (motion) in
                 if (motion.cyclesCompletedCount == 0) {
                     XCTAssertTrue(motion.totalProgress <= 0.25)
@@ -238,7 +238,7 @@ import XCTest
                 XCTAssertEqual(motion.cyclesCompletedCount, 2)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -257,9 +257,9 @@ import XCTest
         
         let did_start = expectation(description: "motion called started notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
         .started { (motion) in
-            XCTAssertEqual(motion.motionState, MotionState.moving)
+            XCTAssertEqual(motion.motionState, .moving)
             
             did_start.fulfill()
         }
@@ -274,13 +274,13 @@ import XCTest
         
         let tester = Tester()
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
         motion.start()
         motion.pause()
         motion.start()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.paused)
+        XCTAssertEqual(motion.motionState, .paused)
         
     }
     
@@ -290,9 +290,9 @@ import XCTest
         
         let did_stop = expectation(description: "motion called stopped notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
         .stopped { (motion) in
-            XCTAssertEqual(motion.motionState, MotionState.stopped)
+            XCTAssertEqual(motion.motionState, .stopped)
             
             did_stop.fulfill()
         }
@@ -310,11 +310,11 @@ import XCTest
 
         let tester = Tester()
         let did_pause = expectation(description: "motion called paused notify closure")
-        let data = PropertyData(path: "value", start: 0.0, end: 100.0)
+        let data = PropertyData(keyPath: \Tester.value, start: 0.0, end: 100.0)
         let motion = PhysicsMotion(target: tester, properties: [data], velocity: 2.0, friction: 0.98)
         .paused { (motion) in
             print("physics paused with state \(motion.motionState)")
-            XCTAssertEqual(motion.motionState, MotionState.paused)
+            XCTAssertEqual(motion.motionState, .paused)
 
             did_pause.fulfill()
         }
@@ -332,13 +332,13 @@ import XCTest
         
         let tester = Tester()
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
         motion.start()
         motion.stop()
         motion.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
     }
     
     func test_resume() {
@@ -348,15 +348,15 @@ import XCTest
         let did_resume = expectation(description: "motion called resumed notify closure")
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
             .resumed { (motion) in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_resume.fulfill()
             }
             .completed { (motion) in
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -375,13 +375,13 @@ import XCTest
         
         let tester = Tester()
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
         motion.start()
         motion.stop()
         motion.resume()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
     }
     
     func test_update() {
@@ -390,9 +390,9 @@ import XCTest
         
         let did_update = expectation(description: "motion called updated notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value")], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 2.0, friction: 0.98)
             .updated { (motion) in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_update.fulfill()
                 motion.stop()
@@ -408,7 +408,7 @@ import XCTest
         
         let did_reset = expectation(description: "motion called updated notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData("value", 10.0)], velocity: 2.0, friction: 0.98)
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], velocity: 2.0, friction: 0.98)
         
         motion.start()
         let after_time = DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);

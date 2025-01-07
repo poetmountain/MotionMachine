@@ -2,7 +2,7 @@
 //  PathPhysicsMotionTests.swift
 //  MotionMachineTests
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -39,13 +39,13 @@ import UIKit
         // repeats should set repeating and amount
         let config = PhysicsConfiguration(velocity: 200, friction: 0.3)
         let motion = PathPhysicsMotion(path: path.cgPath, configuration: config).repeats(1)
-        XCTAssertTrue(motion.repeating)
+        XCTAssertTrue(motion.isRepeating)
         XCTAssertEqual(motion.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
         let motion2 = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).repeats()
-        XCTAssertTrue(motion2.repeating)
-        XCTAssertEqual(motion2.repeatCycles, REPEAT_INFINITE)
+        XCTAssertTrue(motion2.isRepeating)
+        XCTAssertEqual(motion2.repeatCycles, PathPhysicsMotion.REPEAT_INFINITE)
         
     }
     
@@ -55,7 +55,7 @@ import UIKit
         
         // reverses should set reversing properties
         let motion = PathPhysicsMotion(pathState: pathState, velocity: 200, friction: 0.3, startPosition: 0.2, endPosition: 0.8).reverses()
-        XCTAssertTrue(motion.reversing)
+        XCTAssertTrue(motion.isReversing)
     }
     
     // MARK: Motion tests
@@ -306,7 +306,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, newCycles)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 didComplete.fulfill()
         }
@@ -359,7 +359,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, 1)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -413,7 +413,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, 2)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -437,7 +437,7 @@ import UIKit
         
         let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .started { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_start.fulfill()
         }
@@ -460,7 +460,7 @@ import UIKit
         motion.start()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.paused)
+        XCTAssertEqual(motion.motionState, .paused)
         
     }
     
@@ -473,7 +473,7 @@ import UIKit
         
         let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .stopped { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_stop.fulfill()
         }
@@ -499,7 +499,7 @@ import UIKit
         
         let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         .paused { (motion, currentPoint)  in
-            XCTAssertEqual(motion.motionState, MotionState.paused)
+            XCTAssertEqual(motion.motionState, .paused)
             
             did_pause.fulfill()
         }
@@ -527,7 +527,7 @@ import UIKit
         motion.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
         
     }
     
@@ -542,7 +542,7 @@ import UIKit
 
         let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
         .resumed { (motion, currentPoint)  in
-            XCTAssertEqual(motion.motionState, MotionState.moving)
+            XCTAssertEqual(motion.motionState, .moving)
             
             did_resume.fulfill()
         }
@@ -558,7 +558,7 @@ import UIKit
             XCTAssertEqual(currentPoint.y, expectedPoint.y, accuracy: 0.1)
             
             XCTAssertEqual(motion.totalProgress, 1.0)
-            XCTAssertEqual(motion.motionState, MotionState.stopped)
+            XCTAssertEqual(motion.motionState, .stopped)
             
             did_complete.fulfill()
         }
@@ -585,7 +585,7 @@ import UIKit
         motion.resume()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
         
     }
     
@@ -599,7 +599,7 @@ import UIKit
         
         let motion = PathPhysicsMotion(pathState: pathState, velocity: velocity, friction: friction)
             .updated { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_update.fulfill()
                 motion.stop()

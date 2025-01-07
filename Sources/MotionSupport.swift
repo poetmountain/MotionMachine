@@ -2,14 +2,20 @@
 //  MotionSupport.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
+
+#if canImport(QuartzCore)
 import QuartzCore
+#endif
 
 #if os(iOS) || os(tvOS)
 import UIKit
@@ -20,9 +26,10 @@ import UIKit
 
     // MARK: Additive utility methods
     
-    // Holds weak references to all currently-tweening Motion instances which are moving an object's property
+    /// Holds weak references to all currently active Motion instances
     static var motions = NSHashTable<AnyObject>.weakObjects()
     
+    /// An incrementing counter which represents the most recently-created Motion operation. For internal use only.
     static var operationID: UInt = 0
     
     
@@ -32,7 +39,7 @@ import UIKit
      *  - parameter additiveMotion: The `Additive` object to register.
      *  - returns: An operation ID that should be assigned to the `Additive` object's `operationID` property.
      */
-    public static func register(additiveMotion motion: Additive) -> UInt {
+    public static func register(additiveMotion motion: any Additive) -> UInt {
         if !(MotionSupport.motions.contains(motion)) {
             MotionSupport.motions.add(motion)
         }
@@ -45,7 +52,7 @@ import UIKit
      *
      *  - parameter additiveMotion: The `Additive` object to remove.
      */
-    public static func unregister(additiveMotion motion: Additive) {
+    public static func unregister(additiveMotion motion: any Additive) {
         MotionSupport.motions.remove(motion)
     }
     
@@ -63,8 +70,8 @@ import UIKit
      *
      *  **Example Usage**
      *
-        `if let last_target_value = MotionSupport.targetValue(forObject: unwrapped_object, keyPath: property.path) {
-            properties[index].start = last_target_value
+        `if let lastTargetValue = MotionSupport.targetValue(forObject: targetObject, targetProperty: property, requestingID: self.operationID) {
+            properties[index].start = lastTargetValue
         }`
      *
      *  - parameters:
@@ -73,141 +80,126 @@ import UIKit
      *
      *  - returns: The ending value. Returns `nil` if no `Additive` object is targeting this property.
      */
-    public static func targetValue(forObject object: AnyObject, keyPath path: String) -> Double? {
+    public static func targetValue<TargetType: AnyObject>(forObject object: TargetType, targetProperty: PropertyData<TargetType>, requestingID: UInt) -> Double? {
         
-        var target_value: Double?
+        var targetValue: Double?
         
         // create an array from the operations NSSet, using the Motion's operationID as sort key
-        let motions_array = MotionSupport.motions.allObjects
-        let sorted_motions = motions_array.sorted( by: { (motion1, motion2) -> Bool in
+        let motionsArray = MotionSupport.motions.allObjects
+        let sortedMotions = motionsArray.sorted( by: { (motion1, motion2) -> Bool in
             var test: Bool = false
-            if let m1 = motion1 as? Additive, let m2 = motion2 as? Additive {
+            if let m1 = motion1 as? any Additive, let m2 = motion2 as? any Additive {
                 test =  m1.operationID < m2.operationID
             }
             return test
         })
 
-        // reverse through the array and find the most recent motion operation that's modifying this object property
-        for motion in sorted_motions {
-            if let additive = motion as? Additive {
-                for property: PropertyData in additive.properties {
-                    if ((property.target === object || property.targetObject === object) && property.path == path) {
-                        target_value =  property.start + ((property.end - property.start) * additive.additiveWeighting)
-                        
+        // find the most recent motion operation that's modifying this object property
+        for motion in sortedMotions {
+            if let motion = motion as? any Moveable, motion.operationID == requestingID {
+                continue
+            }
+            if let additive = motion as? any Additive<TargetType> {
+                for property in additive.properties {
+                    if ((property.target === object || property.targetObject === object) && ((targetProperty.keyPath != nil && property.keyPath == targetProperty.keyPath) || (!targetProperty.stringPath.isEmpty && property.stringPath == targetProperty.stringPath))) {
+                        targetValue = property.start + ((property.end - property.start) * additive.additiveWeighting)
+
                         break
                     }
                 }
             }
         }
+
         
-        return target_value
+        return targetValue
     }
     
     
     // MARK: Utility methods
-    
-    /// Attempts to cast a generic object to a Double value.
-    /// - Parameter number: The object to case.
-    /// - Returns: A Double value, if the cast succeeded.
-    public static func cast(_ number: AnyObject) -> Double? {
-        var value: Double?
         
-        if let number = number as? NSNumber {
-            value = number.doubleValue
-        } else if let number = number as? Double {
-            value = number
-        } else if let number = number as? CGFloat {
-            value = Double(number)
-        } else if let number = number as? Int {
-            value = Double(number)
-        } else if let number = number as? UInt {
-            value = Double(number)
-        } else if let number = number as? Float {
-            value = Double(number)
-        }
+    /// Builds and returns a `PropertyData` object using the supplied values.
+    ///
+    /// A `PropertyData` object will be created if the values you supply pass one of the following tests:
+    /// 1) there's a specified start value and that value is different than either the original value or the ending value, or
+    /// 2) there's just an original value and that value is different than the ending value, or
+    /// 3) there's no start value passed in, which will return a `PropertyData` object with only an end value. In cases 1 and 2, a `PropertyData` object with both start and end values will be returned. In the third case, a `PropertyData` object that only has an ending value will be returned. If all those tests fail, no object will be returned.
+    ///
+    /// - Parameters:
+    ///   - keyPath: A base `KeyPath` to be used for the `PropertyData`'s `keyPath` property.
+    ///   - originalValue: An optional value representing the current value of the target object property.
+    ///   - startValue: An optional value to be supplied to the `PropertyData`'s `start` property.
+    ///   - endValue: A value to be supplied to the `PropertyData`'s `end` property.
+    ///   - isAdditive: Denotes whether this ``PropertyData`` will be used with an additive Motion. If `true`, optimizations that prevent the ``PropertyData`` from being built will not occur as it would result in incorrect additive calculations.
+    ///  - Returns: An optional `PropertyData` object using the supplied values.
+    ///
+    public static func buildPropertyData<TargetType, PropertyType: BinaryFloatingPoint>(keyPath: KeyPath<TargetType, PropertyType>, originalValue: PropertyType?=nil, startValue: PropertyType?, endValue: PropertyType, isAdditive: Bool = false) -> PropertyData<TargetType>? {
+        var data: PropertyData<TargetType>?
         
-        return value
-    }
-    
+        if let startValue {
+            if let originalValue, (startValue !≈ originalValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, start: startValue, end: endValue)
+            } else if (endValue !≈ startValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, start: startValue, end: endValue)
 
-    
-    /// Utility method which determines whether the value is of the specified type.
-    public static func matchesType(forValue value: Any, typeToMatch matchType: Any.Type) -> Bool {
-        
-        let does_match: Bool = type(of: value) == matchType || value is NSNumber
-        
-        return does_match
-    }
-    
-    /// Utility method which determines whether the value is of the specified Objective-C type.
-    public static func matchesObjCType(forValue value: NSValue, typeToMatch matchType: UnsafePointer<Int8>) -> Bool {
-        var matches: Bool = false
-        
-        let value_type: UnsafePointer<Int8> = value.objCType
-        
-        matches = (strcmp(value_type, matchType)==0)
-        
-        return matches
-    }
-
-    /// Utility method that returns a getter method selector for a property name string.
-    static func propertyGetter(forName name: String) -> Selector {
-        
-        let selector = NSSelectorFromString(name)
-        
-        return selector
-        
-    }
-    
-    /// Utility method that returns a setter method selector for a property name string.
-    static func propertySetter(forName name: String) -> Selector {
-        
-        var selector_name = name
-        let capped_first_letter = String(name[name.startIndex]).capitalized
-        let replace_range: Range = selector_name.startIndex ..< selector_name.index(after: selector_name.startIndex)
-        selector_name.replaceSubrange(replace_range, with: capped_first_letter)
-        let setter_string = String.localizedStringWithFormat("%@%@:", "set", selector_name)
-        let selector = NSSelectorFromString(setter_string)
-        
-        return selector
-    }
-    
-    /**
-     *  Builds and returns a `PropertyData` object if the values you supply pass one of the following tests: 1) there's a specified start value and that value is different than either the original value or the ending value, or 2) there's just an original value and that value is different than the ending value, or 3) there's no start value passed in, which will return a `PropertyData` object with only an end value. In cases 1 and 2, a `PropertyData` object with both start and end values will be returned. In the third case, a `PropertyData` object that only has an ending value will be returned. If all those tests fail, no object will be returned.
-     *
-     *  - parameter path: A base path to be used for the `PropertyData`'s `path` property.
-     *  - parameter originalValue: An optional value representing the current value of the target object property.
-     *  - parameter startValue: An optional value to be supplied to the `PropertyData`'s `start` property.
-     *  - parameter endValue: A value to be supplied to the `PropertyData`'s `end` property.
-     *  - returns: An optional `PropertyData` object using the supplied values.
-     */
-    public static func buildPropertyData(path: String, originalValue: Double?=nil, startValue: Double?, endValue: Double) -> PropertyData? {
-        var data: PropertyData?
-        
-        if let unwrapped_start = startValue {
-            if ((originalValue != nil && unwrapped_start !≈ originalValue!) || endValue !≈ unwrapped_start) {
-                data = PropertyData(path: path, start: unwrapped_start, end: endValue)
             }
-        } else if let unwrapped_org = originalValue {
-            if (endValue !≈ unwrapped_org) {
-                data = PropertyData(path: path, start: unwrapped_org, end: endValue)
+
+        } else if let originalValue {
+            if (endValue !≈ originalValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, start: originalValue, end: endValue)
             }
         } else {
-            data = PropertyData(path: path, end: endValue)
+            data = PropertyData<TargetType>(keyPath: keyPath, end: endValue)
 
         }
         
         return data
     }
     
+    /// Builds and returns a `PropertyData` object using the supplied values.
+    ///
+    /// A `PropertyData` object will be created if the values you supply pass one of the following tests:
+    /// 1) there's a specified start value and that value is different than either the original value or the ending value, or
+    /// 2) there's just an original value and that value is different than the ending value, or
+    /// 3) there's no start value passed in, which will return a `PropertyData` object with only an end value. In cases 1 and 2, a `PropertyData` object with both start and end values will be returned. In the third case, a `PropertyData` object that only has an ending value will be returned. If all those tests fail, no object will be returned.
+    ///
+    /// - Parameters:
+    ///   - keyPath: A base `KeyPath` to be used for the `PropertyData`'s `keyPath` property.
+    ///   - parentPath: A `KeyPath` referencing the parent object to the value being updated.
+    ///   - originalValue: An optional value representing the current value of the target object property.
+    ///   - startValue: An optional value to be supplied to the `PropertyData`'s `start` property.
+    ///   - endValue: A value to be supplied to the `PropertyData`'s `end` property.
+    ///   - isAdditive: Denotes whether this ``PropertyData`` will be used with an additive Motion. If `true`, optimizations that prevent the ``PropertyData`` from being built will not occur as it would result in incorrect additive calculations.
+    ///  - Returns: An optional `PropertyData` object using the supplied values.
+    ///
+    public static func buildPropertyData<TargetType, PropertyType: BinaryFloatingPoint, ParentType>(keyPath: KeyPath<TargetType, PropertyType>, parentPath: KeyPath<TargetType, ParentType>? = nil, originalValue: PropertyType? = nil, startValue: PropertyType?, endValue: PropertyType, isAdditive: Bool = false) -> PropertyData<TargetType>? {
+        var data: PropertyData<TargetType>?
+        
+        if let startValue {
+            if let originalValue, (startValue !≈ originalValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, parentPath: parentPath, start: startValue, end: endValue)
+            } else if (endValue !≈ startValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, parentPath: parentPath, start: startValue, end: endValue)
+
+            }
+
+        } else if let originalValue {
+            if (endValue !≈ originalValue || isAdditive) {
+                data = PropertyData<TargetType>(keyPath: keyPath, parentPath: parentPath, start: originalValue, end: endValue)
+            }
+        } else {
+            data = PropertyData<TargetType>(keyPath: keyPath, end: endValue)
+
+        }
+        
+        return data
+    }
 }
 
 // MARK: - Declarations
 
-/// An enum representing NSValue-encoded structs supported by MotionMachine.
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+/// An enum representing value types supported by MotionMachine.
 @MainActor public enum ValueStructTypes {
-    /// Represents a `NSNumber` type.
-    case number
     
     /// Represents a `CGPoint` type.
     case point
@@ -238,23 +230,13 @@ import UIKit
     /// Represents an unsupported type.
     case unsupported
     
-    static var valueTypes: [ValueStructTypes: NSValue] = [ValueStructTypes.number : NSNumber.init(value: 0),
-                                                                  ValueStructTypes.point : NSValue(cgPoint: CGPoint.zero),
-                                                                  ValueStructTypes.size : NSValue(cgSize: CGSize.zero),
-                                                                  ValueStructTypes.rect : NSValue(cgRect: CGRect.zero),
-                                                                  ValueStructTypes.vector : NSValue(cgVector: CGVector(dx: 0.0, dy: 0.0)),
-                                                                  ValueStructTypes.affineTransform : NSValue(cgAffineTransform: CGAffineTransform.identity),
-                                                                  ValueStructTypes.transform3D : NSValue.init(caTransform3D: CATransform3DIdentity)
+    static var valueTypes: [ValueStructTypes: Any] = [ValueStructTypes.point : CGPoint.zero,
+                                                      ValueStructTypes.size : CGSize.zero,
+                                                      ValueStructTypes.rect : CGRect.zero,
+                                                      ValueStructTypes.vector : CGVector(dx: 0.0, dy: 0.0),
+                                                      ValueStructTypes.affineTransform : CGAffineTransform.identity,
+                                                      ValueStructTypes.transform3D : CATransform3DIdentity
     ]
     
-    
-    /**
-     *  Provides a C string returned by Foundation's `objCType` method for a specific ValueStructTypes type; this represents a specific Objective-C type. This is useful for Foundation structs which can't be used with Swift's `as` type checking.
-     */
-    func toObjCType() -> UnsafePointer<Int8> {
-        guard let type_value = ValueStructTypes.valueTypes[self]?.objCType else { return NSNumber(value: false).objCType }
-        
-        return type_value
-    }
-    
 }
+#endif

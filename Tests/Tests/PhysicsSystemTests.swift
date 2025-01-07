@@ -2,7 +2,7 @@
 //  PhysicsSystemTests.swift
 //  MotionMachineTests
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -15,7 +15,7 @@ import XCTest
         let velocity = 1.0
         let friction = 0.1
         let system = PhysicsSystem(velocity: velocity, friction: friction)
-        let property = PropertyData(path: "", start: 0.0, end: 1.0)
+        let property = PropertyData(keyPath: \Tester.value, start: 0.0, end: 1.0)
         let timeElapsed: TimeInterval = 0.1
         // d = (v*t) + 1/2at^2
         let expectedValue = property.start + (velocity * timeElapsed) + (0.5 * -friction * pow(timeElapsed,2))
@@ -38,7 +38,7 @@ import XCTest
         let restitution = 0.5
         let collisionValue = 0.8
         let system = PhysicsSystem(velocity: velocity, friction: friction, restitution: restitution, useCollisionDetection: true)
-        var property = PropertyData(path: "", start: 0.0, end: collisionValue)
+        let property = PropertyData(keyPath: \Tester.value, start: 0.0, end: collisionValue)
         let timeElapsed: TimeInterval = 0.05
         let startTimestamp = CFAbsoluteTimeGetCurrent()
         
@@ -70,7 +70,7 @@ import XCTest
         let restitution = 0.5
         let collisionValue = 0.8
         let system = PhysicsSystem(velocity: velocity, friction: friction, restitution: restitution, useCollisionDetection: true)
-        var property = PropertyData(path: "", start: collisionValue, end: 0.0)
+        let property = PropertyData(keyPath: \Tester.value, start: collisionValue, end: 0.0)
         let timeElapsed: TimeInterval = 0.05
         let startTimestamp = CFAbsoluteTimeGetCurrent()
         
@@ -102,7 +102,7 @@ import XCTest
         let restitution = 0.5
         let collisionValue = 0.2
         let system = PhysicsSystem(velocity: velocity, friction: friction, restitution: restitution, useCollisionDetection: true)
-        var property = PropertyData(path: "", start: collisionValue, end: 1.0)
+        let property = PropertyData(keyPath: \Tester.value, start: collisionValue, end: 1.0)
         property.current = 0.9
         let timeElapsed: TimeInterval = 0.05
         let startTimestamp = CFAbsoluteTimeGetCurrent()

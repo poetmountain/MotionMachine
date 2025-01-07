@@ -1,7 +1,7 @@
 ![MotionMachine logo](Guides/mmlogo.png)
 
-![swift](https://img.shields.io/badge/Swift-5.10%20%7C%206.0-005AA5.svg)
-![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20visionOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
+![swift](https://img.shields.io/badge/Swift-6.0-005AA5.svg)
+![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20visionOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
 MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
 
@@ -20,38 +20,41 @@ MotionMachine provides a modular, powerful, and generic platform for manipulatin
 
 ##### Get started with the **[Motion Classes guide](Guides/MoveableClasses.md)** for detailed explanations and examples.
 
-Also check out the [Examples project](Examples) to see all the MotionMachine classes in action, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
+If you're upgrading from a previous version of MotionMachine, check out the [3.0 Migration Guide](Guides/MigrationGuide3.0.md) for breaking changes.
 
+Also check out the [Examples project](Examples) to see all the MotionMachine classes in action, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
 
 ## Introduction
 ![MotionGroup animation](Guides/group.gif)
 
-This complex animation was created with the code sample below. These `Motion` classes animate the NSLayoutConstraints of the circle views (_the constraints object in the `target` parameter is a dictionary of NSLayoutConstraint references_) as well as one of their `backgroundColor` properties. A `MotionGroup` object is used to synchronize the four `Motion` objects and reverse their movements.
+This complex animation was created with the code sample below. These `Motion` classes animate the NSLayoutConstraints of the circle views as well as one of their `backgroundColor` properties. A `MotionGroup` object is used to synchronize the four `Motion` objects and reverse their movements.
 ```swift
-let group = MotionGroup()
+let group = MotionGroup(options: [.reverses])
 
-.add(Motion(target: constraints["circleX"]!,
-        properties: [PropertyData("constant", 200.0)],
+.add(Motion(target: circleViewXConstraint,
+        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 200.0)],
           duration: 1.0,
             easing: EasingQuartic.easeInOut()))
 
-.add(Motion(target: constraints["circleY"]!,
-        properties: [PropertyData("constant", 250.0)],
+.add(Motion(target: circleViewYConstraint,
+        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
           duration: 1.4,
             easing: EasingElastic.easeInOut()))
 
-.add(Motion(target: circle,
-        properties: [PropertyData("backgroundColor.blue", 0.9)],
+.add(Motion(target: circleView,
+            states: MotionState(keyPath: \UIView.backgroundColor[default: .black], end: .systemBlue),
           duration: 1.2,
             easing: EasingQuartic.easeInOut()))
 
-.add(Motion(target: constraints["circle2X"]!,
-        properties: [PropertyData("constant", 300.0)],
+let circle2Motion = secondCircleXConstraint,
+        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 300.0)],
           duration: 1.2,
             easing: EasingQuadratic.easeInOut())
-            .reverses(withEasing: EasingQuartic.easeInOut()))
+.reverses(withEasing: EasingQuartic.easeInOut())
+circle2Motion.reverseEasing = EasingQuartic.easeInOut()
+group.add(circle2Motion)
 
-.start()
+group.start()
 ```
 
 
@@ -62,18 +65,15 @@ All of the included motion classes in MotionMachine adopt the `Moveable` protoco
 
 #### Motion
 
-`Motion` uses a KVC keyPath (i.e. "frame.origin.x") to target specific properties of an object and transform their values over a period of time via an easing equation. In this example, we pass in `PropertyStates` structs to the statesForProperties convenience initializer to provide ending value states for the transform and backgroundColor properties of the target object.
+`Motion` uses Swift's KeyPaths to target specific properties of an object and transform their values over a period of time via an easing equation. Althought we can provide those transformation instructions directly via `PropertyData` objects, that can become unweildy when interpolating many object values. To alleviate this, `Motion` also accepts `MotionState` objects that provide representations of end states for objects. In this example we're providing a `CGAffineTransform` object for the transform and a `UIColor` object for the backgroundColor of the target view. `Motion` will automatically create `PropertyData` objects from these states.
 
 ```swift
+let transformState = MotionState(keyPath: \UIView.transform, end: circle.transform.scaledBy(x: 1.5, y: 1.5))
+let colorState = MotionState(keyPath: \UIView.backgroundColor[default: .black], end: .systemBlue)
 
-let new_color = UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)
-let circle = circles[0]
-
-motion = Motion(target: circle,
-   statesForProperties: [
-    PropertyStates(path: "transform", end: circle.transform.scaledBy(x: 1.5, y: 1.5)),
-    PropertyStates(path: "backgroundColor", end: new_color)
-    ],
+// The `states` parameter here is a parameter pack of `MotionState` objects which have unique generic types. Pass them in as you would a normal variadic parameter. 
+motion = Motion(target: circleView,
+                states: transformState, colorState,
               duration: 2.0,
                 easing: EasingBack.easeInOut(overshoot: 0.5))
 .reverses()
@@ -94,7 +94,7 @@ group = MotionGroup().reverses(syncsChildMotions: true)
 
 // move first circle horizontally
 let horizontal1 = Motion(target: constraints["x1"]!,
-                         properties: [PropertyData("constant", 250.0)],
+                         properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
                          duration: 1.5,
                          easing: EasingSine.easeOut())
 .reverses()
@@ -102,16 +102,16 @@ group.add(horizontal1)
 
 // reverse and repeat horizontal movement of second circle once, with a subtle overshoot easing
 let horizontal2 = Motion(target: constraints["x2"]!,
-                  properties: [PropertyData("constant", 250.0)],
+                  properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
                   duration: 1.0,
                   easing: EasingBack.easeOut(overshoot: 0.12))
 .reverses()
 group.add(horizontal2)
 
-// change backgroundColor of second circle
+// Change the backgroundColor of the second circle. The "default" subscript in the keyPath is due to UIView's `backgroundColor` property being an optional.
 let color = Motion(target: circles[1],
-                   statesForProperties: [PropertyStates(path: "backgroundColor", end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0))],
-                   duration: 3.0,
+                   states: MotionState(keyPath: \UIView.backgroundColor[default: .black], end: .systemBlue),
+                 duration: 3.0,
                    easing: EasingQuadratic.easeInOut())
 group.add(color)
 
@@ -127,20 +127,20 @@ group.add(color)
 
 ```swift
 
-// create a reversing MotionSequence with its reversingMode set to contiguous to create a fluid animation from its child motions
+// Create a reversing MotionSequence with its reversingMode set to contiguous to create a fluid animation from its child motions. We could make these one Motion with multiple states, but we want to use different easing equations and durations on the view properties.
 sequence = MotionSequence().reverses(.contiguous)
 
 // set up motions for each circle and add them to the MotionSequence
-for x in 0..<4 {
-    // motion to animate a topAnchor constraint down
-    let down = Motion(target: constraints["y\(x)"]!,
-                      properties: [PropertyData("constant", 60.0)],
+for circle in circles {
+    // motion to animate a UIView's origin
+    let down = Motion(target: circle,
+                      properties: [PropertyData(keyPath: \UIView.frame.origin.y, end: 60.0)],
                       duration: 0.4,
                       easing: EasingQuartic.easeInOut())
 
     // motion to change background color of circle
-    let color = Motion(target: circles[x],
-                       statesForProperties: [PropertyStates(path: "backgroundColor", end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0))],
+    let color = Motion(target: circle,
+                       states: MotionState(keyPath: \UIView.backgroundColor[default: .black], end: .systemBlue),
                        duration: 0.3,
                        easing: EasingQuadratic.easeInOut())
 
@@ -166,19 +166,15 @@ You can add MotionMachine to an Xcode project by adding it as a Swift package de
 ## Compatibility
 
 MotionMachine currently requires:
-* Swift 5.10 or above
+* Swift 6.0 or above
 * Xcode 16+
-* iOS 13.0 or later, tvOS 13.0 or later
+* iOS 16.0 or later, macOS 14.0 or later, visionOS 1.0 or later, tvOS 16.0 or later
 
 #### Caveats
 
-* MotionMachine uses Key-Value Coding (KVC) to introspect objects and retrieve and set their property values using keypaths. Because Swift currently offers no native ability in this regard, objects whose properties should be modified by MotionMachine must inherit from `NSObject`. If and when more dynamism is added to Swift (and the author of this library hopes that is the case), MotionMachine will hopefully be able to do away with this restriction. Note that as of Swift 4.0, any properties of a custom class you wish to manipulate must be prefixed with `@objc`, or add `@objcMembers` above the class if all properties should be exposed.
+* Structs cannot be used as the top level of a KeyPath, though you can use them as a descendent of the top level object.
 
-* Because native Swift structs cannot inherit from `NSObject`, Swift structs unfortunately cannot be used directly with MotionMachine at this time, though you can use them in a keyPath if you're not targeting one of their properties directly.
-
-* The KVC provided by `NSObject` is not able to evaluate Optional values. Properties you wish to modify with MotionMachine must not be Optionals.
-
-* Swift on Linux is not currently supported due to the lack of Foundation and Core Graphics frameworks on that platform.
+* Optionals in key paths are supported, however you must provide a default value for them via a subscript when declaring the path, using the format `\Object.someOptional[default: <some default value>]`.
 
 ## Credits
 

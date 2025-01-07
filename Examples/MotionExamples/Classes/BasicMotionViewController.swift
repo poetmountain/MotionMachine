@@ -2,7 +2,7 @@
 //  BasicMotionViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -14,7 +14,7 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
     var createdUI: Bool = false
     var buttonsView: ButtonsView!
     var motionView: UIView!
-    var motion: Motion!
+    var motion: Motion<NSLayoutConstraint>!
     var xConstraint: NSLayoutConstraint!
     
     convenience init() {
@@ -40,7 +40,7 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
             
             // setup motion
             motion = Motion(target: xConstraint, duration: 1.0, easing: EasingQuadratic.easeInOut(), options: [.reverses])
-                .add(PropertyData("constant", 200.0))
+                .add(PropertyData(keyPath: \NSLayoutConstraint.constant, end: 200.0))
                 .paused({ (motion) in
                     print("paused!")
                 })
@@ -102,6 +102,8 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         
         motionView = UIView.init()
         motionView.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
+        motionView.layer.masksToBounds = true
+        motionView.layer.cornerRadius = 20
         self.view.addSubview(motionView)
         motionView.translatesAutoresizingMaskIntoConstraints = false
         

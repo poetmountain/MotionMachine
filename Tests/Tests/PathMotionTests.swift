@@ -2,7 +2,7 @@
 //  PathMotionTests.swift
 //  MotionMachineTests
 //
-///  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+///  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -38,13 +38,13 @@ import UIKit
         
         // repeats should set repeating and amount
         let motion = PathMotion(pathState: pathState, duration: 0.2).repeats(1)
-        XCTAssertTrue(motion.repeating)
+        XCTAssertTrue(motion.isRepeating)
         XCTAssertEqual(motion.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
         let motion2 = PathMotion(pathState: pathState, duration: 0.2).repeats()
-        XCTAssertTrue(motion2.repeating)
-        XCTAssertEqual(motion2.repeatCycles, REPEAT_INFINITE)
+        XCTAssertTrue(motion2.isRepeating)
+        XCTAssertEqual(motion2.repeatCycles, PathMotion.REPEAT_INFINITE)
         
     }
     
@@ -55,7 +55,7 @@ import UIKit
         // reverses should set reversing and reverseEasing properties
         let easing: EasingUpdateClosure = EasingQuadratic.easeIn()
         let motion = PathMotion(pathState: pathState, duration: 0.2).reverses(withEasing: easing)
-        XCTAssertTrue(motion.reversing)
+        XCTAssertTrue(motion.isReversing)
         XCTAssertTrue(motion.reverseEasing != nil)
         
     }
@@ -258,7 +258,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, newCycles)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 didComplete.fulfill()
         }
@@ -307,7 +307,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, 1)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -366,7 +366,7 @@ import UIKit
                 XCTAssertEqual(motion.cyclesCompletedCount, 2)
                 XCTAssertEqual(motion.cycleProgress, 1.0)
                 XCTAssertEqual(motion.totalProgress, 1.0)
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -390,7 +390,7 @@ import UIKit
         
         let motion = PathMotion(pathState: pathState, duration: 0.2)
             .started { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_start.fulfill()
         }
@@ -411,7 +411,7 @@ import UIKit
         motion.start()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.paused)
+        XCTAssertEqual(motion.motionState, .paused)
         
     }
     
@@ -423,7 +423,7 @@ import UIKit
         
         let motion = PathMotion(pathState: pathState, duration: 0.2)
             .stopped { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.stopped)
+                XCTAssertEqual(motion.motionState, .stopped)
                 
                 did_stop.fulfill()
         }
@@ -448,7 +448,7 @@ import UIKit
         
         let motion = PathMotion(pathState: pathState, duration: duration)
         .paused { (motion, currentPoint)  in
-            XCTAssertEqual(motion.motionState, MotionState.paused)
+            XCTAssertEqual(motion.motionState, .paused)
             
             did_pause.fulfill()
         }
@@ -474,7 +474,7 @@ import UIKit
         motion.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
         
     }
     
@@ -487,7 +487,7 @@ import UIKit
 
         let motion = PathMotion(pathState: pathState, duration: 0.4)
         .resumed { (motion, currentPoint)  in
-            XCTAssertEqual(motion.motionState, MotionState.moving)
+            XCTAssertEqual(motion.motionState, .moving)
             
             did_resume.fulfill()
         }
@@ -498,7 +498,7 @@ import UIKit
             XCTAssertEqual(currentPoint, expectedPoint)
             
             XCTAssertEqual(motion.totalProgress, 1.0)
-            XCTAssertEqual(motion.motionState, MotionState.stopped)
+            XCTAssertEqual(motion.motionState, .stopped)
             
             did_complete.fulfill()
         }
@@ -523,7 +523,7 @@ import UIKit
         motion.resume()
         
         // should not start again
-        XCTAssertEqual(motion.motionState, MotionState.stopped)
+        XCTAssertEqual(motion.motionState, .stopped)
         
     }
     
@@ -535,7 +535,7 @@ import UIKit
         
         let motion = PathMotion(pathState: pathState, duration: 0.2)
             .updated { (motion, currentPoint)  in
-                XCTAssertEqual(motion.motionState, MotionState.moving)
+                XCTAssertEqual(motion.motionState, .moving)
                 
                 did_update.fulfill()
                 motion.stop()

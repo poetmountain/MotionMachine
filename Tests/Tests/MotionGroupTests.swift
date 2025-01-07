@@ -2,7 +2,7 @@
 //  MotionGroupTests.swift
 //  MotionMachineTests
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -17,9 +17,9 @@ import XCTest
     func test_add() {
         let tester = Tester()
         let group = MotionGroup()
-        let motion = Motion(target: tester, duration: 1.0)
-        let motion2 = Motion(target: tester, duration: 1.0)
-        let motion3 = Motion(target: tester, duration: 1.0)
+        let motion = Motion<Tester>(target: tester, duration: 1.0)
+        let motion2 = Motion<Tester>(target: tester, duration: 1.0)
+        let motion3 = Motion<Tester>(target: tester, duration: 1.0)
 
         // add should add a Moveable object to the group list
         group.add(motion)
@@ -32,8 +32,8 @@ import XCTest
     
     func test_afterDelay() {
         let tester = Tester()
-        let motion = Motion(target: tester, duration: 1.0)
-        let motion2 = Motion(target: tester, duration: 1.0)
+        let motion = Motion<Tester>(target: tester, duration: 1.0)
+        let motion2 = Motion<Tester>(target: tester, duration: 1.0)
         // afterDelay should add a delay
         let group = MotionGroup(motions: [motion, motion2]).afterDelay(1.0)
         XCTAssertEqual(group.delay, 1.0)
@@ -46,13 +46,13 @@ import XCTest
         
         // repeats should set repeating and amount
         let group = MotionGroup(motions: [motion, motion2]).repeats(1)
-        XCTAssertTrue(group.repeating)
+        XCTAssertTrue(group.isRepeating)
         XCTAssertEqual(group.repeatCycles, 1)
         
         // if no value provided, repeating should be infinite
         let group2 = MotionGroup(motions: [motion, motion2]).repeats()
-        XCTAssertTrue(group2.repeating)
-        XCTAssertEqual(group2.repeatCycles, REPEAT_INFINITE)
+        XCTAssertTrue(group2.isRepeating)
+        XCTAssertEqual(group2.repeatCycles, MotionGroup.REPEAT_INFINITE)
     }
     
     func test_reverses() {
@@ -62,7 +62,7 @@ import XCTest
         
         // reverses should set reversing and syncMotionsWhenReversing
         let group = MotionGroup(motions: [motion, motion2]).reverses(syncsChildMotions: true)
-        XCTAssertTrue(group.reversing)
+        XCTAssertTrue(group.isReversing)
         XCTAssertTrue(group.syncMotionsWhenReversing)
         
     }
@@ -103,8 +103,8 @@ import XCTest
     func test_should_end_motions_at_proper_ending_values() {
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
 
         // should assign tempo to group but remove child tempos
@@ -114,10 +114,10 @@ import XCTest
         let did_complete = expectation(description: "group called completed notify closure")
 
         group.completed { (group) in
-            let motion = group.motions[0] as? Motion
+            let motion = group.motions[0] as? Motion<Tester>
             XCTAssertEqual(motion?.properties[0].current, motion?.properties[0].end)
             XCTAssertEqual(motion?.totalProgress, 1.0)
-            let motion2 = group.motions[1] as? Motion
+            let motion2 = group.motions[1] as? Motion<Tester>
             XCTAssertEqual(motion2?.properties[0].current, motion2?.properties[0].end)
             XCTAssertEqual(motion2?.totalProgress, 1.0)
             
@@ -134,8 +134,8 @@ import XCTest
         let timestamp = CFAbsoluteTimeGetCurrent()
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .completed { (group) in
             
@@ -143,7 +143,7 @@ import XCTest
             XCTAssertEqual(final_value, 10.0)
             XCTAssertEqual(group.totalProgress, 1.0)
             let new_timestamp = CFAbsoluteTimeGetCurrent()
-            if let motion = group.motions.first as? Motion {
+            if let motion = group.motions.first as? Motion<Tester> {
                 XCTAssertEqual(new_timestamp, timestamp + motion.duration, accuracy: 0.9)
                 
                 did_complete.fulfill()
@@ -163,8 +163,8 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.2)
         
         let did_repeat = expectation(description: "group called cycleRepeated notify closure")
         let did_complete = expectation(description: "group called completed notify closure")
@@ -180,14 +180,14 @@ import XCTest
         .completed { (group) in
             XCTAssertEqual(tester.value, 100.0)
             XCTAssertEqual(tester2.value, 100.0)
-            let motion = group.motions.first as? Motion
+            let motion = group.motions.first as? Motion<Tester>
             XCTAssertEqual(motion?.properties[0].current, motion?.properties[0].end)
             XCTAssertEqual(motion?.totalProgress, 1.0)
             let new_cycles = group.repeatCycles + 1
             XCTAssertEqual(group.cyclesCompletedCount, new_cycles)
             XCTAssertEqual(group.cycleProgress, 1.0)
             XCTAssertEqual(group.totalProgress, 1.0)
-            XCTAssertEqual(group.motionState, MotionState.stopped)
+            XCTAssertEqual(group.motionState, .stopped)
             
             did_complete.fulfill()
         }
@@ -204,8 +204,8 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.2)
         
         let did_reverse = expectation(description: "group called reversed notify closure")
         let did_complete = expectation(description: "group called completed notify closure")
@@ -221,20 +221,20 @@ import XCTest
             .completed { (group) in
                 XCTAssertEqual(tester.value, 0.0)
                 XCTAssertEqual(tester2.value, 0.0)
-                let motion = group.motions.first as? Motion
+                let motion = group.motions.first as? Motion<Tester>
                 XCTAssertEqual(motion?.properties[0].current, motion?.properties[0].start)
                 XCTAssertEqual(motion?.totalProgress, 1.0)
                 XCTAssertEqual(group.cyclesCompletedCount, 1)
                 XCTAssertEqual(group.cycleProgress, 1.0)
                 XCTAssertEqual(group.totalProgress, 1.0)
-                XCTAssertEqual(group.motionState, MotionState.stopped)
+                XCTAssertEqual(group.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
         
         // should turn on reversing for all child motions
-        XCTAssertTrue(motion.reversing)
-        XCTAssertTrue(motion2.reversing)
+        XCTAssertTrue(motion.isReversing)
+        XCTAssertTrue(motion2.isReversing)
         
         group.start()
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -245,8 +245,8 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 100.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 100.0)], duration: 0.5)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 100.0)], duration: 0.5)
         
         let did_reverse = expectation(description: "group called reversed notify closure")
         let did_complete = expectation(description: "group called completed notify closure")
@@ -264,13 +264,13 @@ import XCTest
             .completed { (group) in
                 XCTAssertEqual(tester.value, 0.0)
                 XCTAssertEqual(tester2.value, 0.0)
-                let motion = group.motions.first as? Motion
+                let motion = group.motions.first as? Motion<Tester>
                 XCTAssertEqual(motion?.properties[0].current, motion?.properties[0].start)
                 XCTAssertEqual(motion?.totalProgress, 1.0)
                 XCTAssertEqual(group.cyclesCompletedCount, 1)
                 XCTAssertEqual(group.cycleProgress, 1.0)
                 XCTAssertEqual(group.totalProgress, 1.0)
-                XCTAssertEqual(group.motionState, MotionState.stopped)
+                XCTAssertEqual(group.motionState, .stopped)
                 
                 did_complete.fulfill()
         }
@@ -280,8 +280,8 @@ import XCTest
         let after_time = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC);
         DispatchQueue.main.asyncAfter(deadline: after_time, execute: {
             // motion with the shorter duration should wait for the other motion to finish before group reverses
-            XCTAssertEqual(motion.motionState, MotionState.paused)
-            XCTAssertEqual(motion2.motionState, MotionState.moving)
+            XCTAssertEqual(motion.motionState, .paused)
+            XCTAssertEqual(motion2.motionState, .moving)
             XCTAssertEqual(group.motionDirection, MotionDirection.forward)
         })
         
@@ -298,11 +298,11 @@ import XCTest
 
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .started { (group) in
-            XCTAssertEqual(group.motionState, MotionState.moving)
+            XCTAssertEqual(group.motionState, .moving)
             
             did_start.fulfill()
         }
@@ -312,7 +312,7 @@ import XCTest
         // should not start when paused
         group.pause()
         group.start()
-        XCTAssertEqual(group.motionState, MotionState.paused)
+        XCTAssertEqual(group.motionState, .paused)
         waitForExpectations(timeout: 1.0, handler: nil)
         
     }
@@ -323,11 +323,11 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .stopped { (group) in
-            XCTAssertEqual(group.motionState, MotionState.stopped)
+            XCTAssertEqual(group.motionState, .stopped)
             
             did_stop.fulfill()
         }
@@ -348,11 +348,11 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .paused { (group) in
-            XCTAssertEqual(group.motionState, MotionState.paused)
+            XCTAssertEqual(group.motionState, .paused)
             
             did_pause.fulfill()
         }
@@ -367,7 +367,7 @@ import XCTest
     func test_pause_while_stopped() {
         
         let tester = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion])
 
         
@@ -376,7 +376,7 @@ import XCTest
         group.pause()
         
         // should not pause while stopped
-        XCTAssertEqual(group.motionState, MotionState.stopped)
+        XCTAssertEqual(group.motionState, .stopped)
     }
     
     func test_resume() {
@@ -386,18 +386,18 @@ import XCTest
 
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         .resumed { (group) in
-            XCTAssertEqual(group.motionState, MotionState.moving)
+            XCTAssertEqual(group.motionState, .moving)
             
             did_resume.fulfill()
         }
         .completed { (group) in
             XCTAssertEqual(tester.value, 10.0)
             XCTAssertEqual(group.totalProgress, 1.0)
-            XCTAssertEqual(group.motionState, MotionState.stopped)
+            XCTAssertEqual(group.motionState, .stopped)
             
             did_complete.fulfill()
         }
@@ -418,11 +418,11 @@ import XCTest
         
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
             .updated { (group) in
-                XCTAssertEqual(group.motionState, MotionState.moving)
+                XCTAssertEqual(group.motionState, .moving)
                 
                 did_update.fulfill()
                 group.stop()
@@ -440,8 +440,8 @@ import XCTest
 
         let tester = Tester()
         let tester2 = Tester()
-        let motion = Motion(target: tester, properties: [PropertyData("value", 10.0)], duration: 0.2)
-        let motion2 = Motion(target: tester2, properties: [PropertyData("value", 10.0)], duration: 0.2)
+        let motion = Motion(target: tester, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
+        let motion2 = Motion(target: tester2, properties: [PropertyData(keyPath: \Tester.value, end: 10.0)], duration: 0.2)
         let group = MotionGroup(motions: [motion, motion2])
         
         group.start()

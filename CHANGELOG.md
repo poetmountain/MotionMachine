@@ -1,3 +1,14 @@
+### 3.0.0
+- MotionMachine's use of `NSObject` Key-Value Coding paths (i.e. "frame.origin.x") to read and write property values has been replaced with modern Swift KeyPaths (i.e. `\UIView.frame.origin.x`). This significant change provides more type safety and compile-time type checking, eliminates unsafe code, and now allows for the use of Optional properties and structs. Please see the [Motion Classes guide](Guides/MoveableClasses.md) for implementation examples. Tests and examples project have also been updated to reflect these changes.
+- Added support for macOS! MotionMachine may now be used in AppKit projects in macOS 14.0 or higher.
+- Added a new value assistant `SIMDAssistant` to support using all current `SIMD` types as `MotionState` states. Added tests for this class.
+- Added a new value assistant `CGColorAssistant` to support using `CGColor` as a `MotionState` state. Added tests for this class.
+- Added a new value assistant `NumericAssistant` which is now the default assistant for top-level properties on the target object which are numeric values. This supports all of the many numeric types that conform to either `BinaryFloatingPoint` or `BinaryInteger`, as well as `NSNumber`. Added tests for this class.
+- Fixed `velocityDecayLimit` not being settable on `PhysicsMotion`.
+- Improved internal platform availability checks. Theoretically this may allow MotionMachine to now run on non-Apple platforms on which Swift is available, though this has not been tested.
+- With this update the minimum supported versions of iOS and tvOS have been increased to 16.0 in order to support KeyPaths in a generic way. If you need to support earlier versions of iOS or tvOS, please continue to use MotionMachine release `2.2.1`.
+- Support for Swift 5.10 has been dropped due to the adoption of a Swift 6 feature (parameter pack iteration). If you require an older version of Swift, please use MotionMachine release `2.2.1` or older.
+
 ### 2.2.1
 - Added support for visionOS
 - Fixed some access permission issues

@@ -2,80 +2,51 @@
 //  PhysicsMotion.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
-/// A closure used to provide status updates for a ``PhysicsMotion`` object.
-/// - Parameter motion: The ``PhysicsMotion`` object which published this update closure.
-public typealias PhysicsMotionUpdateClosure = (_ motion: PhysicsMotion) -> Void
-
-/**
- *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
- *
- *  - seealso: start
- */
-public typealias PhysicsMotionStarted = PhysicsMotionUpdateClosure
-
-/**
- *  This notification closure should be called when the `stop` method starts a motion operation.
- *
- *  - seealso: stop
- */
-public typealias PhysicsMotionStopped = PhysicsMotionUpdateClosure
-
-
-/**
- *  This notification closure should be called when the `update(withTimeInterval:)` method is called while a Moveable object is currently moving.
- *
- *  - seealso: update(withTimeInterval:)
- */
-public typealias PhysicsMotionUpdated = PhysicsMotionUpdateClosure
-
-
-/**
- *  This notification closure should be called when a motion operation reverses its movement direction.
- *
- */
-public typealias PhysicsMotionReversed = PhysicsMotionUpdateClosure
-
-/**
- *  This notification closure should be called when a motion has started a new repeat cycle.
- *
- */
-public typealias PhysicsMotionRepeated = PhysicsMotionUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `pause` method pauses a motion operation.
- *
- */
-public typealias PhysicsMotionPaused = PhysicsMotionUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `resume` method resumes a motion operation.
- *
- */
-public typealias PhysicsMotionResumed = PhysicsMotionUpdateClosure
-
-/**
- *  This notification closure should be called when a motion operation has fully completed.
- *
- *  - remark: This closure should only be executed when all activity related to the motion has ceased. For instance, if a Moveable class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
- *
- */
-public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
-
-
 /**
  *  PhysicsMotion handles a single motion operation on one or more properties, using a physics system to update values with decaying velocity.
  */
-@MainActor public class PhysicsMotion: Moveable, Additive, TempoDriven, PropertyDataDelegate {
+@MainActor public class PhysicsMotion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, PropertyDataDelegate {
+
+    /// A closure used to provide status updates for a ``PhysicsMotion`` object.
+    /// - Parameter motion: The ``PhysicsMotion`` object which published this update closure.
+    public typealias PhysicsMotionUpdateClosure = (_ motion: PhysicsMotion) -> Void
+    
+    /// This notification closure should be called when the ``start()`` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
+    public typealias PhysicsMotionStarted = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when the ``stop()`` method starts a motion operation.
+    public typealias PhysicsMotionStopped = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when the ``update(withTimeInterval:)`` method is called while a ``Moveable`` object is currently moving.
+    public typealias PhysicsMotionUpdated = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when a motion operation reverses its movement direction.
+    public typealias PhysicsMotionReversed = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when a motion has started a new motion cycle.
+    public typealias PhysicsMotionRepeated = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when calling the ``pause()`` method pauses a motion operation.
+    public typealias PhysicsMotionPaused = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when calling the ``resume()`` method resumes a motion operation.
+    public typealias PhysicsMotionResumed = PhysicsMotionUpdateClosure
+
+    /// This notification closure should be called when a motion operation has fully completed.
+    ///
+    /// > Note: This closure should only be executed when all activity related to the motion has ceased. For instance, if a ``Moveable`` class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
+    public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
+
 
     // Default limit for a velocity's decay.
-    static let DEFAULT_DECAY_LIMIT: Double = 0.95
+    let DEFAULT_DECAY_LIMIT: Double = 0.95
     
     
     // MARK: - Public Properties
@@ -93,32 +64,13 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     
     
     /**
-     *  A Boolean which determines whether a motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
+     *  An object conforming to the ``ValueAssistant`` protocol which acts as an interface for retrieving and updating value types.
      *
-     *  - note: By design, setting this value to `true` without changing the `repeatCycles` property from its default value will cause the motion to repeat infinitely.
-     *  - seealso: repeatCycles
+     *  - remark: By default, Motion will assign an instance of the ``ValueAssistantGroup`` class with value assistants supported on the system platform it is running on. You may add your own custom type assistants to this group, or replace it with your own custom ``ValueAssistant`` implementation.
      */
-    public var repeating: Bool = false
-    
-    
-    /**
-     *  The number of motion cycle operations to repeat.
-     *
-     *  - remark: This property is only used when `repeating` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
-     *
-     *  - seealso: repeating
-     */
-    public var repeatCycles: UInt = REPEAT_INFINITE
-
-    
-    /**
-     *  An object conforming to the `ValueAssistant` protocol which acts as an interface for retrieving and updating value types.
-     *
-     *  - remark: By default, PhysicsMotion will assign an instance of the `ValueAssistantGroup` class with value assistants for Core Foundation structs and UIKit colors. You may add your own custom type assistants to this group, or replace it with your own custom `ValueAssistant` implementation.
-     */
-    public var valueAssistant: ValueAssistant = ValueAssistantGroup(assistants: [CGStructAssistant()]) {
+    public var valueAssistant: any ValueAssistant<TargetType> = ValueAssistantGroup(assistants: []) {
         didSet {
-            valueAssistant.additive = _additive
+            valueAssistant.isAdditive = _isAdditive
             valueAssistant.additiveWeighting = additiveWeighting
         }
     }
@@ -129,32 +81,32 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  A Boolean which determines whether this Motion should change its object values additively. Additive animation allows multiple motions to produce a compound effect, creating smooth transitions and blends between different ending value targets. Additive animation is the default behavior for UIKit animations as of iOS 8 and is great for making user interface animations fluid and responsive. MotionMachine uses its own implementation of additive movement, so you can use additive motions on any supported object properties.
      *
-     *   By default, each PhysicsMotion will apply a strong influence on the movement of a property towards its ending value. This means that two Motion objects with the same duration and moving the same object property to different ending values will fight, and the "winning" value will be the last Motion to start its movement. If the durations or starting times are different, a transition between the values will occur. If you wish to create additive motions that apply weighted value updates, you can adjust the `additiveWeighting` property. Setting values to that property that are less than 1.0 will create compound additive motions that are blends of each Motion object's ending values.
+     *   By default, each PhysicsMotion will apply a strong influence on the movement of a property towards its ending value. This means that two Motion objects with the same duration and moving the same object property to different ending values will fight, and the "winning" value will be the last Motion to start its movement. If the durations or starting times are different, a transition between the values will occur. If you wish to create additive motions that apply weighted value updates, you can adjust the ``additiveWeighting`` property. Setting values to that property that are less than 1.0 will create compound additive motions that are blends of each Motion object's ending values.
      *
-     *  - remark: The `start` value of `PropertyData` objects are ignored for additive animations, and will instead combine with the current value of the properties being moved.
+     *  - remark: The `start` value of ``PropertyData`` objects are ignored for additive animations, and will instead combine with the current value of the properties being moved.
      *
-     *  - warning: Please be aware that because of the composite nature of additive movements, values can temporarily move past a `PropertyData`'s specified `end` value. This can have unintended consequences if the property value you are moving is clamped to a limited range. Also note that additive movements may not work well with compound motions that are comprised of sequences, reversing, or repeating, and will not behave correctly when other Motion objects moving the same properties are not using the additive mode. Because of these caveats, the default value is `false`.
+     *  - warning: Please be aware that because of the composite nature of additive movements, values can temporarily move past a ``PropertyData``'s specified `end` value. This can have unintended consequences if the property value you are moving is clamped to a limited range. Also note that additive movements may not work well with compound motions that are comprised of sequences, reversing, or repeating, and will not behave correctly when other Motion objects moving the same properties are not using the additive mode. Because of these caveats, the default value is `false`.
      *
      *  - seealso: additiveWeighting
      *
      */
-    public var additive: Bool {
+    public private(set) var isAdditive: Bool {
         get {
-            return _additive
+            return _isAdditive
         }
         
         set(newValue) {
-            _additive = newValue
-            valueAssistant.additive = additive
+            _isAdditive = newValue
+            valueAssistant.isAdditive = isAdditive
         }
         
     }
-    private var _additive: Bool = false
+    private var _isAdditive: Bool = false
     
     /**
-     *  A weighting between 0.0 and 1.0 which is applied to this PhysicsMotion's object value updates when it is using an additive movement. The higher the weighting amount, the more its additive updates apply to the properties being moved. A value of 1.0 will mean the motion will reach the specific `end` value of each `PropertyData` being moved, while a value of 0.0 will not move towards the `end` value at all. When multiple PhysicsMotions in `additive` mode are moving the same object properties, adjusting this weighting on each PhysicsMotion can create complex composite motions.
+     *  A weighting between 0.0 and 1.0 which is applied to this PhysicsMotion's object value updates when it is using an additive movement. The higher the weighting amount, the more its additive updates apply to the properties being moved. A value of 1.0 will mean the motion will reach the specific `end` value of each ``PropertyData`` being moved, while a value of 0.0 will not move towards the `end` value at all. When multiple Motions in `additive` mode are moving the same object properties, adjusting this weighting on each Motion can create complex composite motions.
      *
-     *  - note: This value only has an effect when `additive` is set to `true`. The default value is 1.0.
+     *  - note: This value only has an effect when ``isAdditive`` is set to `true`. The default value is 1.0.
      *  - seealso: additive
      */
     public var additiveWeighting: Double = 1.0 {
@@ -177,16 +129,16 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     // MARK: Physics properties
     
     /**
-     *  An object conforming to the `PhysicsSolving` protocol which solves position calculation updates.
+     *  An object conforming to the ``PhysicsSolving`` protocol which solves position calculation updates.
      *
-     *  - remark: By default, PhysicsMotion will assign an instance of `PhysicsSystem` to this property, but you can override this with your own custom physics system.
+     *  - remark: By default, PhysicsMotion will assign an instance of ``PhysicsSystem`` to this property, but you can override this with your own custom physics system.
      */
     public var physicsSystem: PhysicsSolving
     
     /**
      *  The current velocity used by the physics system to calculate motion values, measured in units per second.
      *
-     *  - remark: If you wish to change the velocity after initially setting it via one of the init methods, use this setter. If you change the velocity directly on the `physicsSystem` object, the `motionProgress` property won't be accurate.
+     *  - remark: If you wish to change the velocity after initially setting it via one of the init methods, use this setter. If you change the velocity directly on the ``physicsSystem`` object, the ``motionProgress`` property won't be accurate.
      */
     public var velocity: Double {
         get {
@@ -214,9 +166,9 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  This value is used to determine whether the object modeled by the physics system has come to rest due to deceleration.
      *
-     *  - remark: The way in which `PhysicsSystem` applies friction means that as velocity approaches 0.0, it will be assigned smaller and smaller fractional numbers, so we need a reasonable cutoff that approximates the velocity coming to rest. The default value is the constant DEFAULT_DECAY_LIMIT (set to 0.96), which is fine for display properties, but you may prefer other values.
+     *  - remark: The way in which ``PhysicsSystem`` applies friction means that as velocity approaches 0.0, it will be assigned smaller and smaller fractional numbers, so we need a reasonable cutoff that approximates the velocity coming to rest. The default value is the constant `DEFAULT_DECAY_LIMIT` (set to 0.95), which is fine for display properties, but you may prefer other values.
      */
-    public var velocityDecayLimit: Double = PhysicsMotion.DEFAULT_DECAY_LIMIT
+    public var velocityDecayLimit: Double
     
     
     /**
@@ -227,31 +179,26 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     
     // MARK: Property collection methods
     
-    /**
-     *  The collection of `PropertyData` instances, representing the object's properties being moved.
-     *
-     *  - remark: The `path` property of each `PropertyData` must be a valid KVC-compliant keyPath of `targetObject`.
-     *  - seealso: targetObject
-     */
-    private(set) public var properties: [PropertyData] = []
+    /// A collection of ``PropertyData`` instances, representing the object's properties being moved.
+    private(set) public var properties: [PropertyData<TargetType>] = []
     
     
     
     // MARK: Motion state properties
     
     /// The target object whose property should be moved.
-    private(set) public var targetObject: NSObject?
+    private(set) public var targetObject: TargetType?
     
-    /// A `MotionState` enum which represents the current movement state of the motion operation. (read-only)
-    private(set) public var motionState: MotionState
+    /// An enum which represents the current movement state of the motion operation. (read-only)
+    private(set) public var motionState: MoveableState
     
-    /// A `MotionDirection` enum which represents the current direction of the motion operation. (read-only)
+    /// A ``MotionDirection`` enum which represents the current direction of the motion operation. (read-only)
     private(set) public var motionDirection: MotionDirection
     
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a movement between two value destinations. (read-only)
      *
-     *  - remark: Be aware that if this motion is `reversing` or `repeating`, this value will only represent one movement. For instance, if a PhysicsMotion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a PhysicsMotion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
+     *  - remark: Be aware that if this motion is ``isReversing`` or ``isRepeating``, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a Motion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
      */
     private(set) public var motionProgress: Double {
         
@@ -263,9 +210,9 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .forward) {
+            if (isReversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .reverse) {
+            } else if (isReversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -281,7 +228,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a motion cycle. (read-only)
      *
-     *  - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
+     *  - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
      */
     private(set) public var cycleProgress: Double {
         get {
@@ -292,7 +239,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             _cycleProgress = newValue
             
             // sync motionProgress with cycleProgress, so we modify the ivar directly (otherwise we'd enter a recursive loop as each setter is called)
-            if (reversing) {
+            if (isReversing) {
                 var new_progress = _cycleProgress * 2
                 if (_cycleProgress >= 0.5) { new_progress -= 1 }
                 _motionProgress = new_progress
@@ -309,22 +256,21 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /**
      *  The amount of completed motion cycles.  (read-only)
      *
-     * - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle.
+     * - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle.
      */
     private(set) public var cyclesCompletedCount: UInt = 0
     
     
     /**
-     *  A value between 0.0 and 1.0, which represents the current overall progress of the PhysicsMotion. This value should include all reversing and repeat motion cycles. (read-only)
+     *  A value between 0.0 and 1.0, which represents the current overall progress of the motion. This value should include all reversing and repeat motion cycles. (read-only)
      *
-     *  - remark: If a Motion is not repeating, this value will be equivalent to the value of `cycleProgress`.
-     *  - seealso: cycleProgress
+     *  - remark: If a motion is not repeating, this value will be equivalent to the value of ``cycleProgress``.
      *
      */
     public var totalProgress: Double {
         get {
             // sync totalProgress with cycleProgress
-            if (repeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
+            if (isRepeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
                 return (_cycleProgress + Double(cyclesCompletedCount)) / Double(repeatCycles+1)
             } else {
                 return _cycleProgress
@@ -338,9 +284,27 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     // MARK: Moveable protocol properties
     
     /// A Boolean which determines whether a motion operation, when it has moved to the ending value, should move from the ending value back to the starting value.
-    public var reversing: Bool = false
+    public var isReversing: Bool = false
     
-    /// Provides a delegate for updates to a Moveable object's status, used by `Moveable` collections.
+    
+    /**
+     *  A Boolean which determines whether a motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the ``repeatCycles`` property. The default value is `false`.
+     *
+     *  - note: By design, setting this value to `true` without changing the ``repeatCycles`` property from its default value will cause the motion to repeat infinitely.
+     */
+    public var isRepeating: Bool = false
+    
+    
+    /**
+     *  The number of motion cycle operations to repeat.
+     *
+     *  - remark: This property is only used when ``isRepeating`` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
+     *
+     */
+    public var repeatCycles: UInt = REPEAT_INFINITE
+    
+    
+    /// Provides a delegate for updates to a Moveable object's status, used by ``Moveable`` collections.
     public var updateDelegate: MotionUpdateDelegate?
     
     
@@ -348,11 +312,11 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     // MARK: TempoDriven protocol properties
     
     /**
-     *  A concrete `Tempo` subclass that provides an update "beat" while a motion operation occurs.
+     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" while a motion operation occurs.
      *
-     *  - remark: By default, PhysicsMotion will assign an instance of `CATempo` to this property, which uses `CADisplayLink` for interval updates.
+     *  - Note: By default, Motion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
      */
-    public var tempo: Tempo? {
+    public var tempo: TempoProviding? {
         
         get {
             return _tempo
@@ -369,8 +333,8 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             
         }
     }
-    lazy private var _tempo: Tempo? = {
-        return CATempo.init()
+    lazy private var _tempo: TempoProviding? = {
+        return DisplayLinkTempo()
     }()
     
     
@@ -392,7 +356,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _started: PhysicsMotionStarted?
     
     /**
-     *  This closure is called when a motion operation is stopped by calling the `stop` method.
+     *  This closure is called when a motion operation is stopped by calling the ``stop()`` method.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -406,7 +370,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _stopped: PhysicsMotionStopped?
     
     /**
-     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `.Moving`.
+     *  This closure is called when a motion operation update occurs and this instance's ``motionState`` is `moving`.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -434,7 +398,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _cycleRepeated: PhysicsMotionRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `reversing`.
+     *  This closure is called when the ``motionDirection`` property changes to `reversing`.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -448,7 +412,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _reversed: PhysicsMotionReversed?
     
     /**
-     *  This closure is called when calling the `pause` method on this instance causes a motion operation to pause.
+     *  This closure is called when calling the ``pause()`` method on this instance causes a motion operation to pause.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -462,7 +426,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _paused: PhysicsMotionPaused?
     
     /**
-     *  This closure is called when calling the `resume` method on this instance causes a motion operation to resume.
+     *  This closure is called when calling the ``resume()`` method on this instance causes a motion operation to resume.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -476,7 +440,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private var _resumed: PhysicsMotionResumed?
     
     /**
-     *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if `repeating` is set to `true`).
+     *  This closure is called when a motion operation has completed (or when all motion cycles have completed, if ``repeating`` is set to `true`).
      *
      *  - remark: This method can be chained when initializing the object.
      */
@@ -537,12 +501,12 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
      *
      *  - parameters:
      *      - target: The target object whose properties should be modified.
-     *      - properties: An array of `PropertyData` objects that provide instructions for which properties to modify and how.
-     *      - velocity: The velocity used to calculate new values in the `PhysicsSolving` system. Any values are accepted due to the differing ranges of velocity magnitude required for various motion applications. Experiment to see what suits your needs best.
-     *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
-     *      - options: An optional set of `MotionsOptions`.
+     *      - properties: An array of ``PropertyData`` objects that provide instructions for which properties to modify and how.
+     *      - velocity: The velocity used to calculate new values in the ``PhysicsSolving`` system. Any values are accepted due to the differing ranges of velocity magnitude required for various motion applications. Experiment to see what suits your needs best.
+     *      - friction: The friction used to calculate new values in the ``PhysicsSolving`` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
+     *      - options: An optional set of ``MotionsOptions``.
      */
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
+    public convenience init(target targetObject: TargetType, properties: [PropertyData<TargetType>], velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
         
         self.init(targetObject: targetObject, properties: properties, velocity: velocity, friction: friction, options: options)
         
@@ -553,11 +517,11 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
      *
      *  - parameters:
      *      - target: The target object whose properties should be modified.
-     *      - velocity: The velocity used to calculate new values in the `PhysicsSolving` system. Any values are accepted due to the differing ranges of velocity magnitude required for various motion applications. Experiment to see what suits your needs best.
-     *      - friction: The friction used to calculate new values in the `PhysicsSolving` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
-     *      - options: An optional set of `MotionsOptions`.
+     *      - velocity: The velocity used to calculate new values in the ``PhysicsSolving`` system. Any values are accepted due to the differing ranges of velocity magnitude required for various motion applications. Experiment to see what suits your needs best.
+     *      - friction: The friction used to calculate new values in the ``PhysicsSolving`` system. Acceptable values are 0.0 (no friction) to 1.0 (no movement); values outside of this range will be clamped to the nearest edge.
+     *      - options: An optional set of ``MotionsOptions``.
      */
-    public convenience init(target targetObject: NSObject, velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
+    public convenience init(target targetObject: TargetType, velocity: Double, friction: Double, options: MotionOptions? = MotionOptions.none) {
         
         self.init(targetObject: targetObject, properties: [], velocity: velocity, friction: friction, options: options)
     }
@@ -565,33 +529,34 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     /// A convenience initializer.
     /// - Parameters:
     ///   - target: The target object whose properties should be modified.
-    ///   - properties: An array of `PropertyData` objects that provide instructions for which properties to modify and how.
+    ///   - properties: An array of ``PropertyData`` objects that provide instructions for which properties to modify and how.
     ///   - configuration: A configuration model containing data to set up this object's ``PhysicsSystem`` for physics calculations.
     ///   - options: An optional options model.
-    public convenience init(target targetObject: NSObject, properties: [PropertyData], configuration: PhysicsConfiguration, options: MotionOptions? = MotionOptions.none) {
+    public convenience init(target targetObject: TargetType, properties: [PropertyData<TargetType>], configuration: PhysicsConfiguration, options: MotionOptions? = MotionOptions.none) {
         
         self.init(targetObject: targetObject, properties: properties, velocity: configuration.velocity, friction: configuration.friction, restitution: configuration.restitution, useCollisionDetection: configuration.useCollisionDetection,  options: options)
     }
     
-    private init(targetObject: NSObject, properties props: [PropertyData]?, velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil, options: MotionOptions? = MotionOptions.none) {
+    private init(targetObject: TargetType, properties props: [PropertyData<TargetType>]?, velocity: Double, friction: Double, restitution: Double? = nil, useCollisionDetection: Bool? = nil, options: MotionOptions? = MotionOptions.none) {
         
         let properties = props ?? []
         
         self.targetObject = targetObject
         
-        #if os(iOS) || os(tvOS) || os(visionOS)
-        if let assistant_group = valueAssistant as? ValueAssistantGroup {
-            assistant_group.add(UIColorAssistant())
-            assistant_group.add(CIColorAssistant())
-            assistant_group.add(UIKitStructAssistant())
-        }
-        #endif
-        
-        // unpack options values
-        if let unwrappedOptions = options {
-            repeating = unwrappedOptions.contains(.repeats)
-            reversing = unwrappedOptions.contains(.reverses)
-            resetObjectStateOnRepeat = unwrappedOptions.contains(.resetsStateOnRepeat)
+        if let assistantGroup = valueAssistant as? ValueAssistantGroup<TargetType> {
+            assistantGroup.add(NumericAssistant())
+            assistantGroup.add(SIMDAssistant())
+            
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+            assistantGroup.add(CGStructAssistant())
+            assistantGroup.add(CGColorAssistant())
+            assistantGroup.add(CIColorAssistant())
+#endif
+            
+#if os(iOS) || os(tvOS) || os(visionOS)
+            assistantGroup.add(UIColorAssistant())
+            assistantGroup.add(UIKitStructAssistant())
+#endif
         }
         
         motionState = .stopped
@@ -599,24 +564,24 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         
         physicsSystem = PhysicsSystem(velocity: velocity, friction: friction, restitution: restitution, useCollisionDetection: useCollisionDetection)
         
-        _tempo?.delegate = self
-        
         self.friction = friction
         
-        for property in properties {
-            var prop_to_setup = property
-            setup(forProperty: &prop_to_setup)
-            prop_to_setup.delegate = self
-            if (resetObjectStateOnRepeat) {
-                prop_to_setup.startingParentProperty = prop_to_setup.target
-            }
-            
-            self.properties.append(prop_to_setup)
+        self.velocityDecayLimit = DEFAULT_DECAY_LIMIT
+        
+        // unpack options values
+        if let options {
+            isRepeating = options.contains(.repeats)
+            isReversing = options.contains(.reverses)
+            resetObjectStateOnRepeat = options.contains(.resetsStateOnRepeat)
+            isAdditive = options.contains(.additive)
         }
         
+        setupProperties(properties: properties)
+        
+        _tempo?.delegate = self
+
     }
     
-
     
     // MARK: - Public methods
     
@@ -628,15 +593,16 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
      *  - warning: This method should not be called after the Motion has started.
      *  - returns: A reference to this Motion instance, for the purpose of chaining multiple calls to this method.
      */
-    @discardableResult public func add(_ property: PropertyData) -> PhysicsMotion {
+    @discardableResult public func add(_ property: PropertyData<TargetType>) -> PhysicsMotion {
         
-        var prop = property
-        setup(forProperty: &prop)
-        prop.delegate = self
-        if (resetObjectStateOnRepeat) {
-            prop.startingParentProperty = prop.target
+        if let targetObject {
+            setupProperty(property: property, for: targetObject)
         }
-        properties.append(prop)
+        property.delegate = self
+        if (resetObjectStateOnRepeat) {
+            property.startingParentProperty = property.target
+        }
+        properties.append(property)
         
         return self
     }
@@ -669,7 +635,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> PhysicsMotion {
         
         repeatCycles = numberOfCycles
-        repeating = true
+        isRepeating = true
         
         return self
     }
@@ -685,7 +651,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
      */
     @discardableResult public func reverses() -> PhysicsMotion {
         
-        reversing = true
+        isReversing = true
         
         return self
     }
@@ -698,155 +664,46 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     
     // MARK: - Private methods
     
-    /**
-     *  Initializes property metadata in preparation for a motion operation.
-     *
-     *  - parameter property: The `PropertyData` instance to modify.
-     */
-    private func setup(forProperty property: inout PropertyData) {
+    func setupProperties(properties: [PropertyData<TargetType>]) {
+        guard let targetObject else { return }
         
-        guard let unwrapped_object = targetObject else { return }
-        
-        if (unwrapped_object is NSValue) {
-            property.target = unwrapped_object
-            property.parentKeyPath = property.path
+        for property in properties {
+            setupProperty(property: property, for: targetObject)
             
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-            
-            return
-        }
-        
-        if (valueAssistant.acceptsKeypath(unwrapped_object)) {
-            property.targetObject = unwrapped_object
-        }
-        
-        // determine if target property is a value we can update directly, or if it's an element of a struct we need to replace
-        property.parentKeyPath = property.path
-        let keys: [String] = property.path.components(separatedBy: ".")
-        let key_count = keys.count
-        
-        if (key_count > 1) {
-            // there's more than one element in the path, meaning we have a parent, so let's find the prop type
-            
-            // descend keypath tree until we find a key in the path that isn't a struct or integer
-            var parent_value: AnyObject?
-            
-            for (index, key) in keys.enumerated() {
-                let parent_keys = keys[0 ... index]
-                
-                if (parent_keys.count > 0) {
-                    let parent_path = parent_keys.joined(separator: ".")
-                    
-                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as? NSObject {
-                        parent_value = parent
-                        var is_value_supported = false
-                        
-                        if (valueAssistant.updateValue(inObject: parent, newValues: [property.path : 1]) != nil) {
-                            is_value_supported = true
-                        }
-                        
-                        if (is_value_supported) {
-                            // we found a path element that isn't numeric, so we'll need to save the path element below this one
-                            
-                            property.replaceParentProperty = true
-                            property.parentKeyPath = parent_path
-                            
-                            property.getter = MotionSupport.propertyGetter(forName: key)
-                            property.setter = MotionSupport.propertySetter(forName: key)
-                            
-                            break
-                            
-                        }
-                        
-                    }
-                    
-                }
+            property.delegate = self
+            if (resetObjectStateOnRepeat) {
+                property.startingParentProperty = property.target
             }
-            
-            if (property.replaceParentProperty) {
-                if let value = parent_value {
-                    property.target = value
-                }
-                
-            } else if let lastProp = keys.last {
-                property.getter = MotionSupport.propertyGetter(forName: lastProp)
-                property.setter = MotionSupport.propertySetter(forName: lastProp)
-            }
-            
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-            
-        } else if (key_count == 1) {
-            // this is a top-level property, so let's see if this property is updatable
-            var is_value_supported = false
-            var propValue: Any?
-            let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
-            if (keypath_accepted) {
-                do {
-                    propValue = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
 
-                } catch ValueAssistantError.typeRequirement(let valueType) {
-                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
-
-                } catch {
-                    // any other errors
-                }
-                
-                if (propValue == nil) {
-                    
-                    // this should be wrapped in a do/catch, but Swift doesn't catch obj-c exceptions :(
-                    propValue = valueAssistant.updateValue(inObject: unwrapped_object, newValues: [property.path : property.start])
-
-                    if let retrieved = try? valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
-                        propValue = retrieved
-                    }
-                }
-                
-                if let propValue = propValue as? NSObject, valueAssistant.supports(propValue) {
-                    is_value_supported = true
-                }
-            }
-            if (is_value_supported) {
-                if let value = propValue {
-                    property.target = value as AnyObject
-                }
-                
-            } else if (unwrapped_object is NSNumber) {
-                // target property's value could be nil if it's a NSNumber, so set it to the starting value
-                let start_value = NSNumber.init(value: property.start)
-                property.target = start_value
-            } else {
-                property.target = unwrapped_object
-            }
-            
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-            
-        } else {
-            // there is no path, so the top-level object should be the target
-            property.target = unwrapped_object
+            self.properties.append(property)
         }
-        
     }
-    
     
     /**
      *  Assigns a start value for the property, useful when a motion is starting with the property's current value.
      *
      *  - parameter property: The `PropertyData` instance to modify.
      */
-    private func assignStartingPropertyValue(_ property: inout PropertyData) {
+    private func assignStartingPropertyValue(_ property: PropertyData<TargetType>) {
         if (property.useExistingStartValue && completedCount == 0) {
-            if let current_value = valueAssistant.retrieveCurrentObjectValue(forProperty: property) {
+            
+            if let targetObject = property.targetObject {
+                
+                if let startValue = property.retrieveValue(from: targetObject) as? any BinaryFloatingPoint, let convertedValue = startValue.toDouble() {
+                    property.start = convertedValue
+                    
+                } else if let startValue = property.retrieveValue(from: targetObject) as? any BinaryInteger, let convertedValue = startValue.toDouble() {
+                    property.start = convertedValue
+                }
+                
                 let shouldChangeEndValue = (property.start == property.end && physicsSystem.useCollisionDetection)
-                property.start = current_value
                 // We need to keep start and end values equal if physics collisions are active. By default a PropertyData end value is 0.0, so if the start value changes and an end value wasn't provided, turning on collisions would create a collision value at 0.0 that the user might not expect.
                 // The physics system ignores collisions if start and end collision points are equal, so this circumvents unwanted behavior.
                 if shouldChangeEndValue {
-                    property.end = current_value
+                    property.end = property.start
                 }
             }
+
         }
     }
     
@@ -855,7 +712,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
     private func startMotion() {
         for index in 0 ..< properties.count {
             // modify start value if we should use the existing value instead
-            if (!additive) { assignStartingPropertyValue(&properties[index]) }
+            if (!isAdditive) { assignStartingPropertyValue(properties[index]) }
             properties[index].current = properties[index].start
         }
         
@@ -863,7 +720,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         startTime = 0.0
         initialVelocity = physicsSystem.velocity
         
-        if (additive && targetObject != nil) {
+        if (isAdditive && targetObject != nil) {
             operationID = MotionSupport.register(additiveMotion: self)
         }
         
@@ -950,13 +807,6 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
                 properties[index].delta = new_positions[index] - properties[index].current
                 properties[index].current = new_positions[index]
             }
-            
-        } else if let targetObject = targetObject as? Double {
-            var property = PropertyData(path: "unused", end: 1.0)
-            property.current = targetObject
-            if let new_value = physicsSystem.solve(forPositions: [property], timestamp: CFAbsoluteTimeGetCurrent()).first {
-                self.targetObject = NSNumber.init(value: new_value)
-            }
 
         }
         
@@ -971,32 +821,12 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
      *
      *  - parameter property: The property to update.
      */
-    private func updatePropertyValue(forProperty property: inout PropertyData) {
+    private func updatePropertyValue(forProperty property: PropertyData<TargetType>) {
         
-        let new_value = (additive) ? property.delta : property.current
+        let newValue = (isAdditive) ? property.delta : property.current
         
-        if (property.targetObject == nil) {
-            
-            if let new_prop = valueAssistant.calculateValue(forProperty: property, newValue: new_value) {
-                property.target = new_prop
-            }
-            
-            return
-        }
-        
-        if let targetObject = property.targetObject {
-            
-            if let new_prop = valueAssistant.calculateValue(forProperty: property, newValue: new_value) {
-                
-                if (!property.replaceParentProperty) {
-                    targetObject.setValue(new_prop, forKey: property.path)
-                    
-                } else {
-                    targetObject.setValue(new_prop, forKeyPath: property.parentKeyPath)
-                    
-                }
-            }
-        }
+        valueAssistant.update(property: property, newValue: newValue)
+
     }
     
     
@@ -1008,13 +838,13 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
         _motionProgress = 1.0
         _cycleProgress = 1.0
         completedCount += 1
-        if (!repeating) { cyclesCompletedCount += 1 }
+        if (!isRepeating) { cyclesCompletedCount += 1 }
 
         for index in 0 ..< properties.count {
-            updatePropertyValue(forProperty: &properties[index])
+            updatePropertyValue(forProperty: properties[index])
         }
         
-        if (additive && targetObject != nil) {
+        if (isAdditive && targetObject != nil) {
             operationID = 0
             MotionSupport.unregister(additiveMotion: self)
         }
@@ -1045,11 +875,14 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             _motionProgress = 0.0
             
             if (resetObjectStateOnRepeat) {
-                if let unwrapped_object = targetObject {
+                if let targetObject {
                     for index in 0 ..< properties.count {
                         let property = properties[index]
-                        if let unwrapped_starting = property.startingParentProperty {
-                            unwrapped_object.setValue(unwrapped_starting, forKey: property.parentKeyPath)
+
+                        if let startingParentProperty = property.startingParentProperty, property.replaceParentProperty {
+                            property.applyToParent(value: startingParentProperty, to: targetObject)
+                        } else {
+                            property.apply(value: property.start, to: targetObject)
                         }
                     }
                 }
@@ -1058,7 +891,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             // setting startTime to 0.0 causes update method to re-init the motion
             startTime = 0.0
             
-            if (reversing) {
+            if (isReversing) {
                 reverseMotionDirection()
             } else {
                 physicsSystem.reset()
@@ -1136,19 +969,19 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
                 pauseTimestamp = 0.0
                 
                 // temporarily turn off additive mode for the first update so the starting position can be set
-                let temp_additive = additive
-                additive = false
-                _additive = temp_additive
+                let temp_additive = isAdditive
+                isAdditive = false
+                _isAdditive = temp_additive
                 for index in 0 ..< properties.count {
-                    if (!_additive) { updatePropertyValue(forProperty: &properties[index]) }
+                    if (!_isAdditive) { updatePropertyValue(forProperty: properties[index]) }
                 }
-                valueAssistant.additive = _additive
+                valueAssistant.isAdditive = _isAdditive
             }
             
             if (abs(physicsSystem.velocity) > velocityDecayLimit) {
                 
                 for index in 0 ..< properties.count {
-                    updatePropertyValue(forProperty: &properties[index])
+                    updatePropertyValue(forProperty: properties[index])
                 }
                 
                 // call update closure
@@ -1157,14 +990,14 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             } else {
                 
                 // motion has completed
-                if (reversing || repeating) {
-                    if ((repeating && !reversing) || (reversing && repeating && motionDirection == .reverse)) {
+                if (isReversing || isRepeating) {
+                    if ((isRepeating && !isReversing) || (isReversing && isRepeating && motionDirection == .reverse)) {
                         nextRepeatCycle()
                         
-                    } else if (!repeating && reversing && motionDirection == .reverse) {
+                    } else if (!isRepeating && isReversing && motionDirection == .reverse) {
                         motionCompleted()
                         
-                    } else if (reversing && motionState == .moving) {
+                    } else if (isReversing && motionState == .moving) {
                         reverseMotionDirection()
                     }
                     
@@ -1204,19 +1037,19 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             
             let no_delay_set: Bool = ((delay == 0.0) ? true : false)
             
-            if (additive) {
+            if (isAdditive) {
                 if let unwrapped_object = targetObject {
                     for index in 0 ..< properties.count {
                         // assign the ending value of the last motion for this obj/keyPath to each property's starting value
                         let property = properties[index]
                         
-                        if let last_target_value = MotionSupport.targetValue(forObject: unwrapped_object, keyPath: property.path) {
-                            properties[index].start = last_target_value
+                        if let lastTargetValue = MotionSupport.targetValue(forObject: unwrapped_object, targetProperty: property, requestingID: self.operationID) {
+                            properties[index].start = lastTargetValue
                         }
                     }
                     
                     if (no_delay_set) {
-                        operationID = MotionSupport.register(additiveMotion: self as Additive)
+                        operationID = MotionSupport.register(additiveMotion: self as any Additive)
                     }
                 }
             }
@@ -1246,7 +1079,7 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             currentTime = 0.0
             motionProgress = 0.0
             
-            if (additive && targetObject != nil) {
+            if (isAdditive && targetObject != nil) {
                 operationID = 0
                 MotionSupport.unregister(additiveMotion: self)
             }
@@ -1308,9 +1141,9 @@ public typealias PhysicsMotionCompleted = PhysicsMotionUpdateClosure
             let property = properties[index]
             properties[index].current = property.start
             if (resetObjectStateOnRepeat) {
-                if let unwrapped_object = targetObject {
-                    if let unwrapped_starting = property.startingParentProperty {
-                        unwrapped_object.setValue(unwrapped_starting, forKey: property.parentKeyPath)
+                if let targetObject {
+                    if let startingParentProperty = property.startingParentProperty {
+                        property.applyToParent(value: startingParentProperty, to: targetObject)
                     }
                 }
             }

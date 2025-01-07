@@ -1,9 +1,9 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 //  Package.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -13,7 +13,10 @@ import PackageDescription
 let package = Package(
     name: "MotionMachine",
     platforms: [
-        .iOS(.v13), .tvOS(.v13), .visionOS(.v1)
+        .iOS(.v16),
+        .tvOS(.v16),
+        .visionOS(.v1),
+        .macOS(.v14)
     ],
     products: [
         .library(name: "MotionMachine", targets: ["MotionMachine"])
@@ -26,5 +29,5 @@ let package = Package(
             path: "Tests/Tests/"
         )
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageModes: [.v6]
 )

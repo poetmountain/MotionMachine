@@ -2,84 +2,50 @@
 //  MotionSequence.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
-/// A closure used to provide status updates for a ``MotionSequence`` object.
-/// - Parameter sequence: The ``MotionSequence`` object which published this update closure.
-public typealias SequenceUpdateClosure = (_ sequence: MotionSequence) -> Void
-
-/**
- *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
- *
- *  - seealso: start
- */
-public typealias SequenceStarted = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when the `stop` method starts a motion operation.
- *
- *  - seealso: stop
- */
-public typealias SequenceStopped = SequenceUpdateClosure
-
-
-/**
- *  This notification closure should be called when the `update` method is called while a Moveable object is currently moving.
- *
- *  - seealso: update
- */
-public typealias SequenceUpdated = SequenceUpdateClosure
-
-
-/**
- *  This notification closure should be called when a motion operation reverses its movement direction.
- *
- */
-public typealias SequenceReversed = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when a motion has started a new repeat cycle.
- *
- */
-public typealias SequenceRepeated = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `pause` method pauses a motion operation.
- *
- */
-public typealias SequencePaused = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `resume` method resumes a motion operation.
- *
- */
-public typealias SequenceResumed = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when a motion operation has fully completed.
- *
- *  - remark: This closure should only be executed when all activity related to the motion has ceased. For instance, if a Moveable class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
- *
- */
-public typealias SequenceCompleted = SequenceUpdateClosure
-
-/**
- *  This notification closure should be called when a sequence's movement has advanced to its next sequence step.
- *
- */
-public typealias SequenceStepped = SequenceUpdateClosure
-
-
-/**
- *  MotionSequence moves a collection of objects conforming to the `Moveable` protocol in sequential order. MotionSequence provides a powerful and easy way of chaining together individual motions to create complex animations.
- */
+/// MotionSequence moves a collection of objects conforming to the ``Moveable`` protocol in sequential order. A single `MotionSequence` could hold ``Motion``, ``PhysicsMotion``, and ``PathMotion`` objects, and even other ``MoveableCollection`` objects. MotionSequence provides a powerful and easy way of chaining together individual motions to create complex animations.
 public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate {
 
+    /// A closure used to provide status updates for a ``MotionSequence`` object.
+    /// - Parameter sequence: The ``MotionSequence`` object which published this update closure.
+    public typealias SequenceUpdateClosure = (_ sequence: MotionSequence) -> Void
+
+    /// This notification closure should be called when the ``start()`` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
+    public typealias SequenceStarted = SequenceUpdateClosure
+
+    /// This notification closure should be called when the ``stop()`` method starts a motion operation.
+    public typealias SequenceStopped = SequenceUpdateClosure
+
+    /// This notification closure should be called when the ``update(withTimeInterval:)`` method is called while a ``Moveable`` object is currently moving.
+    public typealias SequenceUpdated = SequenceUpdateClosure
+
+    /// This notification closure should be called when a motion operation reverses its movement direction.
+    public typealias SequenceReversed = SequenceUpdateClosure
+
+    /// This notification closure should be called when a motion has started a new motion cycle.
+    public typealias SequenceRepeated = SequenceUpdateClosure
+
+    /// This notification closure should be called when calling the ``pause()`` method pauses a motion operation.
+    public typealias SequencePaused = SequenceUpdateClosure
+
+    /// This notification closure should be called when calling the ``resume()`` method resumes a motion operation.
+    public typealias SequenceResumed = SequenceUpdateClosure
+
+    /// This notification closure should be called when a motion operation has fully completed.
+    ///
+    /// > Note: This closure should only be executed when all activity related to the motion has ceased. For instance, if a ``Moveable`` class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
+    public typealias SequenceCompleted = SequenceUpdateClosure
+
+    /// This notification closure should be called when a sequence's movement has advanced to its next sequence step.
+    public typealias SequenceStepped = SequenceUpdateClosure
+    
+    
     // MARK: - Public Properties
     
     ///-------------------------------------
@@ -93,30 +59,11 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      */
     public var delay: TimeInterval = 0.0
     
-    /**
-     *  A Boolean which determines whether the sequence should repeat. When set to `true`, the sequence repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
-     *
-     *  - note: By design, setting this value to `true` without changing the `repeatCycles` property from its default value (0) will cause the sequence to repeat infinitely.
-     *  - seealso: repeatCycles
-     */
-    public var repeating: Bool = false
-    
-    
-    /**
-     *  The number of complete sequence cycle operations to repeat.
-     *
-     *  - remark: This property is only used when `repeating` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
-     *
-     *  - seealso: repeating
-     */
-    public var repeatCycles: UInt = REPEAT_INFINITE
-    
-    
 
     // MOTION STATE
     
     /**
-     *  An array of `Moveable` objects controlled by this MotionSequence object, determining each step of the sequence. (read-only)
+     *  An array of ``Moveable`` objects controlled by this MotionSequence object, determining each step of the sequence. (read-only)
      *
      *  - remark: The order of objects in this array represents the sequence order in which each will be moved.
      */
@@ -130,7 +77,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a movement between two value destinations. (read-only)
      *
-     *  - remark: Be aware that if this motion is `reversing` or `repeating`, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a Motion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
+     *  - remark: Be aware that if this motion is ``isReversing`` or ``isRepeating``, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a motion class is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
      */
     private(set) public var motionProgress: Double {
         
@@ -142,9 +89,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .forward) {
+            if (isReversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .reverse) {
+            } else if (isReversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -160,7 +107,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a motion cycle. (read-only)
      *
-     *  - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
+     *  - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
      */
     private(set) public var cycleProgress: Double {
         get {
@@ -171,7 +118,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             _cycleProgress = newValue
             
             // sync motionProgress with cycleProgress, so we modify the ivar directly (otherwise we'd enter a recursive loop as each setter is called)
-            if (reversing) {
+            if (isReversing) {
                 var new_progress = _cycleProgress * 2
                 if (_cycleProgress >= 0.5) { new_progress -= 1 }
                 _motionProgress = new_progress
@@ -188,7 +135,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  The amount of completed motion cycles.  (read-only)
      *
-     * - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle.
+     * - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle.
      */
     private(set) public var cyclesCompletedCount: UInt = 0
     
@@ -196,14 +143,13 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     /**
      *  A value between 0.0 and 1.0, which represents the current overall progress of the sequence. This value should include all reversing and repeat motion cycles. (read-only)
      *
-     *  - remark: If a sequence is not repeating, this value will be equivalent to the value of `cycleProgress`.
-     *  - seealso: cycleProgress
+     *  - remark: If the sequence is not repeating, this value will be equivalent to the value of ``cycleProgress``.
      *
      */
     public var totalProgress: Double {
         get {
             // sync totalProgress with cycleProgress
-            if (repeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
+            if (isRepeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
                 return (_cycleProgress + Double(cyclesCompletedCount)) / Double(repeatCycles+1)
             } else {
                 return _cycleProgress
@@ -216,22 +162,22 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     // MARK: Moveable protocol properties
     
     /**
-     *  Specifies that the MotionSequence's child motions should reverse their movements back to their starting values after completing their forward movements. When each child motion should reverse is determined by the MotionSequence's `reversingMode`.
+     *  Specifies that the MotionSequence's child motions should reverse their movements back to their starting values after completing their forward movements. When each child motion should reverse is determined by the MotionSequence's ``reversingMode``.
      *
-     *  - important: The previous state of `reversing` on any of this sequence's `Moveable` objects will be overridden with the value you assign to this property!
+     *  - important: The previous state of ``isReversing`` on any of this sequence's ``Moveable`` objects will be overridden with the value you assign to this property!
      */
-    public var reversing: Bool {
+    public var isReversing: Bool {
         get {
-            return _reversing
+            return _isReversing
         }
         
         set(newValue) {
-            _reversing = newValue
+            _isReversing = newValue
             
             // change the `reversing` property on each `Moveable` object sequence step to reflect the sequence's new state
             if (reversingMode == .contiguous) {
                 for step in steps {
-                    step.reversing = _reversing
+                    step.isReversing = _isReversing
                 }
             }
             
@@ -239,38 +185,58 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         }
 
     }
-    private var _reversing: Bool = false
+    private var _isReversing: Bool = false
     
     
-    /// A `MotionState` enum which represents the current movement state of the motion operation. (read-only)
-    private(set) public var motionState: MotionState
+    /**
+     *  A Boolean which determines whether the sequence should repeat. When set to `true`, the sequence repeats for the number of times specified by the ``repeatCycles`` property. The default value is `false`.
+     *
+     *  - note: By design, setting this value to `true` without changing the ``repeatCycles`` property from its default value (0) will cause the sequence to repeat infinitely.
+     */
+    public var isRepeating: Bool = false
+    
+    
+    /**
+     *  The number of complete sequence cycle operations to repeat.
+     *
+     *  - remark: This property is only used when ``isRepeating`` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
+     *
+     */
+    public var repeatCycles: UInt = REPEAT_INFINITE
+    
+    
+    /// An enum which represents the current movement state of the motion operation. (read-only)
+    private(set) public var motionState: MoveableState
     
     /// Provides a delegate for updates to a Moveable object's status, used by Moveable collections.
     public weak var updateDelegate: MotionUpdateDelegate?
     
     
+    private(set) public var operationID: UInt = 0
+    
+    
     // MARK: MoveableCollection protocol properties
     
     /**
-     *  A `CollectionReversingMode` enum which defines the behavior of a `Moveable` class when its `reversing` property is set to `true`. In the standard MotionMachine classes only `MotionSequence` currently uses this property to alter its behavior.
+     *  An enum which defines the behavior of a ``Moveable`` class when its ``isReversing`` property is set to `true`. In the standard MotionMachine classes only `MotionSequence` currently uses this property to alter its behavior.
      *
-     *  - note: While including this property in custom classes which implement the `MoveableCollection` protocol is required, implementation of behavior based on the property's value is optional.
-     *  - remark: The default value is `Sequential`. Please see the documentation for `CollectionReversingMode` for more information on these modes.
+     *  - note: While including this property in custom classes which implement the ``MoveableCollection`` protocol is required, implementation of behavior based on the property's value is optional.
+     *  - remark: The default value is `sequential`. Please see the documentation for `CollectionReversingMode` for more information on these modes.
      */
     public var reversingMode: CollectionReversingMode = .sequential {
         didSet {
-            if (reversingMode == .contiguous && reversing) {
+            if (reversingMode == .contiguous && isReversing) {
                 for step in steps {
-                    step.reversing = true
+                    step.isReversing = true
                     if var collection = step as? MoveableCollection {
                         // by default, setting a contiguous reversingMode will cascade down to sub-collections
                         // since usually a user would expect a contiguous movement from each sub-motion when setting this value
                         collection.reversingMode = .contiguous
                     }
                 }
-            } else if (reversingMode == .sequential && reversing) {
+            } else if (reversingMode == .sequential && isReversing) {
                 for step in steps {
-                    step.reversing = false
+                    step.isReversing = false
                 }
             }
         }
@@ -278,14 +244,14 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     
     
     
-    // MARK: TempoBeating protocol properties
+    // MARK: TempoDriven protocol properties
     
     /**
-     *  A concrete `Tempo` subclass that provides an update "beat" while a motion operation occurs.
+     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" to all child motions while the motion operation occurs.
      *
-     *  - remark: By default, Motion will assign an instance of `CATempo` to this property, which uses CADisplayLink for interval updates.
+     *  - Note: By default, Motion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
      */
-    public var tempo: Tempo? {
+    public var tempo: TempoProviding? {
         
         get {
             return _tempo
@@ -313,8 +279,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             }
         }
     }
-    lazy private var _tempo: Tempo? = {
-        return CATempo.init()
+    lazy private var _tempo: TempoProviding? = {
+        return DisplayLinkTempo()
     }()
     
     
@@ -346,7 +312,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private var _stopped: SequenceStopped?
     
     /**
-     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `.Moving`.
+     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `moving`.
      *
      *  - seealso: update(withTimeInterval:)
      */
@@ -370,9 +336,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private var _cycleRepeated: SequenceRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `reversing`.
+     *  This closure is called when the ``motionDirection`` property changes to `reversing`.
      *
-     *  - seealso: motionDirection, reversing
      */
     @discardableResult public func reversed(_ closure: @escaping SequenceReversed) -> Self {
         _reversed = closure
@@ -382,7 +347,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private var _reversed: SequenceReversed?
     
     /**
-     *  This closure is called when calling the `pause` method on this instance causes a motion operation to pause.
+     *  This closure is called when calling the ``pause()`` method on this instance causes a motion operation to pause.
      *
      *  - seealso: pause
      */
@@ -394,7 +359,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private var _paused: SequencePaused?
     
     /**
-     *  This closure is called when calling the `resume` method on this instance causes a motion operation to resume.
+     *  This closure is called when calling the ``resume()`` method on this instance causes a motion operation to resume.
      *
      *  - seealso: resume
      */
@@ -474,8 +439,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         
         // unpack options values
         if let unwrappedOptions = options {
-            repeating = unwrappedOptions.contains(.repeats)
-            _reversing = unwrappedOptions.contains(.reverses)
+            isRepeating = unwrappedOptions.contains(.repeats)
+            _isReversing = unwrappedOptions.contains(.reverses)
         }
         
         motionState = .stopped
@@ -505,8 +470,8 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      */
     @discardableResult public func add(_ sequenceStep: Moveable, useChildTempo: Bool = false) -> Self {
         
-        if (reversing && reversingMode == .contiguous) {
-            sequenceStep.reversing = true
+        if (isReversing && reversingMode == .contiguous) {
+            sequenceStep.isReversing = true
         }
         
         if let tempo_beating = (sequenceStep as? TempoDriven) {
@@ -591,7 +556,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> MotionSequence {
         
         repeatCycles = numberOfCycles
-        repeating = true
+        isRepeating = true
         
         return self
     }
@@ -605,11 +570,10 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      *
      *  - parameter mode: Defines the `CollectionReversingMode` used when reversing.
      *  - returns: A reference to this MotionSequence instance, for the purpose of chaining multiple calls to this method.
-     *  - seealso: reversing, reversingMode
      */
     @discardableResult public func reverses(_ mode: CollectionReversingMode = .sequential) -> MotionSequence {
         
-        reversing = true
+        isReversing = true
         reversingMode = mode
         
         return self
@@ -666,7 +630,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             weak var weak_self = self
             _cycleRepeated?(weak_self!)
             
-            if (reversing) {
+            if (isReversing) {
                 if (motionDirection == .forward) {
                     motionDirection = .reverse
                     
@@ -680,7 +644,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             // send repeat status update
             sendStatusUpdate(.repeated)
             
-            if (reversing && reversingMode == .sequential) {
+            if (isReversing && reversingMode == .sequential) {
                 currentSequenceIndex += 1
             }
             
@@ -703,14 +667,14 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
     private func nextSequenceStep() {
         
         if (
-            (!reversing && currentSequenceIndex + 1 < steps.count)
-            || (reversing && (motionDirection == .forward && currentSequenceIndex + 1 < steps.count))
-            || (reversing && (motionDirection == .reverse && currentSequenceIndex - 1 >= 0))
+            (!isReversing && currentSequenceIndex + 1 < steps.count)
+            || (isReversing && (motionDirection == .forward && currentSequenceIndex + 1 < steps.count))
+            || (isReversing && (motionDirection == .reverse && currentSequenceIndex - 1 >= 0))
             ) {
             
-            if (!reversing || (reversing && motionDirection == .forward)) {
+            if (!isReversing || (isReversing && motionDirection == .forward)) {
                 currentSequenceIndex += 1
-            } else if (reversing && motionDirection == .reverse) {
+            } else if (isReversing && motionDirection == .reverse) {
                 currentSequenceIndex -= 1
             }
             
@@ -724,9 +688,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             // start the next sequence step
             if let next_step = currentStep() {
 
-                if (!reversing
-                    || (reversing && reversingMode == .contiguous && motionDirection == .forward)
-                    || (reversing && reversingMode == .sequential)) {
+                if (!isReversing
+                    || (isReversing && reversingMode == .contiguous && motionDirection == .forward)
+                    || (isReversing && reversingMode == .sequential)) {
                     _ = next_step.start()
                     
                 } else {
@@ -773,7 +737,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
         motionState = .stopped
         motionProgress = 1.0
         _cycleProgress = 1.0
-        if (!repeating) { cyclesCompletedCount += 1 }
+        if (!isRepeating) { cyclesCompletedCount += 1 }
         
         // call update closure
         _updated?(self)
@@ -814,7 +778,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             children_progress += step.totalProgress
         }
         children_progress /= Double(steps.count)
-        if (reversing && reversingMode == .sequential) {
+        if (isReversing && reversingMode == .sequential) {
             children_progress *= 0.5
             
             if (motionDirection == .reverse) {
@@ -999,7 +963,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             
         case .halfCompleted:
             
-            if (reversing && reversingMode == .contiguous && motionDirection == .forward) {
+            if (isReversing && reversingMode == .contiguous && motionDirection == .forward) {
                 motionsReversedCount += 1
                 if (motionsReversedCount >= steps.count) {
                     
@@ -1021,7 +985,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                 nextSequenceStep()
             
             } else {
-                if (reversing && reversingMode == .sequential && ((motionDirection == .forward && currentSequenceIndex + 1 >= steps.count)
+                if (isReversing && reversingMode == .sequential && ((motionDirection == .forward && currentSequenceIndex + 1 >= steps.count)
                     || (motionDirection == .reverse && currentSequenceIndex - 1 == 0))) {
                     // if the sequence is set to reverse its motion and mode is noncontiguous
                     // + if the sequence has no more steps left
@@ -1036,9 +1000,9 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                         }
                         
                         // start the same clip again
-                        if (!reversing || (reversing && motionDirection == .forward)) {
+                        if (!isReversing || (isReversing && motionDirection == .forward)) {
                             currentSequenceIndex -= 1
-                        } else if (reversing && motionDirection == .reverse) {
+                        } else if (isReversing && motionDirection == .reverse) {
                             currentSequenceIndex += 1
                         }
                         
@@ -1049,7 +1013,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
                         sequenceCompleted()
                     }
                 
-                } else if (repeating) {
+                } else if (isRepeating) {
                     nextRepeatCycle()
                 } else {
                     sequenceCompleted()

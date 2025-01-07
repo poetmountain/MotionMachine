@@ -2,7 +2,7 @@
 //  AdditiveViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -37,7 +37,7 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        
+
         if (!createdUI) {
             setupUI()
             
@@ -56,69 +56,71 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
             let normal_amount = 40.0
             
             let change_color = Motion(target: circle,
-                                      properties: [PropertyData("backgroundColor.red", 91.0/255.0),
-                                        PropertyData("backgroundColor.green", 189.0/255.0),
-                                        PropertyData("backgroundColor.blue", 231.0/255.0)],
+                                      states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], end: .systemBlue),
                                       duration: 1.6,
-                                      easing: EasingQuadratic.easeInOut())
-            change_color.additive = true
+                                      easing: EasingQuadratic.easeInOut(),
+                                      options: [.additive])
             
 
 
             let expand_width = Motion(target: constraints["width"]!,
-                                      properties: [PropertyData(path: "constant", start: normal_amount, end: expanded_amount)],
+                                      properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: normal_amount, end: expanded_amount)],
                                       duration: 1.8,
-                                      easing: EasingCubic.easeInOut())
-            expand_width.additive = true
+                                      easing: EasingCubic.easeInOut(),
+                                      options: [.additive])
             
             let expand_height = Motion(target: constraints["height"]!,
-                                       properties: [PropertyData(path: "constant", start: normal_amount, end: expanded_amount)],
+                                       properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: normal_amount, end: expanded_amount)],
                                        duration: 1.8,
-                                       easing: EasingCubic.easeInOut())
-            expand_height.additive = true
+                                       easing: EasingCubic.easeInOut(),
+                                       options: [.additive])
             
             let corner_radius = Motion(target: circle,
-                                       properties: [PropertyData(path: "layer.cornerRadius", start: normal_amount*0.5, end: expanded_amount*0.5)],
+                                       properties: [PropertyData(keyPath: \UIView.layer.cornerRadius, start: normal_amount*0.5, end: expanded_amount*0.5)],
                                        duration: 1.8,
-                                       easing: EasingCubic.easeInOut())
-            corner_radius.additive = true
+                                       easing: EasingCubic.easeInOut(),
+                                       options: [.additive])
             
-            group = MotionGroup(motions: [expand_width, expand_height, change_color, corner_radius])
-            
-
+            group = MotionGroup(motions: [change_color, expand_width, expand_height, corner_radius])
+            group.completed { [weak self] group in
+                if self?.reverseGroup.motionState == .stopped {
+                    self?.expanding = true
+                }
+            }
             // setup shrink motion
             // -- note: we have to set the starting values for the shrink motions because if we leave them out, they'll use the current
             // values at the time the UI is setup, meaning the start and end values will be the same
             let rev_change_color = Motion(target: circle,
-                                          properties: [PropertyData(path: "backgroundColor.red", start: 91.0/255.0, end: 76.0/255.0),
-                                                       PropertyData(path: "backgroundColor.green", start: 189.0/255.0, end: 164.0/255.0),
-                                                       PropertyData(path: "backgroundColor.blue", start: 231.0/255.0, end: 68.0/255.0)],
+                                          states: MotionState(keyPath: \UIView.backgroundColor[default: .systemBlue], end: .systemGreen),
                                       duration: 1.6,
-                                      easing: EasingQuadratic.easeInOut())
-            rev_change_color.additive = true
+                                      easing: EasingQuadratic.easeInOut(),
+                                          options: [.additive])
             
             
             let shrink_width = Motion(target: constraints["width"]!,
-                                      properties: [PropertyData(path: "constant", start: expanded_amount, end: normal_amount)],
+                                      properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: expanded_amount, end: normal_amount)],
                                       duration: 1.8,
-                                      easing: EasingCubic.easeInOut())
-            shrink_width.additive = true
+                                      easing: EasingCubic.easeInOut(),
+                                      options: [.additive])
             
             let shrink_height = Motion(target: constraints["height"]!,
-                                       properties: [PropertyData(path: "constant", start: expanded_amount, end: normal_amount)],
+                                       properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: expanded_amount, end: normal_amount)],
                                        duration: 1.8,
-                                       easing: EasingCubic.easeInOut())
-            shrink_height.additive = true
+                                       easing: EasingCubic.easeInOut(),
+                                       options: [.additive])
             
             let rev_corner_radius = Motion(target: circle,
-                                       properties: [PropertyData(path: "layer.cornerRadius", start: expanded_amount*0.5, end: normal_amount*0.5)],
+                                           properties: [PropertyData(keyPath: \UIView.layer.cornerRadius, start: expanded_amount*0.5, end: normal_amount*0.5)],
                                          duration: 1.8,
-                                           easing: EasingCubic.easeInOut())
-            rev_corner_radius.additive = true
+                                           easing: EasingCubic.easeInOut(),
+                                           options: [.additive])
             
-            reverseGroup = MotionGroup(motions: [shrink_width, shrink_height, rev_change_color, rev_corner_radius])
-
-            
+            reverseGroup = MotionGroup(motions: [rev_change_color, shrink_width, shrink_height, rev_corner_radius])
+            reverseGroup.completed { [weak self] group in
+                if self?.group.motionState == .stopped {
+                    self?.expanding = false
+                }
+            }
             createdUI = true
         }
         
@@ -164,8 +166,8 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         
         let w: CGFloat = 40.0
         
-        circle = UIView.init()
-        circle.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
+        circle = UIView()
+        circle.backgroundColor = .systemGreen
         circle.layer.masksToBounds = true
         circle.layer.cornerRadius = w * 0.5
         self.view.addSubview(circle)
@@ -198,7 +200,7 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
         label.heightAnchor.constraint(equalToConstant: 60.0).isActive = true
         
         
-        buttonsView = ButtonsView.init(frame: CGRect.zero)
+        buttonsView = ButtonsView()
         view.addSubview(buttonsView)
         buttonsView.startButton.isHidden = true
         buttonsView.stopButton.isHidden = true
@@ -215,14 +217,14 @@ public class AdditiveViewController: UIViewController, ButtonsViewDelegate {
     @objc func viewTappedHandler(_ gesture: UITapGestureRecognizer) {
         
         if (gesture.state != UIGestureRecognizer.State.ended) {
-            return;
+            return
         }
         
         expanding = !expanding
         
-        if (expanding && group.motionState == .stopped) {
+        if (expanding) {
             group.start()
-        } else if (!expanding && reverseGroup.motionState == .stopped) {
+        } else if (!expanding) {
             reverseGroup.start()
         }
     }

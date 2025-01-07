@@ -2,16 +2,19 @@
 //  PathState.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// This state object is used in conjunction with ``PathMotion`` to handle the movement of a point along a path.
-public final class PathState: NSObject, @unchecked Sendable {
+public final class PathState: @unchecked Sendable {
 
     /// A point representing the current location along the path during an animation.
     public private(set) var currentPoint: CGPoint = .zero
@@ -58,7 +61,6 @@ public final class PathState: NSObject, @unchecked Sendable {
     ///   - curveLengthGenerationSteps: Determines the number of steps used in determining the lengths of curves. The default value of `50` is fine in most cases; higher values can marginally increase accuracy, at the cost of performance.
     public init(path: CGPath, curveLengthGenerationSteps: Int? = nil) {
         self.path = path
-        super.init()
 
         if let curveLengthGenerationSteps {
             self.curveLengthGenerationSteps = curveLengthGenerationSteps
@@ -128,7 +130,7 @@ public final class PathState: NSObject, @unchecked Sendable {
         if let lookupCapacity {
             self.lookupTableCapacity = lookupCapacity
         }
-        self.length = self.calculateLength(with: pathElements)
+        self.length = calculateLength(with: pathElements)
         print("MotionMachine: Calculated length of path: \(length)")
         lookupTableCapacity = lookupCapacity ?? Int(Double(length) * Double(lookupTablePrecision))
         
@@ -155,9 +157,9 @@ public final class PathState: NSObject, @unchecked Sendable {
             let lookupCapacity = self.lookupTableCapacity
             lookupTable.reserveCapacity(lookupCapacity)
             
-            //let startTest = Date().timeIntervalSince1970
-            
             accessQueue.sync(flags: .barrier) { [weak self] in
+               // let startTest = Date().timeIntervalSince1970
+
                 for x in 0..<lookupCapacity {
                     
                     let percentage = Double(x) / Double(lookupCapacity)
@@ -165,15 +167,16 @@ public final class PathState: NSObject, @unchecked Sendable {
                         self?.lookupTable.append(point)
                     }
                 }
-                            
+                
+//                let endTest = Date().timeIntervalSince1970
+//                let diff = endTest - startTest
+//                let diffString = String(format: "%.12f", arguments: [diff])
+//                print("elapsed time \(diffString) :: table count \(String(describing: self?.lookupTable.count))")
+                
+                continuation.resume()
+
             }
-            
-//            let endTest = Date().timeIntervalSince1970
-//            let diff = endTest - startTest
-//            let diffString = String(format: "%.12f", arguments: [diff])
-//            print("elapsed time \(diffString) :: table count \(lookupTable.count)")
                         
-            continuation.resume()
         }
         
 
@@ -189,4 +192,4 @@ public final class PathState: NSObject, @unchecked Sendable {
     }
     
 }
-
+#endif

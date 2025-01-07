@@ -2,14 +2,17 @@
 //  PathElement.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// This model represents a single path element in a path.
 public struct PathElement {
     
@@ -33,3 +36,4 @@ public struct PathElement {
         self.controlPoints = controlPoints
     }
 }
+#endif

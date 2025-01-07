@@ -2,7 +2,7 @@
 //  DynamicViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -156,16 +156,16 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         let x = constraints["x"]!
         let y = constraints["y"]!
         let motion_x = Motion(target: x,
-                              properties: [PropertyData(path: "constant", start: Double(x.constant), end: Double(pt.x))],
+                              properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: Double(x.constant), end: Double(pt.x))],
                               duration: 1.5,
-                              easing: EasingQuadratic.easeInOut())
-        motion_x.additive = true
+                              easing: EasingQuadratic.easeInOut(),
+                              options: [.additive])
         
         let motion_y = Motion(target: y,
-                              properties: [PropertyData(path: "constant", start: Double(y.constant), end: Double(pt.y-y_offset))],
+                              properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, start: Double(y.constant), end: Double(pt.y-y_offset))],
                               duration: 1.5,
-                              easing: EasingQuadratic.easeInOut())
-        motion_y.additive = true
+                              easing: EasingQuadratic.easeInOut(),
+                              options: [.additive])
         
         let group = MotionGroup(motions: [motion_x, motion_y])
         group.completed { [weak self] (group) in

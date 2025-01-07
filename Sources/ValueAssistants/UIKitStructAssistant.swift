@@ -2,7 +2,7 @@
 //  UIKitStructAssistant.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -14,9 +14,9 @@ import UIKit
 
 #if os(iOS) || os(tvOS) || os(visionOS)
 /// UIKitStructAssistant provides support for the UIKit structs `UIEdgeInsets` and `UIOffset`.
-public final class UIKitStructAssistant : ValueAssistant {
-    
-    public var additive: Bool = false
+public final class UIKitStructAssistant<TargetType: AnyObject>: ValueAssistant {
+
+    public var isAdditive: Bool = false
     public var additiveWeighting: Double = 1.0 {
         didSet {
             // constrain weighting to range of 0.0 - 1.0
@@ -28,143 +28,150 @@ public final class UIKitStructAssistant : ValueAssistant {
     public required init() {
         // provide support for UIKit structs
         // doesn't seem like there's a better way to extend the enum array from multiple assistants than this?
-        ValueStructTypes.valueTypes[.uiEdgeInsets] = NSValue(uiEdgeInsets: UIEdgeInsets.zero)
-        ValueStructTypes.valueTypes[.uiOffset] = NSValue(uiOffset: UIOffset.zero)
+        ValueStructTypes.valueTypes[.uiEdgeInsets] = UIEdgeInsets.zero
+        ValueStructTypes.valueTypes[.uiOffset] = UIOffset.zero
     }
     
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+    public func generateProperties<StateType>(targetObject target: TargetType, state: MotionState<TargetType, StateType>) throws -> [PropertyData<TargetType>] {
         
-        var properties: [PropertyData] = []
+        var properties: [PropertyData<TargetType>] = []
         
-        guard let end_value = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-        var startValue: NSValue?
+        let nestedObject = target[keyPath: state.keyPath]
+
+        var startValue: Any?
+        let endValue = state.end
+
         var startType: ValueStructTypes = .unsupported
-        let unwrappedStart = propertyStates.start
-        startValue = unwrappedStart as? NSValue
-        if let startValue {
-            startType = UIKitStructAssistant.determineType(forValue: startValue)
+        if let statesStart = state.start {
+            startValue = statesStart
+            startType = UIKitStructAssistant.determineType(forValue: statesStart)
         }
         
-        let end_type = UIKitStructAssistant.determineType(forValue: end_value)
+        let endType = UIKitStructAssistant.determineType(forValue: endValue)
         
-        switch end_type {
+        switch endType {
         case .uiEdgeInsets:
-            let base_path: String = propertyStates.path + "."
+
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, UIEdgeInsets> else { return properties }
 
             var org_top: Double?
             var org_left: Double?
             var org_bottom: Double?
             var org_right: Double?
-            
-            if let unwrapped_nsvalue = target as? NSValue {
-                let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .uiEdgeInsets) {
-                    let org_insets = unwrapped_nsvalue.uiEdgeInsetsValue
-                    org_top = Double(org_insets.top)
-                    org_left = Double(org_insets.left)
-                    org_bottom = Double(org_insets.bottom)
-                    org_right = Double(org_insets.right)
-                }
+                
+            if let insets = nestedObject as? UIEdgeInsets {
+                org_top = insets.top
+                org_left = insets.left
+                org_right = insets.right
+                org_bottom = insets.bottom
             }
+                
+            let endInsets = endValue as? UIEdgeInsets
+
             
-            let insets = end_value.uiEdgeInsetsValue
-            
-            if let unwrapped_top = org_top {
-                var start_state: Double
-                if let startValue, startType == .uiEdgeInsets {
-                    start_state = Double(startValue.uiEdgeInsetsValue.top)
+            if let org_top {
+                var startStateTop: Double
+                if startType == .uiEdgeInsets, let startValue = startValue as? UIEdgeInsets {
+                    startStateTop = startValue.top
                 } else {
-                    start_state = unwrapped_top
+                    startStateTop = org_top
                 }
                 
-                if (Double(insets.top) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "top", start: start_state, end: Double(insets.top))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIEdgeInsets.top)
+
+                if let endTop = endInsets?.top, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_top, startValue: startStateTop, endValue: endTop, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
-            if let unwrapped_left = org_left {
-                var start_state: Double
-                if let startValue, startType == .uiEdgeInsets {
-                    start_state = Double(startValue.uiEdgeInsetsValue.left)
+        
+            if let org_left {
+                var startStateLeft: Double
+                if startType == .uiEdgeInsets, let startValue = startValue as? UIEdgeInsets {
+                    startStateLeft = startValue.left
                 } else {
-                    start_state = unwrapped_left
+                    startStateLeft = org_left
                 }
                 
-                if (Double(insets.left) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "left", start: start_state, end: Double(insets.left))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIEdgeInsets.left)
+
+                if let endLeft = endInsets?.left, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_left, startValue: startStateLeft, endValue: endLeft, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
-            if let unwrapped_bottom = org_bottom {
-                var start_state: Double
-                if let startValue, startType == .uiEdgeInsets {
-                    start_state = Double(startValue.uiEdgeInsetsValue.bottom)
+                
+            if let org_bottom {
+                var startStateBottom: Double
+                if startType == .uiEdgeInsets, let startValue = startValue as? UIEdgeInsets {
+                    startStateBottom = startValue.bottom
                 } else {
-                    start_state = unwrapped_bottom
+                    startStateBottom = org_bottom
                 }
                 
-                if (Double(insets.bottom) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "bottom", start: start_state, end: Double(insets.bottom))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIEdgeInsets.bottom)
+
+                if let endBottom = endInsets?.bottom, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_bottom, startValue: startStateBottom, endValue: endBottom, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
-            if let unwrapped_right = org_right {
-                var start_state: Double
-                if let startValue, startType == .uiEdgeInsets {
-                    start_state = Double(startValue.uiEdgeInsetsValue.right)
+                
+            if let org_right {
+                var startStateRight: Double
+                if startType == .uiEdgeInsets, let startValue = startValue as? UIEdgeInsets {
+                    startStateRight = startValue.right
                 } else {
-                    start_state = unwrapped_right
+                    startStateRight = org_right
                 }
                 
-                if (Double(insets.right) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "right", start: start_state, end: Double(insets.right))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIEdgeInsets.right)
+
+                if let endRight = endInsets?.right, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_right, startValue: startStateRight, endValue: endRight, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
             
         case .uiOffset:
-            let base_path: String = propertyStates.path + "."
-            
+
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, UIOffset> else { return properties }
+
             var org_h: Double?
             var org_v: Double?
             
-            if let unwrapped_nsvalue = target as? NSValue {
-                let type = UIKitStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .uiOffset) {
-                    let org_offset = unwrapped_nsvalue.uiOffsetValue
-                    org_h = Double(org_offset.horizontal)
-                    org_v = Double(org_offset.vertical)
-                }
+            if let uiOffset = nestedObject as? UIOffset {
+                org_h = uiOffset.horizontal
+                org_v = uiOffset.vertical
             }
+                    
+            let endOffset = endValue as? UIOffset
             
-            let offset = end_value.uiOffsetValue
-            
-            if let unwrapped_h = org_h {
-                var start_state: Double
-                if let startValue, startType == .uiOffset {
-                    start_state = Double(startValue.uiOffsetValue.horizontal)
+            if let org_h {
+                var startStateHorizontal: Double
+                if startType == .uiOffset, let startValue = startValue as? UIOffset {
+                    startStateHorizontal = startValue.horizontal
                 } else {
-                    start_state = unwrapped_h
+                    startStateHorizontal = org_h
                 }
                 
-                if (Double(offset.horizontal) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "horizontal", start: start_state, end: Double(offset.horizontal))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIOffset.horizontal)
+
+                if let endHorizontal = endOffset?.horizontal, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_h, startValue: startStateHorizontal, endValue: endHorizontal, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
-            if let unwrapped_v = org_v {
-                var start_state: Double
-                if let startValue, startType == .uiOffset {
-                    start_state = Double(startValue.uiOffsetValue.vertical)
+                
+            if let org_v {
+                var startStateVertical: Double
+                if startType == .uiOffset, let startValue = startValue as? UIOffset {
+                    startStateVertical = startValue.vertical
                 } else {
-                    start_state = unwrapped_v
+                    startStateVertical = org_v
                 }
                 
-                if (Double(offset.vertical) !≈ start_state) {
-                    let prop = PropertyData(path: base_path + "vertical", start: start_state, end: Double(offset.vertical))
+                let finalPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \UIOffset.vertical)
+
+                if let endVertical = endOffset?.vertical, let prop = MotionSupport.buildPropertyData(keyPath: finalPath, parentPath: keyPath, originalValue: org_v, startValue: startStateVertical, endValue: endVertical, isAdditive: isAdditive) {
                     properties.append(prop)
                 }
             }
@@ -179,132 +186,40 @@ public final class UIKitStructAssistant : ValueAssistant {
     }
     
     
-    
-    public func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double? {
-        var retrieved_value: Double?
-        
-        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
+    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
+        guard let targetObject = property.targetObject else { return nil }
 
-        if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .uiEdgeInsets, path: path)
-        
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .uiOffset, path: path)
-        }
-        
-        return retrieved_value
-    }
-    
-    
-    public func calculateValue(forProperty property: PropertyData, newValue: Double) -> NSObject? {
-        
-        guard let unwrapped_target = property.target else { return nil }
-        
-        var new_prop: NSObject? = NSNumber.init(value: property.current)
-        
-        // this code path will execute if the object passed in was an NSValue
-        // as such we must replace the value object directly
-        if ((property.targetObject == nil || property.targetObject === unwrapped_target) && unwrapped_target is NSValue) {
-            var new_property_value = property.current
-            if (additive) {
-                new_property_value = newValue
+        var newPropertyValue = newValue
+        var currentValue: Any?
+
+        currentValue = property.retrieveValue(from: targetObject)
+
+        if (isAdditive) {
+            if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+            } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
+                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+            } else if let currentValue = currentValue as? NSNumber {
+                let current = currentValue.doubleValue
+                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
             }
-            
-            new_prop = updateValue(inObject: unwrapped_target, newValues: [property.path : new_property_value])
-            
-            return new_prop
         }
         
+        property.apply(value: newPropertyValue, to: targetObject)
         
-        if let unwrapped_object = property.targetObject {
-            // we have a normal object whose property is being changed
-            if (unwrapped_target is Double) {
-                if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
-                    var new_property_value = property.current
-                    if (additive) {
-                        new_property_value = newValue
-                    }
-                    new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                }
-                
-            } else if (unwrapped_target is NSValue) {
-                if (!property.replaceParentProperty) {
-                    if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
-                        
-                        if (base_prop is NSObject) {
-                            var new_property_value = property.current
-                            if (additive) {
-                                new_property_value = newValue
-                            }
-                            
-                            new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                            
-                        }
-                        
-                    }
-                } else {
-                    // replace the top-level struct of the property we're trying to alter
-                    // e.g.: key path is "frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                    if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
-                        var new_property_value = property.current
-                        if (additive) {
-                            new_property_value = newValue
-                        }
-                        
-                        new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            return new_prop
-        }
-        
-        return new_prop
-    }
-    
-    
-    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
-        guard newValues.count > 0 else { return nil }
-        
-        var new_parent_value:NSObject?
-        
-        if let unwrapped_value = object as? NSValue {
-            var value = unwrapped_value
-            
-            if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())) {
-                
-                updateStruct(&value, type: .uiEdgeInsets, newValues: newValues)
-            
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())) {
-                
-                updateStruct(&value, type: .uiOffset, newValues: newValues)
-            }
-            
-            new_parent_value = value
-        }
-        
-        return new_parent_value
+        return newPropertyValue
     }
     
     
     
-    public func supports(_ object: AnyObject) -> Bool {
-        var is_supported: Bool = false
+    public func supports(_ object: Any) -> Bool {
+        var isSupported: Bool = false
         
-        if let unwrapped_value = object as? NSValue {
-            if (MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.uiOffset.toObjCType())
-                ) {
-                
-                is_supported = true
-            }
+        if (object is UIEdgeInsets || object is UIOffset) {
+            isSupported = true
         }
-        return is_supported
+        
+        return isSupported
     }
     
     public func acceptsKeypath(_ object: AnyObject) -> Bool {
@@ -320,13 +235,13 @@ public final class UIKitStructAssistant : ValueAssistant {
     
     // MARK: Static methods
     
-    /// Determines the type of struct represented by a NSValue object.
-    public static func determineType(forValue value: NSValue) -> ValueStructTypes {
+    /// Determines the type of struct represented by the supplied object.
+    public static func determineType(forValue value: Any) -> ValueStructTypes {
         let type: ValueStructTypes
         
-        if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiEdgeInsets.toObjCType()) {
+        if value is UIEdgeInsets {
             type = ValueStructTypes.uiEdgeInsets
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.uiOffset.toObjCType()) {
+        } else if value is UIOffset {
             type = ValueStructTypes.uiOffset
         } else {
             type = ValueStructTypes.unsupported
@@ -336,125 +251,6 @@ public final class UIKitStructAssistant : ValueAssistant {
         return type
     }
     
-    
-    static func valueForStruct(_ cfStruct: Any) -> NSValue? {
-        var value: NSValue?
-        
-        let insets = UIEdgeInsets.zero
-        let offset = UIOffset.zero
-        
-        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: insets))), let cfStruct = cfStruct as? UIEdgeInsets {
-            value = NSValue.init(uiEdgeInsets: cfStruct)
-            
-        } else if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: offset))), let cfStruct = cfStruct as? UIOffset {
-            value = NSValue.init(uiOffset: cfStruct)
-        }
-        
-        return value
-    }
-    
-    
-    // MARK: Private methods
-
-    func updateStruct(_ structValue: inout NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
-        
-        guard newValues.count > 0 else { return }
-        
-        switch type {
-        case .uiEdgeInsets:
-            var insets = structValue.uiEdgeInsetsValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "top") {
-                    applyTo(value: &insets.top, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "left") {
-                    applyTo(value: &insets.left, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "bottom") {
-                    applyTo(value: &insets.bottom, newValue: CGFloat(newValue))
-
-                } else if (last_component == "right") {
-                    applyTo(value: &insets.right, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(uiEdgeInsets: insets)
-            
-        case .uiOffset:
-            var offset = structValue.uiOffsetValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "horizontal") {
-                    applyTo(value: &offset.horizontal, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "vertical") {
-                    applyTo(value: &offset.vertical, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(uiOffset: offset)
-            
-        case .unsupported: break
-            
-        default: break
-        }
-        
-    }
-    
-    
-    func retrieveStructValue(_ structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
-        
-        var retrieved_value: Double?
-        
-        switch type {
-        case .uiEdgeInsets:
-            let insets = structValue.uiEdgeInsetsValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "top") {
-                retrieved_value = Double(insets.top)
-                
-            } else if (last_component == "left") {
-                retrieved_value = Double(insets.left)
-                
-            } else if (last_component == "bottom") {
-                retrieved_value = Double(insets.bottom)
-                
-            } else if (last_component == "right") {
-                retrieved_value = Double(insets.right)
-            }
-            
-        case .uiOffset:
-            let offset = structValue.uiOffsetValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "horizontal") {
-                retrieved_value = Double(offset.horizontal)
-                
-            } else if (last_component == "vertical") {
-                retrieved_value = Double(offset.vertical)
-            }
-            
-        case .unsupported: break
-            
-        default:
-            break
-        }
-        
-        
-        return retrieved_value
-    }
-    
-    
-
-
     
 }
 

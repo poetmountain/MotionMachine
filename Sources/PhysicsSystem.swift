@@ -2,7 +2,7 @@
 //  PhysicsSystem.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -10,7 +10,7 @@
 import Foundation
 
 /// This protocol represents physics solving systems that calculate the positions of values over time, and is used in ``PhysicsMotion`` and ``PathPhysicsMotion`` to update property values.
-public protocol PhysicsSolving {
+@MainActor public protocol PhysicsSolving {
     
     /**
      *  The velocity value to use in physics calculations.
@@ -33,7 +33,7 @@ public protocol PhysicsSolving {
     ///   - properties: An array of ``PropertyData`` objects representing the current property values are being modified by the physics calculations. Their `current` property represents the current value being modified. The `start` and `end` properties are unused, except if this object's `areCollisionsActive` property is `true`, in which case they represent collision boundaries for each property.
     ///   - timestamp: The current timestamp.
     /// - Returns: An array of updated positions in the same order as the array passed in.
-    func solve(forPositions properties: [PropertyData], timestamp: TimeInterval) -> [Double]
+    func solve<TargetType: AnyObject>(forPositions properties: [PropertyData<TargetType>], timestamp: TimeInterval) -> [Double]
     
     /**
      *  This method should reset the physics system to its initial velocity and clear the timestamp used to calculate the current step.
@@ -161,7 +161,7 @@ public class PhysicsSystem: PhysicsSolving {
     
     // MARK: PhysicsSolving methods
     
-    public func solve(forPositions positions: [PropertyData], timestamp: TimeInterval) -> [Double] {
+    public func solve<TargetType: AnyObject>(forPositions positions: [PropertyData<TargetType>], timestamp: TimeInterval) -> [Double] {
         var timeDelta = timestamp - lastTimestamp
         timeDelta = max(0.0, timeDelta)
         timeDelta = min(0.2, timeDelta)

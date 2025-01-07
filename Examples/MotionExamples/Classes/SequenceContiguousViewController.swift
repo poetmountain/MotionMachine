@@ -2,7 +2,7 @@
 //  SequenceContiguousViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -42,32 +42,32 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
             // setup motion
             let new_x = Double((view.bounds.size.width * 0.5))
             let move_right = Motion(target: constraints["x"]!,
-                                properties: [PropertyData("constant", new_x)],
+                                    properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: new_x)],
                                   duration: 1.0,
                                     easing: EasingCubic.easeInOut())
             
             let move_down = Motion(target: constraints["y"]!,
-                                   properties: [PropertyData("constant", Double(250.0))],
+                                   properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: Double(250.0))],
                                  duration: 0.8,
                                    easing: EasingQuartic.easeInOut())
             
             let change_color = Motion(target: square,
-                                      statesForProperties: [PropertyStates(path: "backgroundColor", end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0))],
+                                      states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], start: .systemGreen, end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)),
                                     duration: 0.9,
                                       easing: EasingQuadratic.easeInOut())
             
             let expand_width = Motion(target: constraints["width"]!,
-                                   properties: [PropertyData("constant", 150.0)],
+                                 properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 150.0)],
                                    duration: 0.8,
                                    easing: EasingCubic.easeInOut())
             
             let expand_height = Motion(target: constraints["height"]!,
-                                  properties: [PropertyData("constant", 150.0)],
+                                  properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 150.0)],
                                     duration: 0.8,
                                       easing: EasingCubic.easeInOut())
             
             let corner_radius = Motion(target: square,
-                                       properties: [PropertyData("layer.cornerRadius", 75.0)],
+                                       properties: [PropertyData(keyPath: \UIView.layer.cornerRadius, end: 75.0)],
                                        duration: 0.8,
                                        easing: EasingCubic.easeInOut())
             
@@ -136,7 +136,7 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
         // set up motion views
         
         square = UIView.init()
-        square.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
+        square.backgroundColor = .systemGreen
         square.layer.masksToBounds = true
         square.layer.cornerRadius = 20.0
         self.view.addSubview(square)

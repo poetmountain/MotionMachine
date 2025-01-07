@@ -2,17 +2,20 @@
 //  CATempo.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS)
 /**
- *  CATempo uses a `CADisplayLink` object to send out tempo updates that are synchronized with the refresh rate of the display on iOS.
+ *  CATempo uses a `CADisplayLink` object to send out tempo updates that are synchronized with the refresh rate of the display.
  */
-@MainActor public class CATempo : Tempo {
+@MainActor public class CATempo : TempoProviding {
     
     /**
      *  This `CADisplayLink` object is used to provide tempo updates.
@@ -23,19 +26,21 @@ import UIKit
      */
     public var displayLink: CADisplayLink?
     
+    public weak var delegate: TempoDelegate?
+
+    
     /**
      *  Initializes a new `CATempo` object and adds the internal `CADisplayLink` object to the main run loop.
      *
      */
-    public override init() {
-        super.init()
+    public init() {
         
         displayLink = CADisplayLink(weakTarget: self, selector: #selector(update))
         displayLink?.add(to: RunLoop.main, forMode: .common)
     }
     
     /// Calling this method invalides the `CADisplayLink` object to prepare for deallocation.
-    public override func cleanupResources() {
+    public func cleanupResources() {
         displayLink?.invalidate()
 
     }
@@ -46,3 +51,4 @@ import UIKit
     }
     
 }
+#endif

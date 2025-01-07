@@ -2,14 +2,14 @@
 //  TempoDelegate.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
-/// This protocol defines methods that are called on delegate objects which listen for update beats from a `Tempo` object.
+/// This protocol defines methods that are called on delegate objects which listen for update beats from a ``TempoProviding`` object.
 @MainActor public protocol TempoDelegate: AnyObject {
     
     /**

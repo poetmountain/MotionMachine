@@ -2,23 +2,24 @@
 //  CGStructAssistant.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
+#if canImport(QuartzCore)
 import QuartzCore
-
-#if canImport(UIKit)
-import UIKit
 #endif
 
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// CGStructAssistant provides support for several Core Graphics struct types, including `CGPoint`, `CGSize`, `CGRect`, `CGVector`, `CGAffineTransform`, as well as QuartzCore's `CATransform3D` type. It also provides support for the `NSNumber` type.
-public final class CGStructAssistant : ValueAssistant {
-    
-    public var additive: Bool = false
+public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
+        
+    public var isAdditive: Bool = false
     public var additiveWeighting: Double = 1.0 {
         didSet {
             // constrain weighting to range of 0.0 - 1.0
@@ -28,180 +29,148 @@ public final class CGStructAssistant : ValueAssistant {
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+    public func generateProperties<StateType>(targetObject target: TargetType, state: MotionState<TargetType, StateType>) throws -> [PropertyData<TargetType>] {
         
-        var properties: [PropertyData] = []
+        var properties: [PropertyData<TargetType>] = []
 
-        guard let endValue = propertyStates.end as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-        var startValue: NSValue?
+        let nestedObject = target[keyPath: state.keyPath]
+        
+        var startValue: Any?
+        let endValue = state.end
+        
         var startType: ValueStructTypes = .unsupported
-        if let statesStart = propertyStates.start as? NSValue {
+        if let statesStart = state.start {
             startValue = statesStart
             startType = CGStructAssistant.determineType(forValue: statesStart)
+            
         }
         
-        let end_type = CGStructAssistant.determineType(forValue: endValue)
+        let endType = CGStructAssistant.determineType(forValue: endValue)
 
         
-        switch end_type {
-        case .number:
-            var start_state: Double?
-            if let startValue = startValue as? NSNumber, startType == .number {
-                start_state = startValue.doubleValue
-            }
-            if let endValue = endValue as? NSNumber {
-                let property = PropertyData(path: propertyStates.path, start: start_state, end: endValue.doubleValue)
-                properties.append(property)
-            }
+        switch endType {
             
         case .point:
-            var base_path: String = propertyStates.path + "."
-            var org_x: Double?
-            var org_y: Double?
+                
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CGPoint> else { return properties }
+                
+            var orgX: CGFloat?
+            var orgY: CGFloat?
 
-            if let unwrapped_nsvalue = target as? NSValue {
-                let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .point) {
-                    let org_pt = unwrapped_nsvalue.cgPointValue
-                    org_x = Double(org_pt.x)
-                    org_y = Double(org_pt.y)
-                }
+            if let point = nestedObject as? CGPoint {
+                orgX = point.x
+                orgY = point.y
             }
-            #if os(iOS) || os(tvOS)
-                if let unwrapped_view = target as? UIView {
-                    if (base_path.contains("center")) {
-                        org_x = Double(unwrapped_view.center.x)
-                        org_y = Double(unwrapped_view.center.y)
-                    } else {
-                        base_path = "origin."
-                        org_x = Double(unwrapped_view.frame.origin.x)
-                        org_y = Double(unwrapped_view.frame.origin.y)
-                    }
-
-            }
-            #endif
             
-            let end_pt = endValue.cgPointValue
+            let endPoint = endValue as? CGPoint
             
             // x
-            var start_state_x: Double?
-            if let startValue, startType == .point {
-                start_state_x = Double(startValue.cgPointValue.x)
+            var startStateX: CGFloat?
+            if startType == .point, let startState = startValue as? CGPoint {
+                startStateX = startState.x
             }
             
-            // if we've found a starting value either via the PropertyStates object or the original target, use that,
+            // if we've found a starting value either via the MotionState object or the original target, use that,
             // otherwise omit the start parameter and let the Motion setup method deal with it (it will use the current object value)
             // if we have no start value we can't compare start to end, so just make a PropertyData anyway
             // this check is merely an optimization to avoid interpolations for value states that don't change
             // we may want to check again in Motion setup once we have a valid starting value
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "x", originalValue: org_x, startValue: start_state_x, endValue: Double(end_pt.x)) {
+            
+            let xPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGPoint.x)
+            if let endX = endPoint?.x, let prop = MotionSupport.buildPropertyData(keyPath: xPath, parentPath: keyPath, originalValue: orgX, startValue: startStateX, endValue: endX, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
+                
 
-            
             // y
-            var start_state_y: Double?
-            if let startValue, startType == .point {
-                start_state_y = Double(startValue.cgPointValue.y)
+            var startStateY: CGFloat?
+            if startType == .point, let startState = startValue as? CGPoint {
+                startStateY = startState.y
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "y", originalValue: org_y, startValue: start_state_y, endValue: Double(end_pt.y)) {
+            let yPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGPoint.y)
+                if let endY = endPoint?.y, let prop = MotionSupport.buildPropertyData(keyPath: yPath, parentPath: keyPath, originalValue: orgY, startValue: startStateY, endValue: endY, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
      
     
             
         case .size:
-            var base_path: String = propertyStates.path + "."
-            var org_w: Double?
-            var org_h: Double?
             
-            #if os(iOS) || os(tvOS)
-            if let unwrapped_view = target as? UIView {
-                base_path = "size."
-                org_w = Double(unwrapped_view.frame.size.width)
-                org_h = Double(unwrapped_view.frame.size.height)
-            }
-            #endif
-            if let unwrapped_nsvalue = target as? NSValue {
-                let type = CGStructAssistant.determineType(forValue: unwrapped_nsvalue)
-                if (type == .size) {
-                    let org_size = unwrapped_nsvalue.cgSizeValue
-                    org_w = Double(org_size.width)
-                    org_h = Double(org_size.height)
-                }
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CGSize> else { return properties }
+                
+            var orgWidth: CGFloat?
+            var orgHeight: CGFloat?
+            
+                
+            if let size = nestedObject as? CGSize {
+                orgWidth = size.width
+                orgHeight = size.height
             }
             
-            let end_size = endValue.cgSizeValue
+            let endSize = endValue as? CGSize
             
             // width
-            var start_state_w: Double?
-            if let startValue, startType == .size {
-                start_state_w = Double(startValue.cgSizeValue.width)
+            var startStateWidth: CGFloat?
+            if startType == .size, let startState = startValue as? CGSize {
+                startStateWidth = startState.width
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "width", originalValue: org_w, startValue: start_state_w, endValue: Double(end_size.width)) {
+            let widthPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGSize.width)
+            if let endWidth = endSize?.width, let prop = MotionSupport.buildPropertyData(keyPath: widthPath, parentPath: keyPath, originalValue: orgWidth, startValue: startStateWidth, endValue: endWidth, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             
             // height
-            var start_state_h: Double?
-            if let startValue, startType == .size {
-                start_state_h = Double(startValue.cgSizeValue.height)
+            var startStateHeight: CGFloat?
+            if startType == .size, let startState = startValue as? CGSize {
+                startStateHeight = startState.height
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "height", originalValue: org_h, startValue: start_state_h, endValue: Double(end_size.height)) {
+                
+            let heightPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGSize.height)
+            if let endHeight = endSize?.height, let prop = MotionSupport.buildPropertyData(keyPath: heightPath, parentPath: keyPath, originalValue: orgHeight, startValue: startStateHeight, endValue: endHeight, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             
+            
         case .rect:
-            var base_path: String = propertyStates.path + "."
-            #if os(iOS) || os(tvOS)
-            if (target is UIView && propertyStates.path == "") {
-                base_path = "frame."
-            }
-            #endif
-            let end_rect = endValue.cgRectValue
-            var target_pt: NSValue?
-            var target_size: NSValue?
-            
 
-            if let unwrapped_value = target as? NSValue {
-                let target_rect = unwrapped_value.cgRectValue
-                target_pt = NSValue.init(cgPoint: target_rect.origin)
-                target_size = NSValue.init(cgSize: target_rect.size)
-            }
-            #if os(iOS) || os(tvOS)
-                if let unwrapped_view = target as? UIView {
-                    target_pt = NSValue.init(cgPoint: unwrapped_view.frame.origin)
-                    target_size = NSValue.init(cgSize: unwrapped_view.frame.size)
-                }
-            #endif
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CGRect> else { return properties}
+                
+            let end_rect = endValue as? CGRect
+            var target_pt: CGPoint?
+            var target_size: CGSize?
             
-            if let unwrapped_pt = target_pt {
-                let end_pt_value = NSValue.init(cgPoint: end_rect.origin)
+            if let target_rect = nestedObject as? CGRect {
+                target_pt = target_rect.origin
+                target_size = target_rect.size
+            }
+
+            
+            if let targetPoint = target_pt, let endPoint = end_rect?.origin {
 
                 do {
-                    let start_pt: NSValue
-                    if let startValue, startType == .rect {
-                        let start_rect = startValue.cgRectValue
-                        start_pt = NSValue.init(cgPoint: start_rect.origin)
-                    } else {
-                        start_pt = unwrapped_pt
+                    let startPoint: CGPoint
+                    if startType == .rect, let startRect = startValue as? CGRect {
+                        startPoint = startRect.origin
+                    } else  {
+                        startPoint = targetPoint
                     }
+                    
+                    let originPath: ReferenceWritableKeyPath<TargetType, CGPoint> = keyPath.appending(path: \CGRect.origin)
+                    let states = MotionState(keyPath: originPath, start: startPoint, end: endPoint)
 
-                    let states = PropertyStates(path: "", start: start_pt, end: end_pt_value)
-                    var pt_props = try generateProperties(targetObject: unwrapped_pt, propertyStates: states)
-                    var mid_path = ""
-                    if (target is NSValue) {
-                        mid_path = "origin"
-                    }
-                    for index in 0 ..< pt_props.count {
-                        pt_props[index].path = base_path + mid_path + pt_props[index].path
-                    }
-                    properties.append(contentsOf: pt_props)
+                    let pointProps = try generateProperties(targetObject: target, state: states)
+                    properties.append(contentsOf: pointProps)
+                
+
                     
                 } catch ValueAssistantError.typeRequirement(let valueType) {
                     ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
@@ -210,363 +179,412 @@ public final class CGStructAssistant : ValueAssistant {
                 }
                 
             }
-            
-            if let unwrapped_size = target_size {
-                let end_size_value = NSValue.init(cgSize: end_rect.size)
                 
+                
+            if let targetSize = target_size, let endSize = end_rect?.size {
+
                 do {
-                    let start_size: NSValue
-                    if let startValue, startType == .rect {
-                        let start_rect = startValue.cgRectValue
-                        start_size = NSValue.init(cgSize: start_rect.size)
-                    } else {
-                        start_size = unwrapped_size
+                    let startSize: CGSize
+                    if startType == .rect, let startRect = startValue as? CGRect {
+                        startSize = startRect.size
+                    } else  {
+                        startSize = targetSize
                     }
                     
-                    let states = PropertyStates(path: "", start: start_size, end: end_size_value)
+                    let sizePath: ReferenceWritableKeyPath<TargetType, CGSize> = keyPath.appending(path: \CGRect.size)
+                    let states = MotionState(keyPath: sizePath, start: startSize, end: endSize)
 
-                    var size_props = try generateProperties(targetObject: unwrapped_size, propertyStates: states)
-                    var mid_path = ""
-                    if (target is NSValue) {
-                        mid_path = "size"
-                    }
-                    for index in 0 ..< size_props.count {
-                        size_props[index].path = base_path + mid_path + size_props[index].path
-                    }
-                    properties.append(contentsOf: size_props)
+                    let sizeProps = try generateProperties(targetObject: target, state: states)
+                    properties.append(contentsOf: sizeProps)
+                
+
                     
                 } catch ValueAssistantError.typeRequirement(let valueType) {
                     ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
                     
                     return properties
                 }
-
+                
             }
+                
             
         case .vector:
-            let base_path: String = propertyStates.path + "."
 
-            var org_dx: Double?
-            var org_dy: Double?
-            if let target = target as? NSValue {
-                let type = CGStructAssistant.determineType(forValue: target)
-                if (type == .vector) {
-                    let org_vec = target.cgVectorValue
-                    org_dx = Double(org_vec.dx)
-                    org_dy = Double(org_vec.dy)
-                }
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CGVector> else { return properties }
+                
+            var org_dx: CGFloat?
+            var org_dy: CGFloat?
+                
+            if let vector = nestedObject as? CGVector {
+                org_dx = vector.dx
+                org_dy = vector.dy
             }
-            let end_vector = endValue.cgVectorValue
+                
+            let end_vector = endValue as? CGVector
             
             // dx
-            var start_state_dx: Double?
-            if let startValue, startType == .vector {
-                start_state_dx = Double(startValue.cgVectorValue.dx)
+            var start_state_dx: CGFloat?
+            if startType == .vector, let startState = startValue as? CGVector {
+                start_state_dx = startState.dx
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "dx", originalValue: org_dx, startValue: start_state_dx, endValue: Double(end_vector.dx)) {
+            let dxPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGVector.dx)
+            if let endDX = end_vector?.dx, let prop = MotionSupport.buildPropertyData(keyPath: dxPath, parentPath: keyPath, originalValue: org_dx, startValue: start_state_dx, endValue: endDX, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             
             // dy
-            var start_state_dy: Double?
-            if let startValue, startType == .vector {
-                start_state_dy = Double(startValue.cgVectorValue.dy)
+            var start_state_dy: CGFloat?
+            if startType == .vector, let startState = startValue as? CGVector {
+                start_state_dy = startState.dy
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "dy", originalValue: org_dy, startValue: start_state_dy, endValue: Double(end_vector.dy)) {
+            let dyPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGVector.dy)
+            if let endDY = end_vector?.dy, let prop = MotionSupport.buildPropertyData(keyPath: dyPath, parentPath: keyPath, originalValue: org_dy, startValue: start_state_dy, endValue: endDY, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
  
             
         case .affineTransform:
-            var oa: Double?
-            var ob: Double?
-            var oc: Double?
-            var od: Double?
-            var otx: Double?
-            var oty: Double?
-            if let unwrapped_value = target as? NSValue {
-                let type = CGStructAssistant.determineType(forValue: unwrapped_value)
-                if (type == .affineTransform) {
-                    let org_t = unwrapped_value.cgAffineTransformValue
-                    oa = Double(org_t.a)
-                    ob = Double(org_t.b)
-                    oc = Double(org_t.c)
-                    od = Double(org_t.d)
-                    otx = Double(org_t.tx)
-                    oty = Double(org_t.ty)
-                }
-            }
             
-
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CGAffineTransform> else { return properties }
+                
+            var oa: CGFloat?
+            var ob: CGFloat?
+            var oc: CGFloat?
+            var od: CGFloat?
+            var otx: CGFloat?
+            var oty: CGFloat?
+                
+            if let transform = nestedObject as? CGAffineTransform {
+                oa = transform.a
+                ob = transform.b
+                oc = transform.c
+                od = transform.d
+                otx = transform.tx
+                oty = transform.ty
+            }
+                
+            let endTransform = endValue as? CGAffineTransform
             
             // find all transform properties
-            let end_transform = endValue.cgAffineTransformValue
-            let base_path = propertyStates.path + "."
             
             // a
-            var start_state_a: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_a = Double(startValue.cgAffineTransformValue.a)
+            var start_state_a: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_a = startState.a
             }
-
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "a", originalValue: oa, startValue: start_state_a, endValue: Double(end_transform.a)) {
+                
+            let aPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.a)
+            if let endProp = endTransform?.a, let prop = MotionSupport.buildPropertyData(keyPath: aPath, parentPath: keyPath, originalValue: oa, startValue: start_state_a, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
     
             // b
-            var start_state_b: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_b = Double(startValue.cgAffineTransformValue.b)
+            var start_state_b: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_b = startState.b
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "b", originalValue: ob, startValue: start_state_b, endValue: Double(end_transform.b)) {
+                
+            let bPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.b)
+            if let endProp = endTransform?.b, let prop = MotionSupport.buildPropertyData(keyPath: bPath, parentPath: keyPath, originalValue: ob, startValue: start_state_b, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
             
 
             // c
-            var start_state_c: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_c = Double(startValue.cgAffineTransformValue.c)
+            var start_state_c: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_c = startState.c
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "c", originalValue: oc, startValue: start_state_c, endValue: Double(end_transform.c)) {
+                
+            let cPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.c)
+            if let endProp = endTransform?.c, let prop = MotionSupport.buildPropertyData(keyPath: cPath, parentPath: keyPath, originalValue: oc, startValue: start_state_c, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
             
             
             // d
-            var start_state_d: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_d = Double(startValue.cgAffineTransformValue.d)
+            var start_state_d: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_d = startState.d
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "d", originalValue: od, startValue: start_state_d, endValue: Double(end_transform.d)) {
+                
+            let dPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.d)
+            if let endProp = endTransform?.d, let prop = MotionSupport.buildPropertyData(keyPath: dPath, parentPath: keyPath, originalValue: od, startValue: start_state_d, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
 
 
             // tx
-            var start_state_tx: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_tx = Double(startValue.cgAffineTransformValue.tx)
+            var start_state_tx: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_tx = startState.tx
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "tx", originalValue: otx, startValue: start_state_tx, endValue: Double(end_transform.tx)) {
+                
+            let txPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.tx)
+            if let endProp = endTransform?.tx, let prop = MotionSupport.buildPropertyData(keyPath: txPath, parentPath: keyPath, originalValue: otx, startValue: start_state_tx, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
    
 
             // ty
-            var start_state_ty: Double?
-            if let startValue, startType == .affineTransform {
-                start_state_ty = Double(startValue.cgAffineTransformValue.ty)
+            var start_state_ty: CGFloat?
+            if startType == .affineTransform, let startState = startValue as? CGAffineTransform {
+                start_state_ty = startState.ty
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "ty", originalValue: oty, startValue: start_state_ty, endValue: Double(end_transform.ty)) {
+                
+            let tyPath: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CGAffineTransform.ty)
+            if let endProp = endTransform?.ty, let prop = MotionSupport.buildPropertyData(keyPath: tyPath, parentPath: keyPath, originalValue: oty, startValue: start_state_ty, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
             
             
         case .transform3D:
-            var o11: Double?, o12: Double?, o13: Double?, o14: Double?
-            var o21: Double?, o22: Double?, o23: Double?, o24: Double?
-            var o31: Double?, o32: Double?, o33: Double?, o34: Double?
-            var o41: Double?, o42: Double?, o43: Double?, o44: Double?
-            if let unwrapped_value = target as? NSValue {
-                let type = CGStructAssistant.determineType(forValue: unwrapped_value)
-                if (type == .transform3D) {
-                    let org_t = unwrapped_value.caTransform3DValue
-                    o11 = Double(org_t.m11)
-                    o12 = Double(org_t.m12)
-                    o13 = Double(org_t.m13)
-                    o14 = Double(org_t.m14)
-                    o21 = Double(org_t.m21)
-                    o22 = Double(org_t.m22)
-                    o23 = Double(org_t.m23)
-                    o24 = Double(org_t.m24)
-                    o31 = Double(org_t.m31)
-                    o32 = Double(org_t.m32)
-                    o33 = Double(org_t.m33)
-                    o34 = Double(org_t.m34)
-                    o41 = Double(org_t.m41)
-                    o42 = Double(org_t.m42)
-                    o43 = Double(org_t.m43)
-                    o44 = Double(org_t.m44)
-                }
+                
+            guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CATransform3D> else { return properties }
+                
+            var o11: CGFloat?, o12: CGFloat?, o13: CGFloat?, o14: CGFloat?
+            var o21: CGFloat?, o22: CGFloat?, o23: CGFloat?, o24: CGFloat?
+            var o31: CGFloat?, o32: CGFloat?, o33: CGFloat?, o34: CGFloat?
+            var o41: CGFloat?, o42: CGFloat?, o43: CGFloat?, o44: CGFloat?
+                
+            if let transform = nestedObject as? CATransform3D {
+                o11 = transform.m11
+                o12 = transform.m12
+                o13 = transform.m13
+                o14 = transform.m14
+                o21 = transform.m21
+                o22 = transform.m22
+                o23 = transform.m23
+                o24 = transform.m24
+                o31 = transform.m31
+                o32 = transform.m32
+                o33 = transform.m33
+                o34 = transform.m34
+                o41 = transform.m41
+                o42 = transform.m42
+                o43 = transform.m43
+                o44 = transform.m44
             }
-            
-            let base_path = propertyStates.path + "."
-            let end_transform = endValue.caTransform3DValue
+                            
+            let endTransform = endValue as? CATransform3D
             
             // m11
-            var start_state_m11: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m11 = Double(startValue.caTransform3DValue.m11)
+                
+            var start_state_m11: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m11 = startState.m11
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m11", originalValue: o11, startValue: start_state_m11, endValue: Double(end_transform.m11)) {
+                
+            let m11Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m11)
+            if let endProp = endTransform?.m11, let prop = MotionSupport.buildPropertyData(keyPath: m11Path, parentPath: keyPath, originalValue: o11, startValue: start_state_m11, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
+
     
             // m12
-            var start_state_m12: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m12 = Double(startValue.caTransform3DValue.m12)
+            var start_state_m12: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m12 = startState.m12
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m12", originalValue: o12, startValue: start_state_m12, endValue: Double(end_transform.m12)) {
+            let m12Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m12)
+            if let endProp = endTransform?.m12, let prop = MotionSupport.buildPropertyData(keyPath: m12Path, parentPath: keyPath, originalValue: o12, startValue: start_state_m12, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
+            
 
             
             // m13
-            var start_state_m13: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m13 = Double(startValue.caTransform3DValue.m13)
+            var start_state_m13: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m13 = startState.m13
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m13", originalValue: o13, startValue: start_state_m13, endValue: Double(end_transform.m13)) {
+            let m13Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m13)
+            if let endProp = endTransform?.m13, let prop = MotionSupport.buildPropertyData(keyPath: m13Path, parentPath: keyPath, originalValue: o13, startValue: start_state_m13, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
 
             // m14
-            var start_state_m14: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m14 = Double(startValue.caTransform3DValue.m14)
+            var start_state_m14: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m14 = startState.m14
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m14", originalValue: o14, startValue: start_state_m14, endValue: Double(end_transform.m14)) {
+            let m14Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m14)
+            if let endProp = endTransform?.m14, let prop = MotionSupport.buildPropertyData(keyPath: m14Path, parentPath: keyPath, originalValue: o14, startValue: start_state_m14, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
 
             // m21
-            var start_state_m21: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m21 = Double(startValue.caTransform3DValue.m21)
+            var start_state_m21: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m21 = startState.m21
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m21", originalValue: o21, startValue: start_state_m21, endValue: Double(end_transform.m21)) {
+            let m21Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m21)
+            if let endProp = endTransform?.m21, let prop = MotionSupport.buildPropertyData(keyPath: m21Path, parentPath: keyPath, originalValue: o21, startValue: start_state_m21, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
 
             
             // m22
-            var start_state_m22: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m22 = Double(startValue.caTransform3DValue.m22)
+            var start_state_m22: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m22 = startState.m22
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m22", originalValue: o22, startValue: start_state_m22, endValue: Double(end_transform.m22)) {
+            let m22Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m22)
+            if let endProp = endTransform?.m22, let prop = MotionSupport.buildPropertyData(keyPath: m22Path, parentPath: keyPath, originalValue: o22, startValue: start_state_m22, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             
             // m23
-            var start_state_m23: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m23 = Double(startValue.caTransform3DValue.m23)
+            var start_state_m23: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m23 = startState.m23
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m23", originalValue: o23, startValue: start_state_m23, endValue: Double(end_transform.m23)) {
+            let m23Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m23)
+            if let endProp = endTransform?.m23, let prop = MotionSupport.buildPropertyData(keyPath: m23Path, parentPath: keyPath, originalValue: o23, startValue: start_state_m23, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
 
             
             // m24
-            var start_state_m24: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m24 = Double(startValue.caTransform3DValue.m24)
+            var start_state_m24: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m24 = startState.m24
             }
-            
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m24", originalValue: o24, startValue: start_state_m24, endValue: Double(end_transform.m24)) {
+
+            let m24Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m24)
+            if let endProp = endTransform?.m24, let prop = MotionSupport.buildPropertyData(keyPath: m24Path, parentPath: keyPath, originalValue: o24, startValue: start_state_m24, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m31
-            var start_state_m31: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m31 = Double(startValue.caTransform3DValue.m31)
+            var start_state_m31: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m31 = startState.m31
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m31", originalValue: o31, startValue: start_state_m31, endValue: Double(end_transform.m31)) {
+            let m31Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m31)
+            if let endProp = endTransform?.m31, let prop = MotionSupport.buildPropertyData(keyPath: m31Path, parentPath: keyPath, originalValue: o31, startValue: start_state_m31, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m32
-            var start_state_m32: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m32 = Double(startValue.caTransform3DValue.m32)
+            var start_state_m32: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m32 = startState.m32
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m32", originalValue: o32, startValue: start_state_m32, endValue: Double(end_transform.m32)) {
+            let m32Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m32)
+            if let endProp = endTransform?.m32, let prop = MotionSupport.buildPropertyData(keyPath: m32Path, parentPath: keyPath, originalValue: o32, startValue: start_state_m32, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m33
-            var start_state_m33: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m33 = Double(startValue.caTransform3DValue.m33)
+            var start_state_m33: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m33 = startState.m33
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m33", originalValue: o33, startValue: start_state_m33, endValue: Double(end_transform.m33)) {
+            let m33Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m33)
+            if let endProp = endTransform?.m33, let prop = MotionSupport.buildPropertyData(keyPath: m33Path, parentPath: keyPath, originalValue: o33, startValue: start_state_m33, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m34
-            var start_state_m34: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m34 = Double(startValue.caTransform3DValue.m34)
+            var start_state_m34: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m34 = startState.m34
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m34", originalValue: o34, startValue: start_state_m34, endValue: Double(end_transform.m34)) {
+            let m34Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m34)
+            if let endProp = endTransform?.m34, let prop = MotionSupport.buildPropertyData(keyPath: m34Path, parentPath: keyPath, originalValue: o34, startValue: start_state_m34, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m41
-            var start_state_m41: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m41 = Double(startValue.caTransform3DValue.m41)
+            var start_state_m41: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m41 = startState.m41
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m41", originalValue: o41, startValue: start_state_m41, endValue: Double(end_transform.m41)) {
+            let m41Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m41)
+            if let endProp = endTransform?.m41, let prop = MotionSupport.buildPropertyData(keyPath: m41Path, parentPath: keyPath, originalValue: o41, startValue: start_state_m41, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m42
-            var start_state_m42: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m42 = Double(startValue.caTransform3DValue.m42)
+            var start_state_m42: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m42 = startState.m42
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m42", originalValue: o42, startValue: start_state_m42, endValue: Double(end_transform.m42)) {
+            let m42Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m42)
+            if let endProp = endTransform?.m42, let prop = MotionSupport.buildPropertyData(keyPath: m42Path, parentPath: keyPath, originalValue: o42, startValue: start_state_m42, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m43
-            var start_state_m43: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m43 = Double(startValue.caTransform3DValue.m43)
+            var start_state_m43: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m43 = startState.m43
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m43", originalValue: o43, startValue: start_state_m43, endValue: Double(end_transform.m43)) {
+            let m43Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m43)
+            if let endProp = endTransform?.m43, let prop = MotionSupport.buildPropertyData(keyPath: m43Path, parentPath: keyPath, originalValue: o43, startValue: start_state_m43, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
             
             // m44
-            var start_state_m44: Double?
-            if let startValue, startType == .transform3D {
-                start_state_m44 = Double(startValue.caTransform3DValue.m44)
+            var start_state_m44: CGFloat?
+            if startType == .transform3D, let startState = startValue as? CATransform3D {
+                start_state_m44 = startState.m44
             }
             
-            if let prop = MotionSupport.buildPropertyData(path: base_path + "m44", originalValue: o44, startValue: start_state_m44, endValue: Double(end_transform.m44)) {
+            let m44Path: ReferenceWritableKeyPath<TargetType, CGFloat> = keyPath.appending(path: \CATransform3D.m44)
+            if let endProp = endTransform?.m44, let prop = MotionSupport.buildPropertyData(keyPath: m44Path, parentPath: keyPath, originalValue: o44, startValue: start_state_m44, endValue: endProp, isAdditive: isAdditive) {
+                
                 properties.append(prop)
             }
 
@@ -580,202 +598,42 @@ public final class CGStructAssistant : ValueAssistant {
     }
 
     
+    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
+        guard let targetObject = property.targetObject else { return nil }
+        
+        var newPropertyValue = newValue
+        var currentValue: Any?
 
-    
-    
-    public func retrieveValue(inObject object: Any, keyPath path: String) throws -> Double? {
+        currentValue = property.retrieveValue(from: targetObject)
         
-        var retrieved_value: Double?
-        
-        guard let value = object as? NSValue else { throw ValueAssistantError.typeRequirement("NSValue") }
-        
-        if let unwrapped_number = value as? NSNumber {
-            retrieved_value = unwrapped_number.doubleValue
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .point, path: path)
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .size, path: path)
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .rect, path: path)
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .vector, path: path)
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .affineTransform, path: path)
-            
-        } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType())) {
-            
-            retrieved_value = retrieveStructValue(value, type: .transform3D, path: path)
-            
-        }
-        
-        return retrieved_value
-    }
-    
-    
-    
-    public func calculateValue(forProperty property: PropertyData, newValue: Double) -> NSObject? {
-        
-        guard let unwrapped_target = property.target else { return nil }
-        
-        var new_prop: NSObject? = NSNumber.init(value: property.current)
-        
-        // this code path will execute if the object passed in was an NSValue
-        // as such we must replace the value object directly
-        if ((property.targetObject == nil || property.targetObject === unwrapped_target) && unwrapped_target is NSValue) {
-            var new_property_value = property.current
-            if (additive) {
-                new_property_value = newValue
-            }
-            
-            new_prop = updateValue(inObject: unwrapped_target, newValues: [property.path : new_property_value])
-            
-            return new_prop
-        }
-        
-        
-        if let unwrapped_object = property.targetObject {
-            // we have a normal object whose property is being changed
-            if (unwrapped_target is Double) {
-                if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
-                    var new_property_value = property.current
-                    if (additive) {
-                        new_property_value = newValue
-                    }
-                    new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                }
+        if (isAdditive), let currentValue {
+            if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
                 
-            } else if (unwrapped_target is NSValue) {
-                if (!property.replaceParentProperty) {
-                    if let base_prop = unwrapped_object.value(forKeyPath: property.path) {
-                        
-                        if (base_prop is NSObject) {
-                            var new_property_value = property.current
-                            if (additive) {
-                                new_property_value = newValue
-                            }
-                            
-                            new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                            
-                        }
-                        
-                    }
-                } else {
-                    // replace the top-level struct of the property we're trying to alter
-                    // e.g.: key path is "frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                    if let base_prop = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
-                        var new_property_value = property.current
-                        if (additive) {
-                            new_property_value = newValue
-                        }
-                        
-                        new_prop = updateValue(inObject: base_prop, newValues: [property.path : new_property_value])
-                        
-                    }
-                    
-                }
-
+            } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
+                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
             }
-            
-            return new_prop
         }
-
+        
+        property.apply(value: newPropertyValue, to: targetObject)
         
         
-        return new_prop
+        return newPropertyValue
         
     }
     
     
-    
-    
-    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
-        
-        guard newValues.count > 0, var newValue = newValues.values.first else { return nil }
-        
-        var new_parent_value:NSObject?
-                
-        if let unwrapped_double = object as? Double {
-            if (additive) {
-                newValue = unwrapped_double + newValue
-            }
-            
-            new_parent_value = NSNumber.init(value: (newValue as Double))
-            
-        } else if let unwrapped_value = object as? NSValue {
-            var value = unwrapped_value
-            
-            if let unwrapped_number = value as? NSNumber {
-                if (additive) {
-                    newValue = unwrapped_number.doubleValue + newValue
-                }
-                
-                new_parent_value = NSNumber.init(value: newValue)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType())) {
-                
-                updateStruct(&value, type: .point, newValues: newValues)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType())) {
-                
-                updateStruct(&value, type: .size, newValues: newValues)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType())) {
-                
-                updateStruct(&value, type: .rect, newValues: newValues)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType())) {
-                
-                updateStruct(&value, type: .vector, newValues: newValues)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())) {
-                
-                updateStruct(&value, type: .affineTransform, newValues: newValues)
-                
-            } else if (MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType())) {
-                
-                updateStruct(&value, type: .transform3D, newValues: newValues)
-                
-            }
-            
-            new_parent_value = value
-
-        }
-        
-        return new_parent_value
-    }
-    
-    
-    
-    public func supports(_ object: AnyObject) -> Bool {
+    public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false
         
-        if (object is Double || object is Int || object is UInt) {
+        if (object is CGPoint
+            || object is CGSize
+            || object is CGRect
+            || object is CGVector
+            || object is CGAffineTransform
+            || object is CATransform3D
+        ) {
             is_supported = true
-            
-        } else if let unwrapped_value = object as? NSValue {
-
-            if (unwrapped_value is NSNumber
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.point.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.size.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.rect.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.vector.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.affineTransform.toObjCType())
-                || MotionSupport.matchesObjCType(forValue: unwrapped_value, typeToMatch: ValueStructTypes.transform3D.toObjCType())
-                ) {
-                
-                is_supported = true
-                
-            }
             
         }
         
@@ -786,7 +644,7 @@ public final class CGStructAssistant : ValueAssistant {
     public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = false
 
-        if (object is NSObject || object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform || object is CATransform3D) {
+        if (object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform || object is CATransform3D) {
             accepts = true
         }
 
@@ -797,23 +655,21 @@ public final class CGStructAssistant : ValueAssistant {
     
     // MARK: Static methods
     
-    /// Determines the type of struct represented by a NSValue object.
-    static func determineType(forValue value: NSValue) -> ValueStructTypes {
+    /// Determines the type of struct represented by the supplied object.
+    static func determineType(forValue value: Any) -> ValueStructTypes {
         let type: ValueStructTypes
         
-        if (value is NSNumber) {
-            type = ValueStructTypes.number
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.point.toObjCType()) {
+        if (value is CGPoint) {
             type = ValueStructTypes.point
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.size.toObjCType()) {
+        } else if (value is CGSize) {
             type = ValueStructTypes.size
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.rect.toObjCType()) {
+        } else if (value is CGRect) {
             type = ValueStructTypes.rect
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.vector.toObjCType()) {
+        } else if (value is CGVector) {
             type = ValueStructTypes.vector
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.affineTransform.toObjCType()) {
+        } else if (value is CGAffineTransform) {
             type = ValueStructTypes.affineTransform
-        } else if MotionSupport.matchesObjCType(forValue: value, typeToMatch: ValueStructTypes.transform3D.toObjCType()) {
+        } else if (value is CATransform3D) {
             type = ValueStructTypes.transform3D
         } else {
             type = ValueStructTypes.unsupported
@@ -822,406 +678,5 @@ public final class CGStructAssistant : ValueAssistant {
         return type
     }
     
-    
-    static func valueForCGStruct(_ cfStruct: Any) -> NSValue? {
-        var value: NSValue?
-        
-        let num = NSNumber.init(value: 0)
-        let pt = CGPoint.zero
-        let size = CGSize.zero
-        let rect = CGRect.zero
-        let vector = CGVector(dx: 0.0, dy: 0.0)
-        let transform = CGAffineTransform.identity
-        let transform3D = CATransform3DIdentity
-        
-        if (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: num))) {
-            // cast numeric value to a double
-            let double_value = MotionSupport.cast(cfStruct as AnyObject)
-            if let doub = double_value {
-                value = NSNumber.init(value: doub)
-            }
-        } else if let cfStruct = cfStruct as? CGPoint, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: pt))) {
-            value = NSValue.init(cgPoint: cfStruct)
-        } else if let cfStruct = cfStruct as? CGSize, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: size))) {
-            value = NSValue.init(cgSize: cfStruct)
-        } else if let cfStruct = cfStruct as? CGRect, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: rect))) {
-            value = NSValue.init(cgRect: cfStruct)
-        } else if let cfStruct = cfStruct as? CGVector, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: vector))) {
-            value = NSValue.init(cgVector: cfStruct)
-        } else if let cfStruct = cfStruct as? CGAffineTransform, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform))) {
-            value = NSValue.init(cgAffineTransform: cfStruct)
-        } else if let cfStruct = cfStruct as? CATransform3D, (MotionSupport.matchesType(forValue: cfStruct, typeToMatch: type(of: transform3D))) {
-            value = NSValue.init(caTransform3D: cfStruct)
-        }
-        
-        return value
-    }
-    
-    
-    static func isCGStruct(forValue value: Any) -> Bool {
-        var is_supported = false
-        
-        let pt = CGPoint.zero
-        let size = CGSize.zero
-        let rect = CGRect.zero
-        let vector = CGVector(dx: 0.0, dy: 0.0)
-        let transform = CGAffineTransform.identity
-        let transform3D = CATransform3DIdentity
-        if (MotionSupport.matchesType(forValue: value, typeToMatch: type(of: pt))
-            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: size))
-            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: rect))
-            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: vector))
-            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: transform))
-            || MotionSupport.matchesType(forValue: value, typeToMatch: type(of: transform3D))
-            ) {
-            is_supported = true
-        }
-        
-        return is_supported
-    }
-    
-    
-     /** Determines whether the keyPath targets a nested struct by traversing the keyPath and taking the value of each, starting at the top. This is useful for avoiding a runtime exception caused from calling value(forKeyPath:) on a CGRect's component.
-      *
-      *  - remark: If the keyPath is a single level such as "rect", the function will return false.
-     *   - returns: A Bool denoting whether a nested struct is being targeted.
-      */
-    static func targetsNestedStruct(object: AnyObject, path: String) -> Bool {
-        var nested = false
-        
-        let keys: [String] = path.components(separatedBy: ".")
-        let key_count = keys.count
-        if (key_count <= 1) { return false }
-        
-        // there's more than one element in the path, meaning we have a parent, so let's find the prop type
-        // descend keypath tree taking the value of each searching for a CGRect
-        for (index, _) in keys.enumerated() {
-            let parent_keys = keys[0 ..< index]
-            
-            if (parent_keys.count > 0) {
-                let parent_path = parent_keys.joined(separator: ".")
-                
-                if let parent = object.value(forKeyPath: parent_path) as? NSValue {
-                    if (CGStructAssistant.determineType(forValue: parent) == .rect) {
-                        nested = true
-                        break
-                    }
-                    
-                }
-                
-            }
-        }
-        
-        
-        return nested
-    }
-    
-    
-
-    // MARK: Private Methods
-    
-    func updateStruct(_ structValue: inout NSValue, type: ValueStructTypes, newValues: Dictionary<String, Double>) {
-                
-        guard newValues.count > 0 else { return }
-        
-        switch type {
-        case .number:
-            if let unwrapped_number = structValue as? NSNumber, let firstValue = newValues.values.first {
-                var val = unwrapped_number.doubleValue
-                if (additive) {
-                    val += firstValue
-                } else {
-                    val = firstValue
-                }
-                structValue = NSNumber.init(value: val)
-            }
-            
-        case .point:
-            var point = structValue.cgPointValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "x") {
-                    applyTo(value: &point.x, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "y") {
-                    applyTo(value: &point.y, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(cgPoint: point)
-            
-        case .size:
-            var size = structValue.cgSizeValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "width") {
-                    applyTo(value: &size.width, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "height") {
-                    applyTo(value: &size.height, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(cgSize: size)
-            
-            
-        case .rect:
-            var rect = structValue.cgRectValue
-            let keys = Array(newValues.keys)
-            
-            let last_components: [String] = keys.compactMap { (str) -> String? in
-                let components = str.components(separatedBy: ".")
-                return components.last
-            }
-            
-            if (last_components.containsAny(["x", "y"])) {
-                var pt_value = NSValue.init(cgPoint: rect.origin)
-                updateStruct(&pt_value, type: .point, newValues: newValues)
-                
-                rect.origin = pt_value.cgPointValue
-            }
-            
-            if (last_components.containsAny(["width", "height"])) {
-                var size_value = NSValue.init(cgSize: rect.size)
-                updateStruct(&size_value, type: .size, newValues: newValues)
-                
-                rect.size = size_value.cgSizeValue
-            }
-            
-            structValue = NSValue.init(cgRect: rect)
-            
-            
-        case .vector:
-            var vector = structValue.cgVectorValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "dx") {
-                    applyTo(value: &vector.dx, newValue: CGFloat(newValue))
-                    
-                } else if (last_component == "dy") {
-                    applyTo(value: &vector.dy, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(cgVector: vector)
-            
-        case .affineTransform:
-            var transform = structValue.cgAffineTransformValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "a") {
-                    applyTo(value: &transform.a, newValue: CGFloat(newValue))
-                } else if (last_component == "b") {
-                    applyTo(value: &transform.b, newValue: CGFloat(newValue))
-                } else if (last_component == "c") {
-                    applyTo(value: &transform.c, newValue: CGFloat(newValue))
-                } else if (last_component == "d") {
-                    applyTo(value: &transform.d, newValue: CGFloat(newValue))
-                } else if (last_component == "tx") {
-                    applyTo(value: &transform.tx, newValue: CGFloat(newValue))
-                } else if (last_component == "ty") {
-                    applyTo(value: &transform.ty, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(cgAffineTransform: transform)
-            
-        case .transform3D:
-            var transform = structValue.caTransform3DValue
-            
-            for (prop, newValue) in newValues {
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "m11") {
-                    applyTo(value: &transform.m11, newValue: CGFloat(newValue))
-                } else if (last_component == "m12") {
-                    applyTo(value: &transform.m12, newValue: CGFloat(newValue))
-                } else if (last_component == "m13") {
-                    applyTo(value: &transform.m13, newValue: CGFloat(newValue))
-                } else if (last_component == "m14") {
-                    applyTo(value: &transform.m14, newValue: CGFloat(newValue))
-                } else if (last_component == "m21") {
-                    applyTo(value: &transform.m21, newValue: CGFloat(newValue))
-                } else if (last_component == "m22") {
-                    applyTo(value: &transform.m22, newValue: CGFloat(newValue))
-                } else if (last_component == "m23") {
-                    applyTo(value: &transform.m23, newValue: CGFloat(newValue))
-                } else if (last_component == "m24") {
-                    applyTo(value: &transform.m24, newValue: CGFloat(newValue))
-                } else if (last_component == "m31") {
-                    applyTo(value: &transform.m31, newValue: CGFloat(newValue))
-                } else if (last_component == "m32") {
-                    applyTo(value: &transform.m32, newValue: CGFloat(newValue))
-                } else if (last_component == "m33") {
-                    applyTo(value: &transform.m33, newValue: CGFloat(newValue))
-                } else if (last_component == "m34") {
-                    applyTo(value: &transform.m34, newValue: CGFloat(newValue))
-                } else if (last_component == "m41") {
-                    applyTo(value: &transform.m41, newValue: CGFloat(newValue))
-                } else if (last_component == "m42") {
-                    applyTo(value: &transform.m42, newValue: CGFloat(newValue))
-                } else if (last_component == "m43") {
-                    applyTo(value: &transform.m43, newValue: CGFloat(newValue))
-                } else if (last_component == "m44") {
-                    applyTo(value: &transform.m44, newValue: CGFloat(newValue))
-                }
-            }
-            
-            structValue = NSValue.init(caTransform3D: transform)
-            
-        case .unsupported: break
-        
-        default: break
-        }
-        
-    }
-    
-    
-    func retrieveStructValue(_ structValue: NSValue, type: ValueStructTypes, path: String) -> Double? {
-        
-        var retrieved_value: Double?
-        
-        switch type {
-        case .number:
-            if let unwrapped_number = structValue as? NSNumber {
-                retrieved_value = unwrapped_number.doubleValue
-            }
-            
-        case .point:
-            let point = structValue.cgPointValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "x") {
-                retrieved_value = Double(point.x)
-                
-            } else if (last_component == "y") {
-                retrieved_value = Double(point.y)
-            }
-            
-            
-        case .size:
-            let size = structValue.cgSizeValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "width") {
-                retrieved_value = Double(size.width)
-                
-            } else if (last_component == "height") {
-                retrieved_value = Double(size.height)
-                
-            }
-            
-            
-        case .rect:
-            let rect = structValue.cgRectValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if ([last_component].containsAny(["x", "y"])) {
-                let pt_value = NSValue.init(cgPoint: rect.origin)
-                
-                retrieved_value = retrieveStructValue(pt_value, type: .point, path: path)
-                
-            } else if ([last_component].containsAny(["width", "height"])) {
-                let size_value = NSValue.init(cgSize: rect.size)
-                
-                retrieved_value = retrieveStructValue(size_value, type: .size, path: path)
-                
-            }
-            
-            
-        case .vector:
-            let vector = structValue.cgVectorValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "dx") {
-                retrieved_value = Double(vector.dx)
-                
-            } else if (last_component == "dy") {
-                retrieved_value = Double(vector.dy)
-            }
-            
-            
-        case .affineTransform:
-            let transform = structValue.cgAffineTransformValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "a") {
-                retrieved_value = Double(transform.a)
-            } else if (last_component == "b") {
-                retrieved_value = Double(transform.b)
-            } else if (last_component == "c") {
-                retrieved_value = Double(transform.c)
-            } else if (last_component == "d") {
-                retrieved_value = Double(transform.d)
-            } else if (last_component == "tx") {
-                retrieved_value = Double(transform.tx)
-            } else if (last_component == "ty") {
-                retrieved_value = Double(transform.ty)
-            }
-            
-        case .transform3D:
-            let transform = structValue.caTransform3DValue
-            
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "m11") {
-                retrieved_value = Double(transform.m11)
-            } else if (last_component == "m12") {
-                retrieved_value = Double(transform.m12)
-            } else if (last_component == "m13") {
-                retrieved_value = Double(transform.m13)
-            } else if (last_component == "m14") {
-                retrieved_value = Double(transform.m14)
-            } else if (last_component == "m21") {
-                retrieved_value = Double(transform.m21)
-            } else if (last_component == "m22") {
-                retrieved_value = Double(transform.m22)
-            } else if (last_component == "m23") {
-                retrieved_value = Double(transform.m23)
-            } else if (last_component == "m24") {
-                retrieved_value = Double(transform.m24)
-            } else if (last_component == "m31") {
-                retrieved_value = Double(transform.m31)
-            } else if (last_component == "m32") {
-                retrieved_value = Double(transform.m32)
-            } else if (last_component == "m33") {
-                retrieved_value = Double(transform.m33)
-            } else if (last_component == "m34") {
-                retrieved_value = Double(transform.m34)
-            } else if (last_component == "m41") {
-                retrieved_value = Double(transform.m41)
-            } else if (last_component == "m42") {
-                retrieved_value = Double(transform.m42)
-            } else if (last_component == "m43") {
-                retrieved_value = Double(transform.m43)
-            } else if (last_component == "m44") {
-                retrieved_value = Double(transform.m44)
-            }
-            
-        case .unsupported: break
-            
-        default: break
-        }
-        
-        return retrieved_value
-    }
-    
 }
-
-
-
-
-
+#endif

@@ -2,77 +2,46 @@
 //  MotionGroup.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
 
-/// A closure used to provide status updates for a ``MotionGroup`` object.
-/// - Parameter group: The ``MotionGroup`` object which published this update closure.
-public typealias GroupUpdateClosure = (_ group: MotionGroup) -> Void
-
-/**
- *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
- *
- *  - seealso: start
- */
-public typealias GroupStarted = GroupUpdateClosure
-
-/**
- *  This notification closure should be called when the `stop` method starts a motion operation.
- *
- *  - seealso: stop
- */
-public typealias GroupStopped = GroupUpdateClosure
-
-
-/**
- *  This notification closure should be called when the `update` method is called while a Moveable object is currently moving.
- *
- *  - seealso: update
- */
-public typealias GroupUpdated = GroupUpdateClosure
-
-
-/**
- *  This notification closure should be called when a motion operation reverses its movement direction.
- *
- */
-public typealias GroupReversed = GroupUpdateClosure
-
-/**
- *  This notification closure should be called when a motion has started a new repeat cycle.
- *
- */
-public typealias GroupRepeated = GroupUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `pause` method pauses a motion operation.
- *
- */
-public typealias GroupPaused = GroupUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `resume` method resumes a motion operation.
- *
- */
-public typealias GroupResumed = GroupUpdateClosure
-
-/**
- *  This notification closure should be called when a motion operation has fully completed.
- *
- *  - remark: This closure should only be executed when all activity related to the motion has ceased. For instance, if a Moveable class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
- *
- */
-public typealias GroupCompleted = GroupUpdateClosure
-
-
-/**
- *  MotionGroup handles the movement of one or more objects which conform to the `Moveable` protocol, either being instances of `Motion` or other custom classes. The MotionGroup class is a good solution when you want to easily synchronize the movements of many `Moveable` objects.
- */
+/// MotionGroup handles the movement of one or more objects which conform to the ``Moveable`` protocol. A single `MotionGroup` could hold ``Motion``, ``PhysicsMotion``, and ``PathMotion`` objects, and even other ``MoveableCollection`` objects. The MotionGroup class is a good solution when you want to easily synchronize the movements of many ``Moveable`` objects.
 public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate {
+    
+    /// A closure used to provide status updates for a ``MotionGroup`` object.
+    /// - Parameter group: The ``MotionGroup`` object which published this update closure.
+    public typealias GroupUpdateClosure = (_ group: MotionGroup) -> Void
+
+    /// This notification closure should be called when the ``start()`` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
+    public typealias GroupStarted = GroupUpdateClosure
+
+    /// This notification closure should be called when the ``stop()`` method starts a motion operation.
+    public typealias GroupStopped = GroupUpdateClosure
+
+    /// This notification closure should be called when the ``update(withTimeInterval:)`` method is called while a ``Moveable`` object is currently moving.
+    public typealias GroupUpdated = GroupUpdateClosure
+
+    /// This notification closure should be called when a motion operation reverses its movement direction.
+    public typealias GroupReversed = GroupUpdateClosure
+
+    /// This notification closure should be called when a motion has started a new motion cycle.
+    public typealias GroupRepeated = GroupUpdateClosure
+
+    /// This notification closure should be called when calling the ``pause()`` method pauses a motion operation.
+    public typealias GroupPaused = GroupUpdateClosure
+
+    /// This notification closure should be called when calling the ``resume()`` method resumes a motion operation.
+    public typealias GroupResumed = GroupUpdateClosure
+
+    /// This notification closure should be called when a motion operation has fully completed.
+    ///
+    /// > Note: This closure should only be executed when all activity related to the motion has ceased. For instance, if a ``Moveable`` class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
+    public typealias GroupCompleted = GroupUpdateClosure
+    
     
     // MARK: - Public Properties
     
@@ -87,35 +56,16 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      */
     public var delay: TimeInterval = 0.0
     
+
     /**
-     *  A Boolean which determines whether the group's motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
+     *  A Boolean which determines whether the MotionGroup should synchronize when its ``Moveable`` objects reverse direction during each movement cycle.  This means that the MotionGroup's fastest child motion will wait for the other children to finish their movements before reversing direction.
      *
-     *  - note: By design, setting this value to `true` without changing the `repeatCycles` property from its default value (0) will cause the motion to repeat infinitely.
-     *  - seealso: repeatCycles
-     */
-    public var repeating: Bool = false
-    
-    
-    /**
-     *  The number of motion cycle operations to repeat.
+     *  When set to `true`, the MotionGroup will not tell its ``Moveable`` objects to reverse direction until all of them have completed their current movement cycle. This will occur both when the child motions have finished their foward movement, and when they've finished their movement in the opposite direction. When this property is set to `false`, the MotionGroup's objects will move independently of each other.
      *
-     *  - remark: This property is only used when `repeating` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
+     *  The default value is `false`.
      *
-     *  - seealso: repeating
-     */
-    public var repeatCycles: UInt = REPEAT_INFINITE
-    
-    
-    /**
-     *  A Boolean which determines whether the MotionGroup should synchronize when its `Moveable` objects reverse direction during each movement cycle.  This means that the MotionGroup's fastest child motion will wait for the other children to finish their movements before reversing direction.
+     *  - note: This property only has an effect when ``isReversing`` is set to `true`, in which case the MotionGroup will call the `GroupReversed` notification closure when all of its ``Moveable`` objects are ready to reverse.
      *
-     *  When set to `true`, the MotionGroup will not tell its `Moveable` objects to reverse direction until all of them have completed their current movement cycle. This will occur both when the child motions have finished their foward movement, and when they've finished their movement in the opposite direction. When this property is set to `false`, the MotionGroup's objects will move independently of each other.
-     *
-     *  - note: This property only has an effect when `reversing` is set to `true`, in which case the MotionGroup will call the `GroupReversed` notification closure when all of its `Moveable` objects are ready to reverse.
-     * 
-     *   The default value is `false`.
-     *
-     *  - seealso: reversing
      */
     public var syncMotionsWhenReversing: Bool = false
     
@@ -126,8 +76,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /// An array comprising the Moveable objects controlled by this MotionGroup object. (read-only)
     private(set) public var motions: [Moveable] = []
     
-    /// A `MotionState` enum which represents the current movement state of the motion operation. (read-only)
-    private(set) public var motionState: MotionState
+    /// An enum which represents the current movement state of the motion operation. (read-only)
+    private(set) public var motionState: MoveableState
     
     /// A `MotionDirection` enum which represents the current direction of the motion operation. (read-only)
     private(set) public var motionDirection: MotionDirection
@@ -135,7 +85,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a movement between two value destinations. (read-only)
      *
-     *  - remark: Be aware that if this motion is `reversing` or `repeating`, this value will only represent one movement. For instance, if a MotionGroup has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a MotionGroup is reversing, this property's value will represent each movement; first in the forward direction, then again when reversing back to the starting values.
+     *  - remark: Be aware that if this motion is ``isReversing`` or ``isRepeating``, this value will only represent one movement. For instance, if a MotionGroup has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a MotionGroup is reversing, this property's value will represent each movement; first in the forward direction, then again when reversing back to the starting values.
      */
     private(set) public var motionProgress: Double {
         
@@ -147,9 +97,9 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .forward) {
+            if (isReversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .reverse) {
+            } else if (isReversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -165,7 +115,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a motion cycle. (read-only)
      *
-     *  - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
+     *  - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
      */
     private(set) public var cycleProgress: Double {
         get {
@@ -176,7 +126,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             _cycleProgress = newValue
             
             // sync motionProgress with cycleProgress, so we modify the ivar directly (otherwise we'd enter a recursive loop as each setter is called)
-            if (reversing) {
+            if (isReversing) {
                 var new_progress = _cycleProgress * 2
                 if (_cycleProgress >= 0.5) { new_progress -= 1 }
                 _motionProgress = new_progress
@@ -193,7 +143,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /**
      *  The amount of completed motion cycles.  (read-only)
      *
-     * - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle.
+     * - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle.
      */
     private(set) public var cyclesCompletedCount: UInt = 0
     
@@ -201,14 +151,13 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     /**
      *  A value between 0.0 and 1.0, which represents the current overall progress of the group. This value should include all reversing and repeat motion cycles. (read-only)
      *
-     *  - remark: If a group is not repeating, this value will be equivalent to the value of `cycleProgress`.
-     *  - seealso: cycleProgress
+     *  - remark: If the group is not repeating, this value will be equivalent to the value of ``cycleProgress``.
      *
      */
     public var totalProgress: Double {
         get {
             // sync totalProgress with cycleProgress
-            if (repeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
+            if (isRepeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
                 return (_cycleProgress + Double(cyclesCompletedCount)) / Double(repeatCycles+1)
             } else {
                 return _cycleProgress
@@ -221,28 +170,48 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     // MARK: Moveable protocol properties
     
     /// A Boolean which determines whether the MotionGroup's child motions should reverse their movements back to their starting values after completing their forward movements.
-    public var reversing: Bool {
+    public var isReversing: Bool {
         get {
-            return _reversing
+            return _isReversing
         }
         
         set(newValue) {
-            _reversing = newValue
+            _isReversing = newValue
             
-            // change the `reversing` property on each `Moveable` object in the group to reflect the group's new state
+            // change the `isReversing` property on each `Moveable` object in the group to reflect the group's new state
             for motion in motions {
-                motion.reversing = _reversing
+                motion.isReversing = _isReversing
             }
             
             motionsCompletedCount = 0
         }
         
     }
-    private var _reversing: Bool = false
+    private var _isReversing: Bool = false
+    
+    
+    /**
+     *  A Boolean which determines whether the group's motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the ``repeatCycles`` property. The default value is `false`.
+     *
+     *  - note: By design, setting this value to `true` without changing the ``repeatCycles`` property from its default value (0) will cause the motion to repeat infinitely.
+     */
+    public var isRepeating: Bool = false
+    
+    
+    /**
+     *  The number of motion cycle operations to repeat.
+     *
+     *  - remark: This property is only used when ``isRepeating`` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
+     *
+     */
+    public var repeatCycles: UInt = REPEAT_INFINITE
     
     
     /// Provides a delegate for updates to a Moveable object's status, used by Moveable collections.
     public weak var updateDelegate: MotionUpdateDelegate?
+    
+    
+    private(set) public var operationID: UInt = 0
     
     
     // MARK: MoveableCollection protocol properties
@@ -255,18 +224,18 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      */
     public var reversingMode: CollectionReversingMode = .sequential {
         didSet {
-            if (reversingMode == .contiguous && reversing) {
+            if (reversingMode == .contiguous && isReversing) {
                 for motion in motions {
-                    motion.reversing = true
+                    motion.isReversing = true
                     if var collection = motion as? MoveableCollection {
                         // by default, setting a contiguous reversingMode will cascade down to sub-collections
                         // since usually a user would expect a contiguous movement from each sub-motion when setting this value
                         collection.reversingMode = .contiguous
                     }
                 }
-            } else if (reversingMode == .sequential && reversing) {
+            } else if (reversingMode == .sequential && isReversing) {
                 for motion in motions {
-                    motion.reversing = false
+                    motion.isReversing = false
                 }
             }
         }
@@ -274,14 +243,14 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     
     
-    // MARK: TempoBeating protocol properties
+    // MARK: TempoDriven protocol properties
     
     /**
-     *  A concrete `Tempo` subclass that provides an update "beat" while a motion operation occurs.
+     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" to all child motions while the motion operation occurs.
      *
-     *  - remark: By default, Motion will assign an instance of `CATempo` to this property, which uses CADisplayLink for interval updates.
+     *  - Note: By default, Motion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
      */
-    public var tempo: Tempo? {
+    public var tempo: TempoProviding? {
         
         get {
             return _tempo
@@ -309,8 +278,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
             }
         }
     }
-    lazy private var _tempo: Tempo? = {
-        return CATempo.init()
+    lazy private var _tempo: TempoProviding? = {
+        return DisplayLinkTempo()
     }()
     
 
@@ -342,7 +311,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     private var _stopped: GroupStopped?
     
     /**
-     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `.Moving`.
+     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `moving`.
      *
      *  - seealso: update(withTimeInterval:)
      */
@@ -366,9 +335,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     private var _cycleRepeated: GroupRepeated?
     
     /**
-     *  This closure is called when the `motionDirection` property changes to `reversing`.
+     *  This closure is called when the ``motionDirection`` property changes to `reversing`.
      *
-     *  - seealso: motionDirection, reversing
      */
     @discardableResult public func reversed(_ closure: @escaping GroupReversed) -> Self {
         _reversed = closure
@@ -437,7 +405,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     private var motionsCompletedCount: Int = 0
     
     /**
-     *  The number of `Moveable` objects which have finished one direction of a movement cycle and are now moving in a reverse direction. This property is used to sync motion operations when `reversing` and `syncMotionsWhenReversing` are both set to `true`.
+     *  The number of ``Moveable`` objects which have finished one direction of a movement cycle and are now moving in a reverse direction. This property is used to sync motion operations when ``isReversing`` and ``syncMotionsWhenReversing`` are both set to `true`.
      */
     private var motionsReversedCount: Int = 0
     
@@ -457,8 +425,8 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         
         // unpack options values
         if let unwrappedOptions = options {
-            repeating = unwrappedOptions.contains(.repeats)
-            _reversing = unwrappedOptions.contains(.reverses)
+            isRepeating = unwrappedOptions.contains(.repeats)
+            _isReversing = unwrappedOptions.contains(.reverses)
         }
         
         motionState = .stopped
@@ -488,7 +456,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      */
     @discardableResult public func add(_ motion: Moveable, useChildTempo: Bool = false) -> Self {
         
-        if (reversing) { motion.reversing = true }
+        if (isReversing) { motion.isReversing = true }
         
         if let tempo_beating = (motion as? TempoDriven) {
             if (!useChildTempo) { tempo_beating.stopTempoUpdates() }
@@ -572,7 +540,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> MotionGroup {
         
         repeatCycles = numberOfCycles
-        repeating = true
+        isRepeating = true
         
         return self
     }
@@ -590,7 +558,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      */
     @discardableResult public func reverses(syncsChildMotions syncMotions: Bool) -> MotionGroup {
         
-        reversing = true
+        isReversing = true
         syncMotionsWhenReversing = syncMotions
         
         
@@ -644,7 +612,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         motionState = .stopped
         motionProgress = 1.0
         _cycleProgress = 1.0
-        if (!repeating) { cyclesCompletedCount += 1 }
+        if (!isRepeating) { cyclesCompletedCount += 1 }
 
         // call update closure
         _updated?(self)
@@ -886,7 +854,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         
         switch status {
         case .halfCompleted:
-            if (reversing && motionDirection == .forward) {
+            if (isReversing && motionDirection == .forward) {
                 motionsReversedCount += 1
 
                 if (syncMotionsWhenReversing && motionsReversedCount >= motions.count) {
@@ -905,7 +873,7 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
         case .completed:
             motionsCompletedCount += 1
             if (motionsCompletedCount >= motions.count) {
-                if (repeating) {
+                if (isRepeating) {
                     nextRepeatCycle()
                 } else {
                     groupCompleted()

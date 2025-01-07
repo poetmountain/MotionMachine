@@ -2,106 +2,20 @@
 //  MotionMachine.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
+
+#if canImport(QuartzCore)
 import QuartzCore
+#endif
 
-// MARK: Moveable protocol
-
-public extension Moveable {
-    func cleanupResources() {}
-}
-
-
-// MARK: PropertyCollection protocol
-
-/// This protocol represents an object that holds a collection of `PropertyData` objects, such as a ``Motion`` class.
-@MainActor public protocol PropertyCollection: AnyObject {
-    
-    /**
-     *  A collection of `PropertyData` instances.
-     *
-     */
-    var properties: [PropertyData] { get }
-}
-
-// MARK: ValueAssistant protocol
-
-public extension ValueAssistant {
-    
-    func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
-        
-        guard let unwrapped_object = property.targetObject else { return nil }
-        
-        if let path_value = unwrapped_object.value(forKeyPath: property.parentKeyPath) {
-            if let unwrapped_object = path_value as? NSObject {
-                if let retrieved_value = try? retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
-                    return retrieved_value
-                }
-            }
-        }
-        
-        return nil
-    }
-    
-}
-
-// utility methods for ValueAssistant
-public extension ValueAssistant {
-    
-    
-    /// Applies a new Double value to an existing one, either adding to it if ``additive`` mode is active, or simply replacing it.
-    /// - Parameters:
-    ///   - value: The Double value to modify.
-    ///   - newValue: The Double value used to modify the existing value.
-    func applyTo(value: inout Double, newValue: Double) {
-        if (additive) {
-            value += (newValue * additiveWeighting)
-        } else {
-            value = newValue
-        }
-        
-    }
-    
-    /// Applies a new CGFloat value to an existing value, either adding to it if ``additive`` mode is active, or simply replacing it.
-    /// - Parameters:
-    ///   - value: The CGFloat value to modify.
-    ///   - newValue: The CGFloat value used to modify the existing value.
-    func applyTo(value: inout CGFloat, newValue: CGFloat) {
-        if (additive) {
-            value += (newValue * CGFloat(additiveWeighting))
-        } else {
-            value = newValue
-        }
-    }
-    
-    /// Returns the last component in a period-delimited String path.
-    /// - Parameter path: The String path to search.
-    /// - Returns: The path component, if one was found.
-    func lastComponent(forPath path: String) -> String? {
-        return path.components(separatedBy: ".").last
-    }
-    
-    /// Returns the last two components in a period-delimited String path.
-    /// - Parameter path: The String path to search.
-    /// - Returns: An array of path components, if any were found.
-    func lastTwoComponents(forPath path: String) -> [String]? {
-        let components = path.components(separatedBy: ".")
-        var val: [String]?
-        if (components.count > 1) {
-            let strings = components[components.count-2...components.count-1]
-            val = Array(strings)
-        }
-        
-        return val
-    }
-    
-}
 
 /// This error is thrown when a `ValueAssistant` receives the wrong type.
 public enum ValueAssistantError : Error {
@@ -122,7 +36,7 @@ public enum ValueAssistantError : Error {
 
 // Taken from: https://gist.github.com/stephanecopin/c746993d7431ceaaee718a9a491a5cfa
 /// Avoids retain cycles for Timers and CADisplayLinks
-final class WeakTarget: NSObject {
+final class WeakTarget {
     private(set) weak var target: AnyObject?
     let selector: Selector
     
@@ -149,12 +63,13 @@ extension Timer {
     }
 }
 
+#if os(iOS) || os(tvOS) || os(visionOS)
 extension CADisplayLink {
     convenience init(weakTarget: AnyObject, selector: Selector) {
         self.init(target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector)
     }
 }
-
+#endif
 
 /// A singleton configuration class for MotionMachine.
 @MainActor public final class MMConfiguration {
@@ -172,9 +87,6 @@ extension CADisplayLink {
 /// Any easing types used by a Motion object should implement this closure.
 public typealias EasingUpdateClosure = (_ elapsedTime: TimeInterval, _ startValue: Double, _ valueRange: Double, _ duration: TimeInterval) -> Double
 
-
-/// Represents an infinite number of repeat motion cycles.
-public let REPEAT_INFINITE: UInt = 0
 
 /// Utility methods
 public struct MotionUtils {
@@ -224,9 +136,9 @@ func ≈≈ (a: Double, b: Double) -> Bool {
         return true
     }
     
-    let fabs_a = fabs(a)
-    let fabs_b = fabs(b)
-    let diff = fabs(fabs_a - fabs_b)
+    let fabs_a = abs(a)
+    let fabs_b = abs(b)
+    let diff = abs(fabs_a - fabs_b)
     
     if (a == 0.0 || b == 0.0 || diff < Double.leastNormalMagnitude) {
         // a or b is zero or both are extremely close to it
@@ -234,6 +146,49 @@ func ≈≈ (a: Double, b: Double) -> Bool {
         return diff < (Double.ulpOfOne * Double.leastNormalMagnitude)
     } else {
         return (diff / (fabs_a + fabs_b)) < Double.ulpOfOne
+    }
+    
+}
+
+func ≈≈ (a: any BinaryFloatingPoint, b: any BinaryFloatingPoint) -> Bool {
+    guard let doubleA = Double(exactly: a), let doubleB = Double(exactly: b) else { return false }
+    
+    if (doubleA == doubleB) {
+        return true
+    }
+    
+    let abs_a = abs(doubleA)
+    let abs_b = abs(doubleB)
+    let diff = abs(abs_a - abs_b)
+    
+    if (doubleA == 0.0 || doubleB == 0.0 || diff < Double.leastNormalMagnitude) {
+        // a or b is zero or both are extremely close to it
+        // relative error is less meaningful here
+        return diff < (Double.ulpOfOne * Double.leastNormalMagnitude)
+    } else {
+        return (diff / (abs_a + abs_b)) < Double.ulpOfOne
+    }
+    
+}
+
+func ≈≈ (a: any SIMDScalar, b: any SIMDScalar) -> Bool {
+    let doubleA = a.toDouble()
+    let doubleB = b.toDouble()
+    
+    if (doubleA == doubleB) {
+        return true
+    }
+    
+    let abs_a = abs(doubleA)
+    let abs_b = abs(doubleB)
+    let diff = abs(abs_a - abs_b)
+    
+    if (doubleA == 0.0 || doubleB == 0.0 || diff < Double.leastNormalMagnitude) {
+        // a or b is zero or both are extremely close to it
+        // relative error is less meaningful here
+        return diff < (Double.ulpOfOne * Double.leastNormalMagnitude)
+    } else {
+        return (diff / (abs_a + abs_b)) < Double.ulpOfOne
     }
     
 }
@@ -252,6 +207,13 @@ func !≈ (a: Double, b: Double) -> Bool {
     return !(a ≈≈ b)
 }
 
+func !≈ (a: any BinaryFloatingPoint, b: any BinaryFloatingPoint) -> Bool {
+    return !(a ≈≈ b)
+}
+
+func !≈ (a: any SIMDScalar, b: any SIMDScalar) -> Bool {
+    return !(a ≈≈ b)
+}
 
 /// Extension to == operator to allow Moveable instances to be compared
 func == (a: Moveable, b: Moveable) -> Bool {
@@ -263,7 +225,7 @@ func == (a: Moveable, b: Moveable) -> Bool {
     return false
 }
 
-
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 extension CGPath {
     
     /// Introspects the path and returns all path elements as models.
@@ -349,3 +311,149 @@ extension CGPath {
     }
     
 }
+#endif
+
+public extension BinaryFloatingPoint {
+    /// Returns a Double value for this `BinaryFloatingPoint` object; either a precise conversion, or an approximate conversion if an exact one isn't available for this type.
+    /// - Returns: A Double value, if one could be converted.
+    func toDouble() -> Double? {
+        return Double(exactly: self) ?? Double(self)
+    }
+
+    func toScalar<ScalarType: SIMDScalar>(type: ScalarType) -> ScalarType? {
+        if (ScalarType.self == Float.self) {
+            return Float(self) as? ScalarType
+        } else if (ScalarType.self == Double.self) {
+            return Double(self) as? ScalarType
+        } else if (ScalarType.self == Float16.self) {
+            return Float16(self) as? ScalarType
+            
+        } else if (ScalarType.self == Int.self) {
+            return Int(self) as? ScalarType
+        } else if (ScalarType.self == Int16.self) {
+            return Int16(self) as? ScalarType
+        } else if (ScalarType.self == Int32.self) {
+            return Int32(self) as? ScalarType
+        } else if (ScalarType.self == Int64.self) {
+            return Int64(self) as? ScalarType
+        } else if (ScalarType.self == Int8.self) {
+            return Int8(self) as? ScalarType
+            
+        } else if (ScalarType.self == UInt.self) {
+            return UInt(self) as? ScalarType
+        } else if (ScalarType.self == UInt8.self) {
+            return UInt8(self) as? ScalarType
+        } else if (ScalarType.self == UInt16.self) {
+            return UInt16(self) as? ScalarType
+        } else if (ScalarType.self == UInt32.self) {
+            return UInt32(self) as? ScalarType
+        } else if (ScalarType.self == UInt64.self) {
+            return UInt64(self) as? ScalarType
+        }
+        
+        return nil
+    }
+
+}
+
+public extension BinaryInteger {
+    /// Returns a Double value for this `BinaryInteger` object.
+    /// - Returns: A Double value, if one could be converted.
+    func toDouble() -> Double? {
+        return Double(self)
+    }
+    
+    func toScalar<ScalarType: SIMDScalar>(type: ScalarType) -> ScalarType? {
+        if (ScalarType.self == Int.self) {
+            return Int(self) as? ScalarType
+        } else if (ScalarType.self == Int16.self) {
+            return Int16(self) as? ScalarType
+        } else if (ScalarType.self == Int32.self) {
+            return Int32(self) as? ScalarType
+        } else if (ScalarType.self == Int64.self) {
+            return Int64(self) as? ScalarType
+        } else if (ScalarType.self == Int8.self) {
+            return Int8(self) as? ScalarType
+            
+        } else if (ScalarType.self == UInt.self) {
+            return UInt(self) as? ScalarType
+        } else if (ScalarType.self == UInt8.self) {
+            return UInt8(self) as? ScalarType
+        } else if (ScalarType.self == UInt16.self) {
+            return UInt16(self) as? ScalarType
+        } else if (ScalarType.self == UInt32.self) {
+            return UInt32(self) as? ScalarType
+        } else if (ScalarType.self == UInt64.self) {
+            return UInt64(self) as? ScalarType
+        }
+        
+        return nil
+    }
+}
+
+
+
+public extension SIMDScalar {
+    
+    func toDouble() -> Double {
+        
+        if let value = self as? Float {
+            return Double(value)
+            
+        } else if let value = self as? Double {
+            return value
+
+        } else if let value = self as? Float16 {
+            return Double(value)
+            
+        } else if let value = self as? Int {
+            return Double(value)
+        } else if let value = self as? Int16 {
+            return Double(value)
+        } else if let value = self as? Int32 {
+            return Double(value)
+        } else if let value = self as? Int64 {
+            return Double(value)
+        } else if let value = self as? Int8 {
+            return Double(value)
+            
+        } else if let value = self as? UInt {
+            return Double(value)
+        } else if let value = self as? UInt8 {
+            return Double(value)
+        } else if let value = self as? UInt16 {
+            return Double(value)
+        } else if let value = self as? UInt32 {
+            return Double(value)
+        } else if let value = self as? UInt64 {
+            return Double(value)
+        } else {
+            return 0
+        }
+        
+    }
+    
+
+}
+
+// Workaround for deficiency in Swift's handling of optional KeyPaths
+// see: https://forums.swift.org/t/crash-during-optional-key-path-access-what-is-going-on/69141
+public extension Optional {
+    // Produce the `default` value if `self` is nil.
+    subscript(default value: Wrapped) -> Wrapped {
+        get { return self ?? value }
+        set { self = newValue }
+    }
+
+    // Act like optional chaining on read, while allowing "writes" that drop
+    // the value on the floor if `self` is nil.
+    subscript<T>(droppingWritesOnNil path: WritableKeyPath<Wrapped, T>) -> T? {
+        get { return self?[keyPath: path] }
+        set {
+            if let newValue = newValue {
+                self?[keyPath: path] = newValue
+            }
+        }
+    }
+}
+

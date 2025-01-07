@@ -2,7 +2,7 @@
 //  PhysicsMotionViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -13,8 +13,8 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
 
     var createdUI: Bool = false
     var buttonsView: ButtonsView!
-    var square: UIView!
-    var motion: PhysicsMotion!
+    var motionView: UIView!
+    var motion: PhysicsMotion<NSLayoutConstraint>!
     var xConstraint: NSLayoutConstraint!
     
     convenience init() {
@@ -93,23 +93,25 @@ public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate 
         
         
         
-        square = UIView.init()
-        square.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
-        self.view.addSubview(square)
-        square.translatesAutoresizingMaskIntoConstraints = false
+        motionView = UIView.init()
+        motionView.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
+        motionView.layer.masksToBounds = true
+        motionView.layer.cornerRadius = 20
+        self.view.addSubview(motionView)
+        motionView.translatesAutoresizingMaskIntoConstraints = false
         
-        xConstraint = square.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
+        xConstraint = motionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 20.0)
         xConstraint.isActive = true
-        square.topAnchor.constraint(equalTo: top_anchor, constant: 20.0).isActive = true
-        square.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
-        square.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
+        motionView.topAnchor.constraint(equalTo: top_anchor, constant: 20.0).isActive = true
+        motionView.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
+        motionView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
     }
     
     
     private func createMotion() {
         let config = PhysicsConfiguration(velocity: 300, friction: 0.72)
-        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData(path: "constant")], configuration: config)
+        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData(keyPath: \NSLayoutConstraint.constant)], configuration: config)
         .paused({ (motion) in
             print("paused!")
         })

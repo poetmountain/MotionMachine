@@ -2,7 +2,7 @@
 //  CIColorAssistant.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -12,11 +12,18 @@ import Foundation
 import CoreImage
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// CIColorAssistant provides support for Core Image's `CIColor` type.
-public final class CIColorAssistant : ValueAssistant {
+public final class CIColorAssistant<TargetType: AnyObject>: ValueAssistant {
 
-    public var additive: Bool = false
+    public enum CIColorPropertyType: String {
+        case red
+        case green
+        case blue
+        case alpha
+    }
+    
+    public var isAdditive: Bool = false
     public var additiveWeighting: Double = 1.0 {
         didSet {
             // constrain weighting to range of 0.0 - 1.0
@@ -26,12 +33,14 @@ public final class CIColorAssistant : ValueAssistant {
     
     // MARK: ValueAssistant methods
     
-    public func generateProperties(targetObject target: AnyObject, propertyStates: PropertyStates) throws -> [PropertyData] {
+    public func generateProperties<StateType>(targetObject target: TargetType, state: MotionState<TargetType, StateType>) throws -> [PropertyData<TargetType>] {
         
-        var properties: [PropertyData] = []
+        var properties: [PropertyData<TargetType>] = []
         
-        if let new_color = propertyStates.end as? CIColor, (propertyStates.end is CIColor) {
+        guard let keyPath = state.keyPath as? KeyPath<TargetType, CIColor> else { return properties }
 
+        if let newColor = state.end as? CIColor {
+            
             var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
             
             var add_alpha = false
@@ -39,17 +48,19 @@ public final class CIColorAssistant : ValueAssistant {
             var add_green = false
             var add_blue = false
             
-            if let tcolor = target as? CIColor {
-                red = tcolor.red
-                blue = tcolor.blue
-                green = tcolor.green
-                alpha = tcolor.alpha
+            let nestedObject = target[keyPath: state.keyPath]
+            
+            if let targetColor = target as? CIColor {
+                red = targetColor.red
+                blue = targetColor.blue
+                green = targetColor.green
+                alpha = targetColor.alpha
             }
             
-            var start_color: CIColor?
-            if let unwrapped_start = propertyStates.start {
-                if (propertyStates.start is CIColor) {
-                    start_color = unwrapped_start as? CIColor
+            var startColor: CIColor?
+            if let unwrapped_start = state.start {
+                if (state.start is CIColor) {
+                    startColor = unwrapped_start as? CIColor
                     // we need to save start color values so we can compare to new color below
                     if let scolor = unwrapped_start as? CIColor {
                         red = scolor.red
@@ -58,200 +69,139 @@ public final class CIColorAssistant : ValueAssistant {
                         alpha = scolor.alpha
                     }
                 }
+                
+            } else if let originalColor = nestedObject as? CIColor {
+                startColor = originalColor
+                red = originalColor.red
+                blue = originalColor.blue
+                green = originalColor.green
+                alpha = originalColor.alpha
             }
             
             // check each component to avoid building PropertyData objects for color components whose start and end values are the same
-            if (Double(red) !≈ Double(new_color.red)) { add_red = true }
-            if (Double(blue) !≈ Double(new_color.blue)) { add_blue = true }
-            if (Double(green) !≈ Double(new_color.green)) { add_green = true }
-            if (Double(alpha) !≈ Double(new_color.alpha)) { add_alpha = true }
+            if (Double(red) !≈ Double(newColor.red) || isAdditive) { add_red = true }
+            if (Double(blue) !≈ Double(newColor.blue) || isAdditive) { add_blue = true }
+            if (Double(green) !≈ Double(newColor.green) || isAdditive) { add_green = true }
+            if (Double(alpha) !≈ Double(newColor.alpha) || isAdditive) { add_alpha = true }
             
             if (add_red) {
-                var start_state: Double?
-                if let unwrapped_start_color = start_color {
-                    start_state = Double(unwrapped_start_color.red)
+                var startValue: CGFloat?
+                if let startColor {
+                    startValue = startColor.red
                 }
-                let p = PropertyData(path: "red", start: start_state, end: Double(new_color.red))
-                properties.append(p)
+                let propertyPath: KeyPath<TargetType, CGFloat> = keyPath.appending(path: \CIColor.red)
+                let prop = PropertyData<TargetType>(keyPath: propertyPath, parentPath: keyPath, start: startValue, end: newColor.red)
+                prop.stringPath = CIColorPropertyType.red.rawValue
+                properties.append(prop)
             }
             if (add_green) {
-                var start_state: Double?
-                if let unwrapped_start_color = start_color {
-                    start_state = Double(unwrapped_start_color.green)
+                var startValue: CGFloat?
+                if let startColor {
+                    startValue = startColor.green
                 }
-                let p = PropertyData(path: "green", start: start_state, end: Double(new_color.green))
-                properties.append(p)
+                let propertyPath: KeyPath<TargetType, CGFloat> = keyPath.appending(path: \CIColor.green)
+                let prop = PropertyData<TargetType>(keyPath: propertyPath, parentPath: keyPath, start: startValue, end: newColor.green)
+                prop.stringPath = CIColorPropertyType.green.rawValue
+                properties.append(prop)
             }
             if (add_blue) {
-                var start_state: Double?
-                if let unwrapped_start_color = start_color {
-                    start_state = Double(unwrapped_start_color.blue)
+                var startValue: CGFloat?
+                if let startColor {
+                    startValue = startColor.blue
                 }
-                let p = PropertyData(path: "blue", start: start_state, end: Double(new_color.blue))
-                properties.append(p)
+                let propertyPath: KeyPath<TargetType, CGFloat> = keyPath.appending(path: \CIColor.blue)
+                let prop = PropertyData<TargetType>(keyPath: propertyPath, parentPath: keyPath, start: startValue, end: newColor.blue)
+                prop.stringPath = CIColorPropertyType.blue.rawValue
+                properties.append(prop)
             }
             if (add_alpha) {
-                var start_state: Double?
-                if let unwrapped_start_color = start_color {
-                    start_state = Double(unwrapped_start_color.alpha)
+                var startValue: CGFloat?
+                if let startColor {
+                    startValue = startColor.alpha
                 }
-                let p = PropertyData(path: "alpha", start: start_state, end: Double(new_color.alpha))
-                properties.append(p)
+                let propertyPath: KeyPath<TargetType, CGFloat> = keyPath.appending(path: \CIColor.alpha)
+                let prop = PropertyData<TargetType>(keyPath: propertyPath, parentPath: keyPath, start: startValue, end: newColor.alpha)
+                prop.stringPath = CIColorPropertyType.alpha.rawValue
+                properties.append(prop)
             }
             
         }
-        
-        
-        if (propertyStates.path != "") {
-            for index in 0 ..< properties.count {
-                if (properties[index].path != "") {
-                    properties[index].path = propertyStates.path + "." + properties[index].path
-                } else {
-                    properties[index].path = propertyStates.path
-                }
-            }
-        }
+
         
         return properties
     }
     
-    
-    
-    public func retrieveCurrentObjectValue(forProperty property: PropertyData) -> Double? {
-        guard let unwrapped_target = property.target else { return nil }
 
-        var path_value :Double?
+    /**
+     *  This method replaces an element by assigning new values.
+     *
+     *  - parameters:
+     *      - object:   The object that should be updated.
+     *      - property: A ``PropertyData`` object to use for keyPath information.
+     *      - newValue:    The value to update with.
+     *
+     *  - returns: An updated version of the object, if the object property was found and is supported.
+     */
+    func updateColor(color: CIColor, property: PropertyData<TargetType>, newValue: Double) -> CIColor {
+                
+        var newColor = color
         
-        if let unwrapped_object = property.targetObject {
-            if let parent = unwrapped_object.value(forKeyPath: property.parentKeyPath) as? NSObject {
-                path_value = retrieveValue(inObject: parent, keyPath: property.path)
-            }
+        let changed = newValue
+                
+        if (property.stringPath == CIColorPropertyType.alpha.rawValue) {
+            newColor = CIColor(red: color.red, green: color.green, blue: color.blue, alpha: changed)
             
-        } else if (unwrapped_target is CIColor) {
+        } else if (property.stringPath == CIColorPropertyType.red.rawValue) {
+            newColor = CIColor(red: changed, green: color.green, blue: color.blue, alpha: color.alpha)
             
-            path_value = retrieveValue(inObject: unwrapped_target, keyPath: property.path)
+        } else if (property.stringPath == CIColorPropertyType.green.rawValue) {
+            newColor = CIColor(red: color.red, green: changed, blue: color.blue, alpha: color.alpha)
+            
+        } else if (property.stringPath == CIColorPropertyType.blue.rawValue) {
+            newColor = CIColor(red: color.red, green: color.green, blue: changed, alpha: color.alpha)
         }
         
-        return path_value
-        
+        return newColor
     }
     
     
-    public func retrieveValue(inObject object: Any, keyPath path: String) -> Double? {
-        var retrieved_value: Double?
+    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
         
-        if let color = object as? CIColor {
-            let last_component = lastComponent(forPath: path)
-            
-            if (last_component == "alpha") {
-                retrieved_value = Double(color.alpha)
-                
-            } else if (last_component == "red") {
-                retrieved_value = Double(color.red)
-                
-            } else if (last_component == "green") {
-                retrieved_value = Double(color.green)
-                
-            } else if (last_component == "blue") {
-                retrieved_value = Double(color.blue)
-            }
-            
-            
-        }
+        return calculateValue(forProperty: property, newValue: newValue)
         
-        return retrieved_value
     }
     
-    
-    public func updateValue(inObject object: Any, newValues: Dictionary<String, Double>) -> NSObject? {
+    public func calculateValue(forProperty property: PropertyData<TargetType>, newValue: Double) -> Any? {
         
-        guard newValues.count > 0 else { return nil }
+        guard let targetObject = property.targetObject else { return nil }
         
-        var new_parent_value:NSObject?
+        var newPropertyValue = newValue
+        var currentValue: Any?
         
-        if let color = object as? CIColor {
-            var new_color = color
-            
-            for (prop, newValue) in newValues {
-                var changed = CGFloat(newValue)
-                
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "alpha") {
-                    if (additive) { changed = color.alpha + changed }
-                    new_color = CIColor.init(red: color.red, green: color.green, blue: color.blue, alpha: changed)
-                }
-                
-                if (last_component == "red") {
-                    if (additive) { changed = color.red + changed }
-                    new_color = CIColor.init(red: changed, green: color.green, blue: color.blue, alpha: color.alpha)
-                }
-                
-                if (last_component == "green") {
-                    if (additive) { changed = color.green + changed }
-                    new_color = CIColor.init(red: color.red, green: changed, blue: color.blue, alpha: color.alpha)
-                }
-                
-                if (last_component == "blue") {
-                    if (additive) { changed = color.blue + changed }
-                    new_color = CIColor.init(red: color.red, green: color.green, blue: changed, alpha: color.alpha)
-                }
-                
-            }
-            
-            new_parent_value = new_color
+        currentValue = property.retrieveValue(from: targetObject)
+        
+        // use additive method to update value if additive is true
+        if (isAdditive), let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+            newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
         }
         
-        return new_parent_value
-    }
-    
-    
-    
-    public func calculateValue(forProperty property: PropertyData, newValue: Double) -> NSObject? {
-        
-        guard let unwrapped_target = property.target else { return nil }
-        
-        var new_prop: NSObject? = NSNumber.init(value: property.current)
-        
-        
-        if let unwrapped_object = property.targetObject {
-            // we have a normal object whose property is being changed
-            if (unwrapped_target is CIColor) {
-                var new_property_value = property.current
-                if (additive) {
-                    new_property_value = newValue
-                }
-                
-                // replace the top-level struct of the property we're trying to alter
-                // e.g.: keyPath is @"frame.origin.x", so we replace "frame" because that's the closest KVC-compliant prop
-                if let baseProp = unwrapped_object.value(forKeyPath: property.parentKeyPath) as? NSObject {
-                    new_prop = updateValue(inObject: baseProp, newValues: [property.path : new_property_value])
-                }
-            }
-            
-            return new_prop
+        // replace the top-level struct of the property we're trying to alter
+        var updatedParent: CIColor?
+        if let parentValue = property.retrieveParentValue(from: targetObject) as? CIColor {
+            updatedParent = updateColor(color: parentValue, property: property, newValue: newPropertyValue)
         }
         
-        // we have no base object, so we must be changing the CIColor directly
-        if let unwrappedTarget = unwrapped_target as? CIColor {
-            
-            var new_property_value = property.current
-            if (additive) {
-                new_property_value = newValue
-            }
-            
-            new_prop = updateValue(inObject: unwrappedTarget, newValues: [property.path : new_property_value])
-            
+        if let targetObject = property.targetObject, let updated = updatedParent {
+            property.applyToParent(value: updated, to: targetObject)
         }
-        
-        
-        return new_prop
+
+        return newPropertyValue
         
     }
     
     
     
-    public func supports(_ object: AnyObject) -> Bool {
+    public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false
         
         if (object is CIColor) {

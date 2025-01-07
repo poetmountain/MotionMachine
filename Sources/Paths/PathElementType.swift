@@ -2,14 +2,17 @@
 //  PathElementType.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// An enum representing types of path elements, used in defining animation along the path.
 public enum PathElementType {
 
@@ -50,3 +53,4 @@ public enum PathElementType {
         }
     }
 }
+#endif

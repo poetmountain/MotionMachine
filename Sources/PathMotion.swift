@@ -2,78 +2,53 @@
 //  PathMotion.swift
 //  MotionMachine
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
-/// A closure used to provide status updates for a ``PathMotion`` object.
-/// - Parameter motion: The ``PathMotion`` object which published this update closure.
-/// - Parameter currentPoint: The current position of a point being animated along a path.
-public typealias PathMotionUpdateClosure = (_ motion: PathMotion, _ currentPoint: CGPoint) -> Void
-
-/**
- *  This notification closure should be called when the `start` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
- *
- *  - seealso: start
- */
-public typealias PathMotionStarted = PathMotionUpdateClosure
-
-/**
- *  This notification closure should be called when the `stop` method starts a motion operation.
- *
- *  - seealso: stop
- */
-public typealias PathMotionStopped = PathMotionUpdateClosure
-
-
-/**
- *  This notification closure should be called when the `update(withTimeInterval:)` method is called while a Moveable object is currently moving.
- *
- *  - seealso: update(withTimeInterval:)
- */
-public typealias PathMotionUpdated = PathMotionUpdateClosure
-
-
-/**
- *  This notification closure should be called when a motion operation reverses its movement direction.
- *
- */
-public typealias PathMotionReversed = PathMotionUpdateClosure
-
-/**
- *  This notification closure should be called when a motion has started a new repeat cycle.
- *
- */
-public typealias PathMotionRepeated = PathMotionUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `pause` method pauses a motion operation.
- *
- */
-public typealias PathMotionPaused = PathMotionUpdateClosure
-
-/**
- *  This notification closure should be called when calling the `resume` method resumes a motion operation.
- *
- */
-public typealias PathMotionResumed = PathMotionUpdateClosure
-
-/**
- *  This notification closure should be called when a motion operation has fully completed.
- *
- *  - remark: This closure should only be executed when all activity related to the motion has ceased. For instance, if a Moveable class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
- *
- */
-public typealias PathMotionCompleted = PathMotionUpdateClosure
-
-
-
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// PathMotion handles a single motion operation of a coordinate point along a `CGPath`. It does not directly accept `PropertyData` objects, but instead transforms a value between 0.0 and 1.0, representing the length of the associated path. Using this value, it updates the current point on the path.
-public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
+public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate {
+    
+    public typealias TargetType = PathState
+    
+    /// A closure used to provide status updates for a ``PathMotion`` object.
+    /// - Parameter motion: The ``PathMotion`` object which published this update closure.
+    /// - Parameter currentPoint: The current position of a point being animated along a path.
+    public typealias PathMotionUpdateClosure = (_ motion: PathMotion, _ currentPoint: CGPoint) -> Void
+
+    /// This notification closure should be called when the ``start()`` method starts a motion operation. If a delay has been specified, this closure is called after the delay is complete.
+    public typealias PathMotionStarted = PathMotionUpdateClosure
+
+    /// This notification closure should be called when the ``stop()`` method starts a motion operation.
+    public typealias PathMotionStopped = PathMotionUpdateClosure
+
+    /// This notification closure should be called when the ``update(withTimeInterval:)`` method is called while a ``Moveable`` object is currently moving.
+    public typealias PathMotionUpdated = PathMotionUpdateClosure
+
+    /// This notification closure should be called when a motion operation reverses its movement direction.
+    public typealias PathMotionReversed = PathMotionUpdateClosure
+
+    /// This notification closure should be called when a motion has started a new motion cycle.
+    public typealias PathMotionRepeated = PathMotionUpdateClosure
+
+    /// This notification closure should be called when calling the ``pause()`` method pauses a motion operation.
+    public typealias PathMotionPaused = PathMotionUpdateClosure
+
+    /// This notification closure should be called when calling the ``resume()`` method resumes a motion operation.
+    public typealias PathMotionResumed = PathMotionUpdateClosure
+
+    /// This notification closure should be called when a motion operation has fully completed.
+    ///
+    /// > Note: This closure should only be executed when all activity related to the motion has ceased. For instance, if a ``Moveable`` class allows a motion to be repeated multiple times, this closure should be called when all repetitions have finished.
+    public typealias PathMotionCompleted = PathMotionUpdateClosure
+    
     
     // MARK: - Public Properties
     
@@ -91,44 +66,25 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     /**
      *  The duration of a motion operation, in seconds, as it moves from its starting property values to its ending values. (read-only)
      *
-     *  - remark: If the `Motion` is `reversing` or `repeating`, the total duration will be increased by multiples of this duration. If `reversing` is set to `true`, the duration of a total motion cycle will be twice this amount as there will be two separate movements (forwards and back).
+     *  - remark: If the `Motion` is ``isReversing`` or ``isRepeating``, the total duration will be increased by multiples of this duration. If ``isReversing`` is set to `true`, the duration of a total motion cycle will be twice this amount as there will be two separate movements (forwards and back).
      *
      *  - warning: Do not set this parameter while a motion operation is in progress.
      */
     public var duration: TimeInterval = 0.0
+        
     
     /**
-     *  A Boolean which determines whether a motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the `repeatCycles` property. The default value is `false`.
+     *  An object conforming to the ``ValueAssistant`` protocol which acts as an interface for retrieving and updating value types.
      *
-     *  - note: By design, setting this value to `true` without changing the `repeatCycles` property from its default value will cause the motion to repeat infinitely.
-     *  - seealso: repeatCycles
+     *  - remark: Because PathMotion handles its own value interpolation along a path, it only uses the `NumericAssistant`.
      */
-    public var repeating: Bool = false
+    public var valueAssistant: any ValueAssistant<TargetType> = ValueAssistantGroup(assistants: [NumericAssistant()])
     
     
     /**
-     *  The number of motion cycle operations to repeat.
+     *  An operation identifer is assigned to a motion instance when it is moving an object's property and its motion operation is currently in progress. (read-only)
      *
-     *  - remark: This property is only used when `repeating` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
-     *
-     *  - seealso: repeating
-     */
-    public var repeatCycles: UInt = REPEAT_INFINITE
-    
-    
-    
-    /**
-     *  An object conforming to the `ValueAssistant` protocol which acts as an interface for retrieving and updating value types.
-     *
-     *  - remark: By default, Motion will assign an instance of the `ValueAssistantGroup` class with value assistants for CoreFoundation structs and some color classes (CIColor, and UIColor for platforms which support it). You may add your own custom type assistants to this group, or replace it with your own custom `ValueAssistant` implementation.
-     */
-    public var valueAssistant: ValueAssistant = ValueAssistantGroup(assistants: [CGStructAssistant()])
-    
-    
-    /**
-     *  An operation ID is assigned to a Motion instance when it is moving an object's property and its motion operation is currently in progress. (read-only)
-     *
-     *  - remark: This value returns 0 if no ID is currently assigned.
+     *  - remark: This value returns 0 if no identifer is currently assigned.
      */
     private(set) public var operationID: UInt = 0
     
@@ -136,19 +92,17 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     // MARK: PropertyCollection methods
     
     /**
-     *  The collection of `PropertyData` instances, representing the object's properties being moved. In a ``PathMotion`` the only ``PropertyData`` instance stored represents the internal progress along the path. To obtain the motion's current point along the path, subscribe to one of its update methods.
+     *  The collection of ``PropertyData`` instances, representing the object's properties being moved. In a PathMotion the only ``PropertyData`` instance stored represents the internal progress along the path. To obtain the motion's current point along the path, subscribe to one of its update methods.
      *
-     *  - remark: The `path` property of each `PropertyData` must be a valid KVC-compliant keyPath of `targetObject`.
-     *  - seealso: targetObject
      */
-    private(set) public var properties: [PropertyData] = []
+    private(set) public var properties: [PropertyData<TargetType>] = []
     
 
 
     // MARK: Easing update closures
     
     /**
-     *  A `EasingUpdateClosure` closure which performs easing calculations for the motion operation.
+     *  A ``EasingUpdateClosure`` closure which performs easing calculations for the motion operation.
      *
      *  - note: By default, Motion will use `EasingLinear.easeNone()` for its easing equation if no easing closure is assigned.
      *  - seealso: reverseEasingBlock
@@ -157,9 +111,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     
     
     /**
-     *  An optional `EasingUpdateClosure` closure which performs easing calculations for a motion operation that is reversing.
+     *  An optional ``EasingUpdateClosure`` closure which performs easing calculations for a motion operation that is reversing.
      *
-     *  - remark: If not set, the easing closure defined by the `easing` property is used while reversing.
+     *  - remark: If not set, the easing closure defined by the ``easing`` property is used while reversing.
      *
      *  - seealso: easingBlock
      */
@@ -169,10 +123,10 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     // MARK: Motion state properties
     
     /// The target object whose property should be moved.
-    private(set) public weak var targetObject: NSObject?
+    private(set) public weak var targetObject: TargetType?
     
-    /// A `MotionState` enum which represents the current state of the motion operation. (read-only)
-    private(set) public var motionState: MotionState
+    /// An enum which represents the current state of the motion operation. (read-only)
+    private(set) public var motionState: MoveableState
     
     /// A `MotionDirection` enum which represents the current direction of the motion operation. (read-only)
     private(set) public var motionDirection: MotionDirection
@@ -180,7 +134,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a movement between two value destinations. (read-only)
      *
-     *  - remark: Be aware that if this motion is `reversing` or `repeating`, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a Motion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
+     *  - remark: Be aware that if this motion is ``isReversing`` or ``isRepeating``, this value will only represent one movement. For instance, if a Motion has been set to repeat once, this value will move from 0.0 to 1.0, then reset to 0.0 again as the new repeat cycle starts. Similarly, if a Motion is set to reverse, this progress will represent each movement; first in the forward direction, then again when reversing back to the starting values.
      */
     private(set) public var motionProgress: Double {
         
@@ -192,9 +146,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             _motionProgress = newValue
             
             // sync cycleProgress with motionProgress so that cycleProgress always represents total cycle progress
-            if (reversing && motionDirection == .forward) {
+            if (isReversing && motionDirection == .forward) {
                 _cycleProgress = _motionProgress * 0.5
-            } else if (reversing && motionDirection == .reverse) {
+            } else if (isReversing && motionDirection == .reverse) {
                 _cycleProgress = (_motionProgress * 0.5) + 0.5
             } else {
                 _cycleProgress = _motionProgress
@@ -210,7 +164,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     /**
      *  A value between 0.0 and 1.0, which represents the current progress of a motion cycle. (read-only)
      *
-     *  - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
+     *  - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement, which at completion will have a value of 0.5, and the movement in reverse which at completion will have a value of 1.0); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle and thus the progress will reset to 0.0 for each repeat.
      */
     private(set) public var cycleProgress: Double {
         get {
@@ -221,7 +175,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             _cycleProgress = newValue
             
             // sync motionProgress with cycleProgress, so we modify the ivar directly (otherwise we'd enter a recursive loop as each setter is called)
-            if (reversing) {
+            if (isReversing) {
                 var new_progress = _cycleProgress * 2
                 if (_cycleProgress >= 0.5) { new_progress -= 1 }
                 _motionProgress = new_progress
@@ -238,22 +192,21 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     /**
      *  The amount of completed motion cycles.  (read-only)
      *
-     * - remark: A cycle represents the total length of a one motion operation. If `reversing` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if `repeating`, each repetition will be a new cycle.
+     * - remark: A cycle represents the total length of a one motion operation. If ``isReversing`` is set to `true`, a cycle comprises two separate movements (the forward movement and the movement in reverse); otherwise a cycle is the length of one movement. Note that if ``isRepeating`` is `true`, each repetition will be a new cycle.
      */
     private(set) public var cyclesCompletedCount: UInt = 0
     
     
     /**
-     *  A value between 0.0 and 1.0, which represents the current overall progress of the Motion. This value should include all reversing and repeat motion cycles. (read-only)
+     *  A value between 0.0 and 1.0, which represents the current overall progress of the motion. This value should include all reversing and repeat motion cycles. (read-only)
      *
-     *  - remark: If a Motion is not repeating, this value will be equivalent to the value of `cycleProgress`.
-     *  - seealso: cycleProgress
+     *  - remark: If the motion is not repeating, this value will be equivalent to the value of ``cycleProgress``.
      *
      */
     public var totalProgress: Double {
         get {
             // sync totalProgress with cycleProgress
-            if (repeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
+            if (isRepeating && repeatCycles > 0 && cyclesCompletedCount < (repeatCycles+1)) {
                 return (_cycleProgress + Double(cyclesCompletedCount)) / Double(repeatCycles+1)
             } else {
                 return _cycleProgress
@@ -279,7 +232,25 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     // MARK: Moveable protocol properties
     
     /// A Boolean which determines whether a motion operation, when it has moved to the ending value, should move from the ending value back to the starting value.
-    public var reversing: Bool = false
+    public var isReversing: Bool = false
+    
+    
+    /**
+     *  A Boolean which determines whether a motion operation should repeat. When set to `true`, the motion operation repeats for the number of times specified by the ``repeatCycles`` property. The default value is `false`.
+     *
+     *  - note: By design, setting this value to `true` without changing the ``repeatCycles`` property from its default value will cause the motion to repeat infinitely.
+     */
+    public var isRepeating: Bool = false
+    
+    
+    /**
+     *  The number of motion cycle operations to repeat.
+     *
+     *  - remark: This property is only used when ``isRepeating`` is set to `true`. Assigning `REPEAT_INFINITE` to this property signals an infinite amount of motion cycle repetitions. The default value is `REPEAT_INFINITE`.
+     *
+     */
+    public var repeatCycles: UInt = REPEAT_INFINITE
+    
     
     /// Provides a delegate for updates to a Moveable object's status, used by `Moveable` collections.
     public weak var updateDelegate: MotionUpdateDelegate?
@@ -288,11 +259,11 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     // MARK: TempoDriven protocol properties
     
     /**
-     *  A concrete `Tempo` subclass that provides an update "beat" while a motion operation occurs.
+     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" while a motion operation occurs.
      *
-     *  - remark: By default, Motion will assign an instance of `CATempo` to this property, which uses `CADisplayLink` for interval updates.
+     *  - Note: By default, PathMotion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
      */
-    public var tempo: Tempo? {
+    public var tempo: TempoProviding? {
         
         get {
             return _tempo
@@ -309,8 +280,8 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             
         }
     }
-    lazy private var _tempo: Tempo? = {
-        return CATempo.init()
+    lazy private var _tempo: TempoProviding? = {
+        return DisplayLinkTempo()
     }()
     
     
@@ -346,7 +317,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     private var _stopped: PathMotionStopped?
     
     /**
-     *  This closure is called when a motion operation update occurs and this instance's `motionState` is `.Moving`.
+     *  This closure is called when a motion operation update occurs and this instance's ``motionState`` is `moving`.
      *
      *  - remark: This method can be chained when initializing the object.
      *
@@ -483,9 +454,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         let start = max(min(startPosition ?? 0.0, 1.0), 0.0)
         let end = max(min(endPosition ?? 1.0, 1.0), 0.0)
         
-        let state = PropertyData(path: "percentageComplete", start: start, end: end)
+        let state = PropertyData(keyPath: \PathState.percentageComplete, start: start, end: end)
         
-        let properties: [PropertyData] = [state]
+        let properties: [PropertyData<TargetType>] = [state]
         self.targetObject = pathState
         self.pathState = pathState
         
@@ -502,8 +473,8 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         
         // unpack options values
         if let options {
-            repeating = options.contains(.repeats)
-            reversing = options.contains(.reverses)
+            isRepeating = options.contains(.repeats)
+            isReversing = options.contains(.reverses)
         }
         
         motionState = .stopped
@@ -511,13 +482,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         
         _tempo?.delegate = self
 
-        
-        for var property in properties {
-            setup(forProperty: &property)
-            property.delegate = self
-
-            self.properties.append(property)
-        }
+        setupProperties(properties: properties)
         
     }
     
@@ -550,7 +515,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     @discardableResult public func repeats(_ numberOfCycles: UInt = REPEAT_INFINITE) -> PathMotion {
         
         repeatCycles = numberOfCycles
-        repeating = true
+        isRepeating = true
         
         return self
     }
@@ -567,7 +532,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
      */
     @discardableResult public func reverses(withEasing easing: EasingUpdateClosure? = nil) -> PathMotion {
         
-        reversing = true
+        isReversing = true
         reverseEasing = easing
         
         return self
@@ -594,134 +559,21 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     
     // MARK: - Private methods
     
-    /**
-     *  Initializes property metadata in preparation for a motion operation.
-     *
-     *  - parameter property: The `PropertyData` instance to modify.
-     */
-    private func setup(forProperty property: inout PropertyData) {
+    func setupProperties(properties: [PropertyData<TargetType>]) {
+        guard let targetObject else { return }
         
-        guard let unwrapped_object = targetObject else { return }
-        
-        if (unwrapped_object is NSValue) {
-            property.target = unwrapped_object
-            property.parentKeyPath = property.path
+        for property in properties {
+            setupProperty(property: property, for: targetObject)
+            if property.retrieveValue(from: targetObject) != nil {
+                assignStartingPropertyValue(property)
+            }
             
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-            
-            return
+            property.delegate = self
+
+            self.properties.append(property)
         }
-
-        if (valueAssistant.acceptsKeypath(unwrapped_object)) {
-            property.targetObject = unwrapped_object
-        }
-        
-        // determine if target property is a value we can update directly, or if it's an element of a struct we need to replace
-        property.parentKeyPath = property.path
-        let keys: [String] = property.path.components(separatedBy: ".")
-        let key_count = keys.count
-        
-        if (key_count > 1) {
-            // there's more than one element in the path, meaning we have a parent, so let's find the prop type
-            
-            // descend keypath tree until we find a key in the path that isn't a struct or integer
-            var parentValue: AnyObject?
-            
-            for (index, key) in keys.enumerated() {
-                let parent_keys = keys[0 ... index]
-                
-                if (parent_keys.count > 0) {
-                    let parent_path = parent_keys.joined(separator: ".")
-
-                    if let parent = unwrapped_object.value(forKeyPath: parent_path) as? NSObject {
-                        parentValue = parent
-                        
-                        var is_value_supported = false
-
-                        if (valueAssistant.updateValue(inObject: parent, newValues: [property.path : 1]) != nil) {
-                            is_value_supported = true
-                        }
-                        
-                        if (is_value_supported) {
-                            // we found a path element that isn't numeric, so we'll need to save the path element below this one
-                            
-                            property.replaceParentProperty = true
-                            property.parentKeyPath = parent_path
-                            
-                            property.getter = MotionSupport.propertyGetter(forName: key)
-                            property.setter = MotionSupport.propertySetter(forName: key)
-                            
-                            break
-
-                        }
-                        
-                    }
-                    
-                }
-            }
-            
-            if (property.replaceParentProperty) {
-                if let value = parentValue {
-                    property.target = value
-                }
-                
-            } else if let lastProp = keys.last {
-                property.getter = MotionSupport.propertyGetter(forName: lastProp)
-                property.setter = MotionSupport.propertySetter(forName: lastProp)
-            }
-            
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-            
-        } else if (key_count == 1) {
-            // this is a top-level property, so let's see if this property is updatable
-            var is_value_supported = false
-            var propValue: Any?
-            let keypath_accepted = valueAssistant.acceptsKeypath(unwrapped_object)
-            if (keypath_accepted) {
-                do {
-                    propValue = try valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path)
-                    
-                } catch ValueAssistantError.typeRequirement(let valueType) {
-                    ValueAssistantError.typeRequirement(valueType).printError(fromFunction: #function)
-                    
-                } catch {
-                    // any other errors
-                }
-                
-                if (propValue == nil) {
-                    if let retrieved = try? valueAssistant.retrieveValue(inObject: unwrapped_object, keyPath: property.path) {
-                        propValue = retrieved
-                    }
-                }
-                
-                if let propValue = propValue as? NSObject, valueAssistant.supports(propValue) {
-                    is_value_supported = true
-                }
-            }
-            if (is_value_supported) {
-                if let value = propValue {
-                    property.target = value as AnyObject
-                }
-            
-            } else if (unwrapped_object is NSNumber) {
-                // target property's value could be nil if it's a NSNumber, so set it to the starting value
-                let start_value = NSNumber.init(value: property.start)
-                property.target = start_value
-            } else {
-                property.target = unwrapped_object
-            }
-            
-            // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&property)
-        
-        } else {
-            // there is no path, so the top-level object should be the target
-            property.target = unwrapped_object
-        }
-        
     }
+    
     
     
     /**
@@ -729,10 +581,15 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter property: The `PropertyData` instance to modify.
      */
-    private func assignStartingPropertyValue(_ property: inout PropertyData) {
+    private func assignStartingPropertyValue(_ property: PropertyData<TargetType>) {
         if ((property.useExistingStartValue || property.start == 0) && completedCount == 0) {
-            if let current_value = valueAssistant.retrieveCurrentObjectValue(forProperty: property) {
-                property.start = current_value
+            if let targetObject = property.targetObject {
+                if let startValue = property.retrieveValue(from: targetObject) as? any BinaryFloatingPoint, let convertedValue = startValue.toDouble() {
+                    property.start = convertedValue
+                    
+                } else if let startValue = property.retrieveValue(from: targetObject) as? any BinaryInteger, let convertedValue = startValue.toDouble() {
+                    property.start = convertedValue
+                }
             }
         }
     }
@@ -743,7 +600,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         
         for index in 0 ..< properties.count {
             // modify start value if we should use the existing value instead
-            assignStartingPropertyValue(&properties[index])
+            assignStartingPropertyValue(properties[index])
             properties[index].current = properties[index].start
         }
         
@@ -781,31 +638,10 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
      *
      *  - parameter property: The property to update.
      */
-    private func updatePropertyValue(forProperty property: inout PropertyData) {
-        
+    private func updatePropertyValue(forProperty property: PropertyData<TargetType>) {
         let newValue: Double = property.current
                 
-        if (property.targetObject == nil) {
-            
-            if let updatedProperty = valueAssistant.calculateValue(forProperty: property, newValue: newValue) {
-                property.target = updatedProperty
-            }
-            
-            return
-        }
-        
-        if let targetObject = property.targetObject {
-            
-            if let updatedProperty = valueAssistant.calculateValue(forProperty: property, newValue: newValue) {
-
-                if (!property.replaceParentProperty) {
-                    targetObject.setValue(updatedProperty, forKey: property.path)
-                } else {
-                    targetObject.setValue(updatedProperty, forKeyPath: property.parentKeyPath)
-                }
-                                
-            }
-        }
+        valueAssistant.update(property: property, newValue: newValue)
         
         // in PathMotion we just move a float value from 0 to 1, so we need to manually update the CGPoint to reflect the new value
         self.pathState.movePoint(to: newValue)
@@ -818,16 +654,16 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         motionState = .stopped
         _motionProgress = 1.0
         _cycleProgress = 1.0
-        if (!repeating) { cyclesCompletedCount += 1 }
+        if (!isRepeating) { cyclesCompletedCount += 1 }
         completedCount += 1
         
         for index in 0 ..< properties.count {
-            if (reversing) {
+            if (isReversing) {
                 properties[index].current = properties[index].start
             } else {
                 properties[index].current = properties[index].end
             }
-            updatePropertyValue(forProperty: &properties[index])
+            updatePropertyValue(forProperty: properties[index])
         }
 
         
@@ -851,7 +687,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             
             // reset for next cycle
             properties[0].current = properties[0].start
-            updatePropertyValue(forProperty: &properties[0])
+            updatePropertyValue(forProperty: properties[0])
 
             _cycleProgress = 0.0
             _motionProgress = 0.0
@@ -859,7 +695,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             // setting startTime to 0.0 causes update method to re-init the motion
             startTime = 0.0
             
-            if (reversing) {
+            if (isReversing) {
                 reverseMotionDirection()
             }
             
@@ -892,7 +728,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
         _motionProgress = 0.0
 
         // update to end state before calling reverse closure
-        updatePropertyValue(forProperty: &properties[0])
+        updatePropertyValue(forProperty: properties[0])
 
         // call reverse closure
         _reversed?(self, pathState.currentPoint)
@@ -934,7 +770,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
                 pauseTimestamp = 0.0
                 
                 for index in 0 ..< properties.count {
-                    updatePropertyValue(forProperty: &properties[index])
+                    updatePropertyValue(forProperty: properties[index])
                 }
             }
             
@@ -978,7 +814,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             
             if (self.currentTime < self.endTime) {
                 for index in 0 ..< properties.count {
-                    updatePropertyValue(forProperty: &properties[index])
+                    updatePropertyValue(forProperty: properties[index])
                 }
                 // call update closure
                 _updated?(self, pathState.currentPoint)
@@ -986,14 +822,14 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
             } else {
                 
                 // motion has completed
-                if (reversing || repeating) {
-                    if ((repeating && !reversing) || (reversing && repeating && motionDirection == .reverse)) {
+                if (isReversing || isRepeating) {
+                    if ((isRepeating && !isReversing) || (isReversing && isRepeating && motionDirection == .reverse)) {
                         nextRepeatCycle()
                         
-                    } else if (!repeating && reversing && motionDirection == .reverse) {
+                    } else if (!isRepeating && isReversing && motionDirection == .reverse) {
                         motionCompleted()
                         
-                    } else if (reversing && motionState == .moving) {
+                    } else if (isReversing && motionState == .moving) {
                         reverseMotionDirection()
                     }
                     
@@ -1147,3 +983,4 @@ public class PathMotion: Moveable, TempoDriven, PropertyDataDelegate {
     
 
 }
+#endif

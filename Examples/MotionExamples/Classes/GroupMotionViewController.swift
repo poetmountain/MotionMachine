@@ -2,7 +2,7 @@
 //  GroupMotionViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -44,25 +44,25 @@ public class GroupMotionViewController: UIViewController, ButtonsViewDelegate {
             // setup motion
             group = MotionGroup(options: [.reverses])
             .add(Motion(target: constraints["circleX"]!,
-                    properties: [PropertyData("constant", 200.0)],
+                        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 200.0)],
                       duration: 1.0,
                         easing: EasingQuartic.easeInOut()))
                 
             .add(Motion(target: constraints["circleY"]!,
-                    properties: [PropertyData("constant", 250.0)],
+                        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
                       duration: 1.4,
                         easing: EasingElastic.easeInOut()))
                 
             .add(Motion(target: circle,
-                    properties: [PropertyData("backgroundColor.blue", 0.9)],
+                        states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)),
                       duration: 1.2,
                         easing: EasingQuartic.easeInOut()))
             
             .add(Motion(target: constraints["circle2X"]!,
-                        properties: [PropertyData("constant", 300.0)],
+                        properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 300.0)],
                         duration: 1.2,
                         easing: EasingQuadratic.easeInOut()))
-            (group.motions.last as! Motion).reverseEasing = EasingQuartic.easeInOut()
+            (group.motions.last as? Motion<NSLayoutConstraint>)?.reverseEasing = EasingQuartic.easeInOut()
 
             
             createdUI = true

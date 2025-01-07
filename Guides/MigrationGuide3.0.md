@@ -1,0 +1,32 @@
+## MotionMachine 3.0 Migration Guide
+
+MotionMachine 3.0 is a sizeable overhaul of core functionality, replacing its use of Key-Value Coding to read and write property values with modern Swift KeyPaths. Though most of the API is relatively the same, there are several breaking changes and functional differences to be aware of. This guide is provided to help in the transition to 3.0 from prior versions.
+
+### Platform Updates
+
+* The minimum supported versions of iOS and tvOS have been increased to 16.0 in order to support KeyPaths in a generic way. If you need to support earlier versions of iOS or tvOS, please continue to use MotionMachine release `2.2.1`.
+* macOS support has been added, supporting macOS 14.0 and up. A new `CGColorAssistant` value assistant was also added to support using `CGColor` with `MotionState` on AppKit.
+* Due to the adoption of a Swift 6 feature (parameter pack iteration), support for Swift 5.10 has been dropped. If you require an older version of Swift, please use MotionMachine release `2.2.1` or older.
+
+### Notable Changes
+
+* `PropertyData`'s string-based `path` initialization parameters, which were used to supply Key-Value Coding paths (i.e. "frame.origin.x"), have been replaced with `keyPath` parameters which take Swift KeyPaths (i.e. `\UIView.frame.origin.x`). These will effectively point to the same objects or property values as your existing string keypaths. This change also applies to `MotionState`. Note that `PropertyData` now has a `stringPath` property, but this is used by some `ValueAssistant` classes for Apple system types that cannot be otherwise handled using only Swift Keypaths and should not be set directly unless by your own `ValueAssistant` classes.
+    * Structs cannot be used as the top level of a KeyPath, though you can use them as a descendent of the top level object.
+    * Unlike previous versions of MotionMachine, Optionals in key paths are now supported, however you must provide a default value for them via a subscript when declaring the KeyPath, using the format `\Object.someOptional[default: <some default value>]`.
+* `Motion`'s `targetObject` property is now typed as conforming to `AnyObject` instead of `NSObject`, as KVC is no longer being used. In fact, `NSObject` and `NSValue` have been completely removed from MotionMachine.
+* `Motion`'s `propertiesForStates` initializer parameter has been renamed to `states` and is no longer an array of states, but instead is a [parameter pack](https://developer.apple.com/videos/play/wwdc2023/10168) of states. This was required to support `MotionState`'s new property generic which provides type safety and equality to the `start` and `end` parameter values passed in. `MotionState` objects should be supplied to this parameter just like any variadic parameter, for instance `Motion(target: view, states: frameState, colorState, duration: 1.5)`. Unfortunately, supporting the Swift 6 pack iteration feature that MotionMachine needs to generate `PropertyData` objects from each `MotionState` means that support for Swift 5.10 had to be dropped.
+* Additive mode for `Motion` and `PhysicsMotion` must now be set via the `options` initialization parameter using the new option `additive`. The related property `additive` on `Motion` and `PhysicsMotion` has now been renamed to `isAdditive` and is read-only.
+* The `Moveable` protocol property `reversing` was renamed to `isReversing`.
+* The `Moveable` protocol has had the properties `isRepeating` and `repeatCycles` added to it. The `repeating` property which already existed on motion classes has been renamed to `isRepeating`. The default value `REPEAT_INFINITE` has been moved from a top-level definition in the library to a static property on `Moveable`.
+* `PropertyStates` has been renamed to `MotionState`.
+* `PropertyData` is now a class instead of a struct.
+* The "magic" convenience string-based keypath values for `UIColor` properties (red, green, blue, hue, saturation, etc.) no longer exist due to the switch to using Swift KeyPaths instead of NSObject's KVC, as those are not actual properties on `UIColor`. Thus, please now use a `MotionState` when you need to animate a `UIColor`.
+* Numeric value interpolations are now handled by the new assistant `NumericAssistant`. Formerly, `CGStructAssistant` was used for this purpose. This supports all types that conform to either `BinaryFloatingPoint` or `BinaryInteger`, as well as `NSNumber`.
+* The default tempo class for all `TempoDriven` motion classes is now `DisplayLinkTempo` instead of `CATempo`. This is a new class which automatically chooses the correct tempo type depending on the system platform being used. For iOS, visionOS, and tvOS the class chosen will continue to be `CATempo`, but for newly-supported macOS it will be `MacDisplayLinkTempo`. Both classes internally use a `CADisplayLink` object for updates.
+* Tempo classes no longer subclass the `Tempo` abstract class, which has been removed. They now conform to the `TempoProviding` protocol.
+* `TimerTempo`'s update interval now corresponds to the value of `maximumFramesPerSecond` for the `UIScreen`/`NSScreen` the app is running on, in order that motions do not lag behind the refresh rate of the display. For instance, if a screen's `maximumFramesPerSecond` value is 120.0, the timer interval will be 1/120. Formerly it was locked to 60 cycles per second. You can still provide a custom value for this interval, as always.
+* The updating of property values on target objects has been moved from motion classes to relevant `ValueAssistant` classes instead. This better focuses `Motion` and `PhysicsMotion` on pure value interpolations and gives the task of object handling to the `ValueAssistant` classes that have the most knowledge of those objects.
+* The update closure type definitions for `MotionSequence` and `MotionGroup` have been moved inside their classes to provide better scoping.
+* Some methods have been removed from the various `ValueAssistant` classes. `ValueAssistant`-conforming classes should now be update target object properties using the new `update(property: newValue:)` method.
+* Internal platform availability checks have been improved. Theoretically this may allow MotionMachine to now run on non-Apple platforms on which Swift is available, though this has not been tested. `NumericAssistant` and `SIMDAssistant` are the only two `ValueAssistant` classes which only require the Foundation framework, and thus may be usable on non-Apple Swift platforms out of the box.
+

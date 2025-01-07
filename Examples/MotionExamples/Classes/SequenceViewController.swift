@@ -2,7 +2,7 @@
 //  SequenceNoncontiguousViewController.swift
 //  MotionExamples
 //
-//  Copyright © 2024 Poet & Mountain, LLC. All rights reserved.
+//  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
 //  https://github.com/poetmountain
 //
 //  Licensed under MIT License. See LICENSE file in this repository.
@@ -51,12 +51,12 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
             
             for x in 0..<4 {
                 let down = Motion(target: constraints[x],
-                                   properties: [PropertyData("constant", 250.0)],
+                                  properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
                                    duration: 0.6,
                                    easing: EasingQuartic.easeInOut())
                 
                 let color = Motion(target: squares[x],
-                                   statesForProperties: [PropertyStates(path: "backgroundColor", end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0))],
+                                   states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)),
                                     duration: 0.7,
                                     easing: EasingQuadratic.easeInOut())
                 
