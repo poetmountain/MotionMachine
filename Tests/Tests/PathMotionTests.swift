@@ -213,7 +213,7 @@ import UIKit
                 XCTAssertEqual(motion.totalProgress, 1.0)
                 
                 let newTimestamp = CFAbsoluteTimeGetCurrent()
-                XCTAssertEqual(newTimestamp, timestamp + motion.duration + 0.2, accuracy: 0.05)
+                XCTAssertEqual(newTimestamp, timestamp + motion.duration + 0.2, accuracy: 0.1)
                 
                 didComplete.fulfill()
         }

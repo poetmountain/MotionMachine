@@ -38,12 +38,16 @@ public class TimerTempo : TempoProviding {
         var timerInterval = interval
         
         if interval == nil {
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS)
             let fps = UIScreen.main.maximumFramesPerSecond.toDouble() ?? 60.0
             timerInterval = (1.0 / fps)
 #elseif os(macOS)
             let fps = NSScreen.main?.maximumFramesPerSecond.toDouble() ?? 60.0
             timerInterval = (1.0 / fps)
+#elseif os(visionOS)
+            timerInterval = (1.0 / 90.0)
+#else
+            timerInterval = (1.0 / 60.0)
 #endif
         }
         
