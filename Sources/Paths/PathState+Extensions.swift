@@ -32,6 +32,7 @@
 
 import Foundation
 
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 public extension PathState {
     
     /// Returns a point on the path, given a percentage representing the length of the path from 0.0 to 1.0.
@@ -393,3 +394,4 @@ extension CGPoint {
     }
 
 }
+#endif
