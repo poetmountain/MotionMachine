@@ -487,9 +487,10 @@ import Foundation
     /// Timestamp set when the `pause` method is called; used to track the amount of time paused.
     private var pauseTimestamp: TimeInterval = 0.0
     
-    /// A Timer which calls the physics update calculation at fixed rate, separate from display rate
-    private var physicsTimer: Timer?
+    /// A `DispatchSourceTimer` which calls the physics update calculation at fixed rate, separate from display rate
+    private var physicsTimer: DispatchSourceTimer?
     
+
     // The last initial velocity set.
     private var initialVelocity: Double = 0.0
     
@@ -757,18 +758,19 @@ import Foundation
         if (physicsTimer != nil) {
             removePhysicsTimer()
         }
-        physicsTimer = Timer.scheduledTimer(timeInterval: physicsTimerInterval, target: self, selector: #selector(handleTimerUpdated), userInfo: nil, repeats: true)
         
+        physicsTimer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
+        physicsTimer?.schedule(deadline: .now(), repeating: physicsTimerInterval, leeway: .milliseconds(8))
+        physicsTimer?.setEventHandler { [weak self] in
+            self?.updatePhysicsSystem()
+        }
+        physicsTimer?.resume()
     }
-    
-    
-    @objc private func handleTimerUpdated() {
-        updatePhysicsSystem()
-    }
+
     
     private func removePhysicsTimer() {
         if let timer = physicsTimer {
-            timer.invalidate()
+            timer.cancel()
             physicsTimer = nil
         }
     }

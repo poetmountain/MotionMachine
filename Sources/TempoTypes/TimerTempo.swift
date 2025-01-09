@@ -19,15 +19,12 @@ import AppKit
 public class TimerTempo : TempoProviding {
     
     /**
-     *  This `Timer` object is used to provide tempo updates.
+     *  This `DispatchSourceTimer` object is used to provide tempo updates.
      *
-     *  - warning: Do not call the `invalidate` method on this object, as its state is handled by TimerTempo directly.
+     *  - warning: Do not call the `cancel()` method on this object, as its state is handled by TimerTempo directly.
      */
     public var timer: DispatchSourceTimer?
     
-    let timerQueue = DispatchQueue(label: "com.poetmountain.motionmachine.timertempo")  // you can also use `DispatchQueue.main`, if you want
-
-        
     public weak var delegate: TempoDelegate?
 
     /**
