@@ -15,7 +15,7 @@ import UIKit
 import AppKit
 #endif
 
-/// TimerTempo uses an internal `Timer` object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.
+/// TimerTempo uses an internal `DispatchSourceTimer` object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.
 public class TimerTempo : TempoProviding {
     
     /**
@@ -23,7 +23,10 @@ public class TimerTempo : TempoProviding {
      *
      *  - warning: Do not call the `invalidate` method on this object, as its state is handled by TimerTempo directly.
      */
-    public var timer: Timer?
+    public var timer: DispatchSourceTimer?
+    
+    let timerQueue = DispatchQueue(label: "com.poetmountain.motionmachine.timertempo")  // you can also use `DispatchQueue.main`, if you want
+
         
     public weak var delegate: TempoDelegate?
 
@@ -56,22 +59,24 @@ public class TimerTempo : TempoProviding {
     
     private init(interval: TimeInterval?) {
         if let interval {
-            let timer = Timer(timeInterval: interval, weakTarget: self, selector: #selector(update(timer:)), userInfo: nil, repeats: true)
-            timer.tolerance = 0.008
-            self.timer = timer
-            RunLoop.main.add(timer, forMode: .common)
+            timer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
+            timer?.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(8))
+            timer?.setEventHandler { [weak self] in
+                self?.update()
+            }
+            timer?.resume()
         }
     }
     
-    /// Calling this method invalides the `Timer` object to prepare for deallocation.
+    /// Calling this method cancels the `DispatchSourceTimer` object to prepare for deallocation.
     public func cleanupResources() {
-        timer?.invalidate()
+        timer?.cancel()
     }
     
-    @objc func update(timer: Timer) -> Void {
+    func update() {
+        guard let isCancelled = timer?.isCancelled, isCancelled == false else { return }
         let timestamp: TimeInterval = CFAbsoluteTimeGetCurrent()
-
-        delegate?.tempoBeatUpdate(timestamp)
+        self.delegate?.tempoBeatUpdate(timestamp)
     }
     
 }

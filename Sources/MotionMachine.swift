@@ -33,9 +33,9 @@ public enum ValueAssistantError : Error {
     
 }
 
-
+#if os(iOS) || os(tvOS) || os(visionOS)
 // Taken from: https://gist.github.com/stephanecopin/c746993d7431ceaaee718a9a491a5cfa
-/// Avoids retain cycles for Timers and CADisplayLinks
+/// Avoids retain cycles for CADisplayLinks
 final class WeakTarget {
     private(set) weak var target: AnyObject?
     let selector: Selector
@@ -52,16 +52,7 @@ final class WeakTarget {
         _ = self.target?.perform(self.selector, with: parameter)
     }
 }
-
-extension Timer {
-    convenience init(timeInterval ti: TimeInterval, weakTarget: AnyObject, selector: Selector, userInfo: Any?, repeats: Bool) {
-        self.init(timeInterval: ti, target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector, userInfo: userInfo, repeats: repeats)
-    }
-
-    class func scheduledTimer(timeInterval ti: TimeInterval, weakTarget: AnyObject, selector: Selector, userInfo: Any?, repeats: Bool) -> Timer {
-        return self.scheduledTimer(timeInterval: ti, target: WeakTarget(weakTarget, selector: selector), selector: WeakTarget.triggerSelector, userInfo: userInfo, repeats: repeats)
-    }
-}
+#endif
 
 #if os(iOS) || os(tvOS) || os(visionOS)
 extension CADisplayLink {
