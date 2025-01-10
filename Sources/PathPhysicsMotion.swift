@@ -702,8 +702,8 @@ import CoreGraphics
             removePhysicsTimer()
         }
 
-        physicsTimer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
-        physicsTimer?.schedule(deadline: .now(), repeating: physicsTimerInterval, leeway: .milliseconds(8))
+        physicsTimer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+        physicsTimer?.schedule(deadline: .now(), repeating: physicsTimerInterval, leeway: .milliseconds(2))
         physicsTimer?.setEventHandler { [weak self] in
             self?.updatePhysicsSystem()
         }
