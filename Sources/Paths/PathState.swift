@@ -20,7 +20,7 @@ public final class PathState: @unchecked Sendable {
     public private(set) var currentPoint: CGPoint = .zero
     
     /// The percentage complete of the animation along the path. This property is used by the containing ``PathMotion`` instance to drive the path animation, and should not be modified directly. Values range from 0.0 to 1.0.
-    @objc public var percentageComplete: Double = 0.0
+    public var percentageComplete: Double = 0.0
     
     /// Returns the length of the path.
     public var length: CGFloat = 0.0
