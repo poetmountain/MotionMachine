@@ -21,17 +21,17 @@ import QuartzCore
 import UIKit
 #endif
 
+
 /// This struct provides utility methods for Motion classes.
 @MainActor public struct MotionSupport {
 
     // MARK: Additive utility methods
     
-    /// Holds weak references to all currently active Motion instances
-    static var motions = NSHashTable<AnyObject>.weakObjects()
+    /// Holds weak references to all currently active Additive-conforming instances
+    static var motions: [WeakAdditiveContainer] = []
     
     /// An incrementing counter which represents the most recently-created Motion operation. For internal use only.
     static var operationID: UInt = 0
-    
     
     /**
      *  Registers an `Additive` motion. Any custom classes that conform to the `Additive` protocol should register their motion object.
@@ -40,9 +40,8 @@ import UIKit
      *  - returns: An operation ID that should be assigned to the `Additive` object's `operationID` property.
      */
     public static func register(additiveMotion motion: any Additive) -> UInt {
-        if !(MotionSupport.motions.contains(motion)) {
-            MotionSupport.motions.add(motion)
-        }
+        let weakReference = WeakAdditiveContainer(value: motion, identifier: motion.id)
+        MotionSupport.motions.append(weakReference)
         
         return MotionSupport.currentAdditiveOperationID()
     }
@@ -53,7 +52,9 @@ import UIKit
      *  - parameter additiveMotion: The `Additive` object to remove.
      */
     public static func unregister(additiveMotion motion: any Additive) {
-        MotionSupport.motions.remove(motion)
+        if let index = MotionSupport.motions.firstIndex(where:  { $0.object?.id == motion.id }) {
+            MotionSupport.motions.remove(at: index)
+        }
     }
     
     
@@ -84,13 +85,10 @@ import UIKit
         
         var targetValue: Double?
         
-        // create an array from the operations NSSet, using the Motion's operationID as sort key
-        let motionsArray = MotionSupport.motions.allObjects
-        let sortedMotions = motionsArray.sorted( by: { (motion1, motion2) -> Bool in
-            var test: Bool = false
-            if let m1 = motion1 as? any Additive, let m2 = motion2 as? any Additive {
-                test =  m1.operationID < m2.operationID
-            }
+        // create a sorted array from the operations Array, using the Motion's operationID as sort key
+        let sortedMotions = motions.compactMap { $0.object }.sorted( by: { (model1, model2) -> Bool in
+            let test: Bool = model1.operationID < model2.operationID
+            
             return test
         })
 

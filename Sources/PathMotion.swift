@@ -14,7 +14,7 @@ import CoreGraphics
 
 #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// PathMotion handles a single motion operation of a coordinate point along a `CGPath`. It does not directly accept `PropertyData` objects, but instead transforms a value between 0.0 and 1.0, representing the length of the associated path. Using this value, it updates the current point on the path.
-public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate {
+public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate, Identifiable {
     
     public typealias TargetType = PathState
     
@@ -87,6 +87,12 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
      *  - remark: This value returns 0 if no identifer is currently assigned.
      */
     private(set) public var operationID: UInt = 0
+    
+    
+    // MARK: - Identifiable conformance
+    
+    /// A unique identifier.
+    public let id = UUID()
     
     
     // MARK: PropertyCollection methods

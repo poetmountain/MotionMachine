@@ -14,7 +14,7 @@ import CoreGraphics
 
 #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
 /// PathPhysicsMotion handles a single motion operation of a coordinate point along a `CGPath` using a physics system to update the value with a decaying velocity. It does not directly accept `PropertyData` objects, but instead transforms a value between 0.0 and 1.0, representing the length of the associated path. Using this value, it updates the current point on the path.
-@MainActor public class PathPhysicsMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate {
+@MainActor public class PathPhysicsMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate, Identifiable {
 
     public typealias TargetType = PathState
     
@@ -87,6 +87,11 @@ import CoreGraphics
      */
     private(set) public var operationID: UInt = 0
     
+    
+    // MARK: - Identifiable conformance
+    
+    /// A unique identifier.
+    public let id = UUID()
 
     
     // MARK: Physics properties

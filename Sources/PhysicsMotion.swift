@@ -75,8 +75,13 @@ import Foundation
         }
     }
     
+    // MARK: - Identifiable conformance
     
-    // MARK: Additive protocol properties
+    /// A unique identifier.
+    public let id = UUID()
+    
+    
+    // MARK: Additive protocol conformance
     
     /**
      *  A Boolean which determines whether this Motion should change its object values additively. Additive animation allows multiple motions to produce a compound effect, creating smooth transitions and blends between different ending value targets. Additive animation is the default behavior for UIKit animations as of iOS 8 and is great for making user interface animations fluid and responsive. MotionMachine uses its own implementation of additive movement, so you can use additive motions on any supported object properties.
@@ -1193,4 +1198,10 @@ import Foundation
         startTime = 0.0
     }
     
+}
+
+extension PhysicsMotion: Equatable {
+    nonisolated public static func == (lhs: PhysicsMotion<TargetType>, rhs: PhysicsMotion<TargetType>) -> Bool {
+        return (lhs.id == rhs.id)
+    }
 }

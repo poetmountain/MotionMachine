@@ -10,7 +10,7 @@
 import Foundation
 
 /// MotionGroup handles the movement of one or more objects which conform to the ``Moveable`` protocol. A single `MotionGroup` could hold ``Motion``, ``PhysicsMotion``, and ``PathMotion`` objects, and even other ``MoveableCollection`` objects. The MotionGroup class is a good solution when you want to easily synchronize the movements of many ``Moveable`` objects.
-public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate {
+public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate, Identifiable {
     
     /// A closure used to provide status updates for a ``MotionGroup`` object.
     /// - Parameter group: The ``MotionGroup`` object which published this update closure.
@@ -69,6 +69,11 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
      */
     public var syncMotionsWhenReversing: Bool = false
     
+    
+    // MARK: - Identifiable conformance
+    
+    /// A unique identifier.
+    public let id = UUID()
     
     
     // MOTION STATE

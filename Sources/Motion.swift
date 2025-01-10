@@ -13,7 +13,7 @@ import Foundation
  *  Motion handles a single motion operation on one or more properties, interpolating between specified starting and ending values.
  */
 public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, PropertyDataDelegate {
-    
+
     /// A closure used to provide status updates for a ``Motion`` object.
     /// - Parameter motion: The ``Motion`` object which published this update closure.
     public typealias MotionUpdateClosure = (_ motion: Motion<TargetType>) -> Void
@@ -80,11 +80,14 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
         }
     }
     
+    // MARK: - Identifiable conformance
+    
+    /// A unique identifier.
+    public let id = UUID()
     
     
     // MARK: Additive protocol properties
 
-    
     /**
      *  A Boolean which determines whether this `Motion` should change its object values additively. Additive animation allows multiple motions to produce a compound effect, creating smooth transitions and blends between different ending value targets. Additive animation is the default behavior for UIKit animations and is great for making user interface animations fluid and responsive. MotionMachine uses its own implementation of additive movement, so you can use additive motions on any supported object properties.
      *
@@ -1158,4 +1161,10 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
     }
     
 
+}
+
+extension Motion: Equatable {
+    nonisolated public static func == (lhs: Motion<TargetType>, rhs: Motion<TargetType>) -> Bool {
+        return (lhs.id == rhs.id)
+    }
 }

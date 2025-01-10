@@ -178,10 +178,16 @@ import UIKit
         motion.updated { (motion, currentPoint) in
             guard let backEasingPoint = backEasingPoint else { return }
             // point should wrap around to beginning of path as the Back easing takes effect
-            if Math.fuzzyCompare(a: currentPoint.x, b: backEasingPoint.x, errorLimit: 0.1) && Math.fuzzyCompare(a: currentPoint.y, b: backEasingPoint.y, errorLimit: 0.1) {
+            let fuzzyCompareX = Math.fuzzyCompare(a: currentPoint.x, b: backEasingPoint.x, errorLimit: 0.1)
+            let fuzzyCompareY = Math.fuzzyCompare(a: currentPoint.y, b: backEasingPoint.y, errorLimit: 0.1)
+        
+            if fuzzyCompareX && fuzzyCompareY {
+                XCTAssertTrue(fuzzyCompareX, "Expected x-axis points to be \(backEasingPoint.x), but got \(currentPoint.x)")
+                XCTAssertTrue(fuzzyCompareY, "Expected y-axis points to be \(backEasingPoint.y), but got \(currentPoint.y)")
                 XCTAssertEqual(currentPoint.x, backEasingPoint.x, accuracy: 0.1)
                 XCTAssertEqual(currentPoint.y, backEasingPoint.y, accuracy: 0.1)
                 didComplete.fulfill()
+
             }
             
         }

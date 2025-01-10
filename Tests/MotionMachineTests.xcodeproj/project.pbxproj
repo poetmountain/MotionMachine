@@ -23,7 +23,6 @@
 		8B9C0D3C2CF834A500FC5C78 /* TestingSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D3B2CF834A500FC5C78 /* TestingSupport.swift */; };
 		8BA85013205F206C00F1FA7B /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF5205F206C00F1FA7B /* Motion.swift */; };
 		8BA85014205F206C00F1FA7B /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */; };
-		8BA85017205F206C00F1FA7B /* MotionSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */; };
 		8BA85018205F206C00F1FA7B /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */; };
 		8BA85019205F206C00F1FA7B /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */; };
 		8BA8501A205F206C00F1FA7B /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFD205F206C00F1FA7B /* EasingSine.swift */; };
@@ -37,7 +36,6 @@
 		8BA85022205F206C00F1FA7B /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85005205F206C00F1FA7B /* EasingBack.swift */; };
 		8BA85023205F206C00F1FA7B /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85006205F206C00F1FA7B /* PropertyData.swift */; };
 		8BA85025205F206C00F1FA7B /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */; };
-		8BA85026205F206C00F1FA7B /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85009205F206C00F1FA7B /* MotionMachine.swift */; };
 		8BA85027205F206C00F1FA7B /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500A205F206C00F1FA7B /* MotionGroup.swift */; };
 		8BA85028205F206C00F1FA7B /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500B205F206C00F1FA7B /* MotionSequence.swift */; };
 		8BAA9C481CF2574D0079A9DC /* EasingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C471CF2574D0079A9DC /* EasingTests.swift */; };
@@ -78,7 +76,6 @@
 		8B9C0D3B2CF834A500FC5C78 /* TestingSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingSupport.swift; sourceTree = "<group>"; };
 		8BA84FF5205F206C00F1FA7B /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsMotion.swift; sourceTree = "<group>"; };
-		8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSupport.swift; sourceTree = "<group>"; };
 		8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
 		8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
 		8BA84FFD205F206C00F1FA7B /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
@@ -92,7 +89,6 @@
 		8BA85005205F206C00F1FA7B /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
 		8BA85006205F206C00F1FA7B /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyData.swift; sourceTree = "<group>"; };
 		8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsSystem.swift; sourceTree = "<group>"; };
-		8BA85009205F206C00F1FA7B /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionMachine.swift; sourceTree = "<group>"; };
 		8BA8500A205F206C00F1FA7B /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroup.swift; sourceTree = "<group>"; };
 		8BA8500B205F206C00F1FA7B /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequence.swift; sourceTree = "<group>"; };
 		8BAA9C471CF2574D0079A9DC /* EasingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingTests.swift; sourceTree = "<group>"; };
@@ -103,6 +99,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		8B4B05272D30F40600241676 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
 		8B8CAE5B2CFA935B00A02EB7 /* Protocols */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Protocols; sourceTree = "<group>"; };
 		8B8CAE612CFA935B00A02EB7 /* Types */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Types; sourceTree = "<group>"; };
 		8B9C0D182CF7B85D00FC5C78 /* TempoTypes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TempoTypes; sourceTree = "<group>"; };
@@ -183,6 +180,7 @@
 		8BA84FF4205F206C00F1FA7B /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				8B4B05272D30F40600241676 /* Helpers */,
 				8BB995AA2D2791AA0021B8B0 /* MotionState.swift */,
 				8BD434A92D2515570032355F /* ValueAssistants */,
 				8B8CAE532CFA935B00A02EB7 /* PathPhysicsMotion.swift */,
@@ -193,11 +191,9 @@
 				8B9C0D182CF7B85D00FC5C78 /* TempoTypes */,
 				8BA84FF5205F206C00F1FA7B /* Motion.swift */,
 				8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */,
-				8BA84FF9205F206C00F1FA7B /* MotionSupport.swift */,
 				8BA84FFA205F206C00F1FA7B /* EasingTypes */,
 				8BA85006205F206C00F1FA7B /* PropertyData.swift */,
 				8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */,
-				8BA85009205F206C00F1FA7B /* MotionMachine.swift */,
 				8BA8500A205F206C00F1FA7B /* MotionGroup.swift */,
 				8BA8500B205F206C00F1FA7B /* MotionSequence.swift */,
 				8B8CAF132CFC325600A02EB7 /* PhysicsConfiguration.swift */,
@@ -250,6 +246,7 @@
 				8BC143CD1CF03F6900E8EBC5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				8B4B05272D30F40600241676 /* Helpers */,
 				8B8CAE5B2CFA935B00A02EB7 /* Protocols */,
 				8B8CAE612CFA935B00A02EB7 /* Types */,
 				8B9C0D182CF7B85D00FC5C78 /* TempoTypes */,
@@ -349,7 +346,6 @@
 			files = (
 				8BA85020205F206C00F1FA7B /* EasingBounce.swift in Sources */,
 				8B8CAF142CFC325600A02EB7 /* PhysicsConfiguration.swift in Sources */,
-				8BA85017205F206C00F1FA7B /* MotionSupport.swift in Sources */,
 				8BA85013205F206C00F1FA7B /* Motion.swift in Sources */,
 				8B8CAE702CFAF26600A02EB7 /* PhysicsSystemTests.swift in Sources */,
 				8BA85019205F206C00F1FA7B /* EasingLinear.swift in Sources */,
@@ -376,7 +372,6 @@
 				8B9C0D262CF7B88F00FC5C78 /* PathMotion.swift in Sources */,
 				8B6B031B1CF3CC6300C1E216 /* PhysicsMotionTests.swift in Sources */,
 				8BB995AB2D2791AA0021B8B0 /* MotionState.swift in Sources */,
-				8BA85026205F206C00F1FA7B /* MotionMachine.swift in Sources */,
 				8B9C0D282CF7B8D700FC5C78 /* PathMotionTests.swift in Sources */,
 				8B8CAE682CFA935B00A02EB7 /* PathPhysicsMotion.swift in Sources */,
 				8BA85014205F206C00F1FA7B /* PhysicsMotion.swift in Sources */,

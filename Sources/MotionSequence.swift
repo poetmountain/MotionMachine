@@ -10,7 +10,7 @@
 import Foundation
 
 /// MotionSequence moves a collection of objects conforming to the ``Moveable`` protocol in sequential order. A single `MotionSequence` could hold ``Motion``, ``PhysicsMotion``, and ``PathMotion`` objects, and even other ``MoveableCollection`` objects. MotionSequence provides a powerful and easy way of chaining together individual motions to create complex animations.
-public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate {
+public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUpdateDelegate, Identifiable {
 
     /// A closure used to provide status updates for a ``MotionSequence`` object.
     /// - Parameter sequence: The ``MotionSequence`` object which published this update closure.
@@ -59,8 +59,14 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
      */
     public var delay: TimeInterval = 0.0
     
+    
+    // MARK: - Identifiable conformance
+    
+    /// A unique identifier.
+    public let id = UUID()
+    
 
-    // MOTION STATE
+    // MARK: - Motion State
     
     /**
      *  An array of ``Moveable`` objects controlled by this MotionSequence object, determining each step of the sequence. (read-only)
