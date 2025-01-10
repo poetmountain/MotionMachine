@@ -706,11 +706,6 @@ import CoreGraphics
         
     }
     
-    
-    @objc private func handleTimerUpdated() {
-        updatePhysicsSystem()
-    }
-    
     private func removePhysicsTimer() {
         if let timer = physicsTimer {
             timer.cancel()
@@ -754,7 +749,7 @@ import CoreGraphics
             let adjustedProperty = PropertyData(keyPath: \PropertyAdjustmentContainer.value, start: pathLengthStart, end: pathLengthEnd)
             adjustedProperty.current = pathState.length*properties[0].current
             
-            let newPositions = physicsSystem.solve(forPositions: [adjustedProperty], timestamp: CFAbsoluteTimeGetCurrent())
+            let newPositions = physicsSystem.solve(forPositions: [adjustedProperty], timestamp: Date().timeIntervalSince1970)
 
             if newPositions.count > 0 {
                 let delta = abs(abs(newPositions[0]) - abs(properties[0].current))

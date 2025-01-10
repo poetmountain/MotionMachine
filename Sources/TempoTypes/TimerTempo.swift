@@ -72,7 +72,7 @@ public class TimerTempo : TempoProviding {
     
     func update() {
         guard let isCancelled = timer?.isCancelled, isCancelled == false else { return }
-        let timestamp: TimeInterval = CFAbsoluteTimeGetCurrent()
+        let timestamp = Date().timeIntervalSince1970
         self.delegate?.tempoBeatUpdate(timestamp)
     }
     

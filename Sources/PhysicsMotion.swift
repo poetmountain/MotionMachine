@@ -803,7 +803,7 @@ import Foundation
     
     private func updatePhysicsSystem() {
         if (properties.count > 0) {
-            let new_positions = physicsSystem.solve(forPositions: properties, timestamp: CFAbsoluteTimeGetCurrent())
+            let new_positions = physicsSystem.solve(forPositions: properties, timestamp: Date().timeIntervalSince1970)
 
             for index in 0 ..< new_positions.count {
                 properties[index].delta = new_positions[index] - properties[index].current
