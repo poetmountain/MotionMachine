@@ -1,12 +1,12 @@
 ![MotionMachine logo](Guides/mmlogo.png)
 
 ![swift](https://img.shields.io/badge/Swift-6.0-005AA5.svg)
-![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20visionOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
+![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20visionOS%20%7C%20watchOS%20%7C%20tvOS-005AA5.svg) ![license](https://img.shields.io/badge/license-MIT-005AA5.svg)
 
-MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major UIKit types out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
+MotionMachine provides a modular, powerful, and generic platform for manipulating values, whether that be animating UI elements or interpolating property values in your own classes. It offers sensible default functionality that abstracts most of the hard work away, allowing you to focus on your work. While it is type-agnostic, MotionMachine does support most major Apple platform types as object states out of the box and provides syntactic sugar to easily manipulate them. But it's also easy to dive in and modify for your own needs, whether that be custom motion classes, supporting custom value types, or new easing equations.
 
 * Animation engine built from the ground up (not tied to Core Animation).
-* Animate system properties, UIViews, or any generic classes using many easing equations.
+* Animate system properties, UI elements, or any generic classes using many easing equations.
 * Provides static and physics-based motion classes to modifying multiple property values, and both support additive animation.
 * Provides static and physics-based motion classes that can animate a `CGPoint` along a `CGPath`, even part of a path.
 * All motion classes can be grouped, sequenced, and nested in any arrangement and have reversing and repeating actions applied at any level.
@@ -18,7 +18,7 @@ MotionMachine provides a modular, powerful, and generic platform for manipulatin
 
 ## Getting Started
 
-##### Get started with the **[Motion Classes guide](Guides/MoveableClasses.md)** for detailed explanations and examples.
+#### Get started with the **[Motion Classes guide](Guides/MoveableClasses.md)** for detailed explanations and examples.
 
 If you're upgrading from a previous version of MotionMachine, check out the [3.0 Migration Guide](Guides/MigrationGuide3.0.md) for breaking changes.
 
@@ -168,7 +168,7 @@ You can add MotionMachine to an Xcode project by adding it as a Swift package de
 MotionMachine currently requires:
 * Swift 6.0 or above
 * Xcode 16+
-* iOS 16.0 or later, macOS 14.0 or later, visionOS 1.0 or later, tvOS 16.0 or later
+* iOS 16.0 or later, macOS 14.0 or later, visionOS 1.0 or later, watchOS 9.0 or later, tvOS 16.0 or later
 
 #### Caveats
 
