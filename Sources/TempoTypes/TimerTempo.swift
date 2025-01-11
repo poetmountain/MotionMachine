@@ -13,6 +13,8 @@ import Foundation
 import UIKit
 #elseif canImport(AppKit)
 import AppKit
+#elseif canImport(WatchKit)
+import WatchKit
 #endif
 
 /// TimerTempo uses an internal `DispatchSourceTimer` object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.
@@ -46,6 +48,10 @@ public class TimerTempo : TempoProviding {
             timerInterval = (1.0 / fps)
 #elseif os(visionOS)
             timerInterval = (1.0 / 90.0)
+#elseif os(watchOS)
+            // AFAIK there's no current way to determine the maximum framerate of the display on watchOS, other than through WKInterfaceSKScene
+            // so we're just choosing 60fps as a conservative interval (and which matches WKInterfaceSKScene's preferredFramesPerSecond default value)
+            timerInterval = (1.0 / 60.0)
 #else
             timerInterval = (1.0 / 60.0)
 #endif
@@ -56,8 +62,8 @@ public class TimerTempo : TempoProviding {
     
     private init(interval: TimeInterval?) {
         if let interval {
-            timer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
-            timer?.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(8))
+            timer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+            timer?.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(2))
             timer?.setEventHandler { [weak self] in
                 self?.update()
             }

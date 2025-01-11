@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6027CB25-6BA4-4396-AD38-619FC55441D1",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MotionMachineTests.xcodeproj",
+        "identifier" : "8BBF1DFF2D322FC800FB5003",
+        "name" : "MotionMachineWatchTests"
+      }
+    }
+  ],
+  "version" : 1
+}

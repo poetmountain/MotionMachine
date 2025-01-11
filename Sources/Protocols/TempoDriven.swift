@@ -15,10 +15,11 @@ import Foundation
  *  - important: While you aren't required to implement this protocol in order to update your own custom ``Moveable`` classes, it is the preferred way to interact with the MotionMachine ecosystem unless your requirements prevent using ``TempoProviding`` objects for updating your value interpolations.
  */
 @MainActor public protocol TempoDriven: TempoDelegate {
+
     /**
-     *  An object conforming to the ``TempoProviding`` protocol which provides an update "beat" to drive a motion.
+     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" while a motion operation occurs.
      *
-     *  - note: It is expected that classes implementing this protocol also subscribe to this object's ``TempoDelegate`` delegate methods.
+     *  - Note: By default, this class will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates. For watchOS and non-Apple platforms, ``TimerTempo`` is chosen as `CADisplayLink` is not available.
      */
     var tempo: TempoProviding? { get set }
 

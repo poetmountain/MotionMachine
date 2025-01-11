@@ -195,7 +195,7 @@ import UIKit
 
 // MARK: - Declarations
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// An enum representing value types supported by MotionMachine.
 @MainActor public enum ValueStructTypes {
     
@@ -214,10 +214,12 @@ import UIKit
     /// Represents a `CGAffineTransform` type.
     case affineTransform
     
+    #if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     /// Represents a `CATransform3D` type.
     case transform3D
+    #endif
     
-    #if os(iOS) || os(tvOS) || os(visionOS)
+    #if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
     /// Represents a `UIEdgeInsets` type.
     case uiEdgeInsets
     
@@ -227,7 +229,7 @@ import UIKit
     
     /// Represents an unsupported type.
     case unsupported
-    
+#if os(iOS) || os(tvOS) || os(visionOS)
     static var valueTypes: [ValueStructTypes: Any] = [ValueStructTypes.point : CGPoint.zero,
                                                       ValueStructTypes.size : CGSize.zero,
                                                       ValueStructTypes.rect : CGRect.zero,
@@ -235,6 +237,16 @@ import UIKit
                                                       ValueStructTypes.affineTransform : CGAffineTransform.identity,
                                                       ValueStructTypes.transform3D : CATransform3DIdentity
     ]
+#endif
+
+#if os(watchOS)
+    static var valueTypes: [ValueStructTypes: Any] = [ValueStructTypes.point : CGPoint.zero,
+                                                      ValueStructTypes.size : CGSize.zero,
+                                                      ValueStructTypes.rect : CGRect.zero,
+                                                      ValueStructTypes.vector : CGVector(dx: 0.0, dy: 0.0),
+                                                      ValueStructTypes.affineTransform : CGAffineTransform.identity
+    ]
+#endif
     
 }
 #endif

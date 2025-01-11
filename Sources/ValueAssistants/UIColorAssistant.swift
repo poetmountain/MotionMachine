@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
 /// UIColorAssistant provides support for the `UIColor` type.
 public final class UIColorAssistant<TargetType: AnyObject>: ValueAssistant {
     

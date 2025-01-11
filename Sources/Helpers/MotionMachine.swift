@@ -33,7 +33,7 @@ public enum ValueAssistantError : Error {
     
 }
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
 // Taken from: https://gist.github.com/stephanecopin/c746993d7431ceaaee718a9a491a5cfa
 /// Avoids retain cycles for CADisplayLinks
 final class WeakTarget {
@@ -217,7 +217,7 @@ func == (a: Moveable, b: Moveable) -> Bool {
     return false
 }
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 extension CGPath {
     
     /// Introspects the path and returns all path elements as models.

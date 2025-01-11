@@ -9,8 +9,9 @@
 
 import XCTest
 
+
 @MainActor class CIColorAssistantTests: XCTestCase {
-    
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     func test_generateProperties() {
         let assistant = CIColorAssistant<Tester>()
         let tester = Tester()
@@ -124,4 +125,5 @@ import XCTest
         XCTAssertEqual(newValue, currentObjectValue + delta)
 
     }
+#endif
 }

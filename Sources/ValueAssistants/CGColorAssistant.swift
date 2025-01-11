@@ -12,7 +12,7 @@ import Foundation
 import CoreGraphics
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// CGColorAssistant provides support for the `CGColor` type.
 public final class CGColorAssistant<TargetType: AnyObject>: ValueAssistant {
 

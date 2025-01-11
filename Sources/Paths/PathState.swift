@@ -12,7 +12,7 @@ import Foundation
 import CoreGraphics
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// This state object is used in conjunction with ``PathMotion`` to handle the movement of a point along a path.
 public final class PathState: @unchecked Sendable {
 

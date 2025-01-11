@@ -12,7 +12,7 @@ import Foundation
 import CoreGraphics
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// PathPhysicsMotion handles a single motion operation of a coordinate point along a `CGPath` using a physics system to update the value with a decaying velocity. It does not directly accept `PropertyData` objects, but instead transforms a value between 0.0 and 1.0, representing the length of the associated path. Using this value, it updates the current point on the path.
 @MainActor public class PathPhysicsMotion: Moveable, TempoDriven, PropertyCollection, PropertyDataDelegate, Identifiable {
 
@@ -281,11 +281,6 @@ import CoreGraphics
     
     // MARK: TempoDriven protocol properties
     
-    /**
-     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" while a motion operation occurs.
-     *
-     *  - Note: By default, PathPhysicsMotion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
-     */
     public var tempo: TempoProviding? {
         
         get {

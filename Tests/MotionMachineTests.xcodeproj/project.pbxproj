@@ -42,10 +42,58 @@
 		8BAA9C4A1CF27DA40079A9DC /* MotionGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */; };
 		8BAA9C4C1CF2A4C90079A9DC /* MotionSequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */; };
 		8BB995AB2D2791AA0021B8B0 /* MotionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB995AA2D2791AA0021B8B0 /* MotionState.swift */; };
+		8BBF1DE82D322F3900FB5003 /* MotionMachineWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 8BBF1DE72D322F3900FB5003 /* MotionMachineWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8BBF1E0C2D32328000FB5003 /* MotionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB995AA2D2791AA0021B8B0 /* MotionState.swift */; };
+		8BBF1E152D32328000FB5003 /* PathPhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAE532CFA935B00A02EB7 /* PathPhysicsMotion.swift */; };
+		8BBF1E252D32328000FB5003 /* PathMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D252CF7B88F00FC5C78 /* PathMotion.swift */; };
+		8BBF1E2F2D32328000FB5003 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF5205F206C00F1FA7B /* Motion.swift */; };
+		8BBF1E302D32328000FB5003 /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FF6205F206C00F1FA7B /* PhysicsMotion.swift */; };
+		8BBF1E312D32328000FB5003 /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFB205F206C00F1FA7B /* EasingElastic.swift */; };
+		8BBF1E322D32328000FB5003 /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFC205F206C00F1FA7B /* EasingLinear.swift */; };
+		8BBF1E332D32328000FB5003 /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFD205F206C00F1FA7B /* EasingSine.swift */; };
+		8BBF1E342D32328000FB5003 /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFE205F206C00F1FA7B /* EasingQuadratic.swift */; };
+		8BBF1E352D32328000FB5003 /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84FFF205F206C00F1FA7B /* EasingCubic.swift */; };
+		8BBF1E362D32328000FB5003 /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85000205F206C00F1FA7B /* EasingCircular.swift */; };
+		8BBF1E372D32328000FB5003 /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85001205F206C00F1FA7B /* EasingExpo.swift */; };
+		8BBF1E382D32328000FB5003 /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85002205F206C00F1FA7B /* EasingQuartic.swift */; };
+		8BBF1E392D32328000FB5003 /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85003205F206C00F1FA7B /* EasingBounce.swift */; };
+		8BBF1E3A2D32328000FB5003 /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85004205F206C00F1FA7B /* EasingQuintic.swift */; };
+		8BBF1E3B2D32328000FB5003 /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85005205F206C00F1FA7B /* EasingBack.swift */; };
+		8BBF1E3C2D32328000FB5003 /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85006205F206C00F1FA7B /* PropertyData.swift */; };
+		8BBF1E3D2D32328000FB5003 /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85008205F206C00F1FA7B /* PhysicsSystem.swift */; };
+		8BBF1E3E2D32328000FB5003 /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500A205F206C00F1FA7B /* MotionGroup.swift */; };
+		8BBF1E3F2D32328000FB5003 /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8500B205F206C00F1FA7B /* MotionSequence.swift */; };
+		8BBF1E402D32328000FB5003 /* PhysicsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAF132CFC325600A02EB7 /* PhysicsConfiguration.swift */; };
+		8BBF1E472D32333400FB5003 /* MotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0751CEFA2F00087727A /* MotionTests.swift */; };
+		8BBF1E482D32333400FB5003 /* EasingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C471CF2574D0079A9DC /* EasingTests.swift */; };
+		8BBF1E492D32333400FB5003 /* MotionGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */; };
+		8BBF1E4A2D32333400FB5003 /* MotionSequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */; };
+		8BBF1E4B2D32333400FB5003 /* PhysicsMotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6B031A1CF3CC6300C1E216 /* PhysicsMotionTests.swift */; };
+		8BBF1E4C2D32333400FB5003 /* PathMotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D272CF7B8D700FC5C78 /* PathMotionTests.swift */; };
+		8BBF1E4D2D32333400FB5003 /* PathPhysicsMotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAE512CFA930600A02EB7 /* PathPhysicsMotionTests.swift */; };
+		8BBF1E4E2D32333400FB5003 /* PhysicsSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAE6F2CFAF26600A02EB7 /* PhysicsSystemTests.swift */; };
+		8BBF1E502D3233AA00FB5003 /* MotionMachineWatchTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8BBF1E4F2D3233AA00FB5003 /* MotionMachineWatchTests.xctestplan */; };
+		8BBF1E512D32344C00FB5003 /* Tester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC143D01CF0439A00E8EBC5 /* Tester.swift */; };
+		8BBF1E522D32344C00FB5003 /* TestingSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D3B2CF834A500FC5C78 /* TestingSupport.swift */; };
+		8BBF1E552D323B0A00FB5003 /* MotionMachine.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 8BBF1E532D323A1C00FB5003 /* MotionMachine.xctestplan */; };
 		8BC143D11CF0439A00E8EBC5 /* Tester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC143D01CF0439A00E8EBC5 /* Tester.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		8BBF1DE92D322F3900FB5003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B62C0091CEF9C0F0087727A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BBF1DE62D322F3900FB5003;
+			remoteInfo = "MotionMachineWatch Watch App";
+		};
+		8BBF1E042D322FC800FB5003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B62C0091CEF9C0F0087727A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BBF1DE62D322F3900FB5003;
+			remoteInfo = "MotionMachineWatch Watch App";
+		};
 		8BC143CC1CF03F6900E8EBC5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B62C0091CEF9C0F0087727A /* Project object */;
@@ -54,6 +102,20 @@
 			remoteInfo = MotionMachine;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8BBF1DF82D322F3A00FB5003 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				8BBF1DE82D322F3900FB5003 /* MotionMachineWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionMachineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,16 +157,96 @@
 		8BAA9C491CF27DA40079A9DC /* MotionGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroupTests.swift; sourceTree = "<group>"; };
 		8BAA9C4B1CF2A4C90079A9DC /* MotionSequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequenceTests.swift; sourceTree = "<group>"; };
 		8BB995AA2D2791AA0021B8B0 /* MotionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionState.swift; sourceTree = "<group>"; };
+		8BBF1DE22D322F3900FB5003 /* MotionMachineWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionMachineWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BBF1DE72D322F3900FB5003 /* MotionMachineWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MotionMachineWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BBF1E002D322FC800FB5003 /* MotionMachineWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionMachineWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BBF1E4F2D3233AA00FB5003 /* MotionMachineWatchTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MotionMachineWatchTests.xctestplan; sourceTree = "<group>"; };
+		8BBF1E532D323A1C00FB5003 /* MotionMachine.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MotionMachine.xctestplan; sourceTree = "<group>"; };
 		8BC143D01CF0439A00E8EBC5 /* Tester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tester.swift; path = Helpers/Tester.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8BBF1E412D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MotionMachine.swift,
+				MotionSupport.swift,
+				WeakAdditiveContainer.swift,
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+		8BBF1E422D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CGColorAssistant.swift,
+				CGStructAssistant.swift,
+				CIColorAssistant.swift,
+				NumericAssistant.swift,
+				SIMDAssistant.swift,
+				UIColorAssistant.swift,
+				UIKitStructAssistant.swift,
+				ValueAssistantGroup.swift,
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+		8BBF1E432D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Additive.swift,
+				MotionUpdateDelegate.swift,
+				Moveable.swift,
+				MoveableCollection.swift,
+				PropertyCollection.swift,
+				PropertyDataDelegate.swift,
+				TempoDelegate.swift,
+				TempoDriven.swift,
+				TempoProviding.swift,
+				ValueAssistant.swift,
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+		8BBF1E442D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CollectionReversingMode.swift,
+				MotionDirection.swift,
+				MotionOptions.swift,
+				MoveableState.swift,
+				MoveableStatus.swift,
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+		8BBF1E452D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PathEdgeBehavior.swift,
+				PathElement.swift,
+				PathElementType.swift,
+				PathState.swift,
+				"PathState+Extensions.swift",
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+		8BBF1E462D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CATempo.swift,
+				DisplayLinkTempo.swift,
+				MacDisplayLinkTempo.swift,
+				TimerTempo.swift,
+			);
+			target = 8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		8B4B05272D30F40600241676 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
-		8B8CAE5B2CFA935B00A02EB7 /* Protocols */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Protocols; sourceTree = "<group>"; };
-		8B8CAE612CFA935B00A02EB7 /* Types */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Types; sourceTree = "<group>"; };
-		8B9C0D182CF7B85D00FC5C78 /* TempoTypes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TempoTypes; sourceTree = "<group>"; };
-		8B9C0D202CF7B88300FC5C78 /* Paths */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Paths; sourceTree = "<group>"; };
-		8BD434A92D2515570032355F /* ValueAssistants */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ValueAssistants; sourceTree = "<group>"; };
+		8B4B05272D30F40600241676 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E412D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
+		8B8CAE5B2CFA935B00A02EB7 /* Protocols */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E432D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Protocols; sourceTree = "<group>"; };
+		8B8CAE612CFA935B00A02EB7 /* Types */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E442D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Types; sourceTree = "<group>"; };
+		8B9C0D182CF7B85D00FC5C78 /* TempoTypes */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E462D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TempoTypes; sourceTree = "<group>"; };
+		8B9C0D202CF7B88300FC5C78 /* Paths */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E452D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Paths; sourceTree = "<group>"; };
+		8BBF1DEB2D322F3900FB5003 /* MotionMachineWatch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "MotionMachineWatch Watch App"; sourceTree = "<group>"; };
+		8BD434A92D2515570032355F /* ValueAssistants */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8BBF1E422D32328100FB5003 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ValueAssistants; sourceTree = "<group>"; };
 		8BE6E4572D17D8B90050E1F2 /* ValueAssistants */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ValueAssistants; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -123,16 +265,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8BBF1DE42D322F3900FB5003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BBF1DFD2D322FC800FB5003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		8B62C0081CEF9C0F0087727A = {
 			isa = PBXGroup;
 			children = (
+				8BBF1E532D323A1C00FB5003 /* MotionMachine.xctestplan */,
+				8BBF1E4F2D3233AA00FB5003 /* MotionMachineWatchTests.xctestplan */,
 				8BA84FF4205F206C00F1FA7B /* Sources */,
 				8B62C0AC1CEFA3730087727A /* Info.plist */,
 				8B62C0341CEF9CA80087727A /* Tests */,
 				8B62C0BA1CF014210087727A /* App */,
+				8BBF1DEB2D322F3900FB5003 /* MotionMachineWatch Watch App */,
 				8B62C0121CEF9C0F0087727A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -142,6 +301,9 @@
 			children = (
 				8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */,
 				8B62C0B91CF014210087727A /* MotionMachine.app */,
+				8BBF1DE22D322F3900FB5003 /* MotionMachineWatch.app */,
+				8BBF1DE72D322F3900FB5003 /* MotionMachineWatch Watch App.app */,
+				8BBF1E002D322FC800FB5003 /* MotionMachineWatchTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -276,6 +438,67 @@
 			productReference = 8B62C0B91CF014210087727A /* MotionMachine.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8BBF1DE12D322F3900FB5003 /* MotionMachineWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BBF1DF92D322F3A00FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatch" */;
+			buildPhases = (
+				8BBF1DE02D322F3900FB5003 /* Resources */,
+				8BBF1DF82D322F3A00FB5003 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8BBF1DEA2D322F3900FB5003 /* PBXTargetDependency */,
+			);
+			name = MotionMachineWatch;
+			packageProductDependencies = (
+			);
+			productName = MotionMachineWatch;
+			productReference = 8BBF1DE22D322F3900FB5003 /* MotionMachineWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		8BBF1DE62D322F3900FB5003 /* MotionMachineWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BBF1DF52D322F3A00FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatch Watch App" */;
+			buildPhases = (
+				8BBF1DE32D322F3900FB5003 /* Sources */,
+				8BBF1DE42D322F3900FB5003 /* Frameworks */,
+				8BBF1DE52D322F3900FB5003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8BBF1DEB2D322F3900FB5003 /* MotionMachineWatch Watch App */,
+			);
+			name = "MotionMachineWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "MotionMachineWatch Watch App";
+			productReference = 8BBF1DE72D322F3900FB5003 /* MotionMachineWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BBF1E062D322FC800FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatchTests" */;
+			buildPhases = (
+				8BBF1DFC2D322FC800FB5003 /* Sources */,
+				8BBF1DFD2D322FC800FB5003 /* Frameworks */,
+				8BBF1DFE2D322FC800FB5003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8BBF1E052D322FC800FB5003 /* PBXTargetDependency */,
+			);
+			name = MotionMachineWatchTests;
+			packageProductDependencies = (
+			);
+			productName = MotionMachineWatchTests;
+			productReference = 8BBF1E002D322FC800FB5003 /* MotionMachineWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -283,7 +506,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1610;
 				ORGANIZATIONNAME = "Poet & Mountain, LLC";
 				TargetAttributes = {
@@ -297,6 +520,16 @@
 					8B62C0B81CF014210087727A = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1020;
+					};
+					8BBF1DE12D322F3900FB5003 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					8BBF1DE62D322F3900FB5003 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					8BBF1DFF2D322FC800FB5003 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 8BBF1DE62D322F3900FB5003;
 					};
 				};
 			};
@@ -315,6 +548,9 @@
 			targets = (
 				8B62C0241CEF9C0F0087727A /* MotionMachineTests */,
 				8B62C0B81CF014210087727A /* MotionMachine */,
+				8BBF1DE12D322F3900FB5003 /* MotionMachineWatch */,
+				8BBF1DE62D322F3900FB5003 /* MotionMachineWatch Watch App */,
+				8BBF1DFF2D322FC800FB5003 /* MotionMachineWatchTests */,
 			);
 		};
 /* End PBXProject section */
@@ -334,6 +570,29 @@
 				8B62C0C61CF014210087727A /* LaunchScreen.storyboard in Resources */,
 				8B62C0C31CF014210087727A /* Assets.xcassets in Resources */,
 				8B62C0C11CF014210087727A /* Main.storyboard in Resources */,
+				8BBF1E552D323B0A00FB5003 /* MotionMachine.xctestplan in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BBF1DE02D322F3900FB5003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BBF1DE52D322F3900FB5003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BBF1E502D3233AA00FB5003 /* MotionMachineWatchTests.xctestplan in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BBF1DFE2D322FC800FB5003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,9 +646,64 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8BBF1DE32D322F3900FB5003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8BBF1DFC2D322FC800FB5003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BBF1E512D32344C00FB5003 /* Tester.swift in Sources */,
+				8BBF1E522D32344C00FB5003 /* TestingSupport.swift in Sources */,
+				8BBF1E472D32333400FB5003 /* MotionTests.swift in Sources */,
+				8BBF1E482D32333400FB5003 /* EasingTests.swift in Sources */,
+				8BBF1E492D32333400FB5003 /* MotionGroupTests.swift in Sources */,
+				8BBF1E4A2D32333400FB5003 /* MotionSequenceTests.swift in Sources */,
+				8BBF1E4B2D32333400FB5003 /* PhysicsMotionTests.swift in Sources */,
+				8BBF1E4C2D32333400FB5003 /* PathMotionTests.swift in Sources */,
+				8BBF1E4D2D32333400FB5003 /* PathPhysicsMotionTests.swift in Sources */,
+				8BBF1E4E2D32333400FB5003 /* PhysicsSystemTests.swift in Sources */,
+				8BBF1E0C2D32328000FB5003 /* MotionState.swift in Sources */,
+				8BBF1E152D32328000FB5003 /* PathPhysicsMotion.swift in Sources */,
+				8BBF1E252D32328000FB5003 /* PathMotion.swift in Sources */,
+				8BBF1E2F2D32328000FB5003 /* Motion.swift in Sources */,
+				8BBF1E302D32328000FB5003 /* PhysicsMotion.swift in Sources */,
+				8BBF1E312D32328000FB5003 /* EasingElastic.swift in Sources */,
+				8BBF1E322D32328000FB5003 /* EasingLinear.swift in Sources */,
+				8BBF1E332D32328000FB5003 /* EasingSine.swift in Sources */,
+				8BBF1E342D32328000FB5003 /* EasingQuadratic.swift in Sources */,
+				8BBF1E352D32328000FB5003 /* EasingCubic.swift in Sources */,
+				8BBF1E362D32328000FB5003 /* EasingCircular.swift in Sources */,
+				8BBF1E372D32328000FB5003 /* EasingExpo.swift in Sources */,
+				8BBF1E382D32328000FB5003 /* EasingQuartic.swift in Sources */,
+				8BBF1E392D32328000FB5003 /* EasingBounce.swift in Sources */,
+				8BBF1E3A2D32328000FB5003 /* EasingQuintic.swift in Sources */,
+				8BBF1E3B2D32328000FB5003 /* EasingBack.swift in Sources */,
+				8BBF1E3C2D32328000FB5003 /* PropertyData.swift in Sources */,
+				8BBF1E3D2D32328000FB5003 /* PhysicsSystem.swift in Sources */,
+				8BBF1E3E2D32328000FB5003 /* MotionGroup.swift in Sources */,
+				8BBF1E3F2D32328000FB5003 /* MotionSequence.swift in Sources */,
+				8BBF1E402D32328000FB5003 /* PhysicsConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8BBF1DEA2D322F3900FB5003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BBF1DE62D322F3900FB5003 /* MotionMachineWatch Watch App */;
+			targetProxy = 8BBF1DE92D322F3900FB5003 /* PBXContainerItemProxy */;
+		};
+		8BBF1E052D322FC800FB5003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BBF1DE62D322F3900FB5003 /* MotionMachineWatch Watch App */;
+			targetProxy = 8BBF1E042D322FC800FB5003 /* PBXContainerItemProxy */;
+		};
 		8BC143CD1CF03F6900E8EBC5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8B62C0B81CF014210087727A /* MotionMachine */;
@@ -547,9 +861,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
 			};
 			name = Debug;
 		};
@@ -567,14 +885,19 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachine.app/MotionMachine";
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
 			};
 			name = Release;
 		};
 		8B62C0C91CF014210087727A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -588,13 +911,17 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
 			};
 			name = Debug;
 		};
 		8B62C0CA1CF014210087727A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -608,7 +935,198 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Release;
+		};
+		8BBF1DF62D322F3A00FB5003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MotionMachineWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionMachineWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Debug;
+		};
+		8BBF1DF72D322F3A00FB5003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MotionMachineWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionMachineWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Release;
+		};
+		8BBF1DFA2D322F3A00FB5003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionMachineWatch;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8BBF1DFB2D322F3A00FB5003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionMachineWatch;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8BBF1E072D322FC800FB5003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachineWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MotionMachineWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Debug;
+		};
+		8BBF1E082D322FC800FB5003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HJVTQESL5X;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poetmountain.MotionMachineWatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MotionMachineWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MotionMachineWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
 			};
 			name = Release;
 		};
@@ -638,6 +1156,33 @@
 			buildConfigurations = (
 				8B62C0C91CF014210087727A /* Debug */,
 				8B62C0CA1CF014210087727A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BBF1DF52D322F3A00FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BBF1DF62D322F3A00FB5003 /* Debug */,
+				8BBF1DF72D322F3A00FB5003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BBF1DF92D322F3A00FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BBF1DFA2D322F3A00FB5003 /* Debug */,
+				8BBF1DFB2D322F3A00FB5003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BBF1E062D322FC800FB5003 /* Build configuration list for PBXNativeTarget "MotionMachineWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BBF1E072D322FC800FB5003 /* Debug */,
+				8BBF1E082D322FC800FB5003 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

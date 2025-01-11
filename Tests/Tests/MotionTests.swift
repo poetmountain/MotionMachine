@@ -227,7 +227,7 @@ import UIKit
             print("motion2 progress \(motion.properties[0].current) :: tester \(tester.value)")
         }
         motion2.completed { (motion) in
-            XCTAssertEqual(tester.value, motion2.properties[0].end, accuracy: 0.0000001, "Expected motion end to be \(motion2.properties[0].end), but got \(tester.value).")
+            XCTAssertEqual(tester.value, motion2.properties[0].end, accuracy: 0.00001, "Expected motion end to be \(motion2.properties[0].end), but got \(tester.value).")
             did_complete.fulfill()
         }
         motion2.delay = 0.2

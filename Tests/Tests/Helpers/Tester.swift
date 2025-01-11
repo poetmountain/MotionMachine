@@ -19,9 +19,13 @@ import XCTest
     var rect = CGRect.zero
     var vector = CGVector.zero
     var transform = CGAffineTransform.identity
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     var transform3D = CATransform3DIdentity
+#endif
     var color = UIColor.red
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     var ciColor = CIColor.red
+#endif
     var cgColor = UIColor.red.cgColor
     var insets = UIEdgeInsets.zero
     var offset = UIOffset.zero

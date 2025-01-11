@@ -15,7 +15,7 @@ import CoreGraphics
 import QuartzCore
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// CGStructAssistant provides support for several Core Graphics struct types, including `CGPoint`, `CGSize`, `CGRect`, `CGVector`, `CGAffineTransform`, as well as QuartzCore's `CATransform3D` type. It also provides support for the `NSNumber` type.
 public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
         
@@ -355,7 +355,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
             }
             
             
-            
+#if os(iOS) || os(tvOS) || os(visionOS)
         case .transform3D:
                 
             guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CATransform3D> else { return properties }
@@ -588,7 +588,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
                 properties.append(prop)
             }
 
-            
+#endif
         case .unsupported: break
             
         default: break
@@ -626,6 +626,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false
         
+#if os(iOS) || os(tvOS) || os(visionOS)
         if (object is CGPoint
             || object is CGSize
             || object is CGRect
@@ -634,8 +635,19 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
             || object is CATransform3D
         ) {
             is_supported = true
-            
         }
+#endif
+
+#if os(watchOS)
+        if (object is CGPoint
+            || object is CGSize
+            || object is CGRect
+            || object is CGVector
+            || object is CGAffineTransform
+        ) {
+            is_supported = true
+        }
+#endif
         
         return is_supported
     }
@@ -644,9 +656,17 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = false
 
+#if os(iOS) || os(tvOS) || os(visionOS)
         if (object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform || object is CATransform3D) {
             accepts = true
         }
+#endif
+
+#if os(watchOS)
+        if (object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform) {
+            accepts = true
+        }
+#endif
 
         return accepts
     }
@@ -657,8 +677,9 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     
     /// Determines the type of struct represented by the supplied object.
     static func determineType(forValue value: Any) -> ValueStructTypes {
-        let type: ValueStructTypes
+        var type: ValueStructTypes
         
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
         if (value is CGPoint) {
             type = ValueStructTypes.point
         } else if (value is CGSize) {
@@ -669,11 +690,16 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
             type = ValueStructTypes.vector
         } else if (value is CGAffineTransform) {
             type = ValueStructTypes.affineTransform
-        } else if (value is CATransform3D) {
-            type = ValueStructTypes.transform3D
         } else {
             type = ValueStructTypes.unsupported
         }
+#endif
+
+#if os(iOS) || os(tvOS) || os(visionOS)
+        if (value is CATransform3D) {
+            type = ValueStructTypes.transform3D
+        }
+#endif
         
         return type
     }

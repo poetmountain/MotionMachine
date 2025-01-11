@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "30FCB426-14BC-4560-892F-EC7D319B31A4",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MotionMachineTests.xcodeproj",
+        "identifier" : "8B62C0241CEF9C0F0087727A",
+        "name" : "MotionMachineTests"
+      }
+    }
+  ],
+  "version" : 1
+}

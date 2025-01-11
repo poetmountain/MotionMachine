@@ -12,7 +12,7 @@ import Foundation
 import CoreGraphics
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// An enum representing types of path elements, used in defining animation along the path.
 public enum PathElementType {
 

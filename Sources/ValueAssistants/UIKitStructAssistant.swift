@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
 /// UIKitStructAssistant provides support for the UIKit structs `UIEdgeInsets` and `UIOffset`.
 public final class UIKitStructAssistant<TargetType: AnyObject>: ValueAssistant {
 

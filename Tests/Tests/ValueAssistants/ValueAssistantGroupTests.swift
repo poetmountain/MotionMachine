@@ -22,25 +22,25 @@ import XCTest
     
     func test_additive() {
         let structs = CGStructAssistant<Tester>()
-        let ci_colors = CIColorAssistant<Tester>()
+        let cg_colors = CGColorAssistant<Tester>()
         let ui_colors = UIColorAssistant<Tester>()
-        let assistant = ValueAssistantGroup(assistants: [structs, ci_colors, ui_colors])
+        let assistant = ValueAssistantGroup(assistants: [structs, cg_colors, ui_colors])
 
         assistant.isAdditive = true
         assistant.additiveWeighting = 0.5
         
         XCTAssertEqual(structs.isAdditive, assistant.isAdditive)
-        XCTAssertEqual(ci_colors.isAdditive, assistant.isAdditive)
+        XCTAssertEqual(cg_colors.isAdditive, assistant.isAdditive)
         XCTAssertEqual(ui_colors.isAdditive, assistant.isAdditive)
         XCTAssertEqual(structs.additiveWeighting, assistant.additiveWeighting)
-        XCTAssertEqual(ci_colors.additiveWeighting, assistant.additiveWeighting)
+        XCTAssertEqual(cg_colors.additiveWeighting, assistant.additiveWeighting)
         XCTAssertEqual(ui_colors.additiveWeighting, assistant.additiveWeighting)
 
     }
 
     
     func test_generateProperties() {
-        let assistant = ValueAssistantGroup<Tester>(assistants: [CGStructAssistant(), CIColorAssistant(), UIColorAssistant()])
+        let assistant = ValueAssistantGroup<Tester>(assistants: [CGStructAssistant(), CGColorAssistant(), UIColorAssistant()])
         let tester = Tester()
         let rect = CGRect(x: 0.0, y: 10.0, width: 50.0, height: 0.0)
         let path = \Tester.rect

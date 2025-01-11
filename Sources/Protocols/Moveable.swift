@@ -120,7 +120,7 @@ public extension Moveable {
 
 public extension Moveable {
     
-    static var REPEAT_INFINITE: UInt {
+    nonisolated static var REPEAT_INFINITE: UInt {
         return 0
     }
 }

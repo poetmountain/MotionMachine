@@ -12,7 +12,7 @@ import Foundation
 import CoreGraphics
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
 /// This model represents a single path element in a path.
 public struct PathElement {
     

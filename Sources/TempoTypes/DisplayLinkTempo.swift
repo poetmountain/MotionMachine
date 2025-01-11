@@ -28,6 +28,8 @@ import Foundation
         tempo = CATempo()
 #elseif os(macOS)
         tempo = MacDisplayLinkTempo()
+#else
+        tempo = TimerTempo()
 #endif
     }
     

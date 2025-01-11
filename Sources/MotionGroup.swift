@@ -250,11 +250,6 @@ public class MotionGroup: Moveable, MoveableCollection, TempoDriven, MotionUpdat
     
     // MARK: TempoDriven protocol properties
     
-    /**
-     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" to all child motions while the motion operation occurs.
-     *
-     *  - Note: By default, Motion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
-     */
     public var tempo: TempoProviding? {
         
         get {

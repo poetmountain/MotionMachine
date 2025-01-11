@@ -140,10 +140,10 @@ import XCTest
         
         let did_complete = expectation(description: "motion called completed notify closure")
         
-        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 10.0, friction: 0.98, options: [.additive])
+        let motion = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: 10.0, friction: 0.96, options: [.additive])
         motion.additiveWeighting = 0.5
         
-        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: -10.0, friction: 0.98, options: [.additive])
+        let motion2 = PhysicsMotion(target: tester, properties: [PropertyData(keyPath: \Tester.value)], velocity: -10.0, friction: 0.96, options: [.additive])
         .completed { (m) in
             // velocity should basically be 0 as the two velocities cancel each other out
             XCTAssertEqual(tester.value, 0.0, accuracy: 0.05)

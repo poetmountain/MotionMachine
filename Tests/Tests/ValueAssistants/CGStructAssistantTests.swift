@@ -249,7 +249,7 @@ import XCTest
         
     }
     
-    
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
     func test_generateProperties_transform3D() {
         let assistant = CGStructAssistant<Tester>()
         let tester = Tester()
@@ -288,6 +288,7 @@ import XCTest
         
         
     }
+#endif
     
     func test_supports() {
         let assistant = CGStructAssistant<Tester>()
@@ -297,7 +298,9 @@ import XCTest
         XCTAssertTrue(assistant.supports(tester.point))
         XCTAssertTrue(assistant.supports(tester.rect))
         XCTAssertTrue(assistant.supports(tester.transform))
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
         XCTAssertTrue(assistant.supports(tester.transform3D))
+#endif
         XCTAssertTrue(assistant.supports(tester.vector))
         XCTAssertFalse(assistant.supports(tester.value))
 

@@ -16,7 +16,8 @@ let package = Package(
         .iOS(.v16),
         .tvOS(.v16),
         .visionOS(.v1),
-        .macOS(.v14)
+        .macOS(.v14),
+        .watchOS(.v9)
     ],
     products: [
         .library(name: "MotionMachine", targets: ["MotionMachine"])

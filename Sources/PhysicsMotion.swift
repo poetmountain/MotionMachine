@@ -316,11 +316,6 @@ import Foundation
     
     // MARK: TempoDriven protocol properties
     
-    /**
-     *  An object conforming to the ``TempoProviding`` protocol that provides an update "beat" while a motion operation occurs.
-     *
-     *  - Note: By default, Motion will assign an instance of ``DisplayLinkTempo`` to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is ``CATempo``, but for macOS it is ``MacDisplayLinkTempo``. Both classes internally use a `CADisplayLink` object for updates.
-     */
     public var tempo: TempoProviding? {
         
         get {
@@ -548,23 +543,7 @@ import Foundation
         let properties = props ?? []
         
         self.targetObject = targetObject
-        
-        if let assistantGroup = valueAssistant as? ValueAssistantGroup<TargetType> {
-            assistantGroup.add(NumericAssistant())
-            assistantGroup.add(SIMDAssistant())
-            
-#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
-            assistantGroup.add(CGStructAssistant())
-            assistantGroup.add(CGColorAssistant())
-            assistantGroup.add(CIColorAssistant())
-#endif
-            
-#if os(iOS) || os(tvOS) || os(visionOS)
-            assistantGroup.add(UIColorAssistant())
-            assistantGroup.add(UIKitStructAssistant())
-#endif
-        }
-        
+                
         motionState = .stopped
         motionDirection = .forward
         
@@ -573,6 +552,8 @@ import Foundation
         self.friction = friction
         
         self.velocityDecayLimit = DEFAULT_DECAY_LIMIT
+        
+        addAssistants()
         
         // unpack options values
         if let options {

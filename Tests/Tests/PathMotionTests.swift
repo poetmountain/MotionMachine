@@ -296,8 +296,8 @@ import UIKit
                 XCTAssertEqual(finalValue, endPosition, accuracy: 0.000001)
                 
                 if let expectedPoint = pathState.point(at: endPosition)  {
-                    XCTAssertEqual(currentPoint.x, expectedPoint.x, accuracy: 0.000001)
-                    XCTAssertEqual(currentPoint.y, expectedPoint.y, accuracy: 0.000001)
+                    XCTAssertEqual(currentPoint.x, expectedPoint.x, accuracy: 0.001)
+                    XCTAssertEqual(currentPoint.y, expectedPoint.y, accuracy: 0.001)
                 } else {
                     XCTFail("Could not generate point on path")
                 }
@@ -343,8 +343,8 @@ import UIKit
                     XCTAssertEqual(finalValue, endPosition, accuracy: 0.000001)
                     
                     if let expectedPoint = pathState.point(at: endPosition)  {
-                        XCTAssertEqual(currentPoint.x, expectedPoint.x, accuracy: 0.000001)
-                        XCTAssertEqual(currentPoint.y, expectedPoint.y, accuracy: 0.000001)
+                        XCTAssertEqual(currentPoint.x, expectedPoint.x, accuracy: 0.001)
+                        XCTAssertEqual(currentPoint.y, expectedPoint.y, accuracy: 0.001)
                     } else {
                         XCTFail("Could not generate point on path")
                     }

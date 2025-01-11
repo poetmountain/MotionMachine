@@ -17,6 +17,8 @@
     
     /// An object conforming to the `ValueAssistant` protocol which acts as an interface for retrieving and updating value types.
     var valueAssistant: any ValueAssistant<TargetType> { get set }
+    
+    func addAssistants()
 }
 
 
@@ -83,4 +85,26 @@ public extension PropertyCollection {
         }
     }
     
+    
+    func addAssistants() {
+     
+        if let assistantGroup = valueAssistant as? ValueAssistantGroup<TargetType> {
+            assistantGroup.add(NumericAssistant())
+            assistantGroup.add(SIMDAssistant())
+            
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS) || os(watchOS)
+            assistantGroup.add(CGStructAssistant())
+            assistantGroup.add(CGColorAssistant())
+#endif
+
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
+            assistantGroup.add(CIColorAssistant())
+#endif
+            
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
+            assistantGroup.add(UIColorAssistant())
+            assistantGroup.add(UIKitStructAssistant())
+#endif
+        }
+    }
 }
