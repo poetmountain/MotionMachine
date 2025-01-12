@@ -355,7 +355,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
             }
             
             
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
         case .transform3D:
                 
             guard let keyPath = state.keyPath as? ReferenceWritableKeyPath<TargetType, CATransform3D> else { return properties }
@@ -626,7 +626,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false
         
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
         if (object is CGPoint
             || object is CGSize
             || object is CGRect
@@ -656,7 +656,7 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     public func acceptsKeypath(_ object: AnyObject) -> Bool {
         var accepts = false
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
         if (object is CGPoint || object is CGSize || object is CGRect || object is CGVector || object is CGAffineTransform || object is CATransform3D) {
             accepts = true
         }
@@ -677,9 +677,9 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     
     /// Determines the type of struct represented by the supplied object.
     static func determineType(forValue value: Any) -> ValueStructTypes {
-        var type: ValueStructTypes
+        var type: ValueStructTypes = .unsupported
         
-#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS) || os(macOS)
         if (value is CGPoint) {
             type = ValueStructTypes.point
         } else if (value is CGSize) {
@@ -690,12 +690,10 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
             type = ValueStructTypes.vector
         } else if (value is CGAffineTransform) {
             type = ValueStructTypes.affineTransform
-        } else {
-            type = ValueStructTypes.unsupported
         }
 #endif
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(macOS)
         if (value is CATransform3D) {
             type = ValueStructTypes.transform3D
         }
