@@ -28,6 +28,14 @@ import MotionMachine
         motion = nil
     }
     
+    func pauseMotion() {
+        motion?.pause()
+    }
+    
+    func resumeMotion() {
+        motion?.resume()
+    }
+    
     private func setupMotion() {
         let sizeState = MotionState(keyPath: \BasicMotionState.size, start: CGSize(width: 50, height: 50), end: CGSize(width: 200, height: 200))
         let colorState = MotionState(keyPath: \BasicMotionState.color, end: UIColor.magenta)

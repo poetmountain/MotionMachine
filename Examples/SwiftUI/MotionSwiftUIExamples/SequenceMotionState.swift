@@ -36,6 +36,14 @@ import MotionMachine
         sequence?.stop()
         sequence = nil
     }
+    
+    func pauseMotion() {
+        sequence?.pause()
+    }
+    
+    func resumeMotion() {
+        sequence?.resume()
+    }
 
     func setupMotions() {
         let xSpacer = 15.0

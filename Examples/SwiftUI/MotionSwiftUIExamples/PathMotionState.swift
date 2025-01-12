@@ -32,6 +32,14 @@ import MotionMachine
         motion = nil
     }
     
+    func pauseMotion() {
+        motion?.pause()
+    }
+    
+    func resumeMotion() {
+        motion?.resume()
+    }
+    
     private func setupMotion() {
         motion = PathMotion(path: path,
                         duration: 2.0,

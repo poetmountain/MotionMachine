@@ -26,6 +26,23 @@ struct BasicMotionView: View {
                 
             }
         }
+        VStack {
+            HStack {
+                Button {
+                    motionState?.pauseMotion()
+                } label: {
+                    Text("Pause")
+                }
+                .padding()
+                
+                Button {
+                    motionState?.resumeMotion()
+                } label: {
+                    Text("Resume")
+                }
+                .padding()
+            }
+        }
         .padding()
         .task {
             motionState = BasicMotionState()
