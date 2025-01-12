@@ -3,43 +3,25 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B33CCCB2D325ABA0081A8D9 /* MotionMachine in Frameworks */ = {isa = PBXBuildFile; productRef = 8B33CCCA2D325ABA0081A8D9 /* MotionMachine */; };
+		8B33CCCE2D325AFA0081A8D9 /* MotionMachine in Frameworks */ = {isa = PBXBuildFile; productRef = 8B33CCCD2D325AFA0081A8D9 /* MotionMachine */; };
+		8B33CCD12D325B2A0081A8D9 /* MotionMachine in Frameworks */ = {isa = PBXBuildFile; productRef = 8B33CCD02D325B2A0081A8D9 /* MotionMachine */; };
 		8B43DC401D0150B100A58D80 /* PhysicsMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC3F1D0150B100A58D80 /* PhysicsMotionViewController.swift */; };
 		8B43DC421D0159BA00A58D80 /* AdditiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC411D0159BA00A58D80 /* AdditiveViewController.swift */; };
 		8B43DC441D01764900A58D80 /* DynamicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B43DC431D01764900A58D80 /* DynamicViewController.swift */; };
 		8B683B041D00BE76008D43E2 /* GroupMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B031D00BE76008D43E2 /* GroupMotionViewController.swift */; };
 		8B683B061D00E386008D43E2 /* SequenceContiguousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B051D00E386008D43E2 /* SequenceContiguousViewController.swift */; };
 		8B683B081D012529008D43E2 /* SequenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B683B071D012529008D43E2 /* SequenceViewController.swift */; };
-		8B8CAF402CFC3CAB00A02EB7 /* PhysicsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAF3D2CFC3CAB00A02EB7 /* PhysicsConfiguration.swift */; };
-		8B8CAF432CFC3DB200A02EB7 /* PathPhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAF422CFC3DB200A02EB7 /* PathPhysicsMotion.swift */; };
-		8B8CAF442CFC3DB200A02EB7 /* PathMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8CAF412CFC3DB200A02EB7 /* PathMotion.swift */; };
-		8BA8504E205F73E100F1FA7B /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85030205F73E100F1FA7B /* Motion.swift */; };
-		8BA8504F205F73E100F1FA7B /* PhysicsMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85031205F73E100F1FA7B /* PhysicsMotion.swift */; };
-		8BA85053205F73E100F1FA7B /* EasingElastic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85036205F73E100F1FA7B /* EasingElastic.swift */; };
-		8BA85054205F73E100F1FA7B /* EasingLinear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85037205F73E100F1FA7B /* EasingLinear.swift */; };
-		8BA85055205F73E100F1FA7B /* EasingSine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85038205F73E100F1FA7B /* EasingSine.swift */; };
-		8BA85056205F73E100F1FA7B /* EasingQuadratic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85039205F73E100F1FA7B /* EasingQuadratic.swift */; };
-		8BA85057205F73E100F1FA7B /* EasingCubic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503A205F73E100F1FA7B /* EasingCubic.swift */; };
-		8BA85058205F73E100F1FA7B /* EasingCircular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503B205F73E100F1FA7B /* EasingCircular.swift */; };
-		8BA85059205F73E100F1FA7B /* EasingExpo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503C205F73E100F1FA7B /* EasingExpo.swift */; };
-		8BA8505A205F73E100F1FA7B /* EasingQuartic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503D205F73E100F1FA7B /* EasingQuartic.swift */; };
-		8BA8505B205F73E100F1FA7B /* EasingBounce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503E205F73E100F1FA7B /* EasingBounce.swift */; };
-		8BA8505C205F73E100F1FA7B /* EasingQuintic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8503F205F73E100F1FA7B /* EasingQuintic.swift */; };
-		8BA8505D205F73E100F1FA7B /* EasingBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85040205F73E100F1FA7B /* EasingBack.swift */; };
-		8BA8505E205F73E100F1FA7B /* PropertyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85041205F73E100F1FA7B /* PropertyData.swift */; };
-		8BA85060205F73E100F1FA7B /* PhysicsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85043205F73E100F1FA7B /* PhysicsSystem.swift */; };
-		8BA85062205F73E100F1FA7B /* MotionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85045205F73E100F1FA7B /* MotionGroup.swift */; };
-		8BA85063205F73E100F1FA7B /* MotionSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA85046205F73E100F1FA7B /* MotionSequence.swift */; };
 		8BB379D81CFFA17E00A35AFD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379D71CFFA17E00A35AFD /* AppDelegate.swift */; };
 		8BB379DA1CFFA17E00A35AFD /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB379D91CFFA17E00A35AFD /* MasterViewController.swift */; };
 		8BB379E11CFFA17E00A35AFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BB379E01CFFA17E00A35AFD /* Assets.xcassets */; };
 		8BB379E41CFFA17E00A35AFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB379E21CFFA17E00A35AFD /* LaunchScreen.storyboard */; };
 		8BB37A281CFFB03F00A35AFD /* BasicMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A271CFFB03F00A35AFD /* BasicMotionViewController.swift */; };
 		8BB37A2C1CFFC64F00A35AFD /* ButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB37A2B1CFFC64F00A35AFD /* ButtonsView.swift */; };
-		8BB995EB2D2792DB0021B8B0 /* MotionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB995EA2D2792DB0021B8B0 /* MotionState.swift */; };
 		8BBED8E22CFD10D40033F10A /* PathMotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBED8E12CFD10D30033F10A /* PathMotionViewController.swift */; };
 		8BBED9342CFD39A70033F10A /* PathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBED9332CFD39A70033F10A /* PathView.swift */; };
 		8BBED9362CFD5C120033F10A /* PathMotionContiguousViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBED9352CFD5C120033F10A /* PathMotionContiguousViewController.swift */; };
@@ -53,26 +35,6 @@
 		8B683B031D00BE76008D43E2 /* GroupMotionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupMotionViewController.swift; path = Classes/GroupMotionViewController.swift; sourceTree = "<group>"; };
 		8B683B051D00E386008D43E2 /* SequenceContiguousViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SequenceContiguousViewController.swift; path = Classes/SequenceContiguousViewController.swift; sourceTree = "<group>"; };
 		8B683B071D012529008D43E2 /* SequenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SequenceViewController.swift; path = Classes/SequenceViewController.swift; sourceTree = "<group>"; };
-		8B8CAF3D2CFC3CAB00A02EB7 /* PhysicsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsConfiguration.swift; sourceTree = "<group>"; };
-		8B8CAF412CFC3DB200A02EB7 /* PathMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathMotion.swift; sourceTree = "<group>"; };
-		8B8CAF422CFC3DB200A02EB7 /* PathPhysicsMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathPhysicsMotion.swift; sourceTree = "<group>"; };
-		8BA85030205F73E100F1FA7B /* Motion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
-		8BA85031205F73E100F1FA7B /* PhysicsMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsMotion.swift; sourceTree = "<group>"; };
-		8BA85036205F73E100F1FA7B /* EasingElastic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingElastic.swift; sourceTree = "<group>"; };
-		8BA85037205F73E100F1FA7B /* EasingLinear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingLinear.swift; sourceTree = "<group>"; };
-		8BA85038205F73E100F1FA7B /* EasingSine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingSine.swift; sourceTree = "<group>"; };
-		8BA85039205F73E100F1FA7B /* EasingQuadratic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuadratic.swift; sourceTree = "<group>"; };
-		8BA8503A205F73E100F1FA7B /* EasingCubic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCubic.swift; sourceTree = "<group>"; };
-		8BA8503B205F73E100F1FA7B /* EasingCircular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingCircular.swift; sourceTree = "<group>"; };
-		8BA8503C205F73E100F1FA7B /* EasingExpo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingExpo.swift; sourceTree = "<group>"; };
-		8BA8503D205F73E100F1FA7B /* EasingQuartic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuartic.swift; sourceTree = "<group>"; };
-		8BA8503E205F73E100F1FA7B /* EasingBounce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBounce.swift; sourceTree = "<group>"; };
-		8BA8503F205F73E100F1FA7B /* EasingQuintic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingQuintic.swift; sourceTree = "<group>"; };
-		8BA85040205F73E100F1FA7B /* EasingBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasingBack.swift; sourceTree = "<group>"; };
-		8BA85041205F73E100F1FA7B /* PropertyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyData.swift; sourceTree = "<group>"; };
-		8BA85043205F73E100F1FA7B /* PhysicsSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsSystem.swift; sourceTree = "<group>"; };
-		8BA85045205F73E100F1FA7B /* MotionGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionGroup.swift; sourceTree = "<group>"; };
-		8BA85046205F73E100F1FA7B /* MotionSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionSequence.swift; sourceTree = "<group>"; };
 		8BB379D41CFFA17D00A35AFD /* MotionExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BB379D71CFFA17E00A35AFD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8BB379D91CFFA17E00A35AFD /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -81,80 +43,29 @@
 		8BB379E51CFFA17E00A35AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8BB37A271CFFB03F00A35AFD /* BasicMotionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BasicMotionViewController.swift; path = Classes/BasicMotionViewController.swift; sourceTree = "<group>"; };
 		8BB37A2B1CFFC64F00A35AFD /* ButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsView.swift; sourceTree = "<group>"; };
-		8BB995EA2D2792DB0021B8B0 /* MotionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionState.swift; sourceTree = "<group>"; };
 		8BBED8E12CFD10D30033F10A /* PathMotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PathMotionViewController.swift; path = Classes/PathMotionViewController.swift; sourceTree = "<group>"; };
 		8BBED9332CFD39A70033F10A /* PathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathView.swift; sourceTree = "<group>"; };
 		8BBED9352CFD5C120033F10A /* PathMotionContiguousViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PathMotionContiguousViewController.swift; path = Classes/PathMotionContiguousViewController.swift; sourceTree = "<group>"; };
 		8BBED9372CFD6B9F0033F10A /* PathPhysicsMotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PathPhysicsMotionViewController.swift; path = Classes/PathPhysicsMotionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		8B4B056E2D30F6BF00241676 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
-		8B8CAE882CFBF0CF00A02EB7 /* Protocols */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Protocols; sourceTree = "<group>"; };
-		8B8CAE8E2CFBF0CF00A02EB7 /* Types */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Types; sourceTree = "<group>"; };
-		8BC97F402CF58DD800A41885 /* TempoTypes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TempoTypes; sourceTree = "<group>"; };
-		8BC97F472CF58E0E00A41885 /* Paths */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Paths; sourceTree = "<group>"; };
-		8BD435162D2525C00032355F /* ValueAssistants */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ValueAssistants; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		8BB379D11CFFA17D00A35AFD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B33CCCE2D325AFA0081A8D9 /* MotionMachine in Frameworks */,
+				8B33CCCB2D325ABA0081A8D9 /* MotionMachine in Frameworks */,
+				8B33CCD12D325B2A0081A8D9 /* MotionMachine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8BA8502F205F73E100F1FA7B /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				8B4B056E2D30F6BF00241676 /* Helpers */,
-				8BB995EA2D2792DB0021B8B0 /* MotionState.swift */,
-				8BD435162D2525C00032355F /* ValueAssistants */,
-				8B8CAF412CFC3DB200A02EB7 /* PathMotion.swift */,
-				8B8CAF422CFC3DB200A02EB7 /* PathPhysicsMotion.swift */,
-				8B8CAF3D2CFC3CAB00A02EB7 /* PhysicsConfiguration.swift */,
-				8B8CAE882CFBF0CF00A02EB7 /* Protocols */,
-				8B8CAE8E2CFBF0CF00A02EB7 /* Types */,
-				8BC97F472CF58E0E00A41885 /* Paths */,
-				8BC97F402CF58DD800A41885 /* TempoTypes */,
-				8BA85030205F73E100F1FA7B /* Motion.swift */,
-				8BA85031205F73E100F1FA7B /* PhysicsMotion.swift */,
-				8BA85035205F73E100F1FA7B /* EasingTypes */,
-				8BA85041205F73E100F1FA7B /* PropertyData.swift */,
-				8BA85043205F73E100F1FA7B /* PhysicsSystem.swift */,
-				8BA85045205F73E100F1FA7B /* MotionGroup.swift */,
-				8BA85046205F73E100F1FA7B /* MotionSequence.swift */,
-			);
-			name = Sources;
-			path = ../Sources;
-			sourceTree = "<group>";
-		};
-		8BA85035205F73E100F1FA7B /* EasingTypes */ = {
-			isa = PBXGroup;
-			children = (
-				8BA85036205F73E100F1FA7B /* EasingElastic.swift */,
-				8BA85037205F73E100F1FA7B /* EasingLinear.swift */,
-				8BA85038205F73E100F1FA7B /* EasingSine.swift */,
-				8BA85039205F73E100F1FA7B /* EasingQuadratic.swift */,
-				8BA8503A205F73E100F1FA7B /* EasingCubic.swift */,
-				8BA8503B205F73E100F1FA7B /* EasingCircular.swift */,
-				8BA8503C205F73E100F1FA7B /* EasingExpo.swift */,
-				8BA8503D205F73E100F1FA7B /* EasingQuartic.swift */,
-				8BA8503E205F73E100F1FA7B /* EasingBounce.swift */,
-				8BA8503F205F73E100F1FA7B /* EasingQuintic.swift */,
-				8BA85040205F73E100F1FA7B /* EasingBack.swift */,
-			);
-			path = EasingTypes;
-			sourceTree = "<group>";
-		};
 		8BB379CB1CFFA17D00A35AFD = {
 			isa = PBXGroup;
 			children = (
-				8BA8502F205F73E100F1FA7B /* Sources */,
 				8BB379D61CFFA17E00A35AFD /* MotionExamples */,
 				8BB379D51CFFA17D00A35AFD /* Products */,
 			);
@@ -215,14 +126,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				8B4B056E2D30F6BF00241676 /* Helpers */,
-				8B8CAE882CFBF0CF00A02EB7 /* Protocols */,
-				8B8CAE8E2CFBF0CF00A02EB7 /* Types */,
-				8BC97F402CF58DD800A41885 /* TempoTypes */,
-				8BC97F472CF58E0E00A41885 /* Paths */,
-				8BD435162D2525C00032355F /* ValueAssistants */,
-			);
 			name = MotionExamples;
 			productName = MotionExamples;
 			productReference = 8BB379D41CFFA17D00A35AFD /* MotionExamples.app */;
@@ -254,6 +157,9 @@
 				Base,
 			);
 			mainGroup = 8BB379CB1CFFA17D00A35AFD;
+			packageReferences = (
+				8B33CCCF2D325B2A0081A8D9 /* XCLocalSwiftPackageReference "../../../MotionMachine" */,
+			);
 			productRefGroup = 8BB379D51CFFA17D00A35AFD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -281,40 +187,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B43DC421D0159BA00A58D80 /* AdditiveViewController.swift in Sources */,
-				8BA85058205F73E100F1FA7B /* EasingCircular.swift in Sources */,
-				8BA85062205F73E100F1FA7B /* MotionGroup.swift in Sources */,
 				8B43DC401D0150B100A58D80 /* PhysicsMotionViewController.swift in Sources */,
-				8BA85060205F73E100F1FA7B /* PhysicsSystem.swift in Sources */,
 				8BBED9382CFD6B9F0033F10A /* PathPhysicsMotionViewController.swift in Sources */,
-				8BA85055205F73E100F1FA7B /* EasingSine.swift in Sources */,
-				8B8CAF402CFC3CAB00A02EB7 /* PhysicsConfiguration.swift in Sources */,
 				8B43DC441D01764900A58D80 /* DynamicViewController.swift in Sources */,
-				8BA85054205F73E100F1FA7B /* EasingLinear.swift in Sources */,
-				8BA8504F205F73E100F1FA7B /* PhysicsMotion.swift in Sources */,
-				8BA85057205F73E100F1FA7B /* EasingCubic.swift in Sources */,
 				8BB37A2C1CFFC64F00A35AFD /* ButtonsView.swift in Sources */,
-				8BA8504E205F73E100F1FA7B /* Motion.swift in Sources */,
 				8BB379DA1CFFA17E00A35AFD /* MasterViewController.swift in Sources */,
-				8BA8505E205F73E100F1FA7B /* PropertyData.swift in Sources */,
 				8BBED8E22CFD10D40033F10A /* PathMotionViewController.swift in Sources */,
-				8BA85053205F73E100F1FA7B /* EasingElastic.swift in Sources */,
-				8BA8505D205F73E100F1FA7B /* EasingBack.swift in Sources */,
-				8BA8505A205F73E100F1FA7B /* EasingQuartic.swift in Sources */,
-				8BA8505B205F73E100F1FA7B /* EasingBounce.swift in Sources */,
 				8BBED9342CFD39A70033F10A /* PathView.swift in Sources */,
 				8BB37A281CFFB03F00A35AFD /* BasicMotionViewController.swift in Sources */,
 				8B683B081D012529008D43E2 /* SequenceViewController.swift in Sources */,
-				8B8CAF432CFC3DB200A02EB7 /* PathPhysicsMotion.swift in Sources */,
-				8BB995EB2D2792DB0021B8B0 /* MotionState.swift in Sources */,
-				8B8CAF442CFC3DB200A02EB7 /* PathMotion.swift in Sources */,
-				8BA85056205F73E100F1FA7B /* EasingQuadratic.swift in Sources */,
-				8BA85059205F73E100F1FA7B /* EasingExpo.swift in Sources */,
 				8B683B061D00E386008D43E2 /* SequenceContiguousViewController.swift in Sources */,
 				8BB379D81CFFA17E00A35AFD /* AppDelegate.swift in Sources */,
 				8BBED9362CFD5C120033F10A /* PathMotionContiguousViewController.swift in Sources */,
-				8BA8505C205F73E100F1FA7B /* EasingQuintic.swift in Sources */,
 				8B683B041D00BE76008D43E2 /* GroupMotionViewController.swift in Sources */,
-				8BA85063205F73E100F1FA7B /* MotionSequence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +399,28 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		8B33CCCF2D325B2A0081A8D9 /* XCLocalSwiftPackageReference "../../../MotionMachine" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../MotionMachine;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B33CCCA2D325ABA0081A8D9 /* MotionMachine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MotionMachine;
+		};
+		8B33CCCD2D325AFA0081A8D9 /* MotionMachine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MotionMachine;
+		};
+		8B33CCD02D325B2A0081A8D9 /* MotionMachine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MotionMachine;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8BB379CC1CFFA17D00A35AFD /* Project object */;
 }

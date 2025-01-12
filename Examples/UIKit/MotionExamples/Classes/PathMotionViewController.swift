@@ -1,5 +1,5 @@
 //
-//  PathPhysicsMotionViewController.swift
+//  PathMotionViewController.swift
 //  MotionExamples
 //
 //  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
@@ -8,8 +8,9 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
+import MotionMachine
 
-class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
+class PathMotionViewController: UIViewController, ButtonsViewDelegate {
 
     lazy var buttonsView: ButtonsView = {
         return ButtonsView()
@@ -32,7 +33,7 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
     }()
     
     
-    var motion: PathPhysicsMotion?
+    var motion: PathMotion?
     var pathState: PathState?
 
     override func viewDidLoad() {
@@ -46,6 +47,7 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
         super.viewDidAppear(animated)
       
         motion?.start()
+
     }
 
 
@@ -57,13 +59,17 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
 
 
     private func setupMotion() {
-        let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 200, startAngle: 0.087, endAngle: 1.66, clockwise: true)
+       let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 200, startAngle: 0.087, endAngle: 1.66, clockwise: true)
         path.addQuadCurve(to: CGPoint(x: 20, y: 50), controlPoint: CGPoint(x: 100, y: 45))
 
         pathView.path = path
 
-        let config = PhysicsConfiguration(velocity: 800, friction: 0.4, restitution: 0.7)
-        motion = PathPhysicsMotion(path: path.cgPath, configuration: config)
+        motion = PathMotion(path: path.cgPath,
+                        duration: 2.0,
+                          easing: EasingQuadratic.easeInOut())
+        .reverses(withEasing: EasingQuartic.easeInOut())
+        .repeats()
+        
         motion?.updated({ [weak pathView, weak view, weak motionView] (motion, currentPoint) in
             if let view, let adjustedPoint = pathView?.convert(currentPoint, to: view) {
                 motionView?.center = adjustedPoint
@@ -73,6 +79,8 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
         motion?.completed({ (motion, currentPoint) in
             print("completed!")
         })
+
+        
     }
     
    
@@ -128,6 +136,5 @@ class PathPhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
     func didResume() {
         motion?.resume()
     }
-
 
 }

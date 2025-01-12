@@ -1,5 +1,5 @@
 //
-//  PathMotionViewController.swift
+//  PathMotionContiguousViewController.swift
 //  MotionExamples
 //
 //  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
@@ -8,8 +8,9 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
+import MotionMachine
 
-class PathMotionViewController: UIViewController, ButtonsViewDelegate {
+class PathMotionContiguousViewController: UIViewController, ButtonsViewDelegate {
 
     lazy var buttonsView: ButtonsView = {
         return ButtonsView()
@@ -26,11 +27,19 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
         return view
     }()
     
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12.0)
+        label.isUserInteractionEnabled = false
+        label.text = "contiguousEdges edge behavior allows motions to seamlessly travel beyond one edge of the path to the other."
+        label.numberOfLines = 4
+        return label
+    }()
 
     lazy var pathView: PathView = {
         return PathView()
     }()
-    
+
     
     var motion: PathMotion?
     var pathState: PathState?
@@ -45,8 +54,10 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
       
-        motion?.start()
-
+        Task {
+            await pathState?.setupPerformanceMode()
+            motion?.start()
+        }
     }
 
 
@@ -58,16 +69,15 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
 
 
     private func setupMotion() {
-       let path = UIBezierPath(arcCenter: CGPoint(x: 20, y: 20), radius: 200, startAngle: 0.087, endAngle: 1.66, clockwise: true)
-        path.addQuadCurve(to: CGPoint(x: 20, y: 50), controlPoint: CGPoint(x: 100, y: 45))
-
-        pathView.path = path
-
-        motion = PathMotion(path: path.cgPath,
-                        duration: 2.0,
-                          easing: EasingQuadratic.easeInOut())
-        .reverses(withEasing: EasingQuartic.easeInOut())
+        let lineWidth = 2.0
+        let rect: CGRect = CGRect(x: 0, y: 0, width: 320, height: 320).insetBy(dx: lineWidth, dy: lineWidth)
+        let radius: CGFloat = rect.width * 0.25
+        let rectPath = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+        pathView.path = rectPath
+        
+        motion = PathMotion(path: rectPath.cgPath, duration: 2, endPosition: 1.0, easing: EasingElastic.easeInOut(), edgeBehavior: .contiguousEdges)
         .repeats()
+        .reverses(withEasing: EasingBack.easeInOut())
         
         motion?.updated({ [weak pathView, weak view, weak motionView] (motion, currentPoint) in
             if let view, let adjustedPoint = pathView?.convert(currentPoint, to: view) {
@@ -75,14 +85,9 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
             }
             
         })
-        motion?.completed({ (motion, currentPoint) in
-            print("completed!")
-        })
-
-        
     }
     
-   
+      
     private func setupUI() {
         view.backgroundColor = UIColor.white
 
@@ -99,7 +104,13 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
         } else {
           top_anchor = margins.bottomAnchor
         }
-
+        
+        self.view.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: top_anchor, constant: 30.0).isActive = true
+        label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 30).isActive = true
+        label.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -30).isActive = true
+        
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
@@ -108,10 +119,10 @@ class PathMotionViewController: UIViewController, ButtonsViewDelegate {
 
         self.view.addSubview(pathView)
         pathView.translatesAutoresizingMaskIntoConstraints = false
-        pathView.topAnchor.constraint(equalTo: top_anchor, constant: 50.0).isActive = true
-        pathView.leftAnchor.constraint(equalTo: margins.leftAnchor, constant: 50.0).isActive = true
-        pathView.widthAnchor.constraint(equalToConstant: 300.0).isActive = true
-        pathView.heightAnchor.constraint(equalToConstant: 300.0).isActive = true
+        pathView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 30.0).isActive = true
+        pathView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0.0).isActive = true
+        pathView.widthAnchor.constraint(equalToConstant: 320.0).isActive = true
+        pathView.heightAnchor.constraint(equalToConstant: 320.0).isActive = true
 
         self.view.addSubview(motionView)
 

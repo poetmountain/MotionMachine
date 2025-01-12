@@ -607,6 +607,7 @@ public class MotionSequence: Moveable, MoveableCollection, TempoDriven, MotionUp
             step.cleanupResources()
             step.updateDelegate = nil
         }
+        steps.removeAll()
     }
     
     

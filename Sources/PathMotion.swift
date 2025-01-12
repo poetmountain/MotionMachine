@@ -222,15 +222,17 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
     }
 
     /// The object maintaining state on the path.
-    public private(set) var pathState: PathState
+    public private(set) var pathState: PathState?
     
     /// Determines how path edges are handled during a motion when the motion attempts to travel past the path's edges. This is rare, but can occur in some cases such as the ``EasingBack`` and ``EasingElastic`` easing equations. The default value is `stopAtEdges`.
-    public var edgeBehavior: PathEdgeBehavior {
+    public var edgeBehavior: PathEdgeBehavior? {
         get {
-            pathState.edgeBehavior
+            pathState?.edgeBehavior
         }
         set {
-            pathState.edgeBehavior = newValue
+            if let newValue {
+                pathState?.edgeBehavior = newValue
+            }
         }
     }
     
@@ -462,7 +464,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
         self.pathState = pathState
         
         if let edgeBehavior {
-            self.pathState.edgeBehavior = edgeBehavior
+            self.pathState?.edgeBehavior = edgeBehavior
         }
         
         self.duration = (duration > 0.0) ? duration : 0.0 // if value passed is negative, clamp it to 0
@@ -544,7 +546,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
     /// > Note: With large paths, the lookup table generation could take a second or longer to complete. Be aware that the lookup table generation runs synchronously on another dispatch queue, blocking the return of this async call until the generation has completed. Be sure to call this method as early as possible to give the operation time to complete before your ``PathMotion`` needs to begin.
     /// - Parameter lookupCapacity: An optional capacity that caps the maximum lookup table amount.
     public func setupPerformanceMode() async {
-        await pathState.setupPerformanceMode()
+        await pathState?.setupPerformanceMode()
     }
     
     
@@ -609,7 +611,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
         startTime = 0.0
         
         // call start closure
-        _started?(self, pathState.currentPoint)
+        if let pathState {
+            _started?(self, pathState.currentPoint)
+        }
         
         // send start status update
         sendStatusUpdate(.started)
@@ -645,7 +649,7 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
         valueAssistant.update(property: property, newValue: newValue)
         
         // in PathMotion we just move a float value from 0 to 1, so we need to manually update the CGPoint to reflect the new value
-        self.pathState.movePoint(to: newValue)
+        self.pathState?.movePoint(to: newValue)
     }
     
 
@@ -667,12 +671,13 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
             updatePropertyValue(forProperty: properties[index])
         }
 
-        
-        // call update closure
-        _updated?(self, pathState.currentPoint)
-        
-        // call complete closure
-        _completed?(self, pathState.currentPoint)
+        if let pathState {
+            // call update closure
+            _updated?(self, pathState.currentPoint)
+            
+            // call complete closure
+            _completed?(self, pathState.currentPoint)
+        }
         
         // send completion status update
         sendStatusUpdate(.completed)
@@ -701,7 +706,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
             }
             
             // call cycle closure
-            _cycleRepeated?(self, pathState.currentPoint)
+            if let pathState {
+                _cycleRepeated?(self, pathState.currentPoint)
+            }
             
             // send repeated status update
             sendStatusUpdate(.repeated)
@@ -732,7 +739,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
         updatePropertyValue(forProperty: properties[0])
 
         // call reverse closure
-        _reversed?(self, pathState.currentPoint)
+        if let pathState {
+            _reversed?(self, pathState.currentPoint)
+        }
         
         // send out 50% complete notification, used by MotionSequence in contiguous mode
         let half_complete = round(Double(repeatCycles) * 0.5)
@@ -818,7 +827,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
                     updatePropertyValue(forProperty: properties[index])
                 }
                 // call update closure
-                _updated?(self, pathState.currentPoint)
+                if let pathState {
+                    _updated?(self, pathState.currentPoint)
+                }
                 
             } else {
                 
@@ -892,7 +903,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
             motionProgress = 0.0
             
             // call stop closure
-            _stopped?(self, pathState.currentPoint)
+            if let pathState {
+                _stopped?(self, pathState.currentPoint)
+            }
             
             // send stopped status update
             sendStatusUpdate(.stopped)
@@ -912,7 +925,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
             pauseTimestamp = currentTime
             
             // call pause closure
-            _paused?(self, pathState.currentPoint)
+            if let pathState {
+                _paused?(self, pathState.currentPoint)
+            }
             
             // send paused status update
             sendStatusUpdate(.paused)
@@ -925,7 +940,9 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
             motionState = .moving
 
             // call resume closure
-            _resumed?(self, pathState.currentPoint)
+            if let pathState {
+                _resumed?(self, pathState.currentPoint)
+            }
             
             // send resumed status update
             sendStatusUpdate(.resumed)

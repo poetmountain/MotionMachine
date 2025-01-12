@@ -1,5 +1,5 @@
 //
-//  BasicMotionViewController.swift
+//  PhysicsMotionViewController.swift
 //  MotionExamples
 //
 //  Copyright © 2025 Poet & Mountain, LLC. All rights reserved.
@@ -8,13 +8,14 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
+import MotionMachine
 
-public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
+public class PhysicsMotionViewController: UIViewController, ButtonsViewDelegate {
 
     var createdUI: Bool = false
     var buttonsView: ButtonsView!
     var motionView: UIView!
-    var motion: Motion<NSLayoutConstraint>!
+    var motion: PhysicsMotion<NSLayoutConstraint>!
     var xConstraint: NSLayoutConstraint!
     
     convenience init() {
@@ -29,31 +30,24 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-
+    
     
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-  
+        
         if (!createdUI) {
             setupUI()
             
             
             // setup motion
-            motion = Motion(target: xConstraint, duration: 1.0, easing: EasingQuadratic.easeInOut(), options: [.reverses])
-                .add(PropertyData(keyPath: \NSLayoutConstraint.constant, end: 200.0))
-                .paused({ (motion) in
-                    print("paused!")
-                })
-                .resumed({ (motion) in
-                    print("resumed!")
-                })
+            createMotion()
             
             createdUI = true
         }
         
     }
-
-  
+    
+    
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -67,8 +61,8 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         
         motion.stop()
     }
-
-
+    
+    
     
     
     // MARK: - Private methods
@@ -89,12 +83,12 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         } else {
             top_anchor = margins.bottomAnchor
         }
-
+        
         buttonsView = ButtonsView.init(frame: CGRect.zero)
         view.addSubview(buttonsView)
         buttonsView.delegate = self
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         buttonsView.widthAnchor.constraint(equalTo: margins.widthAnchor, constant: 0.0).isActive = true
         buttonsView.heightAnchor.constraint(equalTo: margins.heightAnchor, constant: 0.0).isActive = true
         
@@ -113,7 +107,21 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
         motionView.widthAnchor.constraint(equalToConstant: 40.0).isActive = true
         motionView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         
-        
+    }
+    
+    
+    private func createMotion() {
+        let config = PhysicsConfiguration(velocity: 300, friction: 0.72)
+        motion = PhysicsMotion(target: xConstraint, properties: [PropertyData(keyPath: \NSLayoutConstraint.constant)], configuration: config)
+        .paused({ (motion) in
+            print("paused!")
+        })
+        .resumed({ (motion) in
+            print("resumed!")
+        })
+        .completed({ (motion) in
+            print("completed!")
+        })
     }
     
     
@@ -134,5 +142,5 @@ public class BasicMotionViewController: UIViewController, ButtonsViewDelegate {
     func didResume() {
         motion.resume()
     }
-    
+
 }

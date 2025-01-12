@@ -8,6 +8,7 @@
 //  Licensed under MIT License. See LICENSE file in this repository.
 
 import UIKit
+import MotionMachine
 
 public class DynamicViewController: UIViewController, ButtonsViewDelegate {
 
