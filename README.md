@@ -22,7 +22,7 @@ MotionMachine provides a modular, powerful, and generic platform for manipulatin
 
 If you're upgrading from a previous version of MotionMachine, check out the [3.0 Migration Guide](Guides/MigrationGuide3.0.md) for breaking changes.
 
-Also check out the [Examples project](Examples) to see all the MotionMachine classes in action, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
+Also check out the [Examples project](Examples) to see MotionMachine class examples in UIKit and SwiftUI, or dive deep into the source [Documentation](https://poetmountain.github.io/MotionMachine/).
 
 ## Introduction
 ![MotionGroup animation](Guides/group.gif)

@@ -3,6 +3,7 @@
 - Added support for watchOS!
 - Updates to support Linux and other non-Apple Swift platforms. Replaced code specific to Apple platforms with core Swift classes.
 - Improved timing accuracy of `PhysicsMotion` and `PathPhysicsMotion`, as well as `TimerTempo`.
+- Added SwiftUI examples
 
 ### 3.0.0
 - MotionMachine's use of `NSObject` Key-Value Coding paths (i.e. "frame.origin.x") to read and write property values has been replaced with modern Swift KeyPaths (i.e. `\UIView.frame.origin.x`). This significant change provides more type safety and compile-time type checking, eliminates unsafe code, and now allows for the use of Optional properties and structs. Please see the [Motion Classes guide](Guides/MoveableClasses.md) for implementation examples. Tests and examples project have also been updated to reflect these changes.
