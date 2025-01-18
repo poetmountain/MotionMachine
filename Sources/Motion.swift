@@ -754,14 +754,30 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
     /**
      *  Updates the target property with a new delta value.
      *
-     *  - parameter property: The property to update.
+     *  - parameter properties: The properties to update.
      */
-    private func updatePropertyValue(forProperty property: PropertyData<TargetType>) {
+    func updatePropertyValues(properties: [PropertyData<TargetType>]) {
+        guard let targetObject else { return }
         
-        let newValue = (isAdditive) ? property.delta : property.current
-
-        valueAssistant.update(property: property, newValue: newValue)
-
+        // optimization for single-property motions to avoid the overhead of the dictionary grouping
+        if properties.count == 1, let property = properties.first {
+            let newValue = (isAdditive) ? property.delta : property.current
+            valueAssistant.update(properties: [property: newValue], targetObject: targetObject)
+            
+        } else {
+            // group properties together, preferably by their parent keypath (if created by a MotionState), otherwise use the regular keypath
+            let grouped = Dictionary(grouping: properties, by: { $0.parentPath ?? $0.keyPath })
+            
+            for (_, groupedProperties) in grouped {
+                var valuesForProperties: [PropertyData<TargetType>: Double] = [:]
+                for property in groupedProperties {
+                    valuesForProperties[property] = (isAdditive) ? property.delta : property.current
+                }
+                                        
+                valueAssistant.update(properties: valuesForProperties, targetObject: targetObject)
+            }
+        }
+        
     }
 
     /// Called when the motion has completed.
@@ -779,8 +795,8 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
             } else {
                 properties[index].current = properties[index].end
             }
-            updatePropertyValue(forProperty: properties[index])
         }
+        updatePropertyValues(properties: properties)
 
         
         if (isAdditive && targetObject != nil) {
@@ -905,8 +921,8 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
                 let temp_additive = isAdditive
                 isAdditive = false
                 _isAdditive = temp_additive
-                for index in 0 ..< properties.count {
-                    if (!_isAdditive) { updatePropertyValue(forProperty: properties[index]) }
+                if !_isAdditive {
+                    updatePropertyValues(properties: properties)
                 }
                 valueAssistant.isAdditive = _isAdditive
             }
@@ -914,7 +930,7 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
             self.currentTime = min(currentTime, endTime) // don't let currentTime go over endTime or it'll produce wrong easing values
             
             var progress: Double = 0.0
-            let elapsed_time = self.currentTime - startTime
+            let elapsedTime = self.currentTime - startTime
             
             for index in 0 ..< properties.count {
                 let property = properties[index]
@@ -924,49 +940,54 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
                 let value_range = property.end - property.start
                 if (value_range != 0.0) {
                     if (motionDirection == .forward) {
-                        new_value = easing(elapsed_time, property.start, value_range, duration)
+                        if (elapsedTime > 0.0) {
+                            new_value = easing(elapsedTime, property.start, value_range, duration)
+                        }
                         progress = fabs((property.current - property.start) / value_range)
                     
                     } else {
                         if let reverseEasing {
-                            new_value = reverseEasing(elapsed_time, property.end, -value_range, duration)
+                            new_value = reverseEasing(elapsedTime, property.end, -value_range, duration)
                             
                         } else {
-                            new_value = easing(elapsed_time, property.end, -value_range, duration)
+                            new_value = easing(elapsedTime, property.end, -value_range, duration)
                         }
 
                         progress = fabs((property.end - property.current) / value_range)
                     }
-                    properties[index].delta = new_value - property.current
-                    properties[index].current = new_value
+                    if (elapsedTime > 0.0) {
+                        properties[index].delta = new_value - property.current
+                        properties[index].current = new_value
+                    }
                 }
             }
             motionProgress = min(progress, 1.0) // progress for all properties will be the same, so the last is used to avoid multiple property sets
             
-            if (self.currentTime < self.endTime) {
-                for index in 0 ..< properties.count {
-                    updatePropertyValue(forProperty: properties[index])
-                }
-                // call update closure
-                _updated?(self)
-                
-            } else {
-                
-                // motion has completed
-                if (isReversing || isRepeating) {
-                    if ((isRepeating && !isReversing) || (isReversing && isRepeating && motionDirection == .reverse)) {
-                        nextRepeatCycle()
-                        
-                    } else if (!isRepeating && isReversing && motionDirection == .reverse) {
-                        motionCompleted()
-                        
-                    } else if (isReversing && motionState == .moving) {
-                        reverseMotionDirection()
-                    }
+            if (elapsedTime > 0.0) {
+                if (self.currentTime < self.endTime) {
+                    updatePropertyValues(properties: properties)
+                    
+                    // call update closure
+                    _updated?(self)
                     
                 } else {
-                    // not reversing or repeating
-                    motionCompleted()
+                    
+                    // motion has completed
+                    if (isReversing || isRepeating) {
+                        if ((isRepeating && !isReversing) || (isReversing && isRepeating && motionDirection == .reverse)) {
+                            nextRepeatCycle()
+                            
+                        } else if (!isRepeating && isReversing && motionDirection == .reverse) {
+                            motionCompleted()
+                            
+                        } else if (isReversing && motionState == .moving) {
+                            reverseMotionDirection()
+                        }
+                        
+                    } else {
+                        // not reversing or repeating
+                        motionCompleted()
+                    }
                 }
             }
             

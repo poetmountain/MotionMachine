@@ -35,7 +35,7 @@ import Foundation
      *
      *  - returns: An updated version of the property value, if the object property was found and is supported.
      */
-    @discardableResult func update(property: PropertyData<TargetType>, newValue: Double) -> Any?
+    func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType)
     
     /**
      *  Verifies whether this class can update the specified object type.
@@ -113,25 +113,5 @@ public extension ValueAssistant {
         return updatedValue
     }
     
-    /// Returns the last component in a period-delimited String path.
-    /// - Parameter path: The String path to search.
-    /// - Returns: The path component, if one was found.
-    func lastComponent(forPath path: String) -> String? {
-        return path.components(separatedBy: ".").last
-    }
-    
-    /// Returns the last two components in a period-delimited String path.
-    /// - Parameter path: The String path to search.
-    /// - Returns: An array of path components, if any were found.
-    func lastTwoComponents(forPath path: String) -> [String]? {
-        let components = path.components(separatedBy: ".")
-        var val: [String]?
-        if (components.count > 1) {
-            let strings = components[components.count-2...components.count-1]
-            val = Array(strings)
-        }
-        
-        return val
-    }
     
 }

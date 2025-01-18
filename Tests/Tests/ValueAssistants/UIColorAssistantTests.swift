@@ -86,7 +86,8 @@ import XCTest
         }
         property.current = finalValue
         
-        assistant.update(property: property, newValue: finalValue)
+        assistant.update(properties: [property: finalValue], targetObject: tester)
+
         let newColor = tester[keyPath: \Tester.color]
         var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
         newColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
@@ -118,8 +119,7 @@ import XCTest
         var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
         currentColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         
-        assistant.update(property: property, newValue: delta)
-        
+        assistant.update(properties: [property: delta], targetObject: tester)
         let newColor = tester[keyPath: \Tester.color]
         var newRed: CGFloat = 0.0, newGreen: CGFloat = 0.0, newBlue: CGFloat = 0.0, newAlpha: CGFloat = 0.0
         newColor.getRed(&newRed, green: &newGreen, blue: &newBlue, alpha: &newAlpha)

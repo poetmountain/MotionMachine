@@ -54,27 +54,27 @@ public final class NumericAssistant<TargetType: AnyObject>: ValueAssistant {
         
     }
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        guard let targetObject = property.targetObject else { return nil }
-        
-        var newPropertyValue = newValue
-        
-        let currentValue = property.retrieveValue(from: targetObject)
-        
-        if (isAdditive) {
-            if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
-            } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
-            } else if let currentValue = currentValue as? NSNumber {
-                let current = currentValue.doubleValue
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
+
+        for (property, newValue) in properties {
+            var newPropertyValue = newValue
+                        
+            if isAdditive, let path = property.keyPath {
+                let currentValue = targetObject[keyPath: path]
+
+                if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                } else if let currentValue = currentValue as? NSNumber {
+                    let current = currentValue.doubleValue
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                }
             }
+                        
+            property.apply(value: newPropertyValue, to: targetObject)
         }
         
-        property.apply(value: newPropertyValue, to: targetObject)
-        
-        return newPropertyValue
     }
     
     public func supports(_ object: Any) -> Bool {
@@ -89,9 +89,9 @@ public final class NumericAssistant<TargetType: AnyObject>: ValueAssistant {
     func doubleValue(for value: Any) -> Double? {
         var doubleValue: Double?
         
-        if let value = value as? any BinaryInteger {
+        if let value = value as? any BinaryFloatingPoint {
             doubleValue = value.toDouble()
-        } else if let value = value as? any BinaryFloatingPoint {
+        } else if let value = value as? any BinaryInteger {
             doubleValue = value.toDouble()
         } else if let value = value as? NSNumber {
             doubleValue = value.doubleValue

@@ -72,60 +72,33 @@ public final class CGColorAssistant<TargetType: AnyObject>: ValueAssistant {
     }
     
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        return calculateValue(forProperty: property, newValue: newValue)
-    }
-    
-    public func calculateValue(forProperty property: PropertyData<TargetType>, newValue: Double) -> Any? {
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
+        let parentObject = properties.keys.first?.retrieveParentValue(from: targetObject)
+        guard let parentObject, let color = castToCGColor(object: parentObject) else { return }
         
-        guard let targetObject = property.targetObject else { return nil }
-        
-        let newPropertyValue = newValue
+        // copy the current color components to a new array
+        var newComponents: [CGFloat] = color.components?.map { $0 } ?? []
 
-        // replace the top-level struct of the property we're trying to alter
-        var updatedParent: CGColor?
-        
-        if let retrievedValue = property.retrieveParentValue(from: targetObject), let parentValue = castToCGColor(object: retrievedValue) {
-            updatedParent = updateColor(color: parentValue, property: property, newValue: newPropertyValue)
-        }
-        
-        if let targetObject = property.targetObject, let updated = updatedParent {
-            property.applyToParent(value: updated, to: targetObject)
-        }
-
-        return newPropertyValue
-        
-    }
-    
-    func updateColor(color: CGColor, property: PropertyData<TargetType>, newValue: Double) -> CGColor? {
-        guard let components = color.components else { return nil }
-        
-        var newPropertyValue: CGFloat = newValue
-
-        var newComponents: [CGFloat] = []
-        
-        var updatedColor: CGColor?
-        
-        // for each component, if the target index matches, add the new value. otherwise add the existing value
-        for (index, component) in components.enumerated() {
-            if Int(property.stringPath) == index {
+        // for each property, update the associated component with the new value
+        for (property, newValue) in properties {
+            var newPropertyValue = newValue
+            if let componentIndex = Int(property.stringPath) {
                 if isAdditive {
-                    newPropertyValue = applyAdditiveTo(value: component, newValue: newValue)
+                    let currentComponentValue = newComponents[componentIndex]
+                    newPropertyValue = applyAdditiveTo(value: currentComponentValue, newValue: newValue)
                 }
-                newComponents.append(newPropertyValue)
-            } else {
-                newComponents.append(component)
+                newComponents[componentIndex] = newPropertyValue
             }
+
         }
         
-        // now use the new components to update the existing color and apply it to the target object
-        if let colorSpace = color.colorSpace, let targetObject = property.targetObject, let newColor = CGColor(colorSpace: colorSpace, components: newComponents) {
-            property.applyToParent(value: newColor, to: targetObject)
-            updatedColor = newColor
+        // now use the new components array to update the existing color and apply it to the target object
+        if let colorSpace = color.colorSpace, let newColor = CGColor(colorSpace: colorSpace, components: newComponents) {
+            properties.keys.first?.applyToParent(value: newColor, to: targetObject)
         }
-        
-        return updatedColor
+
     }
+    
     
     public func supports(_ object: Any) -> Bool {
         return isObjectCGColor(object: object)

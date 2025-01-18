@@ -13,6 +13,20 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "PerformanceTests",
+        "PerformanceTests\/test_motion_updateProperties()",
+        "PerformanceTests\/test_performance_motion_CGColor()",
+        "PerformanceTests\/test_performance_motion_CGRect()",
+        "PerformanceTests\/test_performance_motion_CIColor()",
+        "PerformanceTests\/test_performance_motion_UIColor()",
+        "PerformanceTests\/test_performance_motion_numeric()",
+        "PerformanceTests\/test_performance_motion_simd16()",
+        "PerformanceTests\/test_performance_motion_simd3()",
+        "PerformanceTests\/test_performance_motion_simd32()",
+        "PerformanceTests\/test_performance_motion_simd64()",
+        "PerformanceTests\/test_performance_motion_simd8()"
+      ],
       "target" : {
         "containerPath" : "container:MotionMachineTests.xcodeproj",
         "identifier" : "8BBF1DFF2D322FC800FB5003",

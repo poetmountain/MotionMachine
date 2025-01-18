@@ -598,27 +598,27 @@ public final class CGStructAssistant<TargetType: AnyObject>: ValueAssistant {
     }
 
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        guard let targetObject = property.targetObject else { return nil }
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {        
+        guard properties.count > 0 else { return }
         
-        var newPropertyValue = newValue
-        var currentValue: Any?
+        for (property, newValue) in properties {
+            var newPropertyValue = newValue
+            
+            if isAdditive, let path = property.keyPath {
+                let currentValue = targetObject[keyPath: path]
 
-        currentValue = property.retrieveValue(from: targetObject)
-        
-        if (isAdditive), let currentValue {
-            if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
-                
-            } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                    
+                } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                }
             }
+            
+            
+            property.apply(value: newPropertyValue, to: targetObject)
+
         }
-        
-        property.apply(value: newPropertyValue, to: targetObject)
-        
-        
-        return newPropertyValue
         
     }
     

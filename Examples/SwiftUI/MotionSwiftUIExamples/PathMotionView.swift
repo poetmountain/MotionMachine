@@ -19,7 +19,7 @@ struct PathMotionView: View {
             VStack(alignment: .center) {
                 if let motionState {
                     Path(motionState.path)
-                        .stroke(.black, lineWidth: 2.0)
+                        .stroke(.foreground, lineWidth: 2.0)
                         .frame(width: 200, height: 200)
                         .alignmentGuide(HorizontalAlignment.center) { _ in 150 }
                     

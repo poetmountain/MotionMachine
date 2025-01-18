@@ -809,12 +809,27 @@ import Foundation
      *
      *  - parameter property: The property to update.
      */
-    private func updatePropertyValue(forProperty property: PropertyData<TargetType>) {
+    func updatePropertyValues(properties: [PropertyData<TargetType>]) {
+        guard let targetObject else { return }
         
-        let newValue = (isAdditive) ? property.delta : property.current
-        
-        valueAssistant.update(property: property, newValue: newValue)
-
+        // optimization for single-property motions to avoid the overhead of the dictionary grouping
+        if properties.count == 1, let property = properties.first {
+            let newValue = (isAdditive) ? property.delta : property.current
+            valueAssistant.update(properties: [property: newValue], targetObject: targetObject)
+            
+        } else {
+            // group properties together, preferably by their parent keypath (if created by a MotionState), otherwise use the regular keypath
+            let grouped = Dictionary(grouping: properties, by: { $0.parentPath ?? $0.keyPath })
+            
+            for (_, groupedProperties) in grouped {
+                var valuesForProperties: [PropertyData<TargetType>: Double] = [:]
+                for property in groupedProperties {
+                    valuesForProperties[property] = (isAdditive) ? property.delta : property.current
+                }
+                                        
+                valueAssistant.update(properties: valuesForProperties, targetObject: targetObject)
+            }
+        }
     }
     
     
@@ -828,9 +843,7 @@ import Foundation
         completedCount += 1
         if (!isRepeating) { cyclesCompletedCount += 1 }
 
-        for index in 0 ..< properties.count {
-            updatePropertyValue(forProperty: properties[index])
-        }
+        updatePropertyValues(properties: properties)
         
         if (isAdditive && targetObject != nil) {
             operationID = 0
@@ -960,17 +973,14 @@ import Foundation
                 let temp_additive = isAdditive
                 isAdditive = false
                 _isAdditive = temp_additive
-                for index in 0 ..< properties.count {
-                    if (!_isAdditive) { updatePropertyValue(forProperty: properties[index]) }
+                if !_isAdditive {
+                    updatePropertyValues(properties: properties)
                 }
                 valueAssistant.isAdditive = _isAdditive
             }
             
             if (abs(physicsSystem.velocity) > velocityDecayLimit) {
-                
-                for index in 0 ..< properties.count {
-                    updatePropertyValue(forProperty: properties[index])
-                }
+                updatePropertyValues(properties: properties)
                 
                 // call update closure
                 _updated?(self)

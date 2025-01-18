@@ -25,6 +25,7 @@ struct AdditiveMotionView: View {
                         
                         Text("Tap to move the circle to that point.\nThe path will blend as you continue to tap in other locations.")
                             .font(.system(size: 12))
+                            .foregroundStyle(.foreground)
                             .frame(width: 300, height: 60, alignment: .center)
                             .position(CGPoint(x: 0, y: 25))
                             .multilineTextAlignment(.leading)
@@ -34,7 +35,7 @@ struct AdditiveMotionView: View {
                 }
             }
         }
-        .background(Color(uiColor: .white))
+        .background(.background)
         .onTapGesture { location in
             motionState?.addMotion(at: location)
         }

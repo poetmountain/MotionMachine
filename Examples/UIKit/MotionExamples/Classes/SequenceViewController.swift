@@ -19,6 +19,7 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
     
     var constraints: [NSLayoutConstraint] = []
     
+    let numCircles = 5
     
     convenience init() {
         self.init(nibName: nil, bundle: nil)
@@ -42,22 +43,16 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
             
             
             // setup motion
-            sequence = MotionSequence(options: [.reverses])
-            .stepCompleted({ (sequence) in
-                print("step complete")
-            })
-            .completed({ (sequence) in
-                print("sequence complete")
-            })
-            
-            for x in 0..<4 {
-                let down = Motion(target: constraints[x],
-                                  properties: [PropertyData(keyPath: \NSLayoutConstraint.constant, end: 250.0)],
+            sequence = MotionSequence(options: [.reverses, .repeats])
+
+            for x in 0..<numCircles {
+                let down = Motion(target: squares[x],
+                                  properties: [PropertyData(keyPath: \UIView.center.y, end: 250.0)],
                                    duration: 0.6,
-                                   easing: EasingQuartic.easeInOut())
+                                  easing: EasingQuadratic.easeInOut())
                 
                 let color = Motion(target: squares[x],
-                                   states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], end: UIColor.init(red: 91.0/255.0, green:189.0/255.0, blue:231.0/255.0, alpha:1.0)),
+                                   states: MotionState(keyPath: \UIView.backgroundColor[default: .systemGreen], end: .systemBlue),
                                     duration: 0.7,
                                     easing: EasingQuadratic.easeInOut())
                 
@@ -98,19 +93,11 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
         view.backgroundColor = UIColor.white
         
         var margins : UILayoutGuide
-        let top_offset : CGFloat = 20.0
         
         if #available(iOS 11.0, *) {
             margins = view.safeAreaLayoutGuide
         } else {
             margins = topLayoutGuide as! UILayoutGuide
-        }
-        
-        var top_anchor: NSLayoutYAxisAnchor
-        if #available(iOS 11.0, *) {
-            top_anchor = margins.topAnchor
-        } else {
-            top_anchor = margins.bottomAnchor
         }
         
         buttonsView = ButtonsView.init(frame: CGRect.zero)
@@ -127,27 +114,16 @@ public class SequenceViewController: UIViewController, ButtonsViewDelegate {
         var currx: CGFloat = 48.0
         let spacer: CGFloat = 20.0
         
-        for _ in 0..<4 {
-            let w: CGFloat = 40.0
+        for _ in 0..<numCircles {
+            let diameter: CGFloat = 40.0
             let square = UIView.init()
-            square.backgroundColor = UIColor.init(red: 76.0/255.0, green:164.0/255.0, blue:68.0/255.0, alpha:1.0)
+            square.backgroundColor = .systemGreen
             square.layer.masksToBounds = true
-            square.layer.cornerRadius = w * 0.5
+            square.layer.cornerRadius = diameter * 0.5
             self.view.addSubview(square)
-            square.translatesAutoresizingMaskIntoConstraints = false
             squares.append(square)
             
-            // set up motion constraints
-            let square_x = square.centerXAnchor.constraint(equalTo: margins.leadingAnchor, constant: currx)
-            square_x.isActive = true
-            let square_y = square.topAnchor.constraint(equalTo: top_anchor, constant: top_offset)
-            square_y.isActive = true
-            let square_height = square.heightAnchor.constraint(equalToConstant: w)
-            square_height.isActive = true
-            let square_width = square.widthAnchor.constraint(equalToConstant: w)
-            square_width.isActive = true
-            
-            constraints.append(square_y)
+            square.frame = CGRect(x: currx, y: 120, width: diameter, height: diameter)
             
             currx += 40.0 + spacer
         }

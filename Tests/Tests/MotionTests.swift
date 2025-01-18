@@ -94,7 +94,7 @@ import UIKit
         // test UIColor assignment
         let did_complete2 = expectation(description: "color motion called completed notify closure")
         
-        let motion2 = Motion(target: tester, properties: [PropertyData<Tester>(stringPath: "color.blue", parentPath: \Tester.color, end: 0.5)], duration: 0.2)
+        let motion2 = Motion(target: tester, properties: [PropertyData<Tester>(stringPath: "blue", parentPath: \Tester.color, end: 0.5)], duration: 0.2)
             .completed { (motion) in
                 var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
                 tester.color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)

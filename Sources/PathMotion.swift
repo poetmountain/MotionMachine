@@ -644,9 +644,11 @@ public class PathMotion: Moveable, TempoDriven, PropertyCollection, PropertyData
      *  - parameter property: The property to update.
      */
     private func updatePropertyValue(forProperty property: PropertyData<TargetType>) {
+        guard let targetObject else { return }
+
         let newValue: Double = property.current
                 
-        valueAssistant.update(property: property, newValue: newValue)
+        valueAssistant.update(properties: [property: newValue], targetObject: targetObject)
         
         // in PathMotion we just move a float value from 0 to 1, so we need to manually update the CGPoint to reflect the new value
         self.pathState?.movePoint(to: newValue)

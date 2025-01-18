@@ -97,6 +97,7 @@ import Foundation
             
         parentApplicator = { (target, property) in
             if let keyPath = parentPath as? ReferenceWritableKeyPath<RootType, ParentType>, let property = property as? ParentType {
+                //print("writing to parent value \(property)")
                 target[keyPath: keyPath] = property
             }
             

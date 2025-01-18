@@ -89,12 +89,8 @@ import XCTest
         property.current = finalValue
         property.targetObject = tester
         
-        if let value = assistant.update(property: property, newValue: finalValue) as? any BinaryFloatingPoint {
-            XCTAssertEqual(Double(value), finalValue)
-        } else {
-            XCTFail("No final value found")
-        }
-        
+        assistant.update(properties: [property: finalValue], targetObject: tester)
+
         let objectValue = tester[keyPath: propertyPath]
         XCTAssertEqual(objectValue, finalValue)
         
@@ -120,7 +116,7 @@ import XCTest
         property.targetObject = tester
         
         let currentObjectValue = tester[keyPath: propertyPath]
-        assistant.update(property: property, newValue: delta)
+        assistant.update(properties: [property: delta], targetObject: tester)
         let newValue = tester[keyPath: propertyPath]
         XCTAssertEqual(newValue, currentObjectValue + delta)
 

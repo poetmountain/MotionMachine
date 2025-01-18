@@ -82,6 +82,7 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         label.font = UIFont.systemFont(ofSize: 12.0)
         label.isUserInteractionEnabled = false
         label.text = "Tap to move the circle to that point.\nThe path will blend as you continue to tap in other locations."
+        label.textColor = .black
         label.numberOfLines = 4
         self.view.addSubview(label)
         
@@ -142,7 +143,6 @@ public class DynamicViewController: UIViewController, ButtonsViewDelegate {
         }
         
         let pt = gesture.location(in: self.view)
-        print("gesture pt \(pt)")
         
         var y_offset : CGFloat = 0.0
         

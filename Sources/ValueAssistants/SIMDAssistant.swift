@@ -271,27 +271,25 @@ public final class SIMDAssistant<TargetType: AnyObject>: ValueAssistant {
     
     
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        guard let targetObject = property.targetObject else { return nil }
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
         
-        var newPropertyValue = newValue
-        var currentValue: Any?
-        
-        currentValue = property.retrieveValue(from: targetObject)
-        
-        if isAdditive, let currentValue {
+        for (property, newValue) in properties {
+            var newPropertyValue = newValue
 
-            if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
-            } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
-                newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+            if isAdditive, let path = property.keyPath {
+                let currentValue = targetObject[keyPath: path]
+
+                if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                } else if let currentValue = currentValue as? any BinaryInteger, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                }
+                
             }
             
+            property.applyToSIMD(value: newPropertyValue, to: targetObject)
         }
         
-        property.applyToSIMD(value: newPropertyValue, to: targetObject)
-        
-        return newPropertyValue
     }
     
     

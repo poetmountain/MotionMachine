@@ -36,3 +36,9 @@ extension PhysicsSystem {
         self.lastTimestamp = timestamp
     }
 }
+
+public extension Motion {
+    func test_updatePropertyValues(properties: [PropertyData<TargetType>]) {
+        updatePropertyValues(properties: properties)
+    }
+}

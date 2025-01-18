@@ -75,11 +75,11 @@ public extension PropertyCollection {
                     if property.target == nil {
                         property.target = convertedValue as AnyObject
                     }
-                } else {
+                } else if property.target == nil {
                     property.target = startValue as AnyObject
                 }
                 
-            } else {
+            } else if property.target == nil {
                 property.target = startValue as AnyObject
             }
         }

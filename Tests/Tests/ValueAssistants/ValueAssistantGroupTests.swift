@@ -85,8 +85,7 @@ import XCTest
         property.targetObject = tester
         property.target = tester.rect as AnyObject
         
-        let value = assistant.update(property: property, newValue: finalValue) as? Double
-        XCTAssertEqual(value, finalValue)
+        assistant.update(properties: [property: finalValue], targetObject: tester)
         
         let objectValue = tester[keyPath: path]
         XCTAssertEqual(objectValue, finalValue)

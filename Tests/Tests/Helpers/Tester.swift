@@ -13,7 +13,10 @@ import XCTest
 
 @MainActor final class Tester {
     
+    let id = UUID()
+    
     var value: Double = 0.0
+    var float: Float = 0.0
     var point = CGPoint.zero
     var size = CGSize.zero
     var rect = CGRect.zero
@@ -35,9 +38,22 @@ import XCTest
     var simd3: SIMD3<Float> = SIMD3(x: 10, y: 75, z: 10)
     var simd4: SIMD4<Int> = SIMD4(x: 10, y: 10, z: 10, w: 10)
     var simd8: SIMD8<Float> = SIMD8(repeating: 10)
+    var simd8Double: SIMD8<Double> = SIMD8(repeating: 10)
     var simd16: SIMD16<Float> = SIMD16(repeating: 5)
     var simd32: SIMD32<Float> = SIMD32(repeating: 100)
     var simd64: SIMD64<Float> = SIMD64(repeating: 100)
+    var simd64Double: SIMD64<Double> = SIMD64(repeating: 100)
+
+}
+
+extension Tester: Hashable, Equatable {
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+    
+    nonisolated static func == (lhs: Tester, rhs: Tester) -> Bool {
+        return (lhs.id == rhs.id)
+    }
 }
 
 @MainActor final class SubTest {

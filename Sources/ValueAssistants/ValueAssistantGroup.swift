@@ -98,35 +98,28 @@ public final class ValueAssistantGroup<TargetType: AnyObject>: ValueAssistant {
     
     
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
         
-        guard let targetObject = property.targetObject else { return nil }
-        
-        var finalValue: Any? = newValue
-        
-        if let parentPath = property.parentPath, let parentObject = targetObject[keyPath: parentPath] {
+        if let parentObject = properties.keys.first?.target {
             // we have a special or supported object whose property is being changed
             for assistant in assistants {
                 if (assistant.supports(parentObject)) {
-                    finalValue = assistant.update(property: property, newValue: newValue)
+                    assistant.update(properties: properties, targetObject: targetObject)
                     break
                 }
             }
-            
-            return finalValue
-        
-        } else if let target = property.target {
+                    
+        } else if let propertyValue = properties.keys.first?.end {
             // we have no base object path, so find assistant that directly supports target property value
             for assistant in assistants {
-                if (assistant.supports(target)) {
-                    finalValue = assistant.update(property: property, newValue: newValue)
+                if (assistant.supports(propertyValue)) {
+                    assistant.update(properties: properties, targetObject: targetObject)
                     break
                 }
             }
         }
         
         
-        return finalValue
     }
     
     

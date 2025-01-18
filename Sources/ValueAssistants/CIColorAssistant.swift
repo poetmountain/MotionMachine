@@ -131,75 +131,54 @@ public final class CIColorAssistant<TargetType: AnyObject>: ValueAssistant {
         return properties
     }
     
+    
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
+        let parentObject = properties.keys.first?.retrieveParentValue(from: targetObject)
+        guard let currentColor = parentObject as? CIColor else { return }
 
-    /**
-     *  This method replaces an element by assigning new values.
-     *
-     *  - parameters:
-     *      - object:   The object that should be updated.
-     *      - property: A ``PropertyData`` object to use for keyPath information.
-     *      - newValue:    The value to update with.
-     *
-     *  - returns: An updated version of the object, if the object property was found and is supported.
-     */
-    func updateColor(color: CIColor, property: PropertyData<TargetType>, newValue: Double) -> CIColor {
+        var red = currentColor.red
+        var blue = currentColor.blue
+        var green = currentColor.green
+        var alpha = currentColor.alpha
+        
+        for (property, newValue) in properties {
+            var newPropertyValue = newValue
+            
+            // use additive method to update value if additive is true
+            if isAdditive, let path = property.keyPath {
+                let currentValue = targetObject[keyPath: path]
+
+                if let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
+                    newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+                }
+            }
+            
+            if (property.stringPath == CIColorPropertyType.alpha.rawValue) {
+                alpha = newPropertyValue
                 
-        var newColor = color
-        
-        let changed = newValue
+            } else if (property.stringPath == CIColorPropertyType.red.rawValue) {
+                red = newPropertyValue
                 
-        if (property.stringPath == CIColorPropertyType.alpha.rawValue) {
-            newColor = CIColor(red: color.red, green: color.green, blue: color.blue, alpha: changed)
-            
-        } else if (property.stringPath == CIColorPropertyType.red.rawValue) {
-            newColor = CIColor(red: changed, green: color.green, blue: color.blue, alpha: color.alpha)
-            
-        } else if (property.stringPath == CIColorPropertyType.green.rawValue) {
-            newColor = CIColor(red: color.red, green: changed, blue: color.blue, alpha: color.alpha)
-            
-        } else if (property.stringPath == CIColorPropertyType.blue.rawValue) {
-            newColor = CIColor(red: color.red, green: color.green, blue: changed, alpha: color.alpha)
-        }
-        
-        return newColor
-    }
-    
-    
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        
-        return calculateValue(forProperty: property, newValue: newValue)
-        
-    }
-    
-    public func calculateValue(forProperty property: PropertyData<TargetType>, newValue: Double) -> Any? {
-        
-        guard let targetObject = property.targetObject else { return nil }
-        
-        var newPropertyValue = newValue
-        var currentValue: Any?
-        
-        currentValue = property.retrieveValue(from: targetObject)
-        
-        // use additive method to update value if additive is true
-        if (isAdditive), let currentValue = currentValue as? any BinaryFloatingPoint, let current = currentValue.toDouble() {
-            newPropertyValue = applyAdditiveTo(value: current, newValue: newValue)
+            } else if (property.stringPath == CIColorPropertyType.green.rawValue) {
+                green = newPropertyValue
+                
+            } else if (property.stringPath == CIColorPropertyType.blue.rawValue) {
+                blue = newPropertyValue
+            }
+
         }
         
         // replace the top-level struct of the property we're trying to alter
-        var updatedParent: CIColor?
-        if let parentValue = property.retrieveParentValue(from: targetObject) as? CIColor {
-            updatedParent = updateColor(color: parentValue, property: property, newValue: newPropertyValue)
+        if let property = properties.keys.first {
+            let updatedParent: CIColor? = CIColor(red: red, green: green, blue: blue, alpha: alpha, colorSpace: currentColor.colorSpace)
+            
+            if let targetObject = property.targetObject, let updated = updatedParent {
+                property.applyToParent(value: updated, to: targetObject)
+            }
         }
-        
-        if let targetObject = property.targetObject, let updated = updatedParent {
-            property.applyToParent(value: updated, to: targetObject)
-        }
-
-        return newPropertyValue
-        
     }
     
-    
+
     
     public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false

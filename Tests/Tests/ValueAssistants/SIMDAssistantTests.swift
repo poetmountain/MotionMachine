@@ -313,8 +313,7 @@ import XCTest
         property.current = finalValue
         property.targetObject = tester
         
-        let value = assistant.update(property: property, newValue: finalValue) as? Double
-        XCTAssertEqual(value, finalValue)
+        assistant.update(properties: [property: finalValue], targetObject: tester)
         
         let objectValue = tester[keyPath: path]
         XCTAssertEqual(objectValue, finalValue, "Expected changed property to be \(finalValue), but found \(String(describing: objectValue)).")
@@ -331,7 +330,8 @@ import XCTest
         property.targetObject = tester
         
         let currentObjectValue = tester[keyPath: path]
-        assistant.update(property: property, newValue: delta)
+        assistant.update(properties: [property: delta], targetObject: tester)
+
         let newValue = tester[keyPath: path]
         XCTAssertEqual(newValue, currentObjectValue + delta)
     }

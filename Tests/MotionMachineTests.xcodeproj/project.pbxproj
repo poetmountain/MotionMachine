@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B6076CC2D399D8700D9F1D9 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6076CB2D399D8700D9F1D9 /* PerformanceTests.swift */; };
+		8B6076CD2D399D8700D9F1D9 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6076CB2D399D8700D9F1D9 /* PerformanceTests.swift */; };
 		8B62C0761CEFA2F00087727A /* MotionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0751CEFA2F00087727A /* MotionTests.swift */; };
 		8B62C0BC1CF014210087727A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BB1CF014210087727A /* AppDelegate.swift */; };
 		8B62C0BE1CF014210087727A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62C0BD1CF014210087727A /* ViewController.swift */; };
@@ -118,6 +120,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8B6076CB2D399D8700D9F1D9 /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		8B62C0251CEF9C0F0087727A /* MotionMachineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionMachineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B62C0751CEFA2F00087727A /* MotionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionTests.swift; sourceTree = "<group>"; };
 		8B62C0AC1CEFA3730087727A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MotionMachineTests/Info.plist; sourceTree = "<group>"; };
@@ -321,6 +324,7 @@
 				8B9C0D272CF7B8D700FC5C78 /* PathMotionTests.swift */,
 				8B8CAE512CFA930600A02EB7 /* PathPhysicsMotionTests.swift */,
 				8B8CAE6F2CFAF26600A02EB7 /* PhysicsSystemTests.swift */,
+				8B6076CB2D399D8700D9F1D9 /* PerformanceTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -634,6 +638,7 @@
 				8B9C0D282CF7B8D700FC5C78 /* PathMotionTests.swift in Sources */,
 				8B8CAE682CFA935B00A02EB7 /* PathPhysicsMotion.swift in Sources */,
 				8BA85014205F206C00F1FA7B /* PhysicsMotion.swift in Sources */,
+				8B6076CC2D399D8700D9F1D9 /* PerformanceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +679,7 @@
 				8BBF1E302D32328000FB5003 /* PhysicsMotion.swift in Sources */,
 				8BBF1E312D32328000FB5003 /* EasingElastic.swift in Sources */,
 				8BBF1E322D32328000FB5003 /* EasingLinear.swift in Sources */,
+				8B6076CD2D399D8700D9F1D9 /* PerformanceTests.swift in Sources */,
 				8BBF1E332D32328000FB5003 /* EasingSine.swift in Sources */,
 				8BBF1E342D32328000FB5003 /* EasingQuadratic.swift in Sources */,
 				8BBF1E352D32328000FB5003 /* EasingCubic.swift in Sources */,

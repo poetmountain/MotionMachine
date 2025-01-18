@@ -91,11 +91,7 @@ import XCTest
         property.current = finalValue
         property.targetObject = tester
         
-        if let value = assistant.update(property: property, newValue: finalValue) as? any BinaryFloatingPoint {
-            XCTAssertEqual(Double(value), finalValue)
-        } else {
-            XCTFail("No final value found")
-        }
+        assistant.update(properties: [property: finalValue], targetObject: tester)
         
         if let parentValue = property.retrieveParentValue(from: tester), let color = assistant.castToCGColor(object: parentValue) {
             XCTAssertEqual(color.components?[0].toDouble(), finalValue)
@@ -123,8 +119,7 @@ import XCTest
         property.current = 0.5
         property.targetObject = tester
         
-        
-        assistant.update(property: property, newValue: delta)
+        assistant.update(properties: [property: delta], targetObject: tester)
 
         if let parentValue = property.retrieveParentValue(from: tester), let color = assistant.castToCGColor(object: parentValue) {
             let newValue = color.components?[component].toDouble() ?? 0.0

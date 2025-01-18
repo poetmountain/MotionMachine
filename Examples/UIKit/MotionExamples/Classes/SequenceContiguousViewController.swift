@@ -76,9 +76,6 @@ public class SequenceContiguousViewController: UIViewController, ButtonsViewDele
             let expand_group = MotionGroup(motions: [expand_width, expand_height, corner_radius])
             
             sequence = MotionSequence(steps: [group, move_down, expand_group], options: [.reverses])
-            .stepCompleted({ (sequence) in
-                print("step complete")
-            })
             .completed({ (sequence) in
                 print("sequence complete")
             })

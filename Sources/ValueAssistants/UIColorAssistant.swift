@@ -16,6 +16,12 @@ import UIKit
 /// UIColorAssistant provides support for the `UIColor` type.
 public final class UIColorAssistant<TargetType: AnyObject>: ValueAssistant {
     
+    private enum ColorType {
+        case hsb
+        case rgb
+        case white
+    }
+    
     public var isAdditive: Bool = false
     public var additiveWeighting: Double = 1.0 {
         didSet {
@@ -145,90 +151,89 @@ public final class UIColorAssistant<TargetType: AnyObject>: ValueAssistant {
     
     
     
-    @discardableResult public func update(property: PropertyData<TargetType>, newValue: Double) -> Any? {
+    public func update(properties: [PropertyData<TargetType>: Double], targetObject: TargetType) {
+        let parentObject = properties.keys.first?.retrieveParentValue(from: targetObject)
+        guard let currentColor = parentObject as? UIColor else { return }
         
-        return calculateValue(forProperty: property, newValue: newValue)
-
-    }
-    
-    public func calculateValue(forProperty property: PropertyData<TargetType>, newValue: Double) -> Any? {
+        var hue: CGFloat = 0.0, saturation: CGFloat = 0.0, brightness: CGFloat = 0.0, alpha: CGFloat = 0.0
+        var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, white: CGFloat = 0.0
         
-        guard let targetObject = property.targetObject  else { return nil }
-                
-        var newPropertyValue = newValue
+        if properties.keys.contains(where: { $0.stringPath == "hue" || $0.stringPath == "saturation" || $0.stringPath == "brightness" }) {
+            currentColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        }
         
-        // replace the UIColor itself
-        if let currentColor = property.retrieveParentValue(from: targetObject) as? UIColor {
-            let newValues = [property.stringPath : newPropertyValue]
-                    
-            var hue: CGFloat = 0.0, saturation: CGFloat = 0.0, brightness: CGFloat = 0.0, alpha: CGFloat = 0.0
-            var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, white: CGFloat = 0.0
+        if properties.keys.contains(where: { $0.stringPath == "red" || $0.stringPath == "blue" || $0.stringPath == "green" }) {
+            currentColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        }
+        
+        if properties.keys.contains(where: { $0.stringPath == "white" }) {
+            currentColor.getWhite(&white, alpha: &alpha)
+        }
+        
+        var colorChangeType: ColorType = .rgb
+        
+        for (property, newValue) in properties {
             
-            var colorToUpdate = currentColor
+            let lastComponent = property.stringPath
             
-            colorToUpdate.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-            colorToUpdate.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-            colorToUpdate.getWhite(&white, alpha: &alpha)
+            let newFloatValue = CGFloat(newValue)
             
-            for (prop, newValue) in newValues {
-                var changed = CGFloat(newValue)
-
-                let last_component = lastComponent(forPath: prop)
-                
-                if (last_component == "hue") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: hue, newValue: changed) }
-                    colorToUpdate = UIColor(hue: changed, saturation: saturation, brightness: brightness, alpha: alpha)
-                }
-                
-                if (last_component == "saturation") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: saturation, newValue: changed) }
-                    colorToUpdate = UIColor(hue: hue, saturation: changed, brightness: brightness, alpha: alpha)
-                }
-                
-                if (last_component == "brightness") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: brightness, newValue: changed) }
-                    colorToUpdate = UIColor(hue: hue, saturation: saturation, brightness: changed, alpha: alpha)
-                }
-                
-                if (last_component == "alpha") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: alpha, newValue: changed) }
-                    colorToUpdate = UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: changed)
-                }
-                
-                if (last_component == "red") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: red, newValue: changed) }
-                    colorToUpdate = UIColor(red: changed, green: green, blue: blue, alpha: alpha)
-                }
-                
-                if (last_component == "green") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: green, newValue: changed) }
-                    colorToUpdate = UIColor(red: red, green: changed, blue: blue, alpha: alpha)
-                }
-                
-                if (last_component == "blue") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: blue, newValue: changed) }
-                    colorToUpdate = UIColor(red: red, green: green, blue: changed, alpha: alpha)
-                }
-                
-                if (last_component == "white") {
-                    if (isAdditive) { changed = applyAdditiveTo(value: white, newValue: changed) }
-                    colorToUpdate = UIColor(white: changed, alpha: alpha)
-                }
-                
-                newPropertyValue = changed
+            if (lastComponent == "hue") {
+                colorChangeType = .hsb
+                hue = (isAdditive) ? applyAdditiveTo(value: hue, newValue: newFloatValue) : newFloatValue
             }
             
-            property.applyToParent(value: colorToUpdate, to: targetObject)
+            if (lastComponent == "saturation") {
+                colorChangeType = .hsb
+                saturation = (isAdditive) ? applyAdditiveTo(value: saturation, newValue: newFloatValue) : newFloatValue
+            }
             
+            if (lastComponent == "brightness") {
+                colorChangeType = .hsb
+                brightness = (isAdditive) ? applyAdditiveTo(value: brightness, newValue: newFloatValue) : newFloatValue
+            }
             
+            if (lastComponent == "red") {
+                colorChangeType = .rgb
+                red = (isAdditive) ? applyAdditiveTo(value: red, newValue: newFloatValue) : newFloatValue
+            }
+            
+            if (lastComponent == "green") {
+                colorChangeType = .rgb
+                green = (isAdditive) ? applyAdditiveTo(value: green, newValue: newFloatValue) : newFloatValue
+            }
+            
+            if (lastComponent == "blue") {
+                colorChangeType = .rgb
+                blue = (isAdditive) ? applyAdditiveTo(value: blue, newValue: newFloatValue) : newFloatValue
+            }
+            
+            if (lastComponent == "white") {
+                colorChangeType = .white
+                white = (isAdditive) ? applyAdditiveTo(value: white, newValue: newFloatValue) : newFloatValue
+            }
+                
+            if (lastComponent == "alpha") {
+                alpha = (isAdditive) ? applyAdditiveTo(value: alpha, newValue: newFloatValue) : newFloatValue
+            }
         }
 
-        return newPropertyValue
+        var changedColor: UIColor
+        
+        switch colorChangeType {
+            case .hsb:
+                changedColor = UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
+            case .rgb:
+                changedColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+            case .white:
+                changedColor = UIColor(white: white, alpha: alpha)
+        }
+                
+        properties.keys.first?.applyToParent(value: changedColor, to: targetObject)
         
     }
     
-    
-    
+
     public func supports(_ object: Any) -> Bool {
         var is_supported: Bool = false
         
