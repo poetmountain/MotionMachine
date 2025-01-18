@@ -27,11 +27,11 @@ import Foundation
     
 
     /**
-     *  This method updates an object property based on the supplied value.
+     *  This method updates a group of properties who have the same parent object.
      *
      *  - parameters:
-     *      - property: The ``PropertyData`` instance whose property should be updated.
-     *      - newValue: The new value to be applied to the object property.
+     *      - properties: A dictionary of updated property values whose keys are ``PropertyData`` objects whose property should be updated.
+     *      - targetObject: The target object.
      *
      *  - returns: An updated version of the property value, if the object property was found and is supported.
      */

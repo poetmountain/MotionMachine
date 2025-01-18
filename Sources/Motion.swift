@@ -752,7 +752,7 @@ public class Motion<TargetType: AnyObject>: Moveable, Additive, TempoDriven, Pro
     // MARK: - Motion methods
     
     /**
-     *  Updates the target property with a new delta value.
+     *  Updates the target properties with a new delta value.
      *
      *  - parameter properties: The properties to update.
      */

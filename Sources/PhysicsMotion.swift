@@ -805,9 +805,9 @@ import Foundation
     // MARK: - Motion methods
     
     /**
-     *  Updates the target property with a new delta value.
+     *  Updates the target properties with a new delta value.
      *
-     *  - parameter property: The property to update.
+     *  - parameter properties: The properties to update.
      */
     func updatePropertyValues(properties: [PropertyData<TargetType>]) {
         guard let targetObject else { return }
