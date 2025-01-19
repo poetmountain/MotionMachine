@@ -116,6 +116,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/WeakAdditiveContainer.html">WeakAdditiveContainer</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -287,7 +290,7 @@
 
                 </div>
               </div>
-            <p>TimerTempo uses an internal <code>Timer</code> object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.</p>
+            <p>TimerTempo uses an internal <code>DispatchSourceTimer</code> object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.</p>
 
           </div>
         </section>
@@ -299,9 +302,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine10TimerTempoC5timerSo7NSTimerCSgvp"></a>
+                    <a name="/s:13MotionMachine10TimerTempoC5timerSo019OS_dispatch_source_E0_pSgvp"></a>
                     <a name="//apple_ref/swift/Property/timer" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine10TimerTempoC5timerSo7NSTimerCSgvp">timer</a>
+                    <a class="token" href="#/s:13MotionMachine10TimerTempoC5timerSo019OS_dispatch_source_E0_pSgvp">timer</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -309,10 +312,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This <code>Timer</code> object is used to provide tempo updates.</p>
+                        <p>This <code>DispatchSourceTimer</code> object is used to provide tempo updates.</p>
 <div class="aside aside-warning">
     <p class="aside-title">Warning</p>
-    Do not call the <code>invalidate</code> method on this object, as its state is handled by TimerTempo directly.
+    Do not call the <code>cancel()</code> method on this object, as its state is handled by TimerTempo directly.
 
 </div>
 
@@ -322,7 +325,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">timer</span><span class="p">:</span> <span class="kt">Timer</span><span class="p">?</span></code></pre>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">timer</span><span class="p">:</span> <span class="kt">DispatchSourceTimer</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -420,7 +423,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Calling this method invalides the <code>Timer</code> object to prepare for deallocation.</p>
+                        <p>Calling this method cancels the <code>DispatchSourceTimer</code> object to prepare for deallocation.</p>
 
                       </div>
                       <div class="declaration">

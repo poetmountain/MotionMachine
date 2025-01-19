@@ -114,6 +114,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/WeakAdditiveContainer.html">WeakAdditiveContainer</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -289,64 +292,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine0A0C"></a>
-                    <a name="//apple_ref/swift/Class/Motion" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine0A0C">Motion</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Motion handles a single motion operation on one or more properties, interpolating between specified starting and ending values.</p>
-
-                        <a href="Classes/Motion.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Motion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Additive.html">Additive</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span> <span class="k">where</span> <span class="kt">TargetType</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:13MotionMachine0A5GroupC"></a>
-                    <a name="//apple_ref/swift/Class/MotionGroup" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine0A5GroupC">MotionGroup</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>MotionGroup handles the movement of one or more objects which conform to the <code><a href="Protocols/Moveable.html">Moveable</a></code> protocol. A single <code>MotionGroup</code> could hold <code><a href="Classes/Motion.html">Motion</a></code>, <code><a href="Classes/PhysicsMotion.html">PhysicsMotion</a></code>, and <code><a href="Classes/PathMotion.html">PathMotion</a></code> objects, and even other <code><a href="Protocols/MoveableCollection.html">MoveableCollection</a></code> objects. The MotionGroup class is a good solution when you want to easily synchronize the movements of many <code><a href="Protocols/Moveable.html">Moveable</a></code> objects.</p>
-
-                        <a href="Classes/MotionGroup.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionGroup</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:13MotionMachine15MMConfigurationC"></a>
                     <a name="//apple_ref/swift/Class/MMConfiguration" class="dashAnchor"></a>
                     <a class="token" href="#/s:13MotionMachine15MMConfigurationC">MMConfiguration</a>
@@ -376,6 +321,96 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:13MotionMachine21WeakAdditiveContainerC"></a>
+                    <a name="//apple_ref/swift/Class/WeakAdditiveContainer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine21WeakAdditiveContainerC">WeakAdditiveContainer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Contains a value as a weak reference to an object</p>
+
+                        <a href="Classes/WeakAdditiveContainer.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">WeakAdditiveContainer</span> <span class="p">:</span> <span class="kt">Identifiable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">WeakAdditiveContainer</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">WeakAdditiveContainer</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine0A0C"></a>
+                    <a name="//apple_ref/swift/Class/Motion" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine0A0C">Motion</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Motion handles a single motion operation on one or more properties, interpolating between specified starting and ending values.</p>
+
+                        <a href="Classes/Motion.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Motion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Additive.html">Additive</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span> <span class="k">where</span> <span class="kt">TargetType</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Motion</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine0A5GroupC"></a>
+                    <a name="//apple_ref/swift/Class/MotionGroup" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine0A5GroupC">MotionGroup</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>MotionGroup handles the movement of one or more objects which conform to the <code><a href="Protocols/Moveable.html">Moveable</a></code> protocol. A single <code>MotionGroup</code> could hold <code><a href="Classes/Motion.html">Motion</a></code>, <code><a href="Classes/PhysicsMotion.html">PhysicsMotion</a></code>, and <code><a href="Classes/PathMotion.html">PathMotion</a></code> objects, and even other <code><a href="Protocols/MoveableCollection.html">MoveableCollection</a></code> objects. The MotionGroup class is a good solution when you want to easily synchronize the movements of many <code><a href="Protocols/Moveable.html">Moveable</a></code> objects.</p>
+
+                        <a href="Classes/MotionGroup.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionGroup</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span><span class="p">,</span> <span class="kt">Identifiable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:13MotionMachine0A8SequenceC"></a>
                     <a name="//apple_ref/swift/Class/MotionSequence" class="dashAnchor"></a>
                     <a class="token" href="#/s:13MotionMachine0A8SequenceC">MotionSequence</a>
@@ -395,7 +430,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionSequence</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionSequence</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span><span class="p">,</span> <span class="kt">Identifiable</span></code></pre>
 
                         </div>
                       </div>
@@ -424,7 +459,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">PathMotion</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyCollection.html">PropertyCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">PathMotion</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyCollection.html">PropertyCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span><span class="p">,</span> <span class="kt">Identifiable</span></code></pre>
 
                         </div>
                       </div>
@@ -453,7 +488,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">PathPhysicsMotion</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyCollection.html">PropertyCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">PathPhysicsMotion</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyCollection.html">PropertyCollection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span><span class="p">,</span> <span class="kt">Identifiable</span></code></pre>
 
                         </div>
                       </div>
@@ -511,6 +546,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">PhysicsMotion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Additive.html">Additive</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span> <span class="k">where</span> <span class="kt">TargetType</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">PhysicsMotion</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                         </div>
                       </div>
@@ -668,7 +704,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>TimerTempo uses an internal <code>Timer</code> object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.</p>
+                        <p>TimerTempo uses an internal <code>DispatchSourceTimer</code> object to send out tempo updates. By default, the update interval is twice the maximum refresh rate of the current display.</p>
 
                         <a href="Classes/TimerTempo.html" class="slightly-smaller">See more</a>
                       </div>

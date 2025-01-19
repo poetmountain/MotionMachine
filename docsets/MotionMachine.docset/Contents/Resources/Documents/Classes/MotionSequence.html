@@ -116,6 +116,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/WeakAdditiveContainer.html">WeakAdditiveContainer</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -283,7 +286,7 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionSequence</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">MotionSequence</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/MoveableCollection.html">MoveableCollection</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/MotionUpdateDelegate.html">MotionUpdateDelegate</a></span><span class="p">,</span> <span class="kt">Identifiable</span></code></pre>
 
                 </div>
               </div>
@@ -636,6 +639,60 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Identifiable%20conformance"></a>
+                <a name="//apple_ref/swift/Section/Identifiable conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Identifiable%20conformance"></a>
+                  <h3 class="section-name"><span>Identifiable conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine0A8SequenceC2id10Foundation4UUIDVvp"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine0A8SequenceC2id10Foundation4UUIDVvp">id</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A unique identifier.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">UUID</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Motion%20State"></a>
+                <a name="//apple_ref/swift/Section/Motion State" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Motion%20State"></a>
+                  <h3 class="section-name"><span>Motion State</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1090,9 +1147,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine0A8SequenceC5tempoAA14TempoProviding_pSgvp"></a>
+                    <a name="/s:13MotionMachine11TempoDrivenP5tempoAA0C9Providing_pSgvp"></a>
                     <a name="//apple_ref/swift/Property/tempo" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine0A8SequenceC5tempoAA14TempoProviding_pSgvp">tempo</a>
+                    <a class="token" href="#/s:13MotionMachine11TempoDrivenP5tempoAA0C9Providing_pSgvp">tempo</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1100,13 +1157,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An object conforming to the <code><a href="../Protocols/TempoProviding.html">TempoProviding</a></code> protocol that provides an update &ldquo;beat&rdquo; to all child motions while the motion operation occurs.</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    By default, Motion will assign an instance of <code><a href="../Classes/DisplayLinkTempo.html">DisplayLinkTempo</a></code> to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is <code><a href="../Classes/CATempo.html">CATempo</a></code>, but for macOS it is <code><a href="../Classes/MacDisplayLinkTempo.html">MacDisplayLinkTempo</a></code>. Both classes internally use a <code>CADisplayLink</code> object for updates.
-
-</div>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>

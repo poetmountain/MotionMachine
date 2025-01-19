@@ -116,6 +116,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/WeakAdditiveContainer.html">WeakAdditiveContainer</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -314,10 +317,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An object conforming to the <code><a href="../Protocols/TempoProviding.html">TempoProviding</a></code> protocol which provides an update &ldquo;beat&rdquo; to drive a motion.</p>
+                        <p>An object conforming to the <code><a href="../Protocols/TempoProviding.html">TempoProviding</a></code> protocol that provides an update &ldquo;beat&rdquo; while a motion operation occurs.</p>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    It is expected that classes implementing this protocol also subscribe to this object&rsquo;s <code><a href="../Protocols/TempoDelegate.html">TempoDelegate</a></code> delegate methods.
+    By default, this class will assign an instance of <code><a href="../Classes/DisplayLinkTempo.html">DisplayLinkTempo</a></code> to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is <code><a href="../Classes/CATempo.html">CATempo</a></code>, but for macOS it is <code><a href="../Classes/MacDisplayLinkTempo.html">MacDisplayLinkTempo</a></code>. Both classes internally use a <code>CADisplayLink</code> object for updates. For watchOS and non-Apple platforms, <code><a href="../Classes/TimerTempo.html">TimerTempo</a></code> is chosen as <code>CADisplayLink</code> is not available.
 
 </div>
 

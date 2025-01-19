@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>EasingCubic Structure Reference</title>
+    <title>WeakAdditiveContainer Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -11,9 +11,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/swift/Struct/EasingCubic" class="dashAnchor"></a>
+    <a name="//apple_ref/swift/Class/WeakAdditiveContainer" class="dashAnchor"></a>
 
-    <a title="EasingCubic Structure Reference"></a>
+    <a title="WeakAdditiveContainer Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -36,9 +36,9 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">MotionMachine</a>
       <img class="carat" src="../img/carat.png" alt=""/>
-      <a class="breadcrumb" href="../Structs.html">Structures</a>
+      <a class="breadcrumb" href="../Classes.html">Classes</a>
       <img class="carat" src="../img/carat.png" alt=""/>
-      EasingCubic Structure Reference
+      WeakAdditiveContainer Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -281,20 +281,18 @@
 
         <section class="section">
           <div class="section-content top-matter">
-            <h1>EasingCubic</h1>
+            <h1>WeakAdditiveContainer</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">EasingCubic</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">WeakAdditiveContainer</span> <span class="p">:</span> <span class="kt">Identifiable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">WeakAdditiveContainer</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">WeakAdditiveContainer</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
               </div>
-            <p>EasingCubic provides cubic easing equations.</p>
-<div class="aside aside-remark">
-    <p class="aside-title">Remark</p>
-    See <a href="http://easings.net">http://easings.net</a> for visual examples.
-
-</div>
+            <p>Contains a value as a weak reference to an object</p>
 
           </div>
         </section>
@@ -306,9 +304,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine11EasingCubicV6easeInS2d_S3dtcyFZ"></a>
-                    <a name="//apple_ref/swift/Method/easeIn()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine11EasingCubicV6easeInS2d_S3dtcyFZ">easeIn()</a>
+                    <a name="/s:s12IdentifiableP2id2IDQzvp"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s12IdentifiableP2id2IDQzvp">id</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -316,20 +314,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides a cubic easing equation applied to the beginning of a motion.</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">easeIn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">UUID</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>Returns a closure containing the easing equation.</p>
                       </div>
                     </section>
                   </div>
@@ -337,9 +331,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine11EasingCubicV7easeOutS2d_S3dtcyFZ"></a>
-                    <a name="//apple_ref/swift/Method/easeOut()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine11EasingCubicV7easeOutS2d_S3dtcyFZ">easeOut()</a>
+                    <a name="/s:SH4hash4intoys6HasherVz_tF"></a>
+                    <a name="//apple_ref/swift/Method/hash(into:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SH4hash4intoys6HasherVz_tF">hash(into:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -347,20 +341,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides a cubic easing equation applied to the end of a motion.</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">easeOut</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">nonisolated</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">hash</span><span class="p">(</span><span class="n">into</span> <span class="nv">hasher</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Hasher</span><span class="p">)</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>Returns a closure containing the easing equation.</p>
                       </div>
                     </section>
                   </div>
@@ -368,9 +357,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine11EasingCubicV9easeInOutS2d_S3dtcyFZ"></a>
-                    <a name="//apple_ref/swift/Method/easeInOut()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine11EasingCubicV9easeInOutS2d_S3dtcyFZ">easeInOut()</a>
+                    <a name="/s:SQ2eeoiySbx_xtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SQ2eeoiySbx_xtFZ">==(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -378,20 +367,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides a cubic easing equation applied to the beginning and end of a motion.</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">easeInOut</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:13MotionMachine19EasingUpdateClosurea">EasingUpdateClosure</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">nonisolated</span> <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">WeakAdditiveContainer</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">WeakAdditiveContainer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>Returns a closure containing the easing equation.</p>
                       </div>
                     </section>
                   </div>

@@ -116,6 +116,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/ValueAssistantGroup.html">ValueAssistantGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/WeakAdditiveContainer.html">WeakAdditiveContainer</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -284,6 +287,7 @@
                   
                   <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kt">Motion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/Moveable.html">Moveable</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/Additive.html">Additive</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/TempoDriven.html">TempoDriven</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/PropertyDataDelegate.html">PropertyDataDelegate</a></span> <span class="k">where</span> <span class="kt">TargetType</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Motion</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
               </div>
@@ -673,6 +677,47 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="k">var</span> <span class="nv">valueAssistant</span><span class="p">:</span> <span class="kd">any</span> <span class="kt"><a href="../Protocols/ValueAssistant.html">ValueAssistant</a></span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Identifiable%20conformance"></a>
+                <a name="//apple_ref/swift/Section/Identifiable conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Identifiable%20conformance"></a>
+                  <h3 class="section-name"><span>Identifiable conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:13MotionMachine0A0C2id10Foundation4UUIDVvp"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:13MotionMachine0A0C2id10Foundation4UUIDVvp">id</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A unique identifier.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">UUID</span></code></pre>
 
                         </div>
                       </div>
@@ -1313,9 +1358,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:13MotionMachine0A0C5tempoAA14TempoProviding_pSgvp"></a>
+                    <a name="/s:13MotionMachine11TempoDrivenP5tempoAA0C9Providing_pSgvp"></a>
                     <a name="//apple_ref/swift/Property/tempo" class="dashAnchor"></a>
-                    <a class="token" href="#/s:13MotionMachine0A0C5tempoAA14TempoProviding_pSgvp">tempo</a>
+                    <a class="token" href="#/s:13MotionMachine11TempoDrivenP5tempoAA0C9Providing_pSgvp">tempo</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1323,13 +1368,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An object conforming to the <code><a href="../Protocols/TempoProviding.html">TempoProviding</a></code> protocol that provides an update &ldquo;beat&rdquo; while a motion operation occurs.</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    By default, Motion will assign an instance of <code><a href="../Classes/DisplayLinkTempo.html">DisplayLinkTempo</a></code> to this property, which automatically chooses the best tempo class for the system platform. For iOS, visionOS, and tvOS the class chosen is <code><a href="../Classes/CATempo.html">CATempo</a></code>, but for macOS it is <code><a href="../Classes/MacDisplayLinkTempo.html">MacDisplayLinkTempo</a></code>. Both classes internally use a <code>CADisplayLink</code> object for updates.
-
-</div>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -2504,6 +2543,32 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">didUpdate</span><span class="p">(</span><span class="n">_</span> <span class="nv">startValue</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:SQ2eeoiySbx_xtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SQ2eeoiySbx_xtFZ">==(_:<wbr>_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">nonisolated</span> <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Motion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Motion</span><span class="o">&lt;</span><span class="kt">TargetType</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
