@@ -1,3 +1,9 @@
+### 3.1.1
+
+- Performance improvements for motion value updates.
+- Fixed `CIColorAssistant` not respecting the existing colorspace of the original object during animations.
+- Added performance tests.
+
 ### 3.1.0
 
 - Added support for watchOS!
