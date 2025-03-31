@@ -40,7 +40,7 @@ import Foundation
 }
 
 extension Additive {
-    public static func == (lhs: any Additive, rhs: any Additive) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         return (lhs.id == rhs.id)
     }
 }

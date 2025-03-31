@@ -1,3 +1,7 @@
+### 3.1.2
+
+- Fix to Equatable conformance for `Additive` protocol, which surfaced as error in Xcode 16.3.
+
 ### 3.1.1
 
 - Performance improvements for motion value updates.
